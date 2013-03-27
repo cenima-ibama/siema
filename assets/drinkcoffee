@@ -1,0 +1,3 @@
+#!/bin/bash
+
+coffee --join js/charts.js -cw coffee/hash5charts.coffee coffee/charts.coffee
