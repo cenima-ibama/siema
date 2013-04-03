@@ -280,13 +280,13 @@
       dial.knob({
         'min': -100,
         'max': 100,
-        'bgColor': "#CCC",
+        'bgColor': "#DEDEDE",
         'angleOffset': -125,
         'angleArc': 250,
         'readOnly': true,
         'width': 60,
         'height': 60,
-        'thickness': 0.6,
+        'thickness': 0.5,
         'displayInput': false,
         draw: function() {
           var color, value, _max, _min;
@@ -1400,10 +1400,8 @@
     return reloadCharts();
   });
 
-  setTimeout(function() {
-    return google.setOnLoadCallback(function() {
-      return reloadCharts();
-    });
-  }, 3000);
+  google.setOnLoadCallback(function() {
+    return reloadCharts();
+  });
 
 }).call(this);

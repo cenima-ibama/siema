@@ -1008,8 +1008,5 @@ $(".quick-btn a").on "click", (event) ->
   reloadCharts()
 # }}}
 # CALLBACK {{{
-setTimeout ->
-  google.setOnLoadCallback -> reloadCharts()
-, 3000
-
+google.setOnLoadCallback -> reloadCharts()
 #}}}

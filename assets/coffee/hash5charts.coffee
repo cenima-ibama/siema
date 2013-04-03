@@ -229,13 +229,13 @@ class Hash5Knobs extends Hash5Charts
     dial.knob(
       'min':-100
       'max':100
-      'bgColor': "#CCC"
+      'bgColor': "#DEDEDE"
       'angleOffset':-125
       'angleArc':250
       'readOnly': true
       'width': 60
       'height': 60
-      'thickness': 0.6
+      'thickness': 0.5
       'displayInput': false
       draw: ->
         value = this.val()
