@@ -8,21 +8,21 @@
   -webkit-box-shadow: inset @x @y @blur rgba(@r, @g, @b, @alpha);
   box-shadow: inset @x @y @blur rgba(@r, @g, @b, @alpha);
 }
-.box-shadow-both(@x1: 0; @y1: 1px; @blur1: 0; @r1: 255; @g1: 255; @b1: 255; @alpha1: 0.2; @x2: 0; @y2: 1px; @blur2: 2px; @r2: 0; @g2: 0; @b2: 0; @alpha2: 0.05) {
-  -moz-box-shadow: @x1 @y1 @blur1 rgba(@r1, @g1, @b1, @alpha1),
-  inset @x2 @y2 @blur2 rgba(@r2, @g2, @b2, @alpha2);
-  -webkit-box-shadow: @x1 @y1 @blur1 rgba(@r1, @g1, @b1, @alpha1),
-  inset @x2 @y2 @blur2 rgba(@r2, @g2, @b2, @alpha2);
-  box-shadow: @x1 @y1 @blur1 rgba(@r1, @g1, @b1, @alpha1),
-  inset @x2 @y2 @blur2 rgba(@r2, @g2, @b2, @alpha2);
+.box-shadow-both(@x1: 0; @y1: 1px; @blur1: 0; @r1: 255; @g1: 255; @b1: 255; @alpha1: 1; @x2: 0; @y2: 1px; @blur2: 0; @r2: 255; @g2: 255; @b2: 255; @alpha2: 0.4) {
+  -moz-box-shadow: @x1 @y1 @blur1 rgba(@r1, @g1, @b1, @alpha1)
+  inset, @x2 @y2 @blur2 rgba(@r2, @g2, @b2, @alpha2);
+  -webkit-box-shadow: @x1 @y1 @blur1 rgba(@r1, @g1, @b1, @alpha1)
+  inset, @x2 @y2 @blur2 rgba(@r2, @g2, @b2, @alpha2);
+  box-shadow: @x1 @y1 @blur1 rgba(@r1, @g1, @b1, @alpha1)
+  inset, @x2 @y2 @blur2 rgba(@r2, @g2, @b2, @alpha2);
 }
 .box-shadow-none {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.background (@color1; @color2) {
-  background-color: @color2; /* Old browsers */
+.background(@color1; @color2) {
+  background-color: @color1; /* Old browsers */
   background-image: -moz-linear-gradient(top, @color1, @color2); /* FF3.6+ */
   background-image: -webkit-linear-gradient(top, @color1, @color2); /* Chrome10+,Safari5.1+ */
   background-image: linear-gradient(to bottom, @color1, @color2); /* W3C */
@@ -82,25 +82,25 @@
     }
   }
 }
-.gauges {
-  float: left;
-  width: auto;
-  margin: 0;
-  .gauge {
-    height: 150px;
-    width: 150px;
-    float: left;
-  }
-}
-.charts {
+.dash {
   position: absolute;
   top: 42px;
   left: 0;
-  right:0;
+  right: 0;
   z-index: 10;
   background-color: #F5F5F5;
   .charts-content {
+    text-align: center;
     margin: 2% 2% 4%;
+    .gauges {
+      width: auto;
+      margin: 0;
+      .gauge {
+        height: 150px;
+        width: 150px;
+        float: left;
+      }
+    }
     .chart {
       float: left;
       width: 47.8%;
@@ -147,8 +147,7 @@
       }
     }
     .chart-header {
-      background-color: #FAFAFA;
-      background-image: linear-gradient(to bottom, #FAFAFA, #EFEFEF);
+      .background(#FAFAFA, #EFEFEF);
       border: 1px solid #DDDDDD;
       border-radius: 2px 2px 0 0;
       .box-shadow-none;
@@ -195,26 +194,26 @@
     }
   }
 }
-.stats-box {
-  margin: 25px 0 10px 25px;
+.boxes {
+  margin:0;
+  display: inline-block;
+  list-style: none outside none;
+  text-align: center;
   @media (max-width: 979px) {
     margin: 0 20px 0 10px;
   }
-  ul {
-    display: inline-block;
-    list-style: none outside none;
-    text-align: center;
+  input, textarea {
+    .box-shadow-none;
   }
-  li {
-    background-color: #F6F6F6;
-    background-image: -moz-linear-gradient(center top , #F9F9F9 0%, #EDEDED 100%);
+  .box {
+    .background(#F9F9F9 0%; #EDEDED 100%);
     border: 1px solid #D5D5D5;
     border-radius: 4px 4px 4px 4px;
     box-shadow: 0 1px 0 0 #FFFFFF inset, 0 1px 0 rgba(255, 255, 255, 0.4);
     display: inline-block;
     line-height: 18px;
-    margin: 0 10px 10px;
-    padding: 0 10px;
+    margin: 0 10px;
+    padding: 0;
   }
   .left {
     border-right: 1px solid lightgrey;
@@ -222,12 +221,12 @@
     font-size: 10px;
     font-weight: bold;
     margin-right: 12px;
-    padding: 10px 14px 6px 4px;
+    padding: 10px 14px 6px;
   }
   .right {
     color: #666666;
     font-size: 12px;
-    padding: 9px 10px 7px 0;
+    padding: 20px 16px 6px 2px;
     text-align: center;
     width: 70px;
     strong {
@@ -241,51 +240,90 @@
     text-shadow: 0 1px 0 #FFFFFF;
   }
 }
-.quick-box{
+.quick-btn{
+  .background(#F9F9F9 0%; #EDEDED 100%);
+  border-top: 1px solid lightgrey;
+  border-left: 1px solid lightgrey;
+  border-radius: 4px 4px 4px 4px;
+  box-shadow: 0 1px 0 0 #FFFFFF inset, 0 1px 0 rgba(255, 255, 255, 0.4);
+  display: inline-block;
+  line-height: 18px;
+  margin: 0 10px;
+  padding: 0;
   @media (max-width: 979px) {
     margin-top: 40px;
   }
-  .quick-box-btn {
-    border-radius: 4px;
-    border: 1px solid lightgrey;
-    margin-bottom: 4px;
-    margin-right: 0;
-    padding: 0 18px;
-    text-align: center;
-    text-shadow: 0 1px 0 #FFFFFF;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    .box-shadow-both;
-    .background(#FAFAFA; #EFEFEF);
-    width: 5%;
+  .item {
+    border-right: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+    box-shadow: 1px 1px 0 0 #FFFFFF;
+    font-size: 10px;
+    font-weight: bold;
+    margin: 0;
+    padding: 10px 14px 6px;
+    float: left;
     @media (max-width: 979px) {
-      width: 12%;
+      width: 15.9%;
     }
     @media (max-width: 639px) {
-      width: 30%;
+      width: 41%;
+    }
+    @media (max-height: 360px) {
+      width: 15.1%;
+    }
+    @media (max-width: 479px) {
+      width: 39.7%;
+    }
+    @media (max-height: 320px) {
+      width: 13.4%;
+    }
+    &:first-child{
+      border-radius: 4px 0 0 4px;
+      @media (max-width: 979px) {
+        border-radius: 4px 0 0 0;
+      }
+      @media (max-width: 767px) {
+      }
+      @media (max-height: 360px) {
+      }
+    }
+    &:last-child {
+      border-radius: 0px 4px 4px 0px;
+      @media (max-width: 979px) {
+        border-radius: 0 0 4px 0;
+      }
+      @media (max-width: 767px) {
+      }
+      @media (max-height: 360px) {
+      }
+    }
+    a {
+      outline: none;
+      text-decoration: none;
+    }
+    &:hover{
+      background: #FAFAFA;
+      text-decoration: none;
+      transition: all 0.2s ease 0s;
     }
     i {
       background-attachment: scroll;
       background-color: transparent;
       background-position: center center;
       background-repeat: no-repeat;
-      padding: 22px;
+      padding: 16px 24px;
       vertical-align: middle;
     }
     span {
       display: block;
       font-size: 12px;
       font-weight: bold;
-      margin-bottom: 10px;
-      margin-top: 2px;
+      margin-bottom: 4px;
+      color: #333333;
     }
-    &:last-child {
-      margin-right: 0;
-    }
-    &:hover{
-      background: none;
-      text-decoration: none;
-      transition: all 0.2s ease 0s;
+    &.active, &:active{
+      background: #FAFAFA;
+      .box-shadow-both(0; 2px; 4px; 0; 0; 0; 0.15; 0; 1px; 2px; 0; 0; 0; 0.05);
     }
     i.icon-ac {
       background-image: url("../img/icons/AC.png");

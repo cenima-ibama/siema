@@ -25,16 +25,6 @@ class Hash5Charts
     # configure object with the options
     @options = $.extend(defaultOptions, options)
 
-  createChart: ->
-    # setup new chart
-    if @options.type is "Gauge"
-      @chart = new google.visualization.Gauge(document.getElementById("chart-" + @options.container))
-    else
-      @chart = new google.visualization[@options.type + "Chart"](document.getElementById("chart-" + @options.container))
-    # only init one time
-    @options.started = false
-    @detectScreenChanges()
-
   createContainer: ->
     container = document.getElementById(@options.container)
     html = "<div class=\"chart-header\">"
@@ -111,15 +101,12 @@ class Hash5Charts
     html = "<div id=\"chart-" + @options.container + "\" class=\"chart-content-small\"></div>"
     $(container).append html
 
-  dataTable: ->
-    @data = new google.visualization.DataTable()
-
   changeTitle: (title) ->
-    $container = $("#" + @options.container + " h2")
-    $container.html(title)
+    container = $("#" + @options.container + " h2")
+    container.html(title)
     if @options.buttons.arrows or @options.buttons.minusplus or @options.selects?
       html = "<span class=\"break\"></span>"
-      $container.prepend html
+      container.prepend html
 
   enableMinimize: (container) ->
     $(@minBtn).on "click", (event) =>
@@ -177,6 +164,25 @@ class Hash5Charts
     $(container).on "change", (event) =>
       @drawChart()
 
+class Hash5GoogleCharts extends Hash5Charts
+
+  dataTable: ->
+    @data = new google.visualization.DataTable()
+
+  createChart: ->
+    # setup new chart
+    if @options.type is "Gauge"
+      @chart = new google.visualization.Gauge(
+        document.getElementById("chart-" + @options.container)
+      )
+    else
+      @chart = new google.visualization[@options.type + "Chart"](
+        document.getElementById("chart-" + @options.container)
+      )
+    # only init one time
+    @options.started = false
+    @detectScreenChanges()
+
   detectScreenChanges: ->
     # Detect whether device supports orientationchange event,
     # otherwise fall back to the resize event.
@@ -189,3 +195,56 @@ class Hash5Charts
         @drawChart()
       , 250
     ),false
+
+class Hash5Knobs extends Hash5Charts
+
+  createKnob: ->
+    container = document.getElementById(@options.container)
+    html = "<div class=\"left\">"
+    html+= "<input type=\"text\" class=\"dial\">"
+    html+= "</div>"
+    html+= "<div class=\"right\">"
+    html+= "</div>"
+    $(container).append html
+    @insertKnob(container)
+
+  updateKnob: (value, name) ->
+    container = document.getElementById(@options.container)
+    info = $(container).children(".right")
+    info.html("<strong>" + value + "</strong> " + name + "")
+    @animateKnob(value)
+
+  animateKnob: (val) ->
+    container = document.getElementById(@options.container)
+    dial = $(container).children().children('input')
+    # $(value: -100).animate
+    #   value: val,
+    #     duration: 2000
+    #     easing: "easeOutSine"
+    #     step: ->
+    #       dial.val(Math.ceil(@value)).trigger "change"
+    dial.val(Math.ceil(val)).trigger "change"
+
+  insertKnob: (container) ->
+    dial = $(container).children().children('input')
+    dial.knob
+      'min':-100
+      'max':100
+      'bgColor': "#EDEDED"
+      'angleOffset':-125
+      'angleArc':250
+      'readOnly': true
+      'width': 60
+      'height': 60
+      'thickness': 0.5
+      'displayInput': false
+      draw: ->
+        value = this.val()
+        _min = this.o.min
+        _max = this.o.max
+        if _min <= value <= _min*0.3 then color = pusher.color("#67C2EF")
+        else if _min*0.3 < value <= _max*0.3 then color = pusher.color("#CBE968")
+        else if _max*0.3 < value <= _max*0.7 then color = pusher.color("#FABB3D")
+        else if _max*0.7 < value <=  _max*0.9 then color = pusher.color("#FA603D")
+        else color = pusher.color("#FF5454")
+        this.o.fgColor = color.html()

@@ -60,7 +60,7 @@ $.ajax
     console.log status, desc
 #}}}
 # CHART1 {{{
-chart1 = new Hash5Charts (
+chart1 = new Hash5GoogleCharts (
   type: "Line"
   container: "chart1"
   title: "Indicativo total de desmatamento diario"
@@ -162,7 +162,7 @@ chart1.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART2 {{{
-chart2 = new Hash5Charts(
+chart2 = new Hash5GoogleCharts(
   type: "Area"
   container: "chart2"
   period: 2
@@ -248,7 +248,7 @@ chart2.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART3 {{{
-chart3 = new Hash5Charts(
+chart3 = new Hash5GoogleCharts(
   type: "Bar"
   container: "chart3"
   period: 1
@@ -352,7 +352,7 @@ chart3.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART4 {{{
-chart4 = new Hash5Charts(
+chart4 = new Hash5GoogleCharts(
   type: "Area"
   container: "chart4"
   title: "Indicativo total de desmatamento por periodo"
@@ -424,7 +424,7 @@ chart4.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART5 {{{
-chart5 = new Hash5Charts(
+chart5 = new Hash5GoogleCharts(
   type: "Column"
   container: "chart5"
   period: 2
@@ -506,7 +506,7 @@ chart5.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART6 {{{
-chart6 = new Hash5Charts(
+chart6 = new Hash5GoogleCharts(
   type: "Column"
   container: "chart6"
   period: 1
@@ -565,7 +565,7 @@ chart6.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART7 {{{
-chart7 = new Hash5Charts(
+chart7 = new Hash5GoogleCharts(
   type: "Pie"
   container: "chart7"
   period: 0
@@ -640,7 +640,7 @@ chart7.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART8 {{{
-chart8 = new Hash5Charts(
+chart8 = new Hash5GoogleCharts(
   type: "Pie"
   container: "chart8"
   period: 1
@@ -699,7 +699,7 @@ chart8.drawChart = ->
   @chart.draw @data, options
 #}}}
 # GAUGE1 {{{
-gauge1 = new Hash5Charts(
+gauge1 = new Hash5GoogleCharts(
   type: "Gauge"
   container: "gauge1"
   title: "Demo"
@@ -779,7 +779,7 @@ gauge1.drawChart = ->
   @chart.draw @data, options
 #}}}
 # GAUGE2 {{{
-gauge2 = new Hash5Charts(
+gauge2 = new Hash5GoogleCharts(
   type: "Gauge"
   container: "gauge2"
   title: "Demo"
@@ -859,7 +859,7 @@ gauge2.drawChart = ->
   @chart.draw @data, options
 #}}}
 # GAUGE3 {{{
-gauge3 = new Hash5Charts(
+gauge3 = new Hash5GoogleCharts(
   type: "Gauge"
   container: "gauge3"
   title: "Demo"
@@ -937,18 +937,51 @@ gauge3.drawChart = ->
       easing: "inAndOut"
   @chart.draw @data, options
 #}}}
-# CALLBACK {{{
-google.setOnLoadCallback -> chart1.drawChart()
-google.setOnLoadCallback -> chart2.drawChart()
-google.setOnLoadCallback -> chart3.drawChart()
-google.setOnLoadCallback -> chart4.drawChart()
-google.setOnLoadCallback -> chart5.drawChart()
-google.setOnLoadCallback -> chart6.drawChart()
-google.setOnLoadCallback -> chart7.drawChart()
-google.setOnLoadCallback -> chart8.drawChart()
-google.setOnLoadCallback -> gauge1.drawChart()
-google.setOnLoadCallback -> gauge2.drawChart()
-google.setOnLoadCallback -> gauge3.drawChart()
+# RING1 {{{
+knob1 = new Hash5Knobs(
+  container: "box1"
+)
+knob1.createKnob()
+
+knob1.drawChart = ->
+  # sum values
+  periodDeforestationAvgRate = (year, month) ->
+    sumValues = (fp, sp) ->
+      sum = 0
+      if selectedState is "Todos"
+        for state of tableData.states
+          for reg of tableData.states[state]
+            reg = tableData.states[state][reg]
+            sum += reg.area if fp <= reg.date <= sp
+      else
+        for reg of tableData.states[selectedState]
+          reg = tableData.states[selectedState][reg]
+          sum += reg.area if fp <= reg.date <= sp
+      sum
+
+    curValue = 0
+    preValue = 0
+
+    year = (if month > 5 then year++ else year)
+
+    prePeriod = new Date(year - 1, 7, 1)
+    curPeriod = new Date(year, month + 1, 0)
+    curValue = sumValues(prePeriod, curPeriod)
+
+    prePeriod = new Date(year - 2, 7, 1)
+    curPeriod = new Date(year - 1, month + 1, 0)
+    preValue = sumValues(prePeriod, curPeriod)
+
+    # caso o valor do periodo anterior seja 0, retorna 0
+    # para evitar uma divisão por 0
+    if preValue is 0
+      0
+    else
+      Math.round (curValue - preValue) / preValue * 100
+
+  result = periodDeforestationAvgRate(chart1.yearsSlct.value, chart1.monthsSlct.value)
+
+  @updateKnob result,"TVPA"
 #}}}
 # CONTROLS {{{
 reloadCharts = ->
@@ -960,12 +993,9 @@ reloadCharts = ->
   chart6.drawChart()
   chart7.drawChart()
   chart8.drawChart()
-  gauge1.drawChart()
-  gauge2.drawChart()
-  gauge3.drawChart()
+  knob1.drawChart()
 
-
-$(".quick-box a").on "click", (event) ->
+$(".quick-btn a").on "click", (event) ->
   event.preventDefault()
   selectedState = $(@).prop("id")
   $(@).each ->
@@ -973,3 +1003,6 @@ $(".quick-box a").on "click", (event) ->
   $(@).addClass "active"
   reloadCharts()
 # }}}
+# CALLBACK {{{
+google.setOnLoadCallback -> reloadCharts()
+#}}}
