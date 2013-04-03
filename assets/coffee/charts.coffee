@@ -941,6 +941,7 @@ gauge3.drawChart = ->
 knob1 = new Hash5Knobs(
   container: "box1"
 )
+
 knob1.createKnob()
 
 knob1.drawChart = ->
@@ -975,13 +976,16 @@ knob1.drawChart = ->
     # caso o valor do periodo anterior seja 0, retorna 0
     # para evitar uma divisão por 0
     if preValue is 0
-      0
+      return 0
     else
-      Math.round (curValue - preValue) / preValue * 100
+      return Math.round (curValue - preValue) / preValue * 100
 
-  result = periodDeforestationAvgRate(chart1.yearsSlct.value, chart1.monthsSlct.value)
+  value = periodDeforestationAvgRate(
+    chart1.yearsSlct.value, chart1.monthsSlct.value
+  )
+  @updateKnob value,"TVPA"
+  return
 
-  @updateKnob result,"TVPA"
 #}}}
 # CONTROLS {{{
 reloadCharts = ->
@@ -1004,5 +1008,8 @@ $(".quick-btn a").on "click", (event) ->
   reloadCharts()
 # }}}
 # CALLBACK {{{
-google.setOnLoadCallback -> reloadCharts()
+setTimeout ->
+  google.setOnLoadCallback -> reloadCharts()
+, 3000
+
 #}}}

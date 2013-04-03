@@ -206,37 +206,36 @@ class Hash5Knobs extends Hash5Charts
     html+= "<div class=\"right\">"
     html+= "</div>"
     $(container).append html
-    @insertKnob(container)
+    @insertKnob container
 
   updateKnob: (value, name) ->
     container = document.getElementById(@options.container)
     info = $(container).children(".right")
     info.html("<strong>" + value + "</strong> " + name + "")
-    @animateKnob(value)
+    @animateKnob(container, value)
 
-  animateKnob: (val) ->
-    container = document.getElementById(@options.container)
-    dial = $(container).children().children('input')
-    # $(value: -100).animate
-    #   value: val,
-    #     duration: 2000
-    #     easing: "easeOutSine"
-    #     step: ->
-    #       dial.val(Math.ceil(@value)).trigger "change"
-    dial.val(Math.ceil(val)).trigger "change"
+  animateKnob: (container, dialValue) ->
+    dial = $(container).find('.dial')
+    $(value: dial.val()).animate
+      value: dialValue,
+        duration: 2000
+        easing: "easeOutSine"
+        step: ->
+          dial.val(Math.ceil @value).trigger "change"
+          return
 
   insertKnob: (container) ->
     dial = $(container).children().children('input')
-    dial.knob
+    dial.knob(
       'min':-100
       'max':100
-      'bgColor': "#EDEDED"
+      'bgColor': "#CCC"
       'angleOffset':-125
       'angleArc':250
       'readOnly': true
       'width': 60
       'height': 60
-      'thickness': 0.5
+      'thickness': 0.6
       'displayInput': false
       draw: ->
         value = this.val()
@@ -248,3 +247,5 @@ class Hash5Knobs extends Hash5Charts
         else if _max*0.7 < value <=  _max*0.9 then color = pusher.color("#FA603D")
         else color = pusher.color("#FF5454")
         this.o.fgColor = color.html()
+    )
+    dial.val(0).trigger "change"

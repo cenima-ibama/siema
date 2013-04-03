@@ -255,29 +255,38 @@
       container = document.getElementById(this.options.container);
       info = $(container).children(".right");
       info.html("<strong>" + value + "</strong> " + name + "");
-      return this.animateKnob(value);
+      return this.animateKnob(container, value);
     };
 
-    Hash5Knobs.prototype.animateKnob = function(val) {
-      var container, dial;
-      container = document.getElementById(this.options.container);
-      dial = $(container).children().children('input');
-      return dial.val(Math.ceil(val)).trigger("change");
+    Hash5Knobs.prototype.animateKnob = function(container, dialValue) {
+      var dial;
+      dial = $(container).find('.dial');
+      return $({
+        value: dial.val()
+      }).animate({
+        value: dialValue
+      }, {
+        duration: 2000,
+        easing: "easeOutSine",
+        step: function() {
+          dial.val(Math.ceil(this.value)).trigger("change");
+        }
+      });
     };
 
     Hash5Knobs.prototype.insertKnob = function(container) {
       var dial;
       dial = $(container).children().children('input');
-      return dial.knob({
+      dial.knob({
         'min': -100,
         'max': 100,
-        'bgColor': "#EDEDED",
+        'bgColor': "#CCC",
         'angleOffset': -125,
         'angleArc': 250,
         'readOnly': true,
         'width': 60,
         'height': 60,
-        'thickness': 0.5,
+        'thickness': 0.6,
         'displayInput': false,
         draw: function() {
           var color, value, _max, _min;
@@ -298,6 +307,7 @@
           return this.o.fgColor = color.html();
         }
       });
+      return dial.val(0).trigger("change");
     };
 
     return Hash5Knobs;
@@ -1324,7 +1334,7 @@
   knob1.createKnob();
 
   knob1.drawChart = function() {
-    var periodDeforestationAvgRate, result;
+    var periodDeforestationAvgRate, value;
     periodDeforestationAvgRate = function(year, month) {
       var curPeriod, curValue, prePeriod, preValue, sumValues;
       sumValues = function(fp, sp) {
@@ -1364,8 +1374,8 @@
         return Math.round((curValue - preValue) / preValue * 100);
       }
     };
-    result = periodDeforestationAvgRate(chart1.yearsSlct.value, chart1.monthsSlct.value);
-    return this.updateKnob(result, "TVPA");
+    value = periodDeforestationAvgRate(chart1.yearsSlct.value, chart1.monthsSlct.value);
+    this.updateKnob(value, "TVPA");
   };
 
   reloadCharts = function() {
@@ -1390,8 +1400,10 @@
     return reloadCharts();
   });
 
-  google.setOnLoadCallback(function() {
-    return reloadCharts();
-  });
+  setTimeout(function() {
+    return google.setOnLoadCallback(function() {
+      return reloadCharts();
+    });
+  }, 3000);
 
 }).call(this);
