@@ -11,7 +11,7 @@ curDay = new Date().getDate()
 for i in [0..totalPeriodos]
   periodos[i] = (today.getFullYear() - i - 1) + "-" + (today.getFullYear() - i)
 
-months =
+monthsOrdered =
   7: "Ago"
   8: "Set"
   9: "Out"
@@ -24,6 +24,20 @@ months =
   4: "Mai"
   5: "Jun"
   6: "Jul"
+
+months =
+  0: "Ago"
+  1: "Set"
+  2: "Out"
+  3: "Nov"
+  4: "Dez"
+  5: "Jan"
+  6: "Fev"
+  7: "Mar"
+  8: "Abr"
+  9: "Mai"
+  10: "Jun"
+  11: "Jul"
 
 estados = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"]
 tableData =
@@ -212,12 +226,12 @@ chart2.drawChart = ->
   for i in [0...@options.period]
     @data.addColumn "number", periodos[i]
 
-  # populate table
-  # list months
-  $.each months, (number, month) =>
-    data = [month]
+  for month of months
+    data = [months[month]]
+    month = parseInt month
+    moth = if 7 <= (month + 7) <= 11 then month+= 7 else month-= 5
     for i in [1..@options.period]
-      data[i] = sumValues(curYear - i + 1, parseInt number)
+      data[i] = sumValues(curYear - i + 1, month)
     @data.addRow data
 
   options =
@@ -378,7 +392,7 @@ chart4.drawChart = ->
       $.each tableData.states[selectedState], (key, reg) ->
         if reg.date >= firstPeriod and reg.date <= secondPeriod
           sum += reg.area
-    Math.round(sum * 100) / 100
+    return Math.round(sum * 100) / 100
 
 
   # create new chart
@@ -716,8 +730,6 @@ spark1.drawChart = ->
           return false
       data[(day-1)] = Math.round((data[(day-1)] + dayValue) * 100)/100
 
-    console.log data
-
   monthDays = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate()
   dateStart = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1)
   dateEnd = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, monthDays)
@@ -736,6 +748,50 @@ spark1.drawChart = ->
 
   value = data[monthDays-1]
   @updateSparkInfo value,"Total Mensal"
+  @updateSparkChart data
+
+#}}}
+# SPARK2 {{{
+spark2 = new Hash5Sparks(
+  container: "spark2"
+)
+
+spark2.createSpark()
+
+spark2.drawChart = ->
+  #Create array with values
+  # sum values
+  sumValues = (year, month) ->
+    sum = 0
+    firstPeriod = new Date(year - 1, 7, 1)
+    secondPeriod = new Date(year , 7, 0)
+    if selectedState is "Todos"
+      $.each tableData.states, (key, state) ->
+        $.each state, (key, reg) ->
+          if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
+            sum += reg.area
+    else
+      $.each tableData.states[selectedState], (key, reg) ->
+        if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
+          sum += reg.area
+    return Math.round(sum * 100) / 100
+
+  # init table
+  data = []
+
+  # populate table
+  # list months
+  $.each months, (number, month) =>
+    i = number
+    number = parseInt number
+    number = if 7 <= (number + 7) <= 11 then number+= 7 else number-= 5
+    data[i] = sumValues(chart1.yearsSlct.value, number)
+
+  value = 0
+  $.each data, ->
+    value += this
+
+  @updateSparkInfo Math.round(value*100)/100,"Total Período"
   @updateSparkChart data
 
 #}}}
@@ -1144,6 +1200,7 @@ reloadCharts = ->
   knob2.drawChart()
   knob3.drawChart()
   spark1.drawChart()
+  spark2.drawChart()
 
 $(".quick-btn a").on "click", (event) ->
   event.preventDefault()

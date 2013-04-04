@@ -69,6 +69,7 @@
           <div id="box2" class="box"> </div>
           <div id="box3" class="box"> </div>
           <div id="spark1" class="box"> </div>
+          <div id="spark2" class="box"> </div>
         </div>
       </div>
       <hr>

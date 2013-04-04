@@ -223,8 +223,8 @@ class Hash5Knobs extends Hash5Charts
       'angleOffset':-125
       'angleArc':250
       'readOnly': true
-      'width': 60
-      'height': 60
+      'width': 58
+      'height': 58
       'thickness': 0.5
       'displayInput': false
       draw: ->
@@ -269,8 +269,8 @@ class Hash5Sparks extends Hash5Charts
     container = document.getElementById(@options.container)
     spark = $(container).children(".left").children(".minichart")
     $(spark).sparkline data,
-      width: 60 #Width of the chart
-      height: 64 #Height of the chart
+      width: 58 #Width of the chart
+      height: 62 #Height of the chart
       lineColor: "#2FABE9" #Used by line to specify the colour of the line drawn
       fillColor: "#67C2EF" #Specify the colour used to fill the area under the graph
       spotColor: "#CBE968" #The CSS colour of the final value marker.
