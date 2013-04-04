@@ -211,18 +211,8 @@ class Hash5Knobs extends Hash5Charts
   updateKnob: (value, name) ->
     container = document.getElementById(@options.container)
     info = $(container).children(".right")
-    info.html("<strong>" + value + "</strong> " + name + "")
+    info.html("<strong>" + value + "%</strong></br> " + name + "")
     @animateKnob(container, value)
-
-  animateKnob: (container, dialValue) ->
-    dial = $(container).find('.dial')
-    $(value: dial.val()).animate
-      value: dialValue,
-        duration: 2000
-        easing: "easeOutSine"
-        step: ->
-          dial.val(Math.ceil @value).trigger "change"
-          return
 
   insertKnob: (container) ->
     dial = $(container).children().children('input')
@@ -249,3 +239,42 @@ class Hash5Knobs extends Hash5Charts
         this.o.fgColor = color.html()
     )
     dial.val(0).trigger "change"
+
+  animateKnob: (container, dialValue) ->
+    dial = $(container).find('.dial')
+    $(value: dial.val()).animate
+      value: dialValue,
+        duration: 2000
+        easing: "easeOutSine"
+        step: ->
+          dial.val(Math.ceil @value).trigger "change"
+          return
+
+class Hash5Sparks extends Hash5Charts
+
+  createSpark: ->
+    container = document.getElementById(@options.container)
+    html = "<div class=\"left\">"
+    html+= "<div class=\"minichart\"></div>"
+    html+= "</div>"
+    html+= "<div class=\"right\"></div>"
+    $(container).append html
+
+  updateSparkInfo: (value, name) ->
+    container = document.getElementById(@options.container)
+    info = $(container).children(".right")
+    info.html("<strong>" + value + "</strong></br> " + name + "")
+
+  updateSparkChart: (data) ->
+    container = document.getElementById(@options.container)
+    spark = $(container).children(".left").children(".minichart")
+    $(spark).sparkline data,
+      width: 60 #Width of the chart
+      height: 64 #Height of the chart
+      lineColor: "#2FABE9" #Used by line to specify the colour of the line drawn
+      fillColor: "#67C2EF" #Specify the colour used to fill the area under the graph
+      spotColor: "#CBE968" #The CSS colour of the final value marker.
+      maxSpotColor: "#FF5454" #The CSS colour of the marker displayed for the maximum value.
+      minSpotColor: "#67C2EF" #The CSS colour of the marker displayed for the mimum value.
+      spotRadius: 2 #Radius of all spot markers, In pixels (default: 1.5)
+      lineWidth: 1 #In pixels (default: 1)

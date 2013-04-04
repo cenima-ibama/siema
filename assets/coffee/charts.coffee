@@ -698,6 +698,47 @@ chart8.drawChart = ->
 
   @chart.draw @data, options
 #}}}
+# SPARK1 {{{
+spark1 = new Hash5Sparks(
+  container: "spark1"
+)
+
+spark1.createSpark()
+
+spark1.drawChart = ->
+  #Create array with values
+  createTable = (state) =>
+    dayValue = 0
+    for day in [1..monthDays]
+      $.each tableData.states[state], (key, reg) ->
+        if dateStart <= reg.date <= dateEnd and reg.day is day
+          dayValue += reg.area
+          return false
+      data[(day-1)] = Math.round((data[(day-1)] + dayValue) * 100)/100
+
+    console.log data
+
+  monthDays = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate()
+  dateStart = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1)
+  dateEnd = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, monthDays)
+  data = []
+
+  # populate table with 0
+  for day in [1..monthDays]
+    data[(day-1)] = 0
+
+  # populate table with real values
+  if selectedState is "Todos"
+    $.each tableData.states, (state, value) ->
+      createTable state
+  else
+    createTable selectedState
+
+  value = data[monthDays-1]
+  @updateSparkInfo value,"Total Mensal"
+  @updateSparkChart data
+
+#}}}
 # GAUGE1 {{{
 gauge1 = new Hash5GoogleCharts(
   type: "Gauge"
@@ -739,9 +780,9 @@ gauge1.drawChart = ->
     # caso o valor do periodo anterior seja 0, retorna 0
     # para evitar uma divisão por 0
     if preValue is 0
-      0
+      return 0
     else
-      Math.round (curValue - preValue) / preValue * 100
+      return Math.round (curValue - preValue) / preValue * 100
 
   # create new chart
   if @options.started
@@ -819,9 +860,9 @@ gauge2.drawChart = ->
     # caso o valor do periodo anterior seja 0, retorna 0
     # para evitar uma divisão por 0
     if preValue is 0
-      0
+      return 0
     else
-      Math.round (curValue - preValue) / preValue * 100
+      return Math.round (curValue - preValue) / preValue * 100
 
   # create new chart
   if @options.started
@@ -898,9 +939,9 @@ gauge3.drawChart = ->
     # caso o valor do periodo anterior seja 0, retorna 0
     # para evitar uma divisão por 0
     if preValue is 0
-      0
+      return 0
     else
-      Math.round (curValue - preValue) / preValue * 100
+      return Math.round (curValue - preValue) / preValue * 100
 
   # create new chart
   if @options.started
@@ -937,7 +978,7 @@ gauge3.drawChart = ->
       easing: "inAndOut"
   @chart.draw @data, options
 #}}}
-# RING1 {{{
+# KNOB1 {{{
 knob1 = new Hash5Knobs(
   container: "box1"
 )
@@ -945,6 +986,108 @@ knob1 = new Hash5Knobs(
 knob1.createKnob()
 
 knob1.drawChart = ->
+  # sum values
+  periodDeforestationRate = (year, month) ->
+    sumValues = (date) ->
+      sum = 0
+      if selectedState is "Todos"
+        for state of tableData.states
+          for reg of tableData.states[state]
+            reg = tableData.states[state][reg]
+            if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
+              sum += reg.area
+      else
+        for reg of tableData.states[selectedState]
+          reg = tableData.states[selectedState][reg]
+          if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
+            sum += reg.area
+      sum
+
+    year = (if month > 5 then year++ else year)
+    # definir periodo atual
+    curDate = new Date(year, month)
+    # definir periodo anterior
+    preDate = new Date(year - 1, month)
+
+    # definir valores referentes ao periodo atual
+    curValue = 0
+    curValue = sumValues(curDate)
+    preValue = 0
+    preValue = sumValues(preDate)
+
+    # caso o valor do periodo anterior seja 0, retorna 0
+    # para evitar uma divisão por 0
+    if preValue is 0
+      return 0
+    else
+      return Math.round (curValue - preValue) / preValue * 100
+
+  value = periodDeforestationRate(
+    chart1.yearsSlct.value, chart1.monthsSlct.value
+  )
+  @updateKnob value,"Taxa VAA"
+  return
+
+#}}}
+# KNOB2 {{{
+knob2 = new Hash5Knobs(
+  container: "box2"
+)
+
+knob2.createKnob()
+
+knob2.drawChart = ->
+  # sum values
+  periodDeforestationRate = (year, month) ->
+    sumValues = (date) ->
+      sum = 0
+      if selectedState is "Todos"
+        for state of tableData.states
+          for reg of tableData.states[state]
+            reg = tableData.states[state][reg]
+            if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
+              sum += reg.area
+      else
+        for reg of tableData.states[selectedState]
+          reg = tableData.states[selectedState][reg]
+          if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
+            sum += reg.area
+      sum
+
+    year = (if month > 5 then year++ else year)
+    # definir periodo atual
+    curDate = new Date(year, month)
+    # definir periodo anterior
+    preDate = new Date(year, month - 1)
+
+    # definir valores referentes ao periodo atual
+    curValue = 0
+    curValue = sumValues(curDate)
+    preValue = 0
+    preValue = sumValues(preDate)
+
+    # caso o valor do periodo anterior seja 0, retorna 0
+    # para evitar uma divisão por 0
+    if preValue is 0
+      return 0
+    else
+      return Math.round (curValue - preValue) / preValue * 100
+
+  value = periodDeforestationRate(
+    chart1.yearsSlct.value, chart1.monthsSlct.value
+  )
+  @updateKnob value,"Taxa VMA"
+  return
+
+#}}}
+# KNOB3 {{{
+knob3 = new Hash5Knobs(
+  container: "box3"
+)
+
+knob3.createKnob()
+
+knob3.drawChart = ->
   # sum values
   periodDeforestationAvgRate = (year, month) ->
     sumValues = (fp, sp) ->
@@ -983,7 +1126,7 @@ knob1.drawChart = ->
   value = periodDeforestationAvgRate(
     chart1.yearsSlct.value, chart1.monthsSlct.value
   )
-  @updateKnob value,"TVPA"
+  @updateKnob value,"Taxa VPA"
   return
 
 #}}}
@@ -998,6 +1141,9 @@ reloadCharts = ->
   chart7.drawChart()
   chart8.drawChart()
   knob1.drawChart()
+  knob2.drawChart()
+  knob3.drawChart()
+  spark1.drawChart()
 
 $(".quick-btn a").on "click", (event) ->
   event.preventDefault()

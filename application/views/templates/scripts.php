@@ -15,5 +15,6 @@
   <script src="<?= base_url()?>assets/js/leaflet-bing.js"></script>
   <script src="<?= base_url()?>assets/js/masonry.min.js"></script>
   <script src="<?= base_url()?>assets/js/knob.js"></script>
+  <script src="<?= base_url()?>assets/js/sparkline.min.js"></script>
   <script src="<?= base_url()?>assets/js/pusher.color.min.js"></script>
   <script src="<?= base_url()?>assets/js/less.min.js"></script>
