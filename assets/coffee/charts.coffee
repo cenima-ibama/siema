@@ -40,7 +40,7 @@ months =
   11: "Jul"
 
 estados = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"]
-tableData =
+tableAlerta =
   init: ->
     @states = {}
     for estado in estados
@@ -67,9 +67,9 @@ $.ajax
 
   dataType: "jsonp"
   success: (data) ->
-    tableData.init()
+    tableAlerta.init()
     $.each data, (i, properties) ->
-      tableData.populate properties.estado, properties.data, parseFloat(properties.total)
+      tableAlerta.populate properties.estado, properties.data, parseFloat(properties.total)
   error: (error, status, desc) ->
     console.log status, desc
 #}}}
@@ -77,11 +77,10 @@ $.ajax
 chart1 = new Hash5GoogleCharts (
   type: "Line"
   container: "chart1"
-  title: "Indicativo total de desmatamento diario"
+  title: "Alerta DETER: Índice Diário"
   buttons:
     minimize: true
     maximize: true
-    close: true
   selects:
     months:
       0: 'Jan'
@@ -114,8 +113,6 @@ chart1.createContainer()
 chart1.yearsSlct.options[totalPeriodos+1].selected = true
 chart1.monthsSlct.options[curMonth].selected = true
 
-console.log chart1
-
 $("#slct-years").on "change", (event) ->
   knob1.drawChart()
   knob2.drawChart()
@@ -134,7 +131,7 @@ chart1.drawChart = ->
   createTable = (state) =>
     dayValue = 0
     for day in [1..monthDays]
-      $.each tableData.states[state], (key, reg) ->
+      $.each tableAlerta.states[state], (key, reg) ->
         if dateStart <= reg.date <= dateEnd and reg.day is day
           dayValue += reg.area
           return false
@@ -163,7 +160,7 @@ chart1.drawChart = ->
 
   # populate table with real values
   if selectedState is "Todos"
-    $.each tableData.states, (state, value) ->
+    $.each tableAlerta.states, (state, value) ->
       createTable state
   else
     createTable selectedState
@@ -178,6 +175,7 @@ chart1.drawChart = ->
     chartArea:
       width: "70%"
       height: "70%"
+    colors: ['#3ABCFC']
     vAxis:
       title: "Área Km2"
     hAxis:
@@ -196,12 +194,11 @@ chart2 = new Hash5GoogleCharts(
   type: "Area"
   container: "chart2"
   period: 2
-  title: "Indicativo total de desmatamento mensal"
+  title: "Alerta DETER: Índice Mensal"
   buttons:
     minusplus: true
     minimize: true
     maximize: true
-    close: true
 )
 chart2.createContainer()
 
@@ -220,12 +217,12 @@ chart2.drawChart = ->
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
     if selectedState is "Todos"
-      $.each tableData.states, (key, state) ->
+      $.each tableAlerta.states, (key, state) ->
         $.each state, (key, reg) ->
           if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
             sum += reg.area
     else
-      $.each tableData.states[selectedState], (key, reg) ->
+      $.each tableAlerta.states[selectedState], (key, reg) ->
         if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
           sum += reg.area
     Math.round(sum * 100) / 100
@@ -260,11 +257,16 @@ chart2.drawChart = ->
     chartArea:
       width: "70%"
       height: "80%"
+    colors: ['#3ABCFC', '#FC2121', '#D0FC3F', '#FCAC0A',
+             '#67C2EF', '#FF5454', '#CBE968', '#FABB3D',
+             '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
     vAxis:
       title: "Área Km2"
     animation:
       duration: 500
       easing: "inAndOut"
+
+
 
   # Disabling the buttons while the chart is drawing.
   @addBtn.disabled = true
@@ -282,12 +284,11 @@ chart3 = new Hash5GoogleCharts(
   type: "Bar"
   container: "chart3"
   period: 1
-  title: "Indicativo de desmatamento do periodo atual"
+  title: "Alerta DETER: Período Atual"
   buttons:
     minusplus: true
     minimize: true
     maximize: true
-    close: true
 )
 chart3.createContainer()
 
@@ -304,13 +305,13 @@ chart3.drawChart = ->
   sumValues = (firstPeriod, secondPeriod) ->
     sum = 0
     if selectedState is "Todos"
-      $.each tableData.states, (key, state) ->
+      $.each tableAlerta.states, (key, state) ->
         $.each state, (key, reg) ->
           if firstPeriod <= reg.date <= secondPeriod
             sum += reg.area
             lastDay = reg.day
     else
-      $.each tableData.states[selectedState], (key, reg) ->
+      $.each tableAlerta.states[selectedState], (key, reg) ->
         if firstPeriod <= reg.date <= secondPeriod
           sum += reg.area
           lastDay = reg.day
@@ -359,6 +360,7 @@ chart3.drawChart = ->
     chartArea:
       width: "68%"
       height: "76%"
+    colors: ['#3ABCFC', '#FC2121']
     vAxis:
       title: "Periodos"
     hAxis:
@@ -385,11 +387,10 @@ chart3.drawChart = ->
 chart4 = new Hash5GoogleCharts(
   type: "Area"
   container: "chart4"
-  title: "Indicativo total de desmatamento por periodo"
+  title: "Alerta DETER: Todos os Períodos"
   buttons:
     minimize: true
     maximize: true
-    close: true
 )
 chart4.createContainer()
 
@@ -400,12 +401,12 @@ chart4.drawChart = ->
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
     if selectedState is "Todos"
-      $.each tableData.states, (key, state) ->
+      $.each tableAlerta.states, (key, state) ->
         $.each state, (key, reg) ->
           if reg.date >= firstPeriod and reg.date <= secondPeriod
             sum += reg.area
     else
-      $.each tableData.states[selectedState], (key, reg) ->
+      $.each tableAlerta.states[selectedState], (key, reg) ->
         if reg.date >= firstPeriod and reg.date <= secondPeriod
           sum += reg.area
     return Math.round(sum * 100) / 100
@@ -440,6 +441,7 @@ chart4.drawChart = ->
     chartArea:
       width: "68%"
       height: "76%"
+    colors: ['#3ABCFC']
     vAxis:
       title: "Periodos"
     hAxis:
@@ -458,12 +460,11 @@ chart5 = new Hash5GoogleCharts(
   type: "Column"
   container: "chart5"
   period: 2
-  title: "Indicativo total de desmatamento por UF"
+  title: "Alerta DETER: UFs"
   buttons:
     minusplus: true
     minimize: true
     maximize: true
-    close: true
 )
 chart5.createContainer()
 
@@ -481,7 +482,7 @@ chart5.drawChart = ->
     sum = 0
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
-    $.each tableData.states[state], (key, reg) ->
+    $.each tableAlerta.states[state], (key, reg) ->
       if firstPeriod <= reg.date <= secondPeriod
         sum += reg.area
     Math.round(sum * 100) / 100
@@ -516,6 +517,9 @@ chart5.drawChart = ->
     chartArea:
       width: "70%"
       height: "76%"
+    colors: ['#3ABCFC', '#FC2121', '#D0FC3F', '#FCAC0A',
+             '#67C2EF', '#FF5454', '#CBE968', '#FABB3D',
+             '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
     bar:
       groupWidth: "100%"
     vAxis:
@@ -540,11 +544,10 @@ chart6 = new Hash5GoogleCharts(
   type: "Column"
   container: "chart6"
   period: 1
-  title: "Indicativo total de desmatamento por UF"
+  title: "Alerta DETER: Acumulado UFs"
   buttons:
     minimize: true
     maximize: true
-    close: true
 )
 chart6.createContainer()
 
@@ -552,7 +555,7 @@ chart6.drawChart = ->
   # sum values
   sumValues = (state) ->
     sum = 0
-    $.each tableData.states[state], (key, reg) ->
+    $.each tableAlerta.states[state], (key, reg) ->
       sum += reg.area
     Math.round(sum * 100) / 100
 
@@ -584,6 +587,7 @@ chart6.drawChart = ->
     chartArea:
       width: "70%"
       height: "76%"
+    colors: ['#3ABCFC']
     bar:
       groupWidth: "100%"
     vAxis:
@@ -603,7 +607,6 @@ chart7 = new Hash5GoogleCharts(
     arrows: true
     minimize: true
     maximize: true
-    close: true
 )
 chart7.createContainer()
 
@@ -623,7 +626,7 @@ chart7.drawChart = ->
     sum = 0
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
-    $.each tableData.states[state], (key, reg) ->
+    $.each tableAlerta.states[state], (key, reg) ->
       if firstPeriod <= reg.date <= secondPeriod
         sum += reg.area
     Math.round(sum * 100) / 100
@@ -654,6 +657,9 @@ chart7.drawChart = ->
     chartArea:
       width: "90%"
       height: "80%"
+    colors: ['#3ABCFC', '#FC2121', '#D0FC3F', '#FCAC0A',
+             '#67C2EF', '#FF5454', '#CBE968', '#FABB3D',
+             '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
     backgroundColor: "transparent"
 
   @changeTitle periodos[@options.period]
@@ -678,7 +684,6 @@ chart8 = new Hash5GoogleCharts(
   buttons:
     minimize: true
     maximize: true
-    close: true
 )
 chart8.createContainer()
 
@@ -686,7 +691,7 @@ chart8.drawChart = ->
   # sum values
   sumValues = (state) ->
     sum = 0
-    $.each tableData.states[state], (key, reg) ->
+    $.each tableAlerta.states[state], (key, reg) ->
       sum += reg.area
     Math.round(sum * 100) / 100
 
@@ -718,6 +723,9 @@ chart8.drawChart = ->
     chartArea:
       width: "70%"
       height: "76%"
+    colors: ['#3ABCFC', '#FC2121', '#D0FC3F', '#FCAC0A',
+             '#67C2EF', '#FF5454', '#CBE968', '#FABB3D',
+             '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
     bar:
       groupWidth: "100%"
     vAxis:
@@ -731,6 +739,7 @@ chart8.drawChart = ->
 # SPARK1 {{{
 spark1 = new Hash5Sparks(
   container: "spark1"
+  title: "Total Mensal"
 )
 
 spark1.createSpark()
@@ -740,7 +749,7 @@ spark1.drawChart = ->
   createTable = (state) =>
     dayValue = 0
     for day in [1..monthDays]
-      $.each tableData.states[state], (key, reg) ->
+      $.each tableAlerta.states[state], (key, reg) ->
         if dateStart <= reg.date <= dateEnd and reg.day is day
           dayValue += reg.area
           return false
@@ -757,19 +766,20 @@ spark1.drawChart = ->
 
   # populate table with real values
   if selectedState is "Todos"
-    $.each tableData.states, (state, value) ->
+    $.each tableAlerta.states, (state, value) ->
       createTable state
   else
     createTable selectedState
 
   value = data[monthDays-1]
-  @updateSparkInfo value,"Total Mensal"
+  @updateSparkInfo value
   @updateSparkChart data
 
 #}}}
 # SPARK2 {{{
 spark2 = new Hash5Sparks(
   container: "spark2"
+  title: "Total Período"
 )
 
 spark2.createSpark()
@@ -782,12 +792,12 @@ spark2.drawChart = ->
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
     if selectedState is "Todos"
-      $.each tableData.states, (key, state) ->
+      $.each tableAlerta.states, (key, state) ->
         $.each state, (key, reg) ->
           if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
             sum += reg.area
     else
-      $.each tableData.states[selectedState], (key, reg) ->
+      $.each tableAlerta.states[selectedState], (key, reg) ->
         if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
           sum += reg.area
     return Math.round(sum * 100) / 100
@@ -807,7 +817,7 @@ spark2.drawChart = ->
   $.each data, ->
     value += this
 
-  @updateSparkInfo Math.round(value*100)/100,"Total Período"
+  @updateSparkInfo Math.round(value*100)/100
   @updateSparkChart data
 
 #}}}
@@ -825,14 +835,14 @@ gauge1.drawChart = ->
     sumValues = (date) ->
       sum = 0
       if selectedState is "Todos"
-        for state of tableData.states
-          for reg of tableData.states[state]
-            reg = tableData.states[state][reg]
+        for state of tableAlerta.states
+          for reg of tableAlerta.states[state]
+            reg = tableAlerta.states[state][reg]
             if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
               sum += reg.area
       else
-        for reg of tableData.states[selectedState]
-          reg = tableData.states[selectedState][reg]
+        for reg of tableAlerta.states[selectedState]
+          reg = tableAlerta.states[selectedState][reg]
           if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
             sum += reg.area
       sum
@@ -905,14 +915,14 @@ gauge2.drawChart = ->
     sumValues = (date) ->
       sum = 0
       if selectedState is "Todos"
-        for state of tableData.states
-          for reg of tableData.states[state]
-            reg = tableData.states[state][reg]
+        for state of tableAlerta.states
+          for reg of tableAlerta.states[state]
+            reg = tableAlerta.states[state][reg]
             if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
               sum += reg.area
       else
-        for reg of tableData.states[selectedState]
-          reg = tableData.states[selectedState][reg]
+        for reg of tableAlerta.states[selectedState]
+          reg = tableAlerta.states[selectedState][reg]
           if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
             sum += reg.area
       sum
@@ -985,13 +995,13 @@ gauge3.drawChart = ->
     sumValues = (fp, sp) ->
       sum = 0
       if selectedState is "Todos"
-        for state of tableData.states
-          for reg of tableData.states[state]
-            reg = tableData.states[state][reg]
+        for state of tableAlerta.states
+          for reg of tableAlerta.states[state]
+            reg = tableAlerta.states[state][reg]
             sum += reg.area if fp <= reg.date <= sp
       else
-        for reg of tableData.states[selectedState]
-          reg = tableData.states[selectedState][reg]
+        for reg of tableAlerta.states[selectedState]
+          reg = tableAlerta.states[selectedState][reg]
           sum += reg.area if fp <= reg.date <= sp
       sum
 
@@ -1052,7 +1062,9 @@ gauge3.drawChart = ->
 #}}}
 # KNOB1 {{{
 knob1 = new Hash5Knobs(
-  container: "box1"
+  container: "knob1"
+  title: "Taxa VAA"
+  popover: "Taxa de variação em relação ao mesmo mês do ano anterior"
 )
 
 knob1.createKnob()
@@ -1063,14 +1075,14 @@ knob1.drawChart = ->
     sumValues = (date) ->
       sum = 0
       if selectedState is "Todos"
-        for state of tableData.states
-          for reg of tableData.states[state]
-            reg = tableData.states[state][reg]
+        for state of tableAlerta.states
+          for reg of tableAlerta.states[state]
+            reg = tableAlerta.states[state][reg]
             if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
               sum += reg.area
       else
-        for reg of tableData.states[selectedState]
-          reg = tableData.states[selectedState][reg]
+        for reg of tableAlerta.states[selectedState]
+          reg = tableAlerta.states[selectedState][reg]
           if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
             sum += reg.area
       return sum
@@ -1097,13 +1109,15 @@ knob1.drawChart = ->
   value = periodDeforestationRate(
     chart1.yearsSlct.value, chart1.monthsSlct.value
   )
-  @updateKnob value,"Taxa VAA"
+  @updateKnob value
   return
 
 #}}}
 # KNOB2 {{{
 knob2 = new Hash5Knobs(
-  container: "box2"
+  container: "knob2"
+  title: "Taxa VMA"
+  popover: "Taxa de variação em relação ao mês anterior"
 )
 
 knob2.createKnob()
@@ -1114,14 +1128,14 @@ knob2.drawChart = ->
     sumValues = (date) ->
       sum = 0
       if selectedState is "Todos"
-        for state of tableData.states
-          for reg of tableData.states[state]
-            reg = tableData.states[state][reg]
+        for state of tableAlerta.states
+          for reg of tableAlerta.states[state]
+            reg = tableAlerta.states[state][reg]
             if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
               sum += reg.area
       else
-        for reg of tableData.states[selectedState]
-          reg = tableData.states[selectedState][reg]
+        for reg of tableAlerta.states[selectedState]
+          reg = tableAlerta.states[selectedState][reg]
           if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
             sum += reg.area
       return sum
@@ -1148,13 +1162,15 @@ knob2.drawChart = ->
   value = periodDeforestationRate(
     chart1.yearsSlct.value, chart1.monthsSlct.value
   )
-  @updateKnob value,"Taxa VMA"
+  @updateKnob value
   return
 
 #}}}
 # KNOB3 {{{
 knob3 = new Hash5Knobs(
-  container: "box3"
+  container: "knob3"
+  title: "Taxa VPA"
+  popover: "Taxa de variação em relação ao periodo anterior"
 )
 
 knob3.createKnob()
@@ -1165,13 +1181,13 @@ knob3.drawChart = ->
     sumValues = (fp, sp) ->
       sum = 0
       if selectedState is "Todos"
-        for state of tableData.states
-          for reg of tableData.states[state]
-            reg = tableData.states[state][reg]
+        for state of tableAlerta.states
+          for reg of tableAlerta.states[state]
+            reg = tableAlerta.states[state][reg]
             sum += reg.area if fp <= reg.date <= sp
       else
-        for reg of tableData.states[selectedState]
-          reg = tableData.states[selectedState][reg]
+        for reg of tableAlerta.states[selectedState]
+          reg = tableAlerta.states[selectedState][reg]
           sum += reg.area if fp <= reg.date <= sp
       return sum
 
@@ -1198,7 +1214,7 @@ knob3.drawChart = ->
   value = periodDeforestationAvgRate(
     chart1.yearsSlct.value, chart1.monthsSlct.value
   )
-  @updateKnob value,"Taxa VPA"
+  @updateKnob value
   return
 
 #}}}

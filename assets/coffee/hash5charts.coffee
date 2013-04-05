@@ -208,11 +208,20 @@ class Hash5Knobs extends Hash5Charts
     $(container).append html
     @insertKnob container
 
-  updateKnob: (value, name) ->
-    container = document.getElementById(@options.container)
-    info = $(container).children(".right")
-    info.html("<strong>" + value + "%</strong></br> " + name + "")
-    @animateKnob(parseFloat(value))
+    if @options.popover?
+      $(container).addClass("popover-" + @options.container)
+      @createPopover()
+
+  createPopover: ->
+    placement = "bottom"
+    trigger = "hover"
+    html = true
+    $(".popover-" + @options.container).popover
+      placement: placement
+      delay: {show: 700, hide: 300}
+      content: "<span>" + @options.popover + "</span>"
+      trigger: trigger
+      html: html
 
   insertKnob: (container) ->
     dial = $(container).children().children('input')
@@ -240,6 +249,12 @@ class Hash5Knobs extends Hash5Charts
     )
     dial.val(0).trigger "change"
 
+  updateKnob: (value) ->
+    container = document.getElementById(@options.container)
+    info = $(container).children(".right")
+    info.html("<strong>" + value + "</strong><br /> " + @options.title)
+    @animateKnob(parseFloat(value))
+
   animateKnob: (dialValue) ->
     container = document.getElementById(@options.container)
     dial = $(container).find('.dial')
@@ -261,10 +276,10 @@ class Hash5Sparks extends Hash5Charts
     html+= "<div class=\"right\"></div>"
     $(container).append html
 
-  updateSparkInfo: (value, name) ->
+  updateSparkInfo: (value) ->
     container = document.getElementById(@options.container)
     info = $(container).children(".right")
-    info.html("<strong>" + value + "</strong><br/> " + name + "")
+    info.html("<strong>" + value + "</strong><br /> " + @options.title)
 
   updateSparkChart: (data) ->
     container = document.getElementById(@options.container)
@@ -277,16 +292,5 @@ class Hash5Sparks extends Hash5Charts
       spotColor: "#CBE968" #The CSS colour of the final value marker.
       maxSpotColor: "#FF5454" #The CSS colour of the marker displayed for the maximum value.
       minSpotColor: "#67C2EF" #The CSS colour of the marker displayed for the mimum value.
-      spotRadius: 2 #Radius of all spot markers, In pixels (default: 1.5)
+      spotRadius: 1.5 #Radius of all spot markers.
       lineWidth: 1 #In pixels (default: 1)
-
-  displayPopup: ->
-    placement = "bottom"
-    trigger = "hover"
-    html = true
-
-    $(".popover-" + @options.container).popover
-      placement: placement
-      content: "<span class=\"content-big\">36094</span> <span class=\"content-small\">Total Visits</span><br /><span class=\"content-big\">220</span> <span class=\"content-small\">Visits Today</span><br /><span class=\"content-big\">200</span> <span class=\"content-small\">Visits Yesterday</span><br /><span class=\"content-big\">5677</span> <span class=\"content-small\">Visits in This Month</span>"
-      trigger: trigger
-      html: html

@@ -65,9 +65,9 @@
       <hr>
       <div class="row-fluid">
         <div class="boxes">
-          <div id="box1" class="box"> </div>
-          <div id="box2" class="box"> </div>
-          <div id="box3" class="box"> </div>
+          <div id="knob1" class="box"> </div>
+          <div id="knob2" class="box"> </div>
+          <div id="knob3" class="box"> </div>
           <div id="spark1" class="box"> </div>
           <div id="spark2" class="box"> </div>
         </div>
