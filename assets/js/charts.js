@@ -255,7 +255,7 @@
       container = document.getElementById(this.options.container);
       info = $(container).children(".right");
       info.html("<strong>" + value + "%</strong></br> " + name + "");
-      return this.animateKnob(container, value);
+      return this.animateKnob(parseFloat(value));
     };
 
     Hash5Knobs.prototype.insertKnob = function(container) {
@@ -294,8 +294,9 @@
       return dial.val(0).trigger("change");
     };
 
-    Hash5Knobs.prototype.animateKnob = function(container, dialValue) {
-      var dial;
+    Hash5Knobs.prototype.animateKnob = function(dialValue) {
+      var container, dial;
+      container = document.getElementById(this.options.container);
       dial = $(container).find('.dial');
       return $({
         value: dial.val()
@@ -336,7 +337,7 @@
       var container, info;
       container = document.getElementById(this.options.container);
       info = $(container).children(".right");
-      return info.html("<strong>" + value + "</strong></br> " + name + "");
+      return info.html("<strong>" + value + "</strong><br/> " + name + "");
     };
 
     Hash5Sparks.prototype.updateSparkChart = function(data) {
@@ -353,6 +354,19 @@
         minSpotColor: "#67C2EF",
         spotRadius: 2,
         lineWidth: 1
+      });
+    };
+
+    Hash5Sparks.prototype.displayPopup = function() {
+      var html, placement, trigger;
+      placement = "bottom";
+      trigger = "hover";
+      html = true;
+      return $(".popover-" + this.options.container).popover({
+        placement: placement,
+        content: "<span class=\"content-big\">36094</span> <span class=\"content-small\">Total Visits</span><br /><span class=\"content-big\">220</span> <span class=\"content-small\">Visits Today</span><br /><span class=\"content-big\">200</span> <span class=\"content-small\">Visits Yesterday</span><br /><span class=\"content-big\">5677</span> <span class=\"content-small\">Visits in This Month</span>",
+        trigger: trigger,
+        html: html
       });
     };
 
@@ -500,7 +514,25 @@
 
   chart1.yearsSlct.options[totalPeriodos + 1].selected = true;
 
-  chart1.monthsSlct.options[today.getMonth()].selected = true;
+  chart1.monthsSlct.options[curMonth].selected = true;
+
+  console.log(chart1);
+
+  $("#slct-years").on("change", function(event) {
+    knob1.drawChart();
+    knob2.drawChart();
+    knob3.drawChart();
+    spark1.drawChart();
+    return spark2.drawChart();
+  });
+
+  $("#slct-months").on("change", function(event) {
+    knob1.drawChart();
+    knob2.drawChart();
+    knob3.drawChart();
+    spark1.drawChart();
+    return spark2.drawChart();
+  });
 
   chart1.drawChart = function() {
     var createTable, data, dateEnd, dateStart, day, monthDays, options, _j,

@@ -212,7 +212,7 @@ class Hash5Knobs extends Hash5Charts
     container = document.getElementById(@options.container)
     info = $(container).children(".right")
     info.html("<strong>" + value + "%</strong></br> " + name + "")
-    @animateKnob(container, value)
+    @animateKnob(parseFloat(value))
 
   insertKnob: (container) ->
     dial = $(container).children().children('input')
@@ -240,7 +240,8 @@ class Hash5Knobs extends Hash5Charts
     )
     dial.val(0).trigger "change"
 
-  animateKnob: (container, dialValue) ->
+  animateKnob: (dialValue) ->
+    container = document.getElementById(@options.container)
     dial = $(container).find('.dial')
     $(value: dial.val()).animate
       value: dialValue,
@@ -263,7 +264,7 @@ class Hash5Sparks extends Hash5Charts
   updateSparkInfo: (value, name) ->
     container = document.getElementById(@options.container)
     info = $(container).children(".right")
-    info.html("<strong>" + value + "</strong></br> " + name + "")
+    info.html("<strong>" + value + "</strong><br/> " + name + "")
 
   updateSparkChart: (data) ->
     container = document.getElementById(@options.container)
@@ -278,3 +279,14 @@ class Hash5Sparks extends Hash5Charts
       minSpotColor: "#67C2EF" #The CSS colour of the marker displayed for the mimum value.
       spotRadius: 2 #Radius of all spot markers, In pixels (default: 1.5)
       lineWidth: 1 #In pixels (default: 1)
+
+  displayPopup: ->
+    placement = "bottom"
+    trigger = "hover"
+    html = true
+
+    $(".popover-" + @options.container).popover
+      placement: placement
+      content: "<span class=\"content-big\">36094</span> <span class=\"content-small\">Total Visits</span><br /><span class=\"content-big\">220</span> <span class=\"content-small\">Visits Today</span><br /><span class=\"content-big\">200</span> <span class=\"content-small\">Visits Yesterday</span><br /><span class=\"content-big\">5677</span> <span class=\"content-small\">Visits in This Month</span>"
+      trigger: trigger
+      html: html

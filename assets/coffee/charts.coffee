@@ -112,7 +112,23 @@ chart1.createContainer()
 
 # make those options selected
 chart1.yearsSlct.options[totalPeriodos+1].selected = true
-chart1.monthsSlct.options[today.getMonth()].selected = true
+chart1.monthsSlct.options[curMonth].selected = true
+
+console.log chart1
+
+$("#slct-years").on "change", (event) ->
+  knob1.drawChart()
+  knob2.drawChart()
+  knob3.drawChart()
+  spark1.drawChart()
+  spark2.drawChart()
+
+$("#slct-months").on "change", (event) ->
+  knob1.drawChart()
+  knob2.drawChart()
+  knob3.drawChart()
+  spark1.drawChart()
+  spark2.drawChart()
 
 chart1.drawChart = ->
   createTable = (state) =>
@@ -1057,7 +1073,7 @@ knob1.drawChart = ->
           reg = tableData.states[selectedState][reg]
           if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
             sum += reg.area
-      sum
+      return sum
 
     year = (if month > 5 then year++ else year)
     # definir periodo atual
@@ -1108,7 +1124,7 @@ knob2.drawChart = ->
           reg = tableData.states[selectedState][reg]
           if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
             sum += reg.area
-      sum
+      return sum
 
     year = (if month > 5 then year++ else year)
     # definir periodo atual
@@ -1157,7 +1173,7 @@ knob3.drawChart = ->
         for reg of tableData.states[selectedState]
           reg = tableData.states[selectedState][reg]
           sum += reg.area if fp <= reg.date <= sp
-      sum
+      return sum
 
     curValue = 0
     preValue = 0
