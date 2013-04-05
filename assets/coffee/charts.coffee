@@ -11,20 +11,6 @@ curDay = new Date().getDate()
 for i in [0..totalPeriodos]
   periodos[i] = (today.getFullYear() - i - 1) + "-" + (today.getFullYear() - i)
 
-monthsOrdered =
-  7: "Ago"
-  8: "Set"
-  9: "Out"
-  10: "Nov"
-  11: "Dez"
-  0: "Jan"
-  1: "Fev"
-  2: "Mar"
-  3: "Abr"
-  4: "Mai"
-  5: "Jun"
-  6: "Jul"
-
 months =
   0: "Ago"
   1: "Set"
