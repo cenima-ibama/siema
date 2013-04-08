@@ -26,6 +26,8 @@ months =
   11: "Jul"
 
 estados = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"]
+#}}}
+# DATABASES {{{
 tableAlerta =
   init: ->
     @states = {}
@@ -50,14 +52,89 @@ $.ajax
   url: "../siscom/rest/v1/ws_geo_attributequery.php"
   data:
     table: "alerta_acumulado_diario"
-
   dataType: "jsonp"
   success: (data) ->
     tableAlerta.init()
     $.each data, (i, properties) ->
-      tableAlerta.populate properties.estado, properties.data, parseFloat(properties.total)
+      tableAlerta.populate(
+        properties.estado, properties.data, parseFloat(properties.total)
+      )
   error: (error, status, desc) ->
     console.log status, desc
+
+tableProdes =
+  init: ->
+    @states = {}
+    for estado in estados
+      @states[estado] = {}
+      for period in periodos
+        @states[estado][period] = {}
+
+  populate: (period, ac, am, ap, ma, mt, pa, ro, rr, to) ->
+    self = @states
+    self.AC[period].area = ac
+    self.AM[period].area = am
+    self.AP[period].area = ap
+    self.MA[period].area = ma
+    self.MT[period].area = mt
+    self.PA[period].area = pa
+    self.RO[period].area = ro
+    self.RR[period].area = rr
+    self.TO[period].area = to
+
+$.ajax
+  type: "GET"
+  url: "../siscom/rest/v1/ws_geo_attributequery.php"
+  data:
+    table: "taxa_prodes"
+  dataType: "jsonp"
+  success: (data) ->
+    tableProdes.init()
+    $.each data, (i, properties) ->
+      tableProdes.populate(
+        properties.ano_prodes.replace('/','-'),
+        parseFloat(properties.ac), parseFloat(properties.am),
+        parseFloat(properties.ap), parseFloat(properties.ma),
+        parseFloat(properties.mt), parseFloat(properties.pa),
+        parseFloat(properties.ro), parseFloat(properties.rr),
+        parseFloat(properties.to)
+      )
+  error: (error, status, desc) ->
+    console.log status, desc
+
+tableNuvens =
+  init: ->
+    @nuvems = {}
+
+  populate: (date, value) ->
+    convertDate = (dateStr) ->
+      dateStr = String(dateStr)
+      dArr = dateStr.split("-")
+      new Date(dArr[0], (dArr[1]) - 1, dArr[2])
+    self = @nuvems
+    self[date] = {}
+    self[date].value = value
+    self[date].date = convertDate(date)
+    self[date].year = convertDate(date).getFullYear()
+    self[date].month = convertDate(date).getMonth()
+    self[date].day = convertDate(date).getDate()
+
+
+$.ajax
+  type: "GET"
+  url: "../siscom/rest/v1/ws_geo_attributequery.php"
+  data:
+    table: "nuvem_deter"
+  dataType: "jsonp"
+  success: (data) ->
+    tableNuvens.init()
+    $.each data, (i, properties) ->
+      tableNuvens.populate(
+        properties.data, properties.percent,
+      )
+  error: (error, status, desc) ->
+    console.log status, desc
+console.log tableNuvens
 #}}}
 # CHART1 {{{
 chart1 = new Hash5GoogleCharts (
@@ -211,7 +288,8 @@ chart2.drawChart = ->
       $.each tableAlerta.states[selectedState], (key, reg) ->
         if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
           sum += reg.area
-    Math.round(sum * 100) / 100
+
+    return Math.round(sum * 100) / 100
 
   # create new chart
   if @options.started
@@ -228,7 +306,7 @@ chart2.drawChart = ->
   for month of months
     data = [months[month]]
     month = parseInt month
-    moth = if 7 <= (month + 7) <= 11 then month+= 7 else month-= 5
+    if 7 <= (month + 7) <= 11 then month+= 7 else month-= 5
     for i in [1..@options.period]
       data[i] = sumValues(curYear - i + 1, month)
     @data.addRow data
@@ -251,8 +329,6 @@ chart2.drawChart = ->
     animation:
       duration: 500
       easing: "inAndOut"
-
-
 
   # Disabling the buttons while the chart is drawing.
   @addBtn.disabled = true
@@ -371,80 +447,8 @@ chart3.drawChart = ->
 #}}}
 # CHART4 {{{
 chart4 = new Hash5GoogleCharts(
-  type: "Area"
-  container: "chart4"
-  title: "Alerta DETER: Todos os Períodos"
-  buttons:
-    minimize: true
-    maximize: true
-)
-chart4.createContainer()
-
-chart4.drawChart = ->
-  # sum values
-  sumValues = (year) ->
-    sum = 0
-    firstPeriod = new Date(year - 1, 7, 1)
-    secondPeriod = new Date(year , 7, 0)
-    if selectedState is "Todos"
-      $.each tableAlerta.states, (key, state) ->
-        $.each state, (key, reg) ->
-          if reg.date >= firstPeriod and reg.date <= secondPeriod
-            sum += reg.area
-    else
-      $.each tableAlerta.states[selectedState], (key, reg) ->
-        if reg.date >= firstPeriod and reg.date <= secondPeriod
-          sum += reg.area
-    return Math.round(sum * 100) / 100
-
-
-  # create new chart
-  if @options.started
-    @createChart()
-
-  # create an empty table
-  @dataTable()
-
-  # init table
-  @data.addColumn "string", "Ano"
-  @data.addColumn "number", "Total"
-
-  # populate table
-  i = totalPeriodos
-  while i >= 0
-    data = [periodos[i]]
-    data[1] = sumValues(curYear - i)
-    @data.addRow data
-    i--
-
-  options =
-    title: ""
-    titleTextStyle:
-      color: "#333"
-      fontSize: 13
-    backgroundColor: "transparent"
-    focusTarget: "category"
-    chartArea:
-      width: "68%"
-      height: "76%"
-    colors: ['#3ABCFC']
-    vAxis:
-      title: "Periodos"
-    hAxis:
-      title: "Área Km2"
-    bar:
-      groupWidth: "80%"
-    isStacked: true
-    animation:
-      duration: 500
-      easing: "inAndOut"
-
-  @chart.draw @data, options
-#}}}
-# CHART5 {{{
-chart5 = new Hash5GoogleCharts(
   type: "Column"
-  container: "chart5"
+  container: "chart4"
   period: 2
   title: "Alerta DETER: UFs"
   buttons:
@@ -452,17 +456,17 @@ chart5 = new Hash5GoogleCharts(
     minimize: true
     maximize: true
 )
-chart5.createContainer()
+chart4.createContainer()
 
-chart5.addBtn.onclick = ->
-  chart5.options.period++
-  chart5.drawChart()
+chart4.addBtn.onclick = ->
+  chart4.options.period++
+  chart4.drawChart()
 
-chart5.delBtn.onclick = ->
-  chart5.options.period--
-  chart5.drawChart()
+chart4.delBtn.onclick = ->
+  chart4.options.period--
+  chart4.drawChart()
 
-chart5.drawChart = ->
+chart4.drawChart = ->
   # sum values
   sumValues = (state, year) ->
     sum = 0
@@ -485,12 +489,17 @@ chart5.drawChart = ->
   for i in [0...@options.period]
     @data.addColumn "number", periodos[i]
 
-  # populate table
-  for i in [0...estados.length]
-    estado = estados[i]
-    data = [estado]
+  # populate table with real values
+  if selectedState is "Todos"
+    $.each tableAlerta.states, (state, reg) =>
+      data = [state]
+      for j in [1..@options.period]
+        data[j] = sumValues(state, curYear - j + 1)
+      @data.addRow data
+  else
+    data = [selectedState]
     for j in [1..@options.period]
-      data[j] = sumValues(estados[i], curYear - j + 1)
+      data[j] = sumValues(selectedState, curYear - j + 1)
     @data.addRow data
 
   options =
@@ -525,12 +534,93 @@ chart5.drawChart = ->
 
   @chart.draw @data, options
 #}}}
+# CHART5 {{{
+chart5 = new Hash5GoogleCharts(
+  type: "Area"
+  container: "chart5"
+  title: "Taxa PRODES|Alerta DETER: Acumulado Períodos"
+  buttons:
+    minimize: true
+    maximize: true
+)
+chart5.createContainer()
+
+chart5.drawChart = ->
+  # sum values
+  sumDeter = (year) ->
+    sum = 0
+    firstPeriod = new Date(year - 1, 7, 1)
+    secondPeriod = new Date(year , 7, 0)
+    if selectedState is "Todos"
+      $.each tableAlerta.states, (key, state) ->
+        $.each state, (key, reg) ->
+          if reg.date >= firstPeriod and reg.date <= secondPeriod
+            sum += reg.area
+    else
+      $.each tableAlerta.states[selectedState], (key, reg) ->
+        if reg.date >= firstPeriod and reg.date <= secondPeriod
+          sum += reg.area
+    return Math.round(sum * 100) / 100 if sum >= 0
+
+  sumProdes = (period) ->
+    sum = 0
+    if selectedState is "Todos"
+      $.each tableProdes.states, (key, state) ->
+        sum+= state[period].area
+    else
+      sum = tableProdes.states[selectedState][period].area
+
+    return sum if sum >= 0
+
+
+  # create new chart
+  if @options.started
+    @createChart()
+
+  # create an empty table
+  @dataTable()
+
+  # init table
+  @data.addColumn "string", "Ano"
+  @data.addColumn "number", "Alerta DETER"
+  @data.addColumn "number", "Taxa PRODES"
+
+  # populate table
+  i = totalPeriodos
+  while i >= 0
+    data = [periodos[i]]
+    data[1] = sumDeter(curYear - i)
+    data[2] = sumProdes(periodos[i])
+    @data.addRow data
+    i--
+
+  options =
+    title: ""
+    titleTextStyle:
+      color: "#333"
+      fontSize: 13
+    backgroundColor: "transparent"
+    focusTarget: "category"
+    chartArea:
+      width: "70%"
+      height: "80%"
+    colors: ['#3ABCFC', '#D0FC3F']
+    vAxis:
+      title: "Área Km2"
+    hAxis:
+      title: "Periodos"
+    animation:
+      duration: 500
+      easing: "inAndOut"
+
+  @chart.draw @data, options
+#}}}
 # CHART6 {{{
 chart6 = new Hash5GoogleCharts(
   type: "Column"
   container: "chart6"
   period: 1
-  title: "Alerta DETER: Acumulado UFs"
+  title: "Taxa PRODES|Alerta DETER: Acumulado UFs"
   buttons:
     minimize: true
     maximize: true
@@ -539,11 +629,17 @@ chart6.createContainer()
 
 chart6.drawChart = ->
   # sum values
-  sumValues = (state) ->
+  sumDeter = (state) ->
     sum = 0
     $.each tableAlerta.states[state], (key, reg) ->
-      sum += reg.area
-    Math.round(sum * 100) / 100
+      sum+= reg.area
+    return Math.round(sum * 100) / 100
+
+  sumProdes = (state) ->
+    sum = 0
+    $.each tableProdes.states[state], (key, period) ->
+      sum+= period.area if period.area?
+    return Math.round(sum * 100) / 100
 
   # create new chart
   if @options.started
@@ -554,13 +650,20 @@ chart6.drawChart = ->
 
   # init table
   @data.addColumn "string", "Estado"
-  @data.addColumn "number", "Área Total"
+  @data.addColumn "number", "Alerta DETER"
+  @data.addColumn "number", "Taxa PRODES"
 
-  # populate table
-  for i in [0...estados.length]
-    estado = estados[i]
-    data = [estado]
-    data[1] = sumValues(estados[i])
+  # populate table with real values
+  if selectedState is "Todos"
+    $.each tableAlerta.states, (state, reg) =>
+      data = [state]
+      data[1] = sumDeter(state)
+      data[2] = sumProdes(state)
+      @data.addRow data
+  else
+    data = [selectedState]
+    data[1] = sumDeter(selectedState)
+    data[2] = sumProdes(selectedState)
     @data.addRow data
 
   options =
@@ -573,7 +676,7 @@ chart6.drawChart = ->
     chartArea:
       width: "70%"
       height: "76%"
-    colors: ['#3ABCFC']
+    colors: ['#3ABCFC', '#D0FC3F']
     bar:
       groupWidth: "100%"
     vAxis:
@@ -707,8 +810,8 @@ chart8.drawChart = ->
     backgroundColor: "transparent"
     focusTarget: "category"
     chartArea:
-      width: "70%"
-      height: "76%"
+      width: "90%"
+      height: "80%"
     colors: ['#3ABCFC', '#FC2121', '#D0FC3F', '#FCAC0A',
              '#67C2EF', '#FF5454', '#CBE968', '#FABB3D',
              '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
@@ -719,6 +822,89 @@ chart8.drawChart = ->
     animation:
       duration: 500
       easing: "inAndOut"
+
+  @chart.draw @data, options
+#}}}
+# CHART9 {{{
+chart9 = new Hash5GoogleCharts(
+  type: "Line"
+  container: "chart9"
+  period: 2
+  title: "Alerta DETER: Taxa de Nuvems"
+  buttons:
+    minusplus: true
+    minimize: true
+    maximize: true
+)
+chart9.createContainer()
+
+chart9.addBtn.onclick = ->
+  chart9.options.period++
+  chart9.drawChart()
+
+chart9.delBtn.onclick = ->
+  chart9.options.period--
+  chart9.drawChart()
+
+chart9.drawChart = ->
+  # sum values
+  sumValues = (year, month) ->
+    percent = 0
+    firstPeriod = new Date(year - 1, 7, 1)
+    secondPeriod = new Date(year , 7, 0)
+    $.each tableNuvens.nuvems, (key, nuvem) ->
+      if nuvem.date >= firstPeriod and nuvem.date <= secondPeriod and nuvem.month is month
+        percent = nuvem.value
+
+    return Math.round(percent * 100)
+
+  # create new chart
+  if @options.started
+    @createChart()
+
+  # create an empty table
+  @dataTable()
+
+  # init table
+  @data.addColumn "string", "mes"
+  for i in [0...@options.period]
+    @data.addColumn "number", periodos[i]
+
+  for month of months
+    data = [months[month]]
+    month = parseInt month
+    if 7 <= (month + 7) <= 11 then month+= 7 else month-= 5
+    for i in [1..@options.period]
+      data[i] = sumValues(curYear - i + 1, month)
+    @data.addRow data
+
+  options =
+    title: ""
+    titleTextStyle:
+      color: "#333"
+      fontSize: 13
+    backgroundColor: "transparent"
+    focusTarget: "category"
+    chartArea:
+      width: "70%"
+      height: "80%"
+    colors: ['#3ABCFC', '#FC2121', '#D0FC3F', '#FCAC0A',
+             '#67C2EF', '#FF5454', '#CBE968', '#FABB3D',
+             '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
+    vAxis:
+      title: "Porcentagem"
+    animation:
+      duration: 500
+      easing: "inAndOut"
+
+  # Disabling the buttons while the chart is drawing.
+  @addBtn.disabled = true
+  @delBtn.disabled = true
+
+  google.visualization.events.addListener @chart, "ready", =>
+    # Enabling only relevant buttons.
+    @addBtn.disabled = @options.period > totalPeriodos - 4
+    @delBtn.disabled = @options.period < 2
 
   @chart.draw @data, options
 #}}}
@@ -796,7 +982,7 @@ spark2.drawChart = ->
   $.each months, (number, month) =>
     i = number
     number = parseInt number
-    number = if 7 <= (number + 7) <= 11 then number+= 7 else number-= 5
+    if 7 <= (number + 7) <= 11 then number+= 7 else number-= 5
     data[i] = sumValues(chart1.yearsSlct.value, number)
 
   value = 0
@@ -1214,6 +1400,7 @@ reloadCharts = ->
   chart6.drawChart()
   chart7.drawChart()
   chart8.drawChart()
+  chart9.drawChart()
   knob1.drawChart()
   knob2.drawChart()
   knob3.drawChart()

@@ -80,9 +80,9 @@
         <div id="chart4" class="chart"> </div>
         <div id="chart5" class="chart"> </div>
         <div id="chart6" class="chart"> </div>
-        <div id="chart7" class="chart"> </div>
-        <div id="chart8" class="chart"> </div>
         <div id="chart9" class="chart"> </div>
+        <div id="chart7" class="chart-small"> </div>
+        <div id="chart8" class="chart-small"> </div>
       </div>
     </section>
   </section>

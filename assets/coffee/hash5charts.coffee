@@ -134,11 +134,6 @@ class Hash5Charts
     $(@maxBtn).on "click", (event) =>
       event.preventDefault()
 
-      $content = $(container).children().next(".chart-content")
-      $content.toggleClass "chart-content-overlay"
-      $content.hide()
-      $content.fadeToggle 500
-
       if $(@maxBtn).children()[0].className is 'icon-resize-full'
         @defaultClass = $(container)[0].className
         $(@minBtn).prop "disabled", true
@@ -153,6 +148,12 @@ class Hash5Charts
 
       $(container).toggleClass @defaultClass
       $(container).toggleClass "chart-overlay"
+
+      content = $(container).children().next(".chart-content")
+      content.toggleClass "chart-content-overlay"
+      content.hide()
+      content.fadeToggle 500
+
       @drawChart()
 
   enableClose: (container) ->
@@ -236,15 +237,21 @@ class Hash5Knobs extends Hash5Charts
       'height': 58
       'thickness': 0.5
       'displayInput': false
+      'colorscheme': 'threecolor'
       draw: ->
-        value = this.val()
-        _min = this.o.min
-        _max = this.o.max
-        if _min <= value <= _min*0.3 then color = pusher.color("#67C2EF")
-        else if _min*0.3 < value <= _max*0.3 then color = pusher.color("#CBE968")
-        else if _max*0.3 < value <= _max*0.7 then color = pusher.color("#FABB3D")
-        else if _max*0.7 < value <=  _max*0.9 then color = pusher.color("#FA603D")
-        else color = pusher.color("#FF5454")
+        value = @val()
+        _min = @o.min
+        _max = @o.max
+        if @colorscheme is "coldandhot"
+          if _min <= value <= _min*0.3 then color = pusher.color("#67C2EF")
+          else if _min*0.3 < value <= _max*0.3 then color = pusher.color("#CBE968")
+          else if _max*0.3 < value <= _max*0.7 then color = pusher.color("#FABB3D")
+          else if _max*0.7 < value <=  _max*0.9 then color = pusher.color("#FA603D")
+          else color = pusher.color("#FF5454")
+        else
+          if value <= 0 then color = pusher.color("#D0FC3F")
+          else if 0 < value <= _max*0.6 then color = pusher.color("#FCAC0A")
+          else color = pusher.color("#FC2121")
         this.o.fgColor = color.html()
     )
     dial.val(0).trigger "change"
@@ -252,7 +259,7 @@ class Hash5Knobs extends Hash5Charts
   updateKnob: (value) ->
     container = document.getElementById(@options.container)
     info = $(container).children(".right")
-    info.html("<strong>" + value + "</strong><br /> " + @options.title)
+    info.html("<strong>" + value + "%</strong><br /> " + @options.title)
     @animateKnob(parseFloat(value))
 
   animateKnob: (dialValue) ->
@@ -263,7 +270,7 @@ class Hash5Knobs extends Hash5Charts
         duration: 2000
         easing: "easeOutSine"
         step: ->
-          dial.val(Math.ceil @value).trigger "change"
+          dial.val(Math.floor @value).trigger "change"
           return
 
 class Hash5Sparks extends Hash5Charts
