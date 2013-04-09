@@ -5,7 +5,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </a>
-    <a class="brand" href="#"><img src="<?= base_url()?>/assets/img/ibama.png" style="margin:-2px 2px 0 10px;"> <span class="label label-inverse">0.4</span></a>
+    <a class="brand" href="#"><img src="<?= base_url()?>/assets/img/ibama.png" style="margin:-2px 2px 0 10px;"> <span class="label label-inverse">0.6</span></a>
     <div class="nav-collapse">
       <button id="btn-map" class="btn btn-inverse"><i class="icon-globe icon-white"></i> Mapa</button>
       <button id="btn-charts" class="btn btn-inverse"><i class="iconic-chart" style="color:#fff;"></i> Estatística</button>
