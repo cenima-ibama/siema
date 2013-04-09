@@ -278,6 +278,7 @@
         'min': -100,
         'max': 100,
         'bgColor': "#DEDEDE",
+        'fgColor': "#DEDEDE",
         'angleOffset': -125,
         'angleArc': 250,
         'readOnly': true,
@@ -285,13 +286,13 @@
         'height': 58,
         'thickness': 0.5,
         'displayInput': false,
-        'colorscheme': 'threecolor',
+        'color': 'alert',
         draw: function() {
           var color, value, _max, _min;
           value = this.val();
           _min = this.o.min;
           _max = this.o.max;
-          if (this.colorscheme === "coldandhot") {
+          if (this.color === "coldtohot") {
             if ((_min <= value && value <= _min * 0.3)) {
               color = pusher.color("#67C2EF");
             } else if ((_min * 0.3 < value && value <= _max * 0.3)) {
@@ -567,8 +568,6 @@
       return console.log(status, desc);
     }
   });
-
-  console.log(tableNuvens);
 
   chart1 = new Hash5GoogleCharts({
     type: "Line",
@@ -1332,7 +1331,7 @@
     type: "Line",
     container: "chart9",
     period: 2,
-    title: "Alerta DETER: Taxa de Nuvems",
+    title: "Alerta DETER: Taxa(%) de Nuvems",
     buttons: {
       minusplus: true,
       minimize: true,

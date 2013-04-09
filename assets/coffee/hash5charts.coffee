@@ -230,6 +230,7 @@ class Hash5Knobs extends Hash5Charts
       'min':-100
       'max':100
       'bgColor': "#DEDEDE"
+      'fgColor': "#DEDEDE"
       'angleOffset':-125
       'angleArc':250
       'readOnly': true
@@ -237,12 +238,12 @@ class Hash5Knobs extends Hash5Charts
       'height': 58
       'thickness': 0.5
       'displayInput': false
-      'colorscheme': 'threecolor'
+      'color': 'alert'
       draw: ->
         value = @val()
         _min = @o.min
         _max = @o.max
-        if @colorscheme is "coldandhot"
+        if @color is "coldtohot"
           if _min <= value <= _min*0.3 then color = pusher.color("#67C2EF")
           else if _min*0.3 < value <= _max*0.3 then color = pusher.color("#CBE968")
           else if _max*0.3 < value <= _max*0.7 then color = pusher.color("#FABB3D")

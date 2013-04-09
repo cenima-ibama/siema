@@ -134,7 +134,6 @@ $.ajax
       )
   error: (error, status, desc) ->
     console.log status, desc
-console.log tableNuvens
 #}}}
 # CHART1 {{{
 chart1 = new Hash5GoogleCharts (
@@ -830,7 +829,7 @@ chart9 = new Hash5GoogleCharts(
   type: "Line"
   container: "chart9"
   period: 2
-  title: "Alerta DETER: Taxa de Nuvems"
+  title: "Alerta DETER: Taxa(%) de Nuvems"
   buttons:
     minusplus: true
     minimize: true
