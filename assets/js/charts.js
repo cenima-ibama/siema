@@ -531,7 +531,7 @@
 
   tableNuvens = {
     init: function() {
-      return this.nuvems = {};
+      return this.nuvem = {};
     },
     populate: function(date, value) {
       var convertDate, self;
@@ -541,7 +541,7 @@
         dArr = dateStr.split("-");
         return new Date(dArr[0], dArr[1] - 1, dArr[2]);
       };
-      self = this.nuvems;
+      self = this.nuvem;
       self[date] = {};
       self[date].value = value;
       self[date].date = convertDate(date);
@@ -1035,14 +1035,16 @@
       if (selectedState === "Todos") {
         $.each(tableAlerta.states, function(key, state) {
           return $.each(state, function(key, reg) {
-            if (reg.date >= firstPeriod && reg.date <= secondPeriod) {
+            var _ref;
+            if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
               return sum += reg.area;
             }
           });
         });
       } else {
         $.each(tableAlerta.states[selectedState], function(key, reg) {
-          if (reg.date >= firstPeriod && reg.date <= secondPeriod) {
+          var _ref;
+          if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
             return sum += reg.area;
           }
         });
@@ -1111,32 +1113,53 @@
     type: "Column",
     container: "chart6",
     period: 1,
-    title: "Taxa PRODES|Alerta DETER: Acumulado UFs",
+    title: "Taxa PRODES|Alerta DETER: UFs",
     buttons: {
       minimize: true,
-      maximize: true
+      maximize: true,
+      arrows: true
     }
   });
 
   chart6.createContainer();
 
+  chart6.changeTitle(periodos[chart6.options.period]);
+
+  chart6.leftBtn.onclick = function() {
+    chart6.options.period++;
+    return chart6.drawChart();
+  };
+
+  chart6.rightBtn.onclick = function() {
+    chart6.options.period--;
+    return chart6.drawChart();
+  };
+
   chart6.drawChart = function() {
     var data, options, sumDeter, sumProdes,
       _this = this;
-    sumDeter = function(state) {
-      var sum;
+    sumDeter = function(state, year) {
+      var firstPeriod, secondPeriod, sum;
       sum = 0;
+      firstPeriod = new Date(year - 1, 7, 1);
+      secondPeriod = new Date(year, 7, 0);
       $.each(tableAlerta.states[state], function(key, reg) {
-        return sum += reg.area;
+        var _ref;
+        if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
+          return sum += reg.area;
+        }
       });
       return Math.round(sum * 100) / 100;
     };
-    sumProdes = function(state) {
-      var sum;
+    sumProdes = function(state, year) {
+      var period, sum;
       sum = 0;
-      $.each(tableProdes.states[state], function(key, period) {
-        if (period.area != null) {
-          return sum += period.area;
+      period = (year - 1) + "-" + year;
+      $.each(tableProdes.states[state], function(key, reg) {
+        if (key === period) {
+          if (reg.area != null) {
+            return sum += reg.area;
+          }
         }
       });
       return Math.round(sum * 100) / 100;
@@ -1152,14 +1175,14 @@
       $.each(tableAlerta.states, function(state, reg) {
         var data;
         data = [state];
-        data[1] = sumDeter(state);
-        data[2] = sumProdes(state);
+        data[1] = sumDeter(state, curYear - _this.options.period);
+        data[2] = sumProdes(state, curYear - _this.options.period);
         return _this.data.addRow(data);
       });
     } else {
       data = [selectedState];
-      data[1] = sumDeter(selectedState);
-      data[2] = sumProdes(selectedState);
+      data[1] = sumDeter(selectedState, curYear - this.options.period);
+      data[2] = sumProdes(selectedState, curYear - this.options.period);
       this.data.addRow(data);
     }
     options = {
@@ -1186,6 +1209,13 @@
         easing: "inAndOut"
       }
     };
+    this.changeTitle("Taxa PRODES|Alerta DETER: UFs [" + periodos[this.options.period] + "]");
+    this.rightBtn.disabled = true;
+    this.leftBtn.disabled = true;
+    google.visualization.events.addListener(this.chart, "ready", function() {
+      _this.rightBtn.disabled = _this.options.period < 2;
+      return _this.leftBtn.disabled = _this.options.period >= totalPeriodos;
+    });
     return this.chart.draw(this.data, options);
   };
 
@@ -1331,7 +1361,7 @@
     type: "Line",
     container: "chart9",
     period: 2,
-    title: "Alerta DETER: Taxa(%) de Nuvems",
+    title: "Alerta DETER: Taxa(%) de Nuvens",
     buttons: {
       minusplus: true,
       minimize: true,
@@ -1359,7 +1389,7 @@
       percent = 0;
       firstPeriod = new Date(year - 1, 7, 1);
       secondPeriod = new Date(year, 7, 0);
-      $.each(tableNuvens.nuvems, function(key, nuvem) {
+      $.each(tableNuvens.nuvem, function(key, nuvem) {
         if (nuvem.date >= firstPeriod && nuvem.date <= secondPeriod && nuvem.month === month) {
           return percent = nuvem.value;
         }
@@ -1855,7 +1885,7 @@
   knob3 = new Hash5Knobs({
     container: "knob3",
     title: "Taxa VPA",
-    popover: "Taxa de variação em relação ao periodo anterior"
+    popover: "Taxa de variação em relação ao período PRODES anterior"
   });
 
   knob3.createKnob();
@@ -1932,8 +1962,10 @@
     return reloadCharts();
   });
 
-  google.setOnLoadCallback(function() {
-    return reloadCharts();
+  $(document).ready(function() {
+    google.setOnLoadCallback(function() {
+      return reloadCharts();
+    });
   });
 
 }).call(this);

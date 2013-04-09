@@ -104,14 +104,14 @@ $.ajax
 
 tableNuvens =
   init: ->
-    @nuvems = {}
+    @nuvem = {}
 
   populate: (date, value) ->
     convertDate = (dateStr) ->
       dateStr = String(dateStr)
       dArr = dateStr.split("-")
       new Date(dArr[0], (dArr[1]) - 1, dArr[2])
-    self = @nuvems
+    self = @nuvem
     self[date] = {}
     self[date].value = value
     self[date].date = convertDate(date)
@@ -553,11 +553,11 @@ chart5.drawChart = ->
     if selectedState is "Todos"
       $.each tableAlerta.states, (key, state) ->
         $.each state, (key, reg) ->
-          if reg.date >= firstPeriod and reg.date <= secondPeriod
+          if firstPeriod <= reg.date <= secondPeriod
             sum += reg.area
     else
       $.each tableAlerta.states[selectedState], (key, reg) ->
-        if reg.date >= firstPeriod and reg.date <= secondPeriod
+        if firstPeriod <= reg.date <= secondPeriod
           sum += reg.area
     return Math.round(sum * 100) / 100 if sum >= 0
 
@@ -619,25 +619,41 @@ chart6 = new Hash5GoogleCharts(
   type: "Column"
   container: "chart6"
   period: 1
-  title: "Taxa PRODES|Alerta DETER: Acumulado UFs"
+  title: "Taxa PRODES|Alerta DETER: UFs"
   buttons:
     minimize: true
     maximize: true
+    arrows: true
 )
 chart6.createContainer()
 
+chart6.changeTitle periodos[chart6.options.period]
+
+chart6.leftBtn.onclick = ->
+  chart6.options.period++
+  chart6.drawChart()
+
+chart6.rightBtn.onclick = ->
+  chart6.options.period--
+  chart6.drawChart()
+
 chart6.drawChart = ->
   # sum values
-  sumDeter = (state) ->
+  sumDeter = (state, year) ->
     sum = 0
+    firstPeriod = new Date(year - 1, 7, 1)
+    secondPeriod = new Date(year , 7, 0)
     $.each tableAlerta.states[state], (key, reg) ->
-      sum+= reg.area
+      if firstPeriod <= reg.date <= secondPeriod
+        sum+= reg.area
     return Math.round(sum * 100) / 100
 
-  sumProdes = (state) ->
+  sumProdes = (state, year) ->
     sum = 0
-    $.each tableProdes.states[state], (key, period) ->
-      sum+= period.area if period.area?
+    period = (year - 1) + "-" + (year)
+    $.each tableProdes.states[state], (key, reg) ->
+      if key is period
+        sum+= reg.area if reg.area?
     return Math.round(sum * 100) / 100
 
   # create new chart
@@ -656,13 +672,13 @@ chart6.drawChart = ->
   if selectedState is "Todos"
     $.each tableAlerta.states, (state, reg) =>
       data = [state]
-      data[1] = sumDeter(state)
-      data[2] = sumProdes(state)
+      data[1] = sumDeter(state, curYear - @options.period)
+      data[2] = sumProdes(state, curYear - @options.period)
       @data.addRow data
   else
     data = [selectedState]
-    data[1] = sumDeter(selectedState)
-    data[2] = sumProdes(selectedState)
+    data[1] = sumDeter(selectedState, curYear - @options.period)
+    data[2] = sumProdes(selectedState, curYear - @options.period)
     @data.addRow data
 
   options =
@@ -683,6 +699,17 @@ chart6.drawChart = ->
     animation:
       duration: 500
       easing: "inAndOut"
+
+  @changeTitle "Taxa PRODES|Alerta DETER: UFs [" + periodos[@options.period] + "]"
+
+  # Disabling the buttons while the chart is drawing.
+  @rightBtn.disabled = true
+  @leftBtn.disabled = true
+
+  google.visualization.events.addListener @chart, "ready", =>
+    # Enabling only relevant buttons.
+    @rightBtn.disabled = @options.period < 2
+    @leftBtn.disabled = @options.period >= totalPeriodos
 
   @chart.draw @data, options
 #}}}
@@ -829,7 +856,7 @@ chart9 = new Hash5GoogleCharts(
   type: "Line"
   container: "chart9"
   period: 2
-  title: "Alerta DETER: Taxa(%) de Nuvems"
+  title: "Alerta DETER: Taxa(%) de Nuvens"
   buttons:
     minusplus: true
     minimize: true
@@ -851,7 +878,7 @@ chart9.drawChart = ->
     percent = 0
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
-    $.each tableNuvens.nuvems, (key, nuvem) ->
+    $.each tableNuvens.nuvem, (key, nuvem) ->
       if nuvem.date >= firstPeriod and nuvem.date <= secondPeriod and nuvem.month is month
         percent = nuvem.value
 
@@ -1341,7 +1368,7 @@ knob2.drawChart = ->
 knob3 = new Hash5Knobs(
   container: "knob3"
   title: "Taxa VPA"
-  popover: "Taxa de variação em relação ao periodo anterior"
+  popover: "Taxa de variação em relação ao período PRODES anterior"
 )
 
 knob3.createKnob()
@@ -1415,5 +1442,7 @@ $(".quick-btn a").on "click", (event) ->
   reloadCharts()
 # }}}
 # CALLBACK {{{
-google.setOnLoadCallback -> reloadCharts()
+$(document).ready ->
+  google.setOnLoadCallback -> reloadCharts()
+  return
 #}}}
