@@ -284,11 +284,11 @@ chart2.drawChart = ->
     if selectedState is "Todos"
       $.each tableAlerta.states, (key, state) ->
         $.each state, (key, reg) ->
-          if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
+          if firstPeriod <= reg.date <= secondPeriod and reg.month == month
             sum += reg.area
     else
       $.each tableAlerta.states[selectedState], (key, reg) ->
-        if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
+        if firstPeriod <= reg.date <= secondPeriod and reg.month == month
           sum += reg.area
 
     return Math.round(sum * 100) / 100
@@ -839,7 +839,6 @@ chart8.drawChart = ->
     @data.addRow data
 
   @changeTitle months[chart1.monthsSlct.value] + ", " + chart1.yearsSlct.value
-  console.log months, chart1.monthsSlct.value
 
   options =
     title: ""
@@ -1419,7 +1418,7 @@ knob3.drawChart = ->
   return
 #}}}
 # CONTROLS {{{
-reloadCharts = ->
+window.reloadCharts = ->
   chart1.drawChart()
   chart2.drawChart()
   chart3.drawChart()
@@ -1443,8 +1442,3 @@ $(".quick-btn a").on "click", (event) ->
   $(@).addClass "active"
   reloadCharts()
 # }}}
-# CALLBACK {{{
-$(document).ready ->
-  google.setOnLoadCallback -> reloadCharts()
-  return
-#}}}
