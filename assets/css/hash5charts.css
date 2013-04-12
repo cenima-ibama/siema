@@ -227,11 +227,6 @@
     display: none;
   }
 }
-.dash .charts-content .chart-header select {
-  -webkit-appearance: button;
-  -moz-appearance: button;
-  appearance: button;
-}
 .boxes {
   margin: 0;
   display: inline-block;
@@ -375,10 +370,10 @@
   }
 }
 @media (max-width: 767px) {
-  
+
 }
 @media (max-height: 360px) {
-  
+
 }
 .quick-btn .item:last-child {
   border-radius: 0px 4px 4px 0px;
@@ -389,10 +384,10 @@
   }
 }
 @media (max-width: 767px) {
-  
+
 }
 @media (max-height: 360px) {
-  
+
 }
 .quick-btn .item a {
   outline: none;

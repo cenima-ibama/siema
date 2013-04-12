@@ -49,7 +49,7 @@ tableAlerta =
 
 $.ajax
   type: "GET"
-  url: "../siscom/rest/v1/ws_geo_attributequery.php"
+  url: "../painel/rest/v1/ws_geo_attributequery.php"
   data:
     table: "alerta_acumulado_diario"
   dataType: "jsonp"
@@ -84,7 +84,7 @@ tableProdes =
 
 $.ajax
   type: "GET"
-  url: "../siscom/rest/v1/ws_geo_attributequery.php"
+  url: "../painel/rest/v1/ws_geo_attributequery.php"
   data:
     table: "taxa_prodes"
   dataType: "jsonp"
@@ -122,7 +122,7 @@ tableNuvens =
 
 $.ajax
   type: "GET"
-  url: "../siscom/rest/v1/ws_geo_attributequery.php"
+  url: "../painel/rest/v1/ws_geo_attributequery.php"
   data:
     table: "nuvem_deter"
   dataType: "jsonp"
@@ -183,6 +183,7 @@ $("#slct-years").on "change", (event) ->
   spark2.drawChart()
 
 $("#slct-months").on "change", (event) ->
+  chart3.drawChart()
   knob1.drawChart()
   knob2.drawChart()
   knob3.drawChart()
@@ -345,7 +346,7 @@ chart3 = new Hash5GoogleCharts(
   type: "Bar"
   container: "chart3"
   period: 1
-  title: "Alerta DETER: Período Atual"
+  title: "Alerta DETER: Índice Períodos"
   buttons:
     minusplus: true
     minimize: true
@@ -370,13 +371,11 @@ chart3.drawChart = ->
         $.each state, (key, reg) ->
           if firstPeriod <= reg.date <= secondPeriod
             sum += reg.area
-            lastDay = reg.day
     else
       $.each tableAlerta.states[selectedState], (key, reg) ->
         if firstPeriod <= reg.date <= secondPeriod
           sum += reg.area
-          lastDay = reg.day
-    Math.round(sum * 100) / 100
+    return Math.round(sum * 100) / 100
 
   # sum total values
   sumTotalValues = (year) ->
@@ -386,8 +385,14 @@ chart3.drawChart = ->
 
   # sum average values
   sumAvgValues = (year) ->
+    month = parseInt(chart1.monthsSlct.value)
     firstPeriod = new Date(year - 1, 7, 1)
-    secondPeriod = new Date(year, curMonth, curDay)
+    if month > 6
+      secondPeriod = new Date(year-1, month+1, 0)
+    else if month != curMonth
+      secondPeriod = new Date(year, month+1, 0)
+    else
+      secondPeriod = new Date(year, month, curDay)
     sumValues firstPeriod, secondPeriod
 
   # create new chart
@@ -881,6 +886,7 @@ chart9.drawChart = ->
     $.each tableNuvens.nuvem, (key, nuvem) ->
       if nuvem.date >= firstPeriod and nuvem.date <= secondPeriod and nuvem.month is month
         percent = nuvem.value
+        return false
 
     return Math.round(percent * 100)
 
@@ -1285,16 +1291,13 @@ knob1.drawChart = ->
             sum += reg.area
       return sum
 
-    year = (if month > 5 then year++ else year)
     # definir periodo atual
     curDate = new Date(year, month)
     # definir periodo anterior
     preDate = new Date(year - 1, month)
 
     # definir valores referentes ao periodo atual
-    curValue = 0
     curValue = sumValues(curDate)
-    preValue = 0
     preValue = sumValues(preDate)
 
     # caso o valor do periodo anterior seja 0, retorna 0
@@ -1305,11 +1308,10 @@ knob1.drawChart = ->
       return Math.round (curValue - preValue) / preValue * 100
 
   value = periodDeforestationRate(
-    chart1.yearsSlct.value, chart1.monthsSlct.value
+    parseInt(chart1.yearsSlct.value), parseInt(chart1.monthsSlct.value)
   )
   @updateKnob value
   return
-
 #}}}
 # KNOB2 {{{
 knob2 = new Hash5Knobs(
@@ -1338,16 +1340,13 @@ knob2.drawChart = ->
             sum += reg.area
       return sum
 
-    year = (if month > 5 then year++ else year)
     # definir periodo atual
     curDate = new Date(year, month)
     # definir periodo anterior
     preDate = new Date(year, month - 1)
 
     # definir valores referentes ao periodo atual
-    curValue = 0
     curValue = sumValues(curDate)
-    preValue = 0
     preValue = sumValues(preDate)
 
     # caso o valor do periodo anterior seja 0, retorna 0
@@ -1358,11 +1357,10 @@ knob2.drawChart = ->
       return Math.round (curValue - preValue) / preValue * 100
 
   value = periodDeforestationRate(
-    chart1.yearsSlct.value, chart1.monthsSlct.value
+    parseInt(chart1.yearsSlct.value), parseInt(chart1.monthsSlct.value)
   )
   @updateKnob value
   return
-
 #}}}
 # KNOB3 {{{
 knob3 = new Hash5Knobs(
@@ -1376,31 +1374,28 @@ knob3.createKnob()
 knob3.drawChart = ->
   # sum values
   periodDeforestationAvgRate = (year, month) ->
-    sumValues = (fp, sp) ->
+    sumValues = (firstPeriod, secondPeriod) ->
       sum = 0
       if selectedState is "Todos"
-        for state of tableAlerta.states
-          for reg of tableAlerta.states[state]
-            reg = tableAlerta.states[state][reg]
-            sum += reg.area if fp <= reg.date <= sp
+        $.each tableAlerta.states, (key, state) ->
+          $.each state, (key, reg) ->
+            if firstPeriod <= reg.date <= secondPeriod
+              sum += reg.area
       else
-        for reg of tableAlerta.states[selectedState]
-          reg = tableAlerta.states[selectedState][reg]
-          sum += reg.area if fp <= reg.date <= sp
-      return sum
+        $.each tableAlerta.states[selectedState], (key, reg) ->
+          if firstPeriod <= reg.date <= secondPeriod
+            sum += reg.area
+      return Math.round(sum * 100) / 100
 
-    curValue = 0
-    preValue = 0
+    if month > 6 then year++ else year
 
-    year = (if month > 5 then year++ else year)
+    sumPeriods = (year, month) ->
+      firstPeriod = new Date(year-1, 7, 1)
+      secondPeriod = new Date(year, month+1, 0)
+      sumValues firstPeriod, secondPeriod
 
-    prePeriod = new Date(year - 1, 7, 1)
-    curPeriod = new Date(year, month + 1, 0)
-    curValue = sumValues(prePeriod, curPeriod)
-
-    prePeriod = new Date(year - 2, 7, 1)
-    curPeriod = new Date(year - 1, month + 1, 0)
-    preValue = sumValues(prePeriod, curPeriod)
+    curValue = sumPeriods(year, month)
+    preValue = sumPeriods(year-1, month)
 
     # caso o valor do periodo anterior seja 0, retorna 0
     # para evitar uma divisão por 0
@@ -1410,11 +1405,10 @@ knob3.drawChart = ->
       return Math.round (curValue - preValue) / preValue * 100
 
   value = periodDeforestationAvgRate(
-    chart1.yearsSlct.value, chart1.monthsSlct.value
+    parseInt(chart1.yearsSlct.value), parseInt(chart1.monthsSlct.value)
   )
   @updateKnob value
   return
-
 #}}}
 # CONTROLS {{{
 reloadCharts = ->

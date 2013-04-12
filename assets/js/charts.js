@@ -460,7 +460,7 @@
 
   $.ajax({
     type: "GET",
-    url: "../siscom/rest/v1/ws_geo_attributequery.php",
+    url: "../painel/rest/v1/ws_geo_attributequery.php",
     data: {
       table: "alerta_acumulado_diario"
     },
@@ -513,7 +513,7 @@
 
   $.ajax({
     type: "GET",
-    url: "../siscom/rest/v1/ws_geo_attributequery.php",
+    url: "../painel/rest/v1/ws_geo_attributequery.php",
     data: {
       table: "taxa_prodes"
     },
@@ -553,7 +553,7 @@
 
   $.ajax({
     type: "GET",
-    url: "../siscom/rest/v1/ws_geo_attributequery.php",
+    url: "../painel/rest/v1/ws_geo_attributequery.php",
     data: {
       table: "nuvem_deter"
     },
@@ -622,6 +622,7 @@
   });
 
   $("#slct-months").on("change", function(event) {
+    chart3.drawChart();
     knob1.drawChart();
     knob2.drawChart();
     knob3.drawChart();
@@ -805,7 +806,7 @@
     type: "Bar",
     container: "chart3",
     period: 1,
-    title: "Alerta DETER: Período Atual",
+    title: "Alerta DETER: Índice Períodos",
     buttons: {
       minusplus: true,
       minimize: true,
@@ -834,19 +835,17 @@
       if (selectedState === "Todos") {
         $.each(tableAlerta.states, function(key, state) {
           return $.each(state, function(key, reg) {
-            var lastDay, _ref;
+            var _ref;
             if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
-              sum += reg.area;
-              return lastDay = reg.day;
+              return sum += reg.area;
             }
           });
         });
       } else {
         $.each(tableAlerta.states[selectedState], function(key, reg) {
-          var lastDay, _ref;
+          var _ref;
           if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
-            sum += reg.area;
-            return lastDay = reg.day;
+            return sum += reg.area;
           }
         });
       }
@@ -859,9 +858,16 @@
       return sumValues(firstPeriod, secondPeriod);
     };
     sumAvgValues = function(year) {
-      var firstPeriod, secondPeriod;
+      var firstPeriod, month, secondPeriod;
+      month = parseInt(chart1.monthsSlct.value);
       firstPeriod = new Date(year - 1, 7, 1);
-      secondPeriod = new Date(year, curMonth, curDay);
+      if (month > 6) {
+        secondPeriod = new Date(year - 1, month + 1, 0);
+      } else if (month !== curMonth) {
+        secondPeriod = new Date(year, month + 1, 0);
+      } else {
+        secondPeriod = new Date(year, month, curDay);
+      }
       return sumValues(firstPeriod, secondPeriod);
     };
     if (this.options.started) {
@@ -1391,7 +1397,8 @@
       secondPeriod = new Date(year, 7, 0);
       $.each(tableNuvens.nuvem, function(key, nuvem) {
         if (nuvem.date >= firstPeriod && nuvem.date <= secondPeriod && nuvem.month === month) {
-          return percent = nuvem.value;
+          percent = nuvem.value;
+          return false;
         }
       });
       return Math.round(percent * 100);
@@ -1814,12 +1821,9 @@
         }
         return sum;
       };
-      year = (month > 5 ? year++ : year);
       curDate = new Date(year, month);
       preDate = new Date(year - 1, month);
-      curValue = 0;
       curValue = sumValues(curDate);
-      preValue = 0;
       preValue = sumValues(preDate);
       if (preValue === 0) {
         return 0;
@@ -1827,7 +1831,7 @@
         return Math.round((curValue - preValue) / preValue * 100);
       }
     };
-    value = periodDeforestationRate(chart1.yearsSlct.value, chart1.monthsSlct.value);
+    value = periodDeforestationRate(parseInt(chart1.yearsSlct.value), parseInt(chart1.monthsSlct.value));
     this.updateKnob(value);
   };
 
@@ -1865,12 +1869,9 @@
         }
         return sum;
       };
-      year = (month > 5 ? year++ : year);
       curDate = new Date(year, month);
       preDate = new Date(year, month - 1);
-      curValue = 0;
       curValue = sumValues(curDate);
-      preValue = 0;
       preValue = sumValues(preDate);
       if (preValue === 0) {
         return 0;
@@ -1878,7 +1879,7 @@
         return Math.round((curValue - preValue) / preValue * 100);
       }
     };
-    value = periodDeforestationRate(chart1.yearsSlct.value, chart1.monthsSlct.value);
+    value = periodDeforestationRate(parseInt(chart1.yearsSlct.value), parseInt(chart1.monthsSlct.value));
     this.updateKnob(value);
   };
 
@@ -1893,45 +1894,49 @@
   knob3.drawChart = function() {
     var periodDeforestationAvgRate, value;
     periodDeforestationAvgRate = function(year, month) {
-      var curPeriod, curValue, prePeriod, preValue, sumValues;
-      sumValues = function(fp, sp) {
-        var reg, state, sum, _ref, _ref1;
+      var curValue, preValue, sumPeriods, sumValues;
+      sumValues = function(firstPeriod, secondPeriod) {
+        var sum;
         sum = 0;
         if (selectedState === "Todos") {
-          for (state in tableAlerta.states) {
-            for (reg in tableAlerta.states[state]) {
-              reg = tableAlerta.states[state][reg];
-              if ((fp <= (_ref = reg.date) && _ref <= sp)) {
-                sum += reg.area;
+          $.each(tableAlerta.states, function(key, state) {
+            return $.each(state, function(key, reg) {
+              var _ref;
+              if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
+                return sum += reg.area;
               }
-            }
-          }
+            });
+          });
         } else {
-          for (reg in tableAlerta.states[selectedState]) {
-            reg = tableAlerta.states[selectedState][reg];
-            if ((fp <= (_ref1 = reg.date) && _ref1 <= sp)) {
-              sum += reg.area;
+          $.each(tableAlerta.states[selectedState], function(key, reg) {
+            var _ref;
+            if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
+              return sum += reg.area;
             }
-          }
+          });
         }
-        return sum;
+        return Math.round(sum * 100) / 100;
       };
-      curValue = 0;
-      preValue = 0;
-      year = (month > 5 ? year++ : year);
-      prePeriod = new Date(year - 1, 7, 1);
-      curPeriod = new Date(year, month + 1, 0);
-      curValue = sumValues(prePeriod, curPeriod);
-      prePeriod = new Date(year - 2, 7, 1);
-      curPeriod = new Date(year - 1, month + 1, 0);
-      preValue = sumValues(prePeriod, curPeriod);
+      if (month > 6) {
+        year++;
+      } else {
+        year;
+      }
+      sumPeriods = function(year, month) {
+        var firstPeriod, secondPeriod;
+        firstPeriod = new Date(year - 1, 7, 1);
+        secondPeriod = new Date(year, month + 1, 0);
+        return sumValues(firstPeriod, secondPeriod);
+      };
+      curValue = sumPeriods(year, month);
+      preValue = sumPeriods(year - 1, month);
       if (preValue === 0) {
         return 0;
       } else {
         return Math.round((curValue - preValue) / preValue * 100);
       }
     };
-    value = periodDeforestationAvgRate(chart1.yearsSlct.value, chart1.monthsSlct.value);
+    value = periodDeforestationAvgRate(parseInt(chart1.yearsSlct.value), parseInt(chart1.monthsSlct.value));
     this.updateKnob(value);
   };
 
