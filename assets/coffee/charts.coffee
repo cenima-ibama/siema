@@ -12,18 +12,18 @@ for i in [0..totalPeriodos]
   periodos[i] = (today.getFullYear() - i - 1) + "-" + (today.getFullYear() - i)
 
 months =
-  0: "Ago"
-  1: "Set"
-  2: "Out"
-  3: "Nov"
-  4: "Dez"
-  5: "Jan"
-  6: "Fev"
-  7: "Mar"
-  8: "Abr"
-  9: "Mai"
-  10: "Jun"
-  11: "Jul"
+  0: 'Jan'
+  1: 'Fev'
+  2: 'Mar'
+  3: 'Abr'
+  4: 'Mai'
+  5: 'Jun'
+  6: 'Jul'
+  7: 'Ago'
+  8: 'Set'
+  9: 'Out'
+  10: 'Nov'
+  11: 'Dez'
 
 estados = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"]
 #}}}
@@ -176,6 +176,7 @@ chart1.yearsSlct.options[totalPeriodos+1].selected = true
 chart1.monthsSlct.options[curMonth].selected = true
 
 $("#slct-years").on "change", (event) ->
+  chart8.drawChart()
   knob1.drawChart()
   knob2.drawChart()
   knob3.drawChart()
@@ -184,6 +185,7 @@ $("#slct-years").on "change", (event) ->
 
 $("#slct-months").on "change", (event) ->
   chart3.drawChart()
+  chart8.drawChart()
   knob1.drawChart()
   knob2.drawChart()
   knob3.drawChart()
@@ -192,13 +194,13 @@ $("#slct-months").on "change", (event) ->
 
 chart1.drawChart = ->
   createTable = (state) =>
-    dayValue = 0
-    for day in [1..monthDays]
+    sum = 0
+    for day in [1..daysInMonth]
       $.each tableAlerta.states[state], (key, reg) ->
-        if dateStart <= reg.date <= dateEnd and reg.day is day
-          dayValue += reg.area
+        if firstPeriod <= reg.date <= secondPeriod and reg.day is day
+          sum += reg.area
           return false
-      @data.setValue (day - 1), 1, Math.round((@data.getValue((day - 1), 1) + dayValue) * 100) / 100
+      @data.setValue (day - 1), 1, Math.round((@data.getValue((day - 1), 1) + sum) * 100) / 100
 
   # create new chart
   if @options.started
@@ -210,13 +212,13 @@ chart1.drawChart = ->
   @data.addColumn "number", "Dia"
   @data.addColumn "number", "Área"
 
-  monthDays = new Date(@yearsSlct.value, @monthsSlct.value + 1, 0).getDate()
-  dateStart = new Date(@yearsSlct.value, @monthsSlct.value, 1)
-  dateEnd = new Date(@yearsSlct.value, @monthsSlct.value, monthDays)
+  daysInMonth = new Date(@yearsSlct.value, @monthsSlct.value + 1, 0).getDate()
+  firstPeriod = new Date(@yearsSlct.value, @monthsSlct.value, 1)
+  secondPeriod = new Date(@yearsSlct.value, @monthsSlct.value, daysInMonth)
   data = []
 
   # populate table with 0
-  for day in [1..monthDays]
+  for day in [1..daysInMonth]
     data[0] = day
     data[1] = 0
     @data.addRow data
@@ -245,7 +247,7 @@ chart1.drawChart = ->
       title: "Dias"
       gridlines:
         color: "#CCC"
-        count: monthDays / 5
+        count: daysInMonth / 5
     animation:
       duration: 500
       easing: "inAndOut"
@@ -800,7 +802,6 @@ chart8 = new Hash5GoogleCharts(
   type: "Pie"
   container: "chart8"
   period: 1
-  title: "2004-Atual"
   buttons:
     minimize: true
     maximize: true
@@ -812,7 +813,8 @@ chart8.drawChart = ->
   sumValues = (state) ->
     sum = 0
     $.each tableAlerta.states[state], (key, reg) ->
-      sum += reg.area
+      if firstPeriod <= reg.date <= secondPeriod
+        sum += reg.area
     Math.round(sum * 100) / 100
 
   # create new chart
@@ -831,7 +833,13 @@ chart8.drawChart = ->
     estado = estados[i]
     data = [estado]
     data[1] = sumValues(estados[i])
+    daysInMonth = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate()
+    firstPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1)
+    secondPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, daysInMonth)
     @data.addRow data
+
+  @changeTitle months[chart1.monthsSlct.value] + ", " + chart1.yearsSlct.value
+  console.log months, chart1.monthsSlct.value
 
   options =
     title: ""
@@ -952,20 +960,20 @@ spark1.drawChart = ->
   #Create array with values
   createTable = (state) =>
     dayValue = 0
-    for day in [1..monthDays]
+    for day in [1..daysInMonth]
       $.each tableAlerta.states[state], (key, reg) ->
-        if dateStart <= reg.date <= dateEnd and reg.day is day
+        if firstPeriod <= reg.date <= secondPeriod and reg.day is day
           dayValue += reg.area
           return false
       data[(day-1)] = Math.round((data[(day-1)] + dayValue) * 100)/100
 
-  monthDays = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate()
-  dateStart = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1)
-  dateEnd = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, monthDays)
+  daysInMonth = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate()
+  firstPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1)
+  secondPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, daysInMonth)
   data = []
 
   # populate table with 0
-  for day in [1..monthDays]
+  for day in [1..daysInMonth]
     data[(day-1)] = 0
 
   # populate table with real values
@@ -975,7 +983,7 @@ spark1.drawChart = ->
   else
     createTable selectedState
 
-  value = data[monthDays-1]
+  value = data[daysInMonth-1]
   @updateSparkInfo value
   @updateSparkChart data
 

@@ -413,18 +413,18 @@
   }
 
   months = {
-    0: "Ago",
-    1: "Set",
-    2: "Out",
-    3: "Nov",
-    4: "Dez",
-    5: "Jan",
-    6: "Fev",
-    7: "Mar",
-    8: "Abr",
-    9: "Mai",
-    10: "Jun",
-    11: "Jul"
+    0: 'Jan',
+    1: 'Fev',
+    2: 'Mar',
+    3: 'Abr',
+    4: 'Mai',
+    5: 'Jun',
+    6: 'Jul',
+    7: 'Ago',
+    8: 'Set',
+    9: 'Out',
+    10: 'Nov',
+    11: 'Dez'
   };
 
   estados = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"];
@@ -614,6 +614,7 @@
   chart1.monthsSlct.options[curMonth].selected = true;
 
   $("#slct-years").on("change", function(event) {
+    chart8.drawChart();
     knob1.drawChart();
     knob2.drawChart();
     knob3.drawChart();
@@ -623,6 +624,7 @@
 
   $("#slct-months").on("change", function(event) {
     chart3.drawChart();
+    chart8.drawChart();
     knob1.drawChart();
     knob2.drawChart();
     knob3.drawChart();
@@ -631,21 +633,21 @@
   });
 
   chart1.drawChart = function() {
-    var createTable, data, dateEnd, dateStart, day, monthDays, options, _j,
+    var createTable, data, day, daysInMonth, firstPeriod, options, secondPeriod, _j,
       _this = this;
     createTable = function(state) {
-      var day, dayValue, _j, _results;
-      dayValue = 0;
+      var day, sum, _j, _results;
+      sum = 0;
       _results = [];
-      for (day = _j = 1; 1 <= monthDays ? _j <= monthDays : _j >= monthDays; day = 1 <= monthDays ? ++_j : --_j) {
+      for (day = _j = 1; 1 <= daysInMonth ? _j <= daysInMonth : _j >= daysInMonth; day = 1 <= daysInMonth ? ++_j : --_j) {
         $.each(tableAlerta.states[state], function(key, reg) {
           var _ref;
-          if ((dateStart <= (_ref = reg.date) && _ref <= dateEnd) && reg.day === day) {
-            dayValue += reg.area;
+          if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod) && reg.day === day) {
+            sum += reg.area;
             return false;
           }
         });
-        _results.push(_this.data.setValue(day - 1, 1, Math.round((_this.data.getValue(day - 1, 1) + dayValue) * 100) / 100));
+        _results.push(_this.data.setValue(day - 1, 1, Math.round((_this.data.getValue(day - 1, 1) + sum) * 100) / 100));
       }
       return _results;
     };
@@ -655,11 +657,11 @@
     this.dataTable();
     this.data.addColumn("number", "Dia");
     this.data.addColumn("number", "Área");
-    monthDays = new Date(this.yearsSlct.value, this.monthsSlct.value + 1, 0).getDate();
-    dateStart = new Date(this.yearsSlct.value, this.monthsSlct.value, 1);
-    dateEnd = new Date(this.yearsSlct.value, this.monthsSlct.value, monthDays);
+    daysInMonth = new Date(this.yearsSlct.value, this.monthsSlct.value + 1, 0).getDate();
+    firstPeriod = new Date(this.yearsSlct.value, this.monthsSlct.value, 1);
+    secondPeriod = new Date(this.yearsSlct.value, this.monthsSlct.value, daysInMonth);
     data = [];
-    for (day = _j = 1; 1 <= monthDays ? _j <= monthDays : _j >= monthDays; day = 1 <= monthDays ? ++_j : --_j) {
+    for (day = _j = 1; 1 <= daysInMonth ? _j <= daysInMonth : _j >= daysInMonth; day = 1 <= daysInMonth ? ++_j : --_j) {
       data[0] = day;
       data[1] = 0;
       this.data.addRow(data);
@@ -691,7 +693,7 @@
         title: "Dias",
         gridlines: {
           color: "#CCC",
-          count: monthDays / 5
+          count: daysInMonth / 5
         }
       },
       animation: {
@@ -1305,7 +1307,6 @@
     type: "Pie",
     container: "chart8",
     period: 1,
-    title: "2004-Atual",
     buttons: {
       minimize: true,
       maximize: true
@@ -1315,12 +1316,15 @@
   chart8.createContainer();
 
   chart8.drawChart = function() {
-    var data, estado, options, sumValues, _j, _ref;
+    var data, daysInMonth, estado, firstPeriod, options, secondPeriod, sumValues, _j, _ref;
     sumValues = function(state) {
       var sum;
       sum = 0;
       $.each(tableAlerta.states[state], function(key, reg) {
-        return sum += reg.area;
+        var _ref;
+        if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
+          return sum += reg.area;
+        }
       });
       return Math.round(sum * 100) / 100;
     };
@@ -1334,8 +1338,13 @@
       estado = estados[i];
       data = [estado];
       data[1] = sumValues(estados[i]);
+      daysInMonth = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate();
+      firstPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1);
+      secondPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, daysInMonth);
       this.data.addRow(data);
     }
+    this.changeTitle(months[chart1.monthsSlct.value] + ", " + chart1.yearsSlct.value);
+    console.log(months, chart1.monthsSlct.value);
     options = {
       title: "",
       titleTextStyle: {
@@ -1462,16 +1471,16 @@
   spark1.createSpark();
 
   spark1.drawChart = function() {
-    var createTable, data, dateEnd, dateStart, day, monthDays, value, _j,
+    var createTable, data, day, daysInMonth, firstPeriod, secondPeriod, value, _j,
       _this = this;
     createTable = function(state) {
       var day, dayValue, _j, _results;
       dayValue = 0;
       _results = [];
-      for (day = _j = 1; 1 <= monthDays ? _j <= monthDays : _j >= monthDays; day = 1 <= monthDays ? ++_j : --_j) {
+      for (day = _j = 1; 1 <= daysInMonth ? _j <= daysInMonth : _j >= daysInMonth; day = 1 <= daysInMonth ? ++_j : --_j) {
         $.each(tableAlerta.states[state], function(key, reg) {
           var _ref;
-          if ((dateStart <= (_ref = reg.date) && _ref <= dateEnd) && reg.day === day) {
+          if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod) && reg.day === day) {
             dayValue += reg.area;
             return false;
           }
@@ -1480,11 +1489,11 @@
       }
       return _results;
     };
-    monthDays = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate();
-    dateStart = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1);
-    dateEnd = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, monthDays);
+    daysInMonth = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate();
+    firstPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1);
+    secondPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, daysInMonth);
     data = [];
-    for (day = _j = 1; 1 <= monthDays ? _j <= monthDays : _j >= monthDays; day = 1 <= monthDays ? ++_j : --_j) {
+    for (day = _j = 1; 1 <= daysInMonth ? _j <= daysInMonth : _j >= daysInMonth; day = 1 <= daysInMonth ? ++_j : --_j) {
       data[day - 1] = 0;
     }
     if (selectedState === "Todos") {
@@ -1494,7 +1503,7 @@
     } else {
       createTable(selectedState);
     }
-    value = data[monthDays - 1];
+    value = data[daysInMonth - 1];
     this.updateSparkInfo(value);
     return this.updateSparkChart(data);
   };
