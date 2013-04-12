@@ -1318,7 +1318,7 @@
   chart8.createContainer();
 
   chart8.drawChart = function() {
-    var data, daysInMonth, estado, firstPeriod, options, secondPeriod, sumValues, _j, _ref;
+    var data, daysInMonth, estado, firstPeriod, options, pieText, pieTooltip, secondPeriod, sumValues, _j, _ref;
     sumValues = function(state) {
       var sum;
       sum = 0;
@@ -1328,7 +1328,11 @@
           return sum += reg.area;
         }
       });
-      return Math.round(sum * 100) / 100;
+      if (firstPeriod > today) {
+        return 1;
+      } else {
+        return Math.round(sum * 100) / 100;
+      }
     };
     if (this.options.started) {
       this.createChart();
@@ -1336,13 +1340,20 @@
     this.dataTable();
     this.data.addColumn("string", "Estado");
     this.data.addColumn("number", "Área Total");
+    daysInMonth = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate();
+    firstPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1);
+    secondPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, daysInMonth);
+    if (firstPeriod > today) {
+      pieText = "none";
+      pieTooltip = "none";
+    } else {
+      pieText = "percent";
+      pieTooltip = "focus";
+    }
     for (i = _j = 0, _ref = estados.length; 0 <= _ref ? _j < _ref : _j > _ref; i = 0 <= _ref ? ++_j : --_j) {
       estado = estados[i];
       data = [estado];
       data[1] = sumValues(estados[i]);
-      daysInMonth = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate();
-      firstPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1);
-      secondPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, daysInMonth);
       this.data.addRow(data);
     }
     this.changeTitle(months[chart1.monthsSlct.value] + ", " + chart1.yearsSlct.value);
@@ -1354,6 +1365,10 @@
       },
       backgroundColor: "transparent",
       focusTarget: "category",
+      pieSliceText: pieText,
+      tooltip: {
+        trigger: pieTooltip
+      },
       chartArea: {
         width: "90%",
         height: "80%"

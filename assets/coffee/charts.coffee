@@ -815,7 +815,10 @@ chart8.drawChart = ->
     $.each tableAlerta.states[state], (key, reg) ->
       if firstPeriod <= reg.date <= secondPeriod
         sum += reg.area
-    Math.round(sum * 100) / 100
+    if firstPeriod > today
+      return 1
+    else
+      Math.round(sum * 100) / 100
 
   # create new chart
   if @options.started
@@ -828,14 +831,22 @@ chart8.drawChart = ->
   @data.addColumn "string", "Estado"
   @data.addColumn "number", "Área Total"
 
+  daysInMonth = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate()
+  firstPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1)
+  secondPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, daysInMonth)
+
+  if firstPeriod > today
+    pieText = "none"
+    pieTooltip = "none"
+  else
+    pieText = "percent"
+    pieTooltip = "focus"
+
   # populate table
   for i in [0...estados.length]
     estado = estados[i]
     data = [estado]
     data[1] = sumValues(estados[i])
-    daysInMonth = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate()
-    firstPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1)
-    secondPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, daysInMonth)
     @data.addRow data
 
   @changeTitle months[chart1.monthsSlct.value] + ", " + chart1.yearsSlct.value
@@ -847,6 +858,9 @@ chart8.drawChart = ->
       fontSize: 13
     backgroundColor: "transparent"
     focusTarget: "category"
+    pieSliceText: pieText
+    tooltip:
+      trigger: pieTooltip
     chartArea:
       width: "90%"
       height: "80%"
