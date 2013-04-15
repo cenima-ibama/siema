@@ -12,18 +12,18 @@ for i in [0..totalPeriodos]
   periodos[i] = (today.getFullYear() - i - 1) + "-" + (today.getFullYear() - i)
 
 months =
-  0: 'Jan'
-  1: 'Fev'
-  2: 'Mar'
-  3: 'Abr'
-  4: 'Mai'
-  5: 'Jun'
-  6: 'Jul'
-  7: 'Ago'
-  8: 'Set'
-  9: 'Out'
-  10: 'Nov'
-  11: 'Dez'
+  0: "Ago"
+  1: "Set"
+  2: "Out"
+  3: "Nov"
+  4: "Dez"
+  5: "Jan"
+  6: "Fev"
+  7: "Mar"
+  8: "Abr"
+  9: "Mai"
+  10: "Jun"
+  11: "Jul"
 
 estados = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"]
 #}}}
@@ -849,7 +849,7 @@ chart8.drawChart = ->
     data[1] = sumValues(estados[i])
     @data.addRow data
 
-  @changeTitle months[chart1.monthsSlct.value] + ", " + chart1.yearsSlct.value
+  @changeTitle chart1.monthsSlct.value + ", " + chart1.yearsSlct.value
 
   options =
     title: ""
