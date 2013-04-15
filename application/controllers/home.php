@@ -14,9 +14,6 @@ class Home extends CI_Controller {
       show_404();
     }
 
-    $this->load->helper(array('form', 'html'));
-    $this->load->model('Home_model');
-    $data = $this->Home_model->get_data_home();
     $data['page_content'] = 'pages/home';
 
     //$this->load->library('firephp');

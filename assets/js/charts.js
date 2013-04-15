@@ -1356,7 +1356,7 @@
       data[1] = sumValues(estados[i]);
       this.data.addRow(data);
     }
-    this.changeTitle(chart1.monthsSlct.value + ", " + chart1.yearsSlct.value);
+    this.changeTitle(chart1.monthsSlct.options[chart1.monthsSlct.value].label + ", " + chart1.yearsSlct.value);
     options = {
       title: "",
       titleTextStyle: {

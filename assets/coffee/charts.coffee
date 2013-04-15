@@ -849,7 +849,7 @@ chart8.drawChart = ->
     data[1] = sumValues(estados[i])
     @data.addRow data
 
-  @changeTitle chart1.monthsSlct.value + ", " + chart1.yearsSlct.value
+  @changeTitle chart1.monthsSlct.options[chart1.monthsSlct.value].label + ", " + chart1.yearsSlct.value
 
   options =
     title: ""
