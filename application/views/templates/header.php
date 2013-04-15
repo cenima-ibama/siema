@@ -8,7 +8,7 @@
     <meta name="author" content="Helmuth Saatkamp <helmuthdu@gmail.com>">
 
     <!-- Le styles -->
-    <link href="//cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" rel="stylesheet">
+    <link href="<?= base_url()?>assets/css/leaflet.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/jquery-ui-1.9.2.css" rel="stylesheet">
     <style type="text/css">
