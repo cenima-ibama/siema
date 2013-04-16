@@ -296,6 +296,22 @@
       this.options = $.extend(defaultOptions, options);
     }
 
+    Hash5MiniCharts.prototype.createContainer = function() {
+      var leftCtrl, rightCtrl;
+      this._container = document.getElementById(this.options.container);
+      leftCtrl = document.createElement("div");
+      leftCtrl.className = "left";
+      this._leftCtrl = leftCtrl;
+      rightCtrl = document.createElement("div");
+      rightCtrl.className = "right";
+      this._rightCtrl = rightCtrl;
+      $(this._container).append(this._leftCtrl, this._rightCtrl);
+      if (this.options.popover) {
+        $(this._container).addClass("popover-" + this.options.container);
+        return this.createPopover();
+      }
+    };
+
     Hash5MiniCharts.prototype.createPopover = function() {
       var html, placement, trigger;
       placement = "bottom";
@@ -326,24 +342,13 @@
     }
 
     Hash5Knobs.prototype.createContainer = function() {
-      var dial, leftCtrl, rightCtrl;
-      this._container = document.getElementById(this.options.container);
-      leftCtrl = document.createElement("div");
-      leftCtrl.className = "left";
-      this._leftCtrl = leftCtrl;
-      rightCtrl = document.createElement("div");
-      rightCtrl.className = "right";
-      this._rightCtrl = rightCtrl;
+      var dial;
+      Hash5Knobs.__super__.createContainer.apply(this, arguments);
       dial = document.createElement("input");
       dial.type = "text";
       dial.className = "dial";
       this._dial = dial;
       $(this._leftCtrl).append(this._dial);
-      $(this._container).append(this._leftCtrl, this._rightCtrl);
-      if (this.options.popover) {
-        $(this._container).addClass("popover-" + this.options.container);
-        this.createPopover();
-      }
       return this.createChart();
     };
 
@@ -427,23 +432,12 @@
     }
 
     Hash5Sparks.prototype.createContainer = function() {
-      var leftCtrl, rightCtrl, spark;
-      this._container = document.getElementById(this.options.container);
-      leftCtrl = document.createElement("div");
-      leftCtrl.className = "left";
-      this._leftCtrl = leftCtrl;
-      rightCtrl = document.createElement("div");
-      rightCtrl.className = "right";
-      this._rightCtrl = rightCtrl;
+      var spark;
+      Hash5Sparks.__super__.createContainer.apply(this, arguments);
       spark = document.createElement("div");
       spark.className = "minichart";
       this._spark = spark;
-      $(this._leftCtrl).append(this._spark);
-      $(this._container).append(this._leftCtrl, this._rightCtrl);
-      if (this.options.popover) {
-        $(this._container).addClass("popover-" + this.options.container);
-        return this.createPopover();
-      }
+      return $(this._leftCtrl).append(this._spark);
     };
 
     Hash5Sparks.prototype.updateInfo = function(data, value) {

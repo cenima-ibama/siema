@@ -293,6 +293,23 @@ class Hash5MiniCharts
     # configure object with the options
     @options = $.extend(defaultOptions, options)
 
+  createContainer: ->
+    @_container = document.getElementById(@options.container)
+
+    leftCtrl = document.createElement("div")
+    leftCtrl.className = "left"
+    @_leftCtrl = leftCtrl
+
+    rightCtrl = document.createElement("div")
+    rightCtrl.className = "right"
+    @_rightCtrl = rightCtrl
+
+    $(@_container).append @_leftCtrl, @_rightCtrl
+
+    if @options.popover
+      $(@_container).addClass("popover-" + @options.container)
+      @createPopover()
+
   createPopover: ->
     placement = "bottom"
     trigger = "hover"
@@ -307,27 +324,13 @@ class Hash5MiniCharts
 class Hash5Knobs extends Hash5MiniCharts
 
   createContainer: ->
-    @_container = document.getElementById(@options.container)
-
-    leftCtrl = document.createElement("div")
-    leftCtrl.className = "left"
-    @_leftCtrl = leftCtrl
-
-    rightCtrl = document.createElement("div")
-    rightCtrl.className = "right"
-    @_rightCtrl = rightCtrl
-
+    super
     dial = document.createElement("input")
     dial.type = "text"
     dial .className = "dial"
     @_dial = dial
 
     $(@_leftCtrl).append @_dial
-    $(@_container).append @_leftCtrl, @_rightCtrl
-
-    if @options.popover
-      $(@_container).addClass("popover-" + @options.container)
-      @createPopover()
 
     @createChart()
 
@@ -379,26 +382,12 @@ class Hash5Knobs extends Hash5MiniCharts
 class Hash5Sparks extends Hash5MiniCharts
 
   createContainer: ->
-    @_container = document.getElementById(@options.container)
-
-    leftCtrl = document.createElement("div")
-    leftCtrl.className = "left"
-    @_leftCtrl = leftCtrl
-
-    rightCtrl = document.createElement("div")
-    rightCtrl.className = "right"
-    @_rightCtrl = rightCtrl
-
+    super
     spark = document.createElement("div")
     spark.className = "minichart"
     @_spark = spark
 
     $(@_leftCtrl).append @_spark
-    $(@_container).append @_leftCtrl, @_rightCtrl
-
-    if @options.popover
-      $(@_container).addClass("popover-" + @options.container)
-      @createPopover()
 
   updateInfo: (data, value) ->
     $(@_rightCtrl).html("<strong>" + value + "</strong><br /> " + @options.title)
