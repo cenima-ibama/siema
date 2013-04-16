@@ -172,10 +172,10 @@ chart1 = new Hash5GoogleCharts (
 chart1.createContainer()
 
 # make those options selected
-chart1.yearsSlct.options[totalPeriodos+1].selected = true
-chart1.monthsSlct.options[curMonth].selected = true
+chart1._yearsSlct.options[totalPeriodos+1].selected = true
+chart1._monthsSlct.options[curMonth].selected = true
 
-$("#slct-years").on "change", (event) ->
+$("#yearsSlct").on "change", (event) ->
   chart8.drawChart()
   knob1.drawChart()
   knob2.drawChart()
@@ -183,7 +183,7 @@ $("#slct-years").on "change", (event) ->
   spark1.drawChart()
   spark2.drawChart()
 
-$("#slct-months").on "change", (event) ->
+$("#monthsSlct").on "change", (event) ->
   chart3.drawChart()
   chart8.drawChart()
   knob1.drawChart()
@@ -212,9 +212,9 @@ chart1.drawChart = ->
   @data.addColumn "number", "Dia"
   @data.addColumn "number", "Área"
 
-  daysInMonth = new Date(@yearsSlct.value, @monthsSlct.value + 1, 0).getDate()
-  firstPeriod = new Date(@yearsSlct.value, @monthsSlct.value, 1)
-  secondPeriod = new Date(@yearsSlct.value, @monthsSlct.value, daysInMonth)
+  daysInMonth = new Date(@_yearsSlct.value, @_monthsSlct.value + 1, 0).getDate()
+  firstPeriod = new Date(@_yearsSlct.value, @_monthsSlct.value, 1)
+  secondPeriod = new Date(@_yearsSlct.value, @_monthsSlct.value, daysInMonth)
   data = []
 
   # populate table with 0
@@ -267,11 +267,11 @@ chart2 = new Hash5GoogleCharts(
 )
 chart2.createContainer()
 
-chart2.addBtn.onclick = ->
+chart2._addBtn.onclick = ->
   chart2.options.period++
   chart2.drawChart()
 
-chart2.delBtn.onclick = ->
+chart2._delBtn.onclick = ->
   chart2.options.period--
   chart2.drawChart()
 
@@ -333,13 +333,13 @@ chart2.drawChart = ->
       easing: "inAndOut"
 
   # Disabling the buttons while the chart is drawing.
-  @addBtn.disabled = true
-  @delBtn.disabled = true
+  @_addBtn.disabled = true
+  @_delBtn.disabled = true
 
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
-    @addBtn.disabled = @options.period > totalPeriodos
-    @delBtn.disabled = @options.period < 2
+    @_addBtn.disabled = @options.period > totalPeriodos
+    @_delBtn.disabled = @options.period < 2
 
   @chart.draw @data, options
 #}}}
@@ -356,11 +356,11 @@ chart3 = new Hash5GoogleCharts(
 )
 chart3.createContainer()
 
-chart3.addBtn.onclick = ->
+chart3._addBtn.onclick = ->
   chart3.options.period++
   chart3.drawChart()
 
-chart3.delBtn.onclick = ->
+chart3._delBtn.onclick = ->
   chart3.options.period--
   chart3.drawChart()
 
@@ -387,7 +387,7 @@ chart3.drawChart = ->
 
   # sum average values
   sumAvgValues = (year) ->
-    month = parseInt(chart1.monthsSlct.value)
+    month = parseInt(chart1._monthsSlct.value)
     firstPeriod = new Date(year - 1, 7, 1)
     if month > 6
       secondPeriod = new Date(year-1, month+1, 0)
@@ -441,13 +441,13 @@ chart3.drawChart = ->
       easing: "inAndOut"
 
   # Disabling the buttons while the chart is drawing.
-  @addBtn.disabled = true
-  @delBtn.disabled = true
+  @_addBtn.disabled = true
+  @_delBtn.disabled = true
 
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
-    @addBtn.disabled = @options.period > totalPeriodos - 1
-    @delBtn.disabled = @options.period < 2
+    @_addBtn.disabled = @options.period > totalPeriodos - 1
+    @_delBtn.disabled = @options.period < 2
 
   @chart.draw @data, options
 #}}}
@@ -464,11 +464,11 @@ chart4 = new Hash5GoogleCharts(
 )
 chart4.createContainer()
 
-chart4.addBtn.onclick = ->
+chart4._addBtn.onclick = ->
   chart4.options.period++
   chart4.drawChart()
 
-chart4.delBtn.onclick = ->
+chart4._delBtn.onclick = ->
   chart4.options.period--
   chart4.drawChart()
 
@@ -530,13 +530,13 @@ chart4.drawChart = ->
       easing: "inAndOut"
 
   # Disabling the buttons while the chart is drawing.
-  @addBtn.disabled = true
-  @delBtn.disabled = true
+  @_addBtn.disabled = true
+  @_delBtn.disabled = true
 
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
-    @addBtn.disabled = @options.period > totalPeriodos
-    @delBtn.disabled = @options.period < 2
+    @_addBtn.disabled = @options.period > totalPeriodos
+    @_delBtn.disabled = @options.period < 2
 
   @chart.draw @data, options
 #}}}
@@ -636,11 +636,11 @@ chart6.createContainer()
 
 chart6.changeTitle periodos[chart6.options.period]
 
-chart6.leftBtn.onclick = ->
+chart6._leftBtn.onclick = ->
   chart6.options.period++
   chart6.drawChart()
 
-chart6.rightBtn.onclick = ->
+chart6._rightBtn.onclick = ->
   chart6.options.period--
   chart6.drawChart()
 
@@ -710,13 +710,13 @@ chart6.drawChart = ->
   @changeTitle "Taxa PRODES|Alerta DETER: UFs [" + periodos[@options.period] + "]"
 
   # Disabling the buttons while the chart is drawing.
-  @rightBtn.disabled = true
-  @leftBtn.disabled = true
+  @_rightBtn.disabled = true
+  @_leftBtn.disabled = true
 
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
-    @rightBtn.disabled = @options.period < 2
-    @leftBtn.disabled = @options.period >= totalPeriodos
+    @_rightBtn.disabled = @options.period < 2
+    @_leftBtn.disabled = @options.period >= totalPeriodos
 
   @chart.draw @data, options
 #}}}
@@ -734,11 +734,11 @@ chart7.createContainer()
 
 chart7.changeTitle periodos[chart7.options.period]
 
-chart7.leftBtn.onclick = ->
+chart7._leftBtn.onclick = ->
   chart7.options.period++
   chart7.drawChart()
 
-chart7.rightBtn.onclick = ->
+chart7._rightBtn.onclick = ->
   chart7.options.period--
   chart7.drawChart()
 
@@ -787,13 +787,13 @@ chart7.drawChart = ->
   @changeTitle periodos[@options.period]
 
   # Disabling the buttons while the chart is drawing.
-  @rightBtn.disabled = true
-  @leftBtn.disabled = true
+  @_rightBtn.disabled = true
+  @_leftBtn.disabled = true
 
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
-    @rightBtn.disabled = @options.period < 1
-    @leftBtn.disabled = @options.period >= totalPeriodos
+    @_rightBtn.disabled = @options.period < 1
+    @_leftBtn.disabled = @options.period >= totalPeriodos
 
   @chart.draw @data, options
 #}}}
@@ -831,9 +831,9 @@ chart8.drawChart = ->
   @data.addColumn "string", "Estado"
   @data.addColumn "number", "Área Total"
 
-  daysInMonth = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate()
-  firstPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1)
-  secondPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, daysInMonth)
+  daysInMonth = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value + 1, 0).getDate()
+  firstPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, 1)
+  secondPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, daysInMonth)
 
   if firstPeriod > today
     pieText = "none"
@@ -849,7 +849,7 @@ chart8.drawChart = ->
     data[1] = sumValues(estados[i])
     @data.addRow data
 
-  @changeTitle chart1.monthsSlct.options[chart1.monthsSlct.value].label + ", " + chart1.yearsSlct.value
+  @changeTitle chart1._monthsSlct.options[chart1._monthsSlct.value].label + ", " + chart1._yearsSlct.value
 
   options =
     title: ""
@@ -890,11 +890,11 @@ chart9 = new Hash5GoogleCharts(
 )
 chart9.createContainer()
 
-chart9.addBtn.onclick = ->
+chart9._addBtn.onclick = ->
   chart9.options.period++
   chart9.drawChart()
 
-chart9.delBtn.onclick = ->
+chart9._delBtn.onclick = ->
   chart9.options.period--
   chart9.drawChart()
 
@@ -951,13 +951,13 @@ chart9.drawChart = ->
       easing: "inAndOut"
 
   # Disabling the buttons while the chart is drawing.
-  @addBtn.disabled = true
-  @delBtn.disabled = true
+  @_addBtn.disabled = true
+  @_delBtn.disabled = true
 
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
-    @addBtn.disabled = @options.period > totalPeriodos - 4
-    @delBtn.disabled = @options.period < 2
+    @_addBtn.disabled = @options.period > totalPeriodos - 4
+    @_delBtn.disabled = @options.period < 2
 
   @chart.draw @data, options
 #}}}
@@ -967,7 +967,7 @@ spark1 = new Hash5Sparks(
   title: "Total Mensal"
 )
 
-spark1.createSpark()
+spark1.createContainer()
 
 spark1.drawChart = ->
   #Create array with values
@@ -980,9 +980,9 @@ spark1.drawChart = ->
           return false
       data[(day-1)] = Math.round((data[(day-1)] + dayValue) * 100)/100
 
-  daysInMonth = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value + 1, 0).getDate()
-  firstPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, 1)
-  secondPeriod = new Date(chart1.yearsSlct.value, chart1.monthsSlct.value, daysInMonth)
+  daysInMonth = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value + 1, 0).getDate()
+  firstPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, 1)
+  secondPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, daysInMonth)
   data = []
 
   # populate table with 0
@@ -997,9 +997,7 @@ spark1.drawChart = ->
     createTable selectedState
 
   value = data[daysInMonth-1]
-  @updateSparkInfo value
-  @updateSparkChart data
-
+  @updateInfo data, value
 #}}}
 # SPARK2 {{{
 spark2 = new Hash5Sparks(
@@ -1007,7 +1005,7 @@ spark2 = new Hash5Sparks(
   title: "Total Período"
 )
 
-spark2.createSpark()
+spark2.createContainer()
 
 spark2.drawChart = ->
   #Create array with values
@@ -1036,15 +1034,13 @@ spark2.drawChart = ->
     i = number
     number = parseInt number
     if 7 <= (number + 7) <= 11 then number+= 7 else number-= 5
-    data[i] = sumValues(chart1.yearsSlct.value, number)
+    data[i] = sumValues(chart1._yearsSlct.value, number)
 
   value = 0
   $.each data, ->
     value += this
 
-  @updateSparkInfo Math.round(value*100)/100
-  @updateSparkChart data
-
+  @updateInfo data, Math.round(value*100)/100
 #}}}
 # GAUGE1 {{{
 gauge1 = new Hash5GoogleCharts(
@@ -1105,7 +1101,7 @@ gauge1.drawChart = ->
   # populate table
   title = 'TVAA'
   data = [title]
-  data[1] = periodDeforestationRate(chart1.yearsSlct.value, chart1.monthsSlct.value)
+  data[1] = periodDeforestationRate(chart1._yearsSlct.value, chart1._monthsSlct.value)
   @data.addRow data
 
   options =
@@ -1185,7 +1181,7 @@ gauge2.drawChart = ->
   # populate table
   title = 'TVMA'
   data = [title]
-  data[1] = periodDeforestationRate(chart1.yearsSlct.value, chart1.monthsSlct.value)
+  data[1] = periodDeforestationRate(chart1._yearsSlct.value, chart1._monthsSlct.value)
   @data.addRow data
 
   options =
@@ -1264,7 +1260,7 @@ gauge3.drawChart = ->
   # populate table
   title = 'TVPA'
   data = [title]
-  data[1] = periodDeforestationAvgRate(chart1.yearsSlct.value, chart1.monthsSlct.value)
+  data[1] = periodDeforestationAvgRate(chart1._yearsSlct.value, chart1._monthsSlct.value)
   @data.addRow data
 
   options =
@@ -1292,7 +1288,7 @@ knob1 = new Hash5Knobs(
   popover: "Taxa de variação em relação ao mesmo mês do ano anterior"
 )
 
-knob1.createKnob()
+knob1.createContainer()
 
 knob1.drawChart = ->
   # sum values
@@ -1329,10 +1325,9 @@ knob1.drawChart = ->
       return Math.round (curValue - preValue) / preValue * 100
 
   value = periodDeforestationRate(
-    parseInt(chart1.yearsSlct.value), parseInt(chart1.monthsSlct.value)
+    parseInt(chart1._yearsSlct.value), parseInt(chart1._monthsSlct.value)
   )
-  @updateKnob value
-  return
+  @updateInfo value
 #}}}
 # KNOB2 {{{
 knob2 = new Hash5Knobs(
@@ -1341,7 +1336,7 @@ knob2 = new Hash5Knobs(
   popover: "Taxa de variação em relação ao mês anterior"
 )
 
-knob2.createKnob()
+knob2.createContainer()
 
 knob2.drawChart = ->
   # sum values
@@ -1378,10 +1373,9 @@ knob2.drawChart = ->
       return Math.round (curValue - preValue) / preValue * 100
 
   value = periodDeforestationRate(
-    parseInt(chart1.yearsSlct.value), parseInt(chart1.monthsSlct.value)
+    parseInt(chart1._yearsSlct.value), parseInt(chart1._monthsSlct.value)
   )
-  @updateKnob value
-  return
+  @updateInfo value
 #}}}
 # KNOB3 {{{
 knob3 = new Hash5Knobs(
@@ -1390,7 +1384,7 @@ knob3 = new Hash5Knobs(
   popover: "Taxa de variação em relação ao período PRODES anterior"
 )
 
-knob3.createKnob()
+knob3.createContainer()
 
 knob3.drawChart = ->
   # sum values
@@ -1426,10 +1420,9 @@ knob3.drawChart = ->
       return Math.round (curValue - preValue) / preValue * 100
 
   value = periodDeforestationAvgRate(
-    parseInt(chart1.yearsSlct.value), parseInt(chart1.monthsSlct.value)
+    parseInt(chart1._yearsSlct.value), parseInt(chart1._monthsSlct.value)
   )
-  @updateKnob value
-  return
+  @updateInfo value
 #}}}
 # CONTROLS {{{
 window.reloadCharts = ->

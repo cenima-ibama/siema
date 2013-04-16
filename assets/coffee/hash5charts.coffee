@@ -26,143 +26,230 @@ class Hash5Charts
     @options = $.extend(defaultOptions, options)
 
   createContainer: ->
-    container = document.getElementById(@options.container)
-    html = "<div class=\"chart-header\">"
-    html += "<div class=\"btn-group chart-icon btn-left\"></div>"
-    html += "<h2>" + @options.title + "</h2>"
-    html += "<div class=\"btn-group chart-icon btn-right\"></div></div>"
-    html += "<div id=\"chart-" + @options.container + "\" class=\"chart-content\"></div>"
+    @_container = document.getElementById(@options.container)
 
-    $(container).append html
+    chartHeader = document.createElement("div")
+    chartHeader.className = "chart-header"
+    @_chartHeader = chartHeader
 
+    chartTitle = document.createElement("h2")
+    chartTitle.innerHTML = @options.title
+    @_chartTitle = chartTitle
+
+    leftCtrl = document.createElement("div")
+    leftCtrl.className = "btn-group chart-icon btn-left"
+    @_leftCtrl = leftCtrl
+
+    rightCtrl = document.createElement("div")
+    rightCtrl.className = "btn-group chart-icon btn-right"
+    @_rightCtrl = rightCtrl
+
+    chartContent = document.createElement("div")
+    chartContent.id = "chart-" + @options.container
+    chartContent.className = "chart-content"
+    @_chartContent = chartContent
+
+    $(@_chartHeader).append @_leftCtrl, @_chartTitle, @_rightCtrl
+    $(@_container).append @_chartHeader, @_chartContent
+
+    pipeline = "<span class=\"break\"></span>"
     # add minus and plus controllers
     if @options.buttons.minusplus
       # add break
-      html = "<span class=\"break\"></span>"
-      $(container).children().children("h2").prepend html
+      $(@_chartTitle).prepend pipeline
       # add buttons
-      html = "<button id=\"" + @options.container + "-btn-minus\" class=\"btn\"> <i class=\"icon-minus\"></i> </button>"
-      html += "<button id=\"" + @options.container + "-btn-plus\" class=\"btn\"> <i class=\"icon-plus\"></i> </button>"
-      $(container).children().children(".btn-left").append html
-      # associate buttons
-      @delBtn = document.getElementById(@options.container + "-btn-minus")
-      @addBtn = document.getElementById(@options.container + "-btn-plus")
+      delBtn = document.createElement("button")
+      delBtn.id = @options.container + "-btn-minus"
+      delBtn.className = "btn"
+      @_delBtn = delBtn
+
+      delIcon = document.createElement("i")
+      delIcon.className = "icon-minus"
+      @_delIcon = delIcon
+      $(@_delBtn).append @_delIcon
+
+      addBtn = document.createElement("button")
+      addBtn.id = @options.container + "-btn-plus"
+      addBtn.className = "btn"
+      @_addBtn = addBtn
+
+      addIcon = document.createElement("i")
+      addIcon.className = "icon-plus"
+      @_addIcon = addIcon
+      $(@_addBtn).append @_addIcon
+
+      $(@_leftCtrl).append @_delBtn, @_addBtn
 
     else if @options.buttons.arrows
       # add break
-      html = "<span class=\"break\"></span>"
-      $(container).children().children("h2").prepend html
-      # add buttons
-      html = "<button id=\"" + @options.container + "-btn-left\" class=\"btn\"> <i class=\"icon-arrow-left\"></i> </button>"
-      html += "<button id=\"" + @options.container + "-btn-right\" class=\"btn\"> <i class=\"icon-arrow-right\"></i> </button>"
-      $(container).children().children(".btn-left").append html
-      # associate buttons
-      @leftBtn = document.getElementById(@options.container + "-btn-left")
-      @rightBtn = document.getElementById(@options.container + "-btn-right")
+      $(@_chartTitle).prepend pipeline
+      # right buttons
+      leftBtn = document.createElement("button")
+      leftBtn.id = @options.container + "-btn-left"
+      leftBtn.className = "btn"
+      @_leftBtn = leftBtn
+
+      leftIcon = document.createElement("i")
+      leftIcon.className = "icon-arrow-left"
+      @_leftIcon = leftIcon
+      $(@_leftBtn).append @_leftIcon
+
+      rightBtn = document.createElement("button")
+      rightBtn.id = @options.container + "-btn-right"
+      rightBtn.className = "btn"
+      @_rightBtn = rightBtn
+
+      rightIcon = document.createElement("i")
+      rightIcon.className = "icon-arrow-right"
+      @_rightIcon = rightIcon
+      $(@_rightBtn).append @_rightIcon
+
+      $(@_leftCtrl).append @_leftBtn, @_rightBtn
 
     else if @options.selects?
       # add break
-      html = "<span class=\"break\"></span>"
-      $(container).children().children("h2").prepend html
+      $(@_chartTitle).prepend pipeline
       # create form
-      html = "<form name=\"form-" + @options.container + "\" class=\"form-inline\" action=\"\">"
+      formBtn = document.createElement("form")
+      formBtn.name = "form-" + @options.container
+      formBtn.className = "form-inline"
+      @_formBtn = formBtn
+
+      $.each @options.selects, (name, options) =>
+        select = "<select id=\"" + name + "Slct\" class=\"input-mini\" name=\"" + name + "\">"
+        $.each options, (value, key) ->
+          select += "<option value=" + value + ">" + key + "</option>"
+        select += "</select>"
+        $(@_formBtn).append select
+
+      $(@_leftCtrl).append @_formBtn
+      $(@_leftCtrl).removeClass "btn-group"
 
       $.each @options.selects, (name, data) =>
-        html += "<select id=\"slct-" + name + "\" class=\"input-mini\" name=\"" + name + "\">"
-        $.each data, (key, value) ->
-          html += "<option value=" + key + ">" + value + "</option>"
-        html += "</select>"
-
-      $(container).children().children(".btn-left").append html
-      $(container).children().children(".btn-left").removeClass "btn-group"
-
-      $.each @options.selects, (name, data) =>
-        @[name + "Slct"] = document["form-" + @options.container][name]
-        @enableSelect("#slct-" + name + "")
+        @["_" + name + "Slct"] = document["form-" + @options.container][name]
+        @enableSelect("#" + name + "Slct")
 
     if @options.buttons.minimize
-      html = "<button id=\"" + @options.container + "-min\" class=\"btn btn-minimize\"><i class=\"icon-chevron-up\"></i></button>"
-      $(container).children().children(".btn-right").append html
-      @minBtn = document.getElementById(@options.container + "-min")
-      @enableMinimize(container)
+
+      # add minimize button
+      minBtn = document.createElement("button")
+      minBtn.id = @options.container + "-btn-minimize"
+      minBtn.className = "btn"
+      @_minBtn = minBtn
+
+      minIcon = document.createElement("i")
+      minIcon.className = "icon-chevron-up"
+      @_minIcon = minIcon
+      $(@_minBtn).append @_minIcon
+
+      $(@_rightCtrl).append @_minBtn
+
+      @enableMinimize()
+
     if @options.buttons.maximize
-      html = "<button id=\"" + @options.container + "-max\" class=\"btn btn-maximize\"><i class=\"icon-resize-full\"></i></button>"
-      $(container).children().children(".btn-right").append html
-      @maxBtn = document.getElementById(@options.container + "-max")
-      @enableMaximize(container)
+
+      # add minimize button
+      maxBtn = document.createElement("button")
+      maxBtn.id = @options.container + "-btn-maximize"
+      maxBtn.className = "btn"
+      @_maxBtn = maxBtn
+
+      maxIcon = document.createElement("i")
+      maxIcon.className = "icon-resize-full"
+      @_maxIcon = maxIcon
+      $(@_maxBtn).append @_maxIcon
+
+      $(@_rightCtrl).append @_maxBtn
+
+      @enableMaximize()
+
     if @options.buttons.close
-      html = "<button id=\"" + @options.container + "-close\" class=\"btn btn-close\"><i class=\"icon-remove\"></i></button>"
-      $(container).children().children(".btn-right").append html
-      @closeBtn = document.getElementById(@options.container + "-close")
-      @enableClose(container)
+
+      # add minimize button
+      closeBtn = document.createElement("button")
+      closeBtn.id = @options.container + "-btn-close"
+      closeBtn.className = "btn"
+      @_closeBtn = closeBtn
+
+      closeIcon = document.createElement("i")
+      closeIcon.className = "icon-remove"
+      @_closeIcon = closeIcon
+      $(@_closeBtn).append @_closeIcon
+
+      $(@_rightCtrl).append @_closeBtn
+
+      @enableClose()
 
   createMinimalContainer: ->
-    container = document.getElementById(@options.container)
-    html = "<div id=\"chart-" + @options.container + "\" class=\"chart-content-small\"></div>"
-    $(container).append html
+    @_container = document.getElementById(@options.container)
+
+    chartContent = document.createElement("div")
+    chartContent.id = "chart-" + @options.container
+    chartContent.className = "chart-content-small"
+    @_chartContent = chartContent
+
+    $(@_container).append @_chartContent
 
   changeTitle: (title) ->
-    container = $("#" + @options.container + " h2")
-    container.html(title)
+    $(@_chartTitle).html(title)
     if @options.buttons.arrows or @options.buttons.minusplus or @options.selects?
-      html = "<span class=\"break\"></span>"
-      container.prepend html
+      pipeline = "<span class=\"break\"></span>"
+      $(@_chartTitle).prepend pipeline
 
-  enableMinimize: (container) ->
-    $(@minBtn).on "click", (event) =>
+  enableMinimize: ->
+    $(@_minBtn).on "click", (event) =>
       event.preventDefault()
-      $content = $(container).children().next(".chart-content")
-      if $content.is(":visible")
-        $(@minBtn).children().removeClass("icon-chevron-up").addClass "icon-chevron-down"
+
+      if $(@_chartContent).is(":visible")
+        @_minIcon.className = "icon-chevron-down"
         if @options.buttons.minusplus
-          $(@addBtn).prop "disabled", true
-          $(@delBtn).prop "disabled", true
+          $(@_addBtn).prop "disabled", true
+          $(@_delBtn).prop "disabled", true
         else if @options.buttons.arrows
-          $(@leftBtn).prop "disabled", true
-          $(@rightBtn).prop "disabled", true
+          $(@_leftBtn).prop "disabled", true
+          $(@_rightBtn).prop "disabled", true
       else
-        $(@minBtn).children().removeClass("icon-chevron-down").addClass "icon-chevron-up"
+        @_minIcon.className = "icon-chevron-up"
         if @options.buttons.minusplus
-          $(@addBtn).prop "disabled", false
-          $(@delBtn).prop "disabled", false
+          $(@_addBtn).prop "disabled", false
+          $(@_delBtn).prop "disabled", false
         else if @options.buttons.arrows
-          $(@leftBtn).prop "disabled", false
-          $(@rightBtn).prop "disabled", false
-      $content.slideToggle()
+          $(@_leftBtn).prop "disabled", false
+          $(@_rightBtn).prop "disabled", false
+      $(@_chartContent).slideToggle()
 
-  enableMaximize: (container) ->
-    $(@maxBtn).on "click", (event) =>
+  enableMaximize: ->
+    $(@_maxBtn).on "click", (event) =>
       event.preventDefault()
 
-      if $(@maxBtn).children()[0].className is 'icon-resize-full'
-        @defaultClass = $(container)[0].className
-        $(@minBtn).prop "disabled", true
-        $(@closeBtn).prop "disabled", true
-        $(@maxBtn).children().prop "class", "icon-resize-small"
+      if @_maxIcon.className is "icon-resize-full"
+        @defaultClass = @_container.className
+        $(@_minBtn).prop "disabled", true
+        $(@_closeBtn).prop "disabled", true
+        @_maxIcon.className = "icon-resize-small"
         $("#navbar").hide()
       else
-        $(@minBtn).prop "disabled", false
-        $(@closeBtn).prop "disabled", false
-        $(@maxBtn).children().prop "class", "icon-resize-full"
+        $(@_minBtn).prop "disabled", false
+        $(@_closeBtn).prop "disabled", false
+        @_maxIcon.className = "icon-resize-full"
         $("#navbar").show()
 
-      $(container).toggleClass @defaultClass
-      $(container).toggleClass "chart-overlay"
+      $(@_container).toggleClass @defaultClass
+      $(@_container).toggleClass "chart-overlay"
 
-      content = $(container).children().next(".chart-content")
-      content.toggleClass "chart-content-overlay"
-      content.hide()
-      content.fadeToggle 500
+      $(@_chartContent).toggleClass "chart-content-overlay"
+      $(@_chartContent).hide()
+      $(@_chartContent).fadeToggle 500
 
       @drawChart()
 
-  enableClose: (container) ->
-    $(@closeBtn).on "click", (event) =>
+  enableClose: ->
+    $(@_closeBtn).on "click", (event) =>
       event.preventDefault()
-      $(container).hide("slide",{},'600')
+      $(@_container).hide("slide", {}, 600)
 
-  enableSelect: (container) ->
-    $(container).on "change", (event) =>
+  enableSelect: (select) ->
+    $(select).on "change", (event) =>
       @drawChart()
 
 class Hash5GoogleCharts extends Hash5Charts
@@ -174,11 +261,11 @@ class Hash5GoogleCharts extends Hash5Charts
     # setup new chart
     if @options.type is "Gauge"
       @chart = new google.visualization.Gauge(
-        document.getElementById("chart-" + @options.container)
+        @_chartContent
       )
     else
       @chart = new google.visualization[@options.type + "Chart"](
-        document.getElementById("chart-" + @options.container)
+        @_chartContent
       )
     # only init one time
     @options.started = false
@@ -192,26 +279,19 @@ class Hash5GoogleCharts extends Hash5Charts
 
     # update chart if orientation or the size of the screen changed
     window.addEventListener orientationEvent, (=>
-      setTimeout =>
-        @drawChart()
-      , 250
+      @drawChart()
     ),false
 
-class Hash5Knobs extends Hash5Charts
+class Hash5MiniCharts
 
-  createKnob: ->
-    container = document.getElementById(@options.container)
-    html = "<div class=\"left\">"
-    html+= "<input type=\"text\" class=\"dial\">"
-    html+= "</div>"
-    html+= "<div class=\"right\">"
-    html+= "</div>"
-    $(container).append html
-    @insertKnob container
-
-    if @options.popover?
-      $(container).addClass("popover-" + @options.container)
-      @createPopover()
+  constructor: (options) ->
+    defaultOptions =
+      type: null
+      container: null
+      title: ""
+      popover: false
+    # configure object with the options
+    @options = $.extend(defaultOptions, options)
 
   createPopover: ->
     placement = "bottom"
@@ -224,21 +304,47 @@ class Hash5Knobs extends Hash5Charts
       trigger: trigger
       html: html
 
-  insertKnob: (container) ->
-    dial = $(container).children().children('input')
-    dial.knob(
-      'min':-100
-      'max':100
-      'bgColor': "#DEDEDE"
-      'fgColor': "#DEDEDE"
-      'angleOffset':-125
-      'angleArc':250
-      'readOnly': true
-      'width': 58
-      'height': 58
-      'thickness': 0.5
-      'displayInput': false
-      'color': 'alert'
+class Hash5Knobs extends Hash5MiniCharts
+
+  createContainer: ->
+    @_container = document.getElementById(@options.container)
+
+    leftCtrl = document.createElement("div")
+    leftCtrl.className = "left"
+    @_leftCtrl = leftCtrl
+
+    rightCtrl = document.createElement("div")
+    rightCtrl.className = "right"
+    @_rightCtrl = rightCtrl
+
+    dial = document.createElement("input")
+    dial.type = "text"
+    dial .className = "dial"
+    @_dial = dial
+
+    $(@_leftCtrl).append @_dial
+    $(@_container).append @_leftCtrl, @_rightCtrl
+
+    if @options.popover
+      $(@_container).addClass("popover-" + @options.container)
+      @createPopover()
+
+    @createChart()
+
+  createChart: ->
+    $(@_dial).knob(
+      min:-100
+      max:100
+      bgColor: "#DEDEDE"
+      fgColor: "#DEDEDE"
+      angleOffset:-125
+      angleArc:250
+      readOnly: true
+      width: 58
+      height: 58
+      thickness: 0.5
+      displayInput: false
+      color: "alert"
       draw: ->
         value = @val()
         _min = @o.min
@@ -255,44 +361,51 @@ class Hash5Knobs extends Hash5Charts
           else color = pusher.color("#FC2121")
         this.o.fgColor = color.html()
     )
-    dial.val(0).trigger "change"
+    $(@_dial).val(0).trigger "change"
 
-  updateKnob: (value) ->
-    container = document.getElementById(@options.container)
-    info = $(container).children(".right")
-    info.html("<strong>" + value + "%</strong><br /> " + @options.title)
-    @animateKnob(parseFloat(value))
+  updateInfo: (value) ->
+    $(@_rightCtrl).html("<strong>" + value + "%</strong><br/> " + @options.title)
+    @updateChart(parseFloat(value))
 
-  animateKnob: (dialValue) ->
-    container = document.getElementById(@options.container)
-    dial = $(container).find('.dial')
+  updateChart: (total) ->
+    dial = $(@_leftCtrl).find('.dial')
     $(value: dial.val()).animate
-      value: dialValue,
+      value: total,
         duration: 2000
         easing: "easeOutSine"
         step: ->
           dial.val(Math.floor @value).trigger "change"
-          return
 
-class Hash5Sparks extends Hash5Charts
+class Hash5Sparks extends Hash5MiniCharts
 
-  createSpark: ->
-    container = document.getElementById(@options.container)
-    html = "<div class=\"left\">"
-    html+= "<div class=\"minichart\"></div>"
-    html+= "</div>"
-    html+= "<div class=\"right\"></div>"
-    $(container).append html
+  createContainer: ->
+    @_container = document.getElementById(@options.container)
 
-  updateSparkInfo: (value) ->
-    container = document.getElementById(@options.container)
-    info = $(container).children(".right")
-    info.html("<strong>" + value + "</strong><br /> " + @options.title)
+    leftCtrl = document.createElement("div")
+    leftCtrl.className = "left"
+    @_leftCtrl = leftCtrl
 
-  updateSparkChart: (data) ->
-    container = document.getElementById(@options.container)
-    spark = $(container).children(".left").children(".minichart")
-    $(spark).sparkline data,
+    rightCtrl = document.createElement("div")
+    rightCtrl.className = "right"
+    @_rightCtrl = rightCtrl
+
+    spark = document.createElement("div")
+    spark.className = "minichart"
+    @_spark = spark
+
+    $(@_leftCtrl).append @_spark
+    $(@_container).append @_leftCtrl, @_rightCtrl
+
+    if @options.popover
+      $(@_container).addClass("popover-" + @options.container)
+      @createPopover()
+
+  updateInfo: (data, value) ->
+    $(@_rightCtrl).html("<strong>" + value + "</strong><br /> " + @options.title)
+    @updateChart(data)
+
+  updateChart: (data) ->
+    $(@_spark).sparkline data,
       width: 58 #Width of the chart
       height: 62 #Height of the chart
       lineColor: "#2FABE9" #Used by line to specify the colour of the line drawn
