@@ -13,10 +13,6 @@
     <div id="map-container" class="map"></div>
   </section>
   <section class="dash">
-    <div id="sidebar-dash">
-      <div id="sidebar-dash-btn"><i class="icon-arrow-right"></i></div>
-      <span>Legendas</span>
-    </div>
     <section class="charts-content">
       <div class="row-fluid">
         <div class="quick-btn">
