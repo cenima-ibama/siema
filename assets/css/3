@@ -5,6 +5,7 @@
   margin-bottom: 5px;
 }
 .form-layer-list .control-group {
+  margin-bottom: 5px;
 }
 .form-layer-list .control-group:after {
   content: "";
@@ -13,7 +14,6 @@
 }
 .form-layer-list .control-label {
   float: left;
-  padding-top: 9px;
+  padding-top: 8px;
   width: 120px;
-  vertical-align: middle;
 }

@@ -47,20 +47,16 @@ tableAlerta =
     self[date].month = convertDate(date).getMonth()
     self[date].day = convertDate(date).getDate()
 
-$.ajax
-  type: "GET"
-  url: "../painel/rest/v1/ws_geo_attributequery.php"
-  data:
-    table: "alerta_acumulado_diario"
-  dataType: "jsonp"
-  success: (data) ->
-    tableAlerta.init()
-    $.each data, (i, properties) ->
-      tableAlerta.populate(
-        properties.estado, properties.data, parseFloat(properties.total)
-      )
-  error: (error, status, desc) ->
-    console.log status, desc
+rest = new H5.PgRest (
+  url: "../painel/rest"
+  table: "alerta_acumulado_diario"
+)
+
+tableAlerta.init()
+$.each rest.request(), (i, properties) ->
+  tableAlerta.populate(
+    properties.estado, properties.data, parseFloat(properties.total)
+  )
 
 tableProdes =
   init: ->
@@ -82,25 +78,21 @@ tableProdes =
     self.RR[period].area = rr
     self.TO[period].area = to
 
-$.ajax
-  type: "GET"
-  url: "../painel/rest/v1/ws_geo_attributequery.php"
-  data:
-    table: "taxa_prodes"
-  dataType: "jsonp"
-  success: (data) ->
-    tableProdes.init()
-    $.each data, (i, properties) ->
-      tableProdes.populate(
-        properties.ano_prodes.replace('/','-'),
-        parseFloat(properties.ac), parseFloat(properties.am),
-        parseFloat(properties.ap), parseFloat(properties.ma),
-        parseFloat(properties.mt), parseFloat(properties.pa),
-        parseFloat(properties.ro), parseFloat(properties.rr),
-        parseFloat(properties.to)
-      )
-  error: (error, status, desc) ->
-    console.log status, desc
+rest = new H5.PgRest (
+  url: "../painel/rest"
+  table: "taxa_prodes"
+)
+
+tableProdes.init()
+$.each rest.request(), (i, properties) ->
+  tableProdes.populate(
+    properties.ano_prodes.replace('/','-'),
+      parseFloat(properties.ac), parseFloat(properties.am),
+      parseFloat(properties.ap), parseFloat(properties.ma),
+      parseFloat(properties.mt), parseFloat(properties.pa),
+      parseFloat(properties.ro), parseFloat(properties.rr),
+      parseFloat(properties.to)
+  )
 
 tableNuvens =
   init: ->
@@ -119,24 +111,19 @@ tableNuvens =
     self[date].month = convertDate(date).getMonth()
     self[date].day = convertDate(date).getDate()
 
+rest = new H5.PgRest (
+  url: "../painel/rest"
+  table: "nuvem_deter"
+)
 
-$.ajax
-  type: "GET"
-  url: "../painel/rest/v1/ws_geo_attributequery.php"
-  data:
-    table: "nuvem_deter"
-  dataType: "jsonp"
-  success: (data) ->
-    tableNuvens.init()
-    $.each data, (i, properties) ->
-      tableNuvens.populate(
-        properties.data, properties.percent,
-      )
-  error: (error, status, desc) ->
-    console.log status, desc
+tableNuvens.init()
+$.each rest.request(), (i, properties) ->
+  tableNuvens.populate(
+    properties.data, properties.percent,
+  )
 #}}}
 # CHART1 {{{
-chart1 = new Hash5GoogleCharts (
+chart1 = new H5.GoogleCharts (
   type: "Line"
   container: "chart1"
   title: "Alerta DETER: Índice Diário"
@@ -255,7 +242,7 @@ chart1.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART2 {{{
-chart2 = new Hash5GoogleCharts(
+chart2 = new H5.GoogleCharts(
   type: "Area"
   container: "chart2"
   period: 2
@@ -344,7 +331,7 @@ chart2.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART3 {{{
-chart3 = new Hash5GoogleCharts(
+chart3 = new H5.GoogleCharts(
   type: "Bar"
   container: "chart3"
   period: 1
@@ -452,7 +439,7 @@ chart3.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART4 {{{
-chart4 = new Hash5GoogleCharts(
+chart4 = new H5.GoogleCharts(
   type: "Column"
   container: "chart4"
   period: 2
@@ -541,7 +528,7 @@ chart4.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART5 {{{
-chart5 = new Hash5GoogleCharts(
+chart5 = new H5.GoogleCharts(
   type: "Area"
   container: "chart5"
   title: "Taxa PRODES|Alerta DETER: Acumulado Períodos"
@@ -622,7 +609,7 @@ chart5.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART6 {{{
-chart6 = new Hash5GoogleCharts(
+chart6 = new H5.GoogleCharts(
   type: "Column"
   container: "chart6"
   period: 1
@@ -721,7 +708,7 @@ chart6.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART7 {{{
-chart7 = new Hash5GoogleCharts(
+chart7 = new H5.GoogleCharts(
   type: "Pie"
   container: "chart7"
   period: 0
@@ -798,7 +785,7 @@ chart7.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART8 {{{
-chart8 = new Hash5GoogleCharts(
+chart8 = new H5.GoogleCharts(
   type: "Pie"
   container: "chart8"
   period: 1
@@ -878,7 +865,7 @@ chart8.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART9 {{{
-chart9 = new Hash5GoogleCharts(
+chart9 = new H5.GoogleCharts(
   type: "Line"
   container: "chart9"
   period: 2
@@ -962,7 +949,7 @@ chart9.drawChart = ->
   @chart.draw @data, options
 #}}}
 # SPARK1 {{{
-spark1 = new Hash5Sparks(
+spark1 = new H5.Sparks(
   container: "spark1"
   title: "Total Mensal"
 )
@@ -1000,7 +987,7 @@ spark1.drawChart = ->
   @updateInfo data, value
 #}}}
 # SPARK2 {{{
-spark2 = new Hash5Sparks(
+spark2 = new H5.Sparks(
   container: "spark2"
   title: "Total Período"
 )
@@ -1043,7 +1030,7 @@ spark2.drawChart = ->
   @updateInfo data, Math.round(value*100)/100
 #}}}
 # GAUGE1 {{{
-gauge1 = new Hash5GoogleCharts(
+gauge1 = new H5.GoogleCharts(
   type: "Gauge"
   container: "gauge1"
   title: "Demo"
@@ -1123,7 +1110,7 @@ gauge1.drawChart = ->
   @chart.draw @data, options
 #}}}
 # GAUGE2 {{{
-gauge2 = new Hash5GoogleCharts(
+gauge2 = new H5.GoogleCharts(
   type: "Gauge"
   container: "gauge2"
   title: "Demo"
@@ -1203,7 +1190,7 @@ gauge2.drawChart = ->
   @chart.draw @data, options
 #}}}
 # GAUGE3 {{{
-gauge3 = new Hash5GoogleCharts(
+gauge3 = new H5.GoogleCharts(
   type: "Gauge"
   container: "gauge3"
   title: "Demo"
@@ -1282,7 +1269,7 @@ gauge3.drawChart = ->
   @chart.draw @data, options
 #}}}
 # KNOB1 {{{
-knob1 = new Hash5Knobs(
+knob1 = new H5.Knobs(
   container: "knob1"
   title: "Taxa VAA"
   popover: "Taxa de variação em relação ao mesmo mês do ano anterior"
@@ -1330,7 +1317,7 @@ knob1.drawChart = ->
   @updateInfo value
 #}}}
 # KNOB2 {{{
-knob2 = new Hash5Knobs(
+knob2 = new H5.Knobs(
   container: "knob2"
   title: "Taxa VMA"
   popover: "Taxa de variação em relação ao mês anterior"
@@ -1378,7 +1365,7 @@ knob2.drawChart = ->
   @updateInfo value
 #}}}
 # KNOB3 {{{
-knob3 = new Hash5Knobs(
+knob3 = new H5.Knobs(
   container: "knob3"
   title: "Taxa VPA"
   popover: "Taxa de variação em relação ao período PRODES anterior"

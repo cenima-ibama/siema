@@ -1,3 +1,10 @@
 #!/bin/bash
 
-coffee --join js/charts.js -cw coffee/hash5charts.coffee coffee/charts.coffee
+case $1 in
+  "--charts")
+    coffee --join js/h5charts.js -cw coffee/charts.coffee
+    ;;
+  "--hash5")
+    coffee --join js/hash5.js -cw coffee/hash5.coffee coffee/hash5pgrest.coffee coffee/hash5charts.coffee
+    ;;
+esac

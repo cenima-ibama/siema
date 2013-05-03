@@ -4,7 +4,7 @@ google.load "visualization", "1",
 google.load "visualization", "1",
   packages: ["gauge"]
 
-class Hash5Charts
+class H5.Charts
 
   constructor: (options) ->
     defaultOptions =
@@ -252,7 +252,7 @@ class Hash5Charts
     $(select).on "change", (event) =>
       @drawChart()
 
-class Hash5GoogleCharts extends Hash5Charts
+class H5.GoogleCharts extends H5.Charts
 
   dataTable: ->
     @data = new google.visualization.DataTable()
@@ -282,7 +282,7 @@ class Hash5GoogleCharts extends Hash5Charts
       @drawChart()
     ),false
 
-class Hash5MiniCharts
+class H5.MiniCharts
 
   constructor: (options) ->
     defaultOptions =
@@ -321,7 +321,7 @@ class Hash5MiniCharts
       trigger: trigger
       html: html
 
-class Hash5Knobs extends Hash5MiniCharts
+class H5.Knobs extends H5.MiniCharts
 
   createContainer: ->
     super
@@ -379,7 +379,7 @@ class Hash5Knobs extends Hash5MiniCharts
         step: ->
           dial.val(Math.floor @value).trigger "change"
 
-class Hash5Sparks extends Hash5MiniCharts
+class H5.Sparks extends H5.MiniCharts
 
   createContainer: ->
     super
