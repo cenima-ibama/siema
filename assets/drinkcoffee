@@ -5,6 +5,6 @@ case $1 in
     coffee --join js/h5charts.js -cw coffee/charts.coffee
     ;;
   "--hash5")
-    coffee --join js/hash5.js -cw coffee/hash5.coffee coffee/hash5pgrest.coffee coffee/hash5charts.coffee
+    coffee --join js/hash5.js -cw coffee/hash5.coffee coffee/hash5pgrest.coffee coffee/hash5charts.coffee coffee/hash5leaflet.coffee
     ;;
 esac

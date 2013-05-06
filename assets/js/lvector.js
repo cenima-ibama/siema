@@ -515,6 +515,7 @@ lvector.Layer = lvector.Class.extend({
       data.features[i].type = "Feature"; // Not really necessary, but let's follow the GeoJSON spec for a Feature
     }
 
+    console.log(data);
     // remove json data
     delete json;
 

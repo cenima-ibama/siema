@@ -1,47 +1,283 @@
-# display stations
-processTMS = (data) ->
-  onEachFeature = (feature, layer) ->
+H5.Leaflet = {
+  layersList: null
+}
+# H5.Leaflet.VectorLayer {{{
+class H5.Leaflet.VectorLayer
+  options:
+    fields: ""
+    scaleRange: null
+    layer: null
+    uniqueField: null
+    visibleAtScale: true
+    autoUpdate: false
+    autoUpdateInterval: null
+    popupTemplate: null
+    popupOptions: {}
+    singlePopup: false
+    symbology: null
+    showAll: false
+    symbology: {}
+
+  constructor: (options) ->
+    L.setOptions this, options
+
+  # Show this layer on the map provided
+  setMap: (map) ->
+    return  if map and @options.map
+    if map
+      @options.map = map
+      if @options.scaleRange and @options.scaleRange instanceof Array and @options.scaleRange.length is 2
+        z = @options.map.getZoom()
+        sr = @options.scaleRange
+        @options.visibleAtScale = (z >= sr[0] and z <= sr[1])
+
+  # Set the Popup content for the feature
+  _setPopupContent: (feature) ->
+
+    # Store previous Popup content so we can check to see if it changed. If it didn't no sense changing the content as this has an ugly flashing effect.
+    previousContent = feature.popupContent
+    atts = feature.properties
+    popupContent = undefined
+
+    # Check to see if it's a string-based popupTemplate or function
+    if typeof @options.popupTemplate is "string"
+
+      # Store the string-based popupTemplate
+      popupContent = @options.popupTemplate
+
+      # Loop through the properties and replace mustache-wrapped property names with actual values
+      for prop of atts
+        re = new RegExp("{" + prop + "}", "g")
+        popupContent = popupContent.replace(re, atts[prop])
+    else if typeof @options.popupTemplate is "function"
+
+      # It's a function-based popupTempmlate, so just call this function and pass properties
+      popupContent = @options.popupTemplate(atts)
+    else
+
+      # Ummm, that's all we support. Seeya!
+      return
+
+    # Store the Popup content
+    feature.popupContent = popupContent
+
+    # Check to see if popupContent has changed and if so setContent
+    if feature.popup
+
+      # The Popup is associated with a feature
+      if feature.popupContent isnt previousContent
+        feature.popup.setContent feature.popupContent
+
+    # The Popup is associated with the layer (singlePopup: true)
+    else if @popup and @popup.associatedFeature is feature
+      if feature.popupContent isnt previousContent
+        @popup.setContent feature.popupContent
+
+  _getFeatureStyle: (feature) ->
+
+    # Create an empty style object to add to, or leave as is if no symbology can be found
+    style = {}
+    atts = feature.properties
+
+    # Is there a symbology set for this layer?
+    if @options.symbology
+      switch @options.symbology.type
+        when "single"
+          # It's a single symbology for all features so just set the key/value pairs in style
+          for key of @options.symbology.style
+            style[key] = @options.symbology.style[key]
+        when "unique"
+          # It's a unique symbology. Check if the feature's property value matches that in the symbology and style accordingly
+          att = @options.symbology.property
+          i = 0
+          len = @options.symbology.values.length
+          while i < len
+            if atts[att] is @options.symbology.values[i].value
+              for key of @options.symbology.values[i].style
+                style[key] = @options.symbology.values[i].style[key]
+            i++
+        when "range"
+          # It's a range symbology. Check if the feature's property value is in the range set in the symbology and style accordingly
+          att = @options.symbology.property
+          i = 0
+          len = @options.symbology.ranges.length
+          while i < len
+            if atts[att] >= @options.symbology.ranges[i].range[0] and atts[att] <= @options.symbology.ranges[i].range[1]
+              for key of @options.symbology.ranges[i].style
+                style[key] = @options.symbology.ranges[i].style[key]
+            i++
+    return style
+
+  _updatePosition: (feature) ->
+    if feature.geometry.type is "Point"
+      for i in [0 .. @layer._layers.length]
+        if feature.properties[@options.uniqueField]is @layer._layers[i].properties[@options.uniqueField]
+          @layer._layers[i].setLatLngs[feature.geometry.coordinates].update()
+
+class H5.Leaflet.PostgisLayer extends H5.Leaflet.VectorLayer
+  options:
+    url: null
+    srid: null
+    geomFieldName: "the_geom"
+    table: null
+    fields: null
+    where: null
+    limit: null
+    uniqueField: null
+
+  constructor: (options) ->
+
+    # Check for required parameters
+    i = 0
+    len = @_requiredParams.length
+
+    while i < len
+      throw new Error("No \"" + @_requiredParams[i] + "\" parameter found.") unless options[@_requiredParams[i]]
+      i++
+
+    L.setOptions this, options
+
+    # # Build Query
+    # where = (if (@options.where) then encodeURIComponent(@options.where) else null)
+    # unless @options.showAll
+      # bounds = @options.map.getBounds()
+      # sw = bounds.getSouthWest()
+      # ne = bounds.getNorthEast()
+      # where += (if where.length then " AND " else "")
+      # if @options.srid
+        # where += @options.geomFieldName + " && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))," + @options.srid + ")"
+      # else
+        # where += "" + @options.geomFieldName + ",4326) && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))"
+    # @options.where = where
+
+    # Build fields
+    @options.fields = ((if @options.fields then @options.fields + "*" else "" )) + ", st_asgeojson(" + @options.geomFieldName + ") as geojson"
+
+    console.log(@options)
+    @_show()
+
+  update: ->
+    @_getGeoJson()
+    # load geojson data
+    if not @layer
+      throw new Error("No layer founded")
+    else
+      layer = new L.GeoJson(@geoJson,
+        onEachFeature: @_updatePosition
+      )
+
+  _requiredParams: ["url", "table"]
+
+  _show: ->
+    @_getGeoJson()
+    # load geojson data
+    if not @layer
+      @layer = L.geoJson(@geoJson,
+        style: @_getFeatureStyle
+        onEachFeature: @_setPopupContent
+      )
+    else
+      layer = L.geoJson(@geoJson,
+        onEachFeature: @_updatePosition
+      )
+    if @options.autoUpdate and @options.autoUpdateInterval
+      @_autoUpdateInterval = setInterval(=>
+        @_show()
+      , @options.autoUpdateInterval)
+
+  _getGeoJson: ->
+    #request data from the server
+    rest = new H5.PgRest {
+      url: @options.url
+      table: @options.table
+      fields: @options.fields
+      parameters: @options.where
+      limit: @options.limit
+    }
+
+    json = rest.request()
+
+    @geoJson = {}
+    @geoJson.features = []
+    @geoJson.total = json.length
+    @geoJson.type = "FeatureCollection" # Not really necessary, but let's follow the GeoJSON spec for a Feature
+    # convert @geoJson to make it look like a GeoJSON FeatureCollection
+    i = 0
+    len = json.length
+
+    while i < len
+      @geoJson.features[i] = {}
+      @geoJson.features[i].properties = {}
+      for prop of json[i]
+        if prop is "geojson"
+          @geoJson.features[i].geometry = JSON.parse(json[i].geojson)
+        else if prop != "properties"
+          @geoJson.features[i].properties[prop] = json[i][prop]
+      # Not really necessary, but let's follow the GeoJSON spec for a Feature
+      @geoJson.features[i].type = "Feature"
+      i++
+
+    json = null
+    console.log @geoJson
+# }}}
+# H5.Leaflet.RapidEyeTMS {{{
+class H5.Leaflet.RapidEyeTMS
+  options:
+    url: null
+    table: null
+    numberOfLayers: 4
+
+  constructor: (options) ->
+    # create object for the tiles
+    @listLayers = []
+    @layers = {}
+    @layerGroup = []
+    @count = 1
+
+    # configure object with the options
+    L.setOptions this, options
+
+    @_createTMSLayers()
+    @_loadGeoJSON()
+    @_addToLayerControl()
+
+  _onEachFeature: (feature, layer) ->
+
     popupContent = "<p>I started out as a GeoJSON " + feature.geometry.type + ", but now I'm a Leaflet vector!</p>"
     popupContent += feature.properties.popupContent  if feature.properties and feature.properties.popupContent
+
     layer.bindPopup popupContent
+
+    #load TMS on mouseover or click
     layer.on "mouseover click", (e) ->
 
       # get the tile URL
+      tmsUrl = feature.properties.url_tiles + "{z}/{x}/{y}.png"
 
       # remove border
-
-      # check if the layer is already loaded
-      checkLayer = (layerId) ->
-        i = 0
-        while i < rapidEye.listLayers.length
-          return false  if layerId is rapidEye.listLayers[i]
-          i++
-        true
-      tmsUrl = feature.properties.url_tiles + "{z}/{x}/{y}.png"
       layer.setStyle
         fillColor: "transparent"
         stroke: false
 
-      if checkLayer(layer._leaflet_id)
+      if @_checkLayer(layer._leaflet_id)
 
         # add tile inside polygon
-        rapidEye.layers[rapidEye.count].setUrl tmsUrl
-        rapidEye.layers[rapidEye.count].redraw()
+        @layers[@count].setUrl tmsUrl
+        @layers[@count].redraw()
 
         # add layer id to the list of layers
-        rapidEye.listLayers.push layer._leaflet_id
+        @listLayers.push layer._leaflet_id
 
         # compare if number of tiles is bigger then the
         # number of layers
-        rapidEye.listLayers.shift()  if rapidEye.listLayers.length > rapidEye.numberOfLayers
+        @listLayers.shift() if @listLayers.length > @options.numberOfLayers
 
         # make next tile avaliable
-        rapidEye.count++
+        @count++
 
         # if the tile number is bigger then the number of layers
         # reset the controller
-        rapidEye.count = 1  if rapidEye.count > rapidEye.numberOfLayers
-
+        @count = 1 if @count > @options.numberOfLayers
 
     # restore style when leave
     layer.on "mouseout", (e) ->
@@ -49,50 +285,55 @@ processTMS = (data) ->
       # restore style
       layer.setStyle stroke: true
 
+  _createTMSLayers: ->
+    # create number of layers to display the tms
+    i = 1
+    while i <= @options.numberOfLayers
+      @layers[i] = new L.TileLayer("",
+        minZoom: 3
+        maxZoom: 17
+        tms: true
+      )
+      # add layer to list of layers
+      @layerGroup.push @layers[i]
+      i++
 
-  # create object for the tiles
-  rapidEye = {}
-  rapidEye.count = 1
-  rapidEye.listLayers = []
-  rapidEye.layers = {}
-  rapidEye.layerGroup = []
-  rapidEye.numberOfLayers = 4
+  _checkLayer: (layerId) ->
+    # check if the layer is already loaded
+      for i in [0 .. @listLayers.length]
+        return false if layerId is @listLayers[i]
+      return true
 
-  # create number of layers to display the tms
-  i = 1
-  while i <= rapidEye.numberOfLayers
-    rapidEye.layers[i] = new L.TileLayer("",
-      minZoom: 3
-      maxZoom: 17
-      tms: true
+  _loadGeoJSON: ->
+    #request data from the server
+    rest = new H5.PgRest {
+      url: @options.url
+      table: @options.table
+    }
+    # load geojson data
+    @_vectors = L.geoJson(rest.request(),
+      style:
+        fillColor: "transparent"
+        color: "purple"
+        weight: 4
+
+      onEachFeature: @_onEachFeature
     )
 
-    # add layer to list of layers
-    rapidEye.layerGroup.push rapidEye.layers[i]
-    i++
-
-  # load geojson data
-  rapidEye.geoJson = L.geoJson(data,
-    style:
-      fillColor: "transparent"
-      color: "purple"
-      weight: 4
-
-    onEachFeature: onEachFeature
-  )
-
-  # create a group of layers and add then to the layers list
-  rapidEyeTMS = new L.LayerGroup(rapidEye.layerGroup)
-  rapidEyeTMS.addLayer rapidEye.geoJson
-  layersList.addLayer rapidEyeTMS, "RapidEye"
-
-H5.LayerControl = L.Control.extend(
+  _addToLayerControl: ->
+    # create a group of layers and add then to the layers list
+    rapidEyeLayer = new L.LayerGroup(@layerGroup)
+    rapidEyeLayer.addLayer @_vectors
+    if H5.Leaflet.layersList then H5.Leaflet.layersList.addLayer rapidEyeLayer, "RapidEye"
+# }}}
+# H5.Leaflet.LayerControl {{{
+H5.Leaflet.LayerControl = L.Control.extend (
   options:
     collapsed: true
     position: "topright"
     autoZIndex: true
 
-  constructor: (baseLayers, options) ->
+  initialize: (baseLayers, options) ->
     L.setOptions this, options
     @_layers = {}
     @_lastZIndex = 0
@@ -181,7 +422,6 @@ H5.LayerControl = L.Control.extend(
     input.type = "checkbox"
     input.defaultChecked = checked
     input.layerId = L.stamp(obj.layer)
-    $(toggle).bootstrapSwitch()
     $(toggle).on "switch-change", (e, data) ->
       _this._onInputClick input, obj
 
@@ -207,71 +447,4 @@ H5.LayerControl = L.Control.extend(
   _collapse: ->
     @_container.className = @_container.className.replace(" leaflet-control-layers-expanded", "")
 )
-bingaerial = new L.BingLayer("AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h",
-  type: "Aerial"
-  attribution: ""
-)
-bingroad = new L.BingLayer("AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h",
-  type: "Road"
-  attribution: ""
-)
-binghybrid = new L.BingLayer("AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h",
-  type: "AerialWithLabels"
-  attribution: ""
-)
-openstreetUrl = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-openstreetAttribution = ""
-openstreet = new L.TileLayer(openstreetUrl,
-  maxZoom: 18
-  attribution: openstreetAttribution
-)
-cloudmadeUrl = "http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png"
-cloudmadeAttribution = ""
-cloudmade = new L.TileLayer(cloudmadeUrl,
-  maxZoom: 18
-  attribution: cloudmadeAttribution
-)
-map = new L.Map("map-container",
-  center: new L.LatLng(-10.0, -58.0)
-  zoom: 6
-  layers: [openstreet]
-  zoomControl: true
-)
-alertaLayer = new lvector.PRWSF(
-  url: "../painel/rest/"
-  geotable: "alerta"
-  fields: "objectid"
-  srid: 4618
-  geomFieldName: "shape"
-  showAll: true
-  popupTemplate: "<div class=\"iw-content\"><center><h3>{objectid}</h3></center></div>"
-  singlePopup: true
-  where: "ano = '2013'"
-  symbology:
-    type: "single"
-    vectorOptions:
-      fillColor: "#ff0000"
-      fillOpacity: 0.6
-      weight: 1.2
-      color: "#ff0000"
-      opacity: 0.8
-)
-alertaLayer.setMap map
-$.getJSON "geojson/rapideye/pampas.json", (data) ->
-  processTMS data
-
-layersList = new hash5LayerControl(
-  OSM: openstreet
-  "Bing Aerial": bingaerial
-  "Bing Road": bingroad
-  "Bing Hybrid": binghybrid
-)
-
-# add layer menu
-map.addControl layersList
-
-# add custom attribution
-map.attributionControl.setPrefix "Hexgis Hash5"
-
-# add scale
-L.control.scale().addTo map
+# }}}

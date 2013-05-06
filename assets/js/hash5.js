@@ -4,48 +4,11 @@
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  this.H5 = (function() {
-    function H5() {}
-
-    H5.prototype.version = 0.6;
-
-    H5.prototype.author = "Helmuth Saatkamp <helmuthdu@gmail.com>";
-
-    H5.prototype.getURLParam = function(param) {
-      var compareKeyValuePair, comparisonResult, i, params, search;
-
-      search = window.location.search.substring(1);
-      compareKeyValuePair = function(pair) {
-        var decodedKey, decodedValue, key_value;
-
-        key_value = pair.split("=");
-        decodedKey = decodeURIComponent(key_value[0]);
-        decodedValue = decodeURIComponent(key_value[1]);
-        if (decodedKey === param) {
-          return decodedValue;
-        }
-        return null;
-      };
-      comparisonResult = null;
-      if (search.indexOf("&") > -1) {
-        params = search.split("&");
-        i = 0;
-        while (i < params.length) {
-          comparisonResult = compareKeyValuePair(params[i]);
-          if (comparisonResult !== null) {
-            break;
-          }
-          i++;
-        }
-      } else {
-        comparisonResult = compareKeyValuePair(search);
-      }
-      return comparisonResult;
-    };
-
-    return H5;
-
-  })();
+  this.H5 = {
+    version: 0.6,
+    company: "Hexgis <www.hexgis.com>",
+    author: "Helmuth Saatkamp <helmuthdu@gmail.com>"
+  };
 
   H5.PgRest = (function() {
     PgRest.prototype.options = {
@@ -94,6 +57,38 @@
       }
       this._get(url, query);
       return this.data;
+    };
+
+    PgRest.prototype.getURLParam = function(param) {
+      var compareKeyValuePair, comparisonResult, i, params, search;
+
+      search = window.location.search.substring(1);
+      compareKeyValuePair = function(pair) {
+        var decodedKey, decodedValue, key_value;
+
+        key_value = pair.split("=");
+        decodedKey = decodeURIComponent(key_value[0]);
+        decodedValue = decodeURIComponent(key_value[1]);
+        if (decodedKey === param) {
+          return decodedValue;
+        }
+        return null;
+      };
+      comparisonResult = null;
+      if (search.indexOf("&") > -1) {
+        params = search.split("&");
+        i = 0;
+        while (i < params.length) {
+          comparisonResult = compareKeyValuePair(params[i]);
+          if (comparisonResult !== null) {
+            break;
+          }
+          i++;
+        }
+      } else {
+        comparisonResult = compareKeyValuePair(search);
+      }
+      return comparisonResult;
     };
 
     PgRest.prototype._get = function(url, query) {
@@ -595,5 +590,506 @@
     return Sparks;
 
   })(H5.MiniCharts);
+
+  H5.Leaflet = {
+    layersList: null
+  };
+
+  H5.Leaflet.VectorLayer = (function() {
+    VectorLayer.prototype.options = {
+      fields: "",
+      scaleRange: null,
+      layer: null,
+      uniqueField: null,
+      visibleAtScale: true,
+      autoUpdate: false,
+      autoUpdateInterval: null,
+      popupTemplate: null,
+      popupOptions: {},
+      singlePopup: false,
+      symbology: null,
+      showAll: false,
+      symbology: {}
+    };
+
+    function VectorLayer(options) {
+      L.setOptions(this, options);
+    }
+
+    VectorLayer.prototype.setMap = function(map) {
+      var sr, z;
+
+      if (map && this.options.map) {
+        return;
+      }
+      if (map) {
+        this.options.map = map;
+        if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
+          z = this.options.map.getZoom();
+          sr = this.options.scaleRange;
+          return this.options.visibleAtScale = z >= sr[0] && z <= sr[1];
+        }
+      }
+    };
+
+    VectorLayer.prototype._setPopupContent = function(feature) {
+      var atts, popupContent, previousContent, prop, re;
+
+      previousContent = feature.popupContent;
+      atts = feature.properties;
+      popupContent = void 0;
+      if (typeof this.options.popupTemplate === "string") {
+        popupContent = this.options.popupTemplate;
+        for (prop in atts) {
+          re = new RegExp("{" + prop + "}", "g");
+          popupContent = popupContent.replace(re, atts[prop]);
+        }
+      } else if (typeof this.options.popupTemplate === "function") {
+        popupContent = this.options.popupTemplate(atts);
+      } else {
+        return;
+      }
+      feature.popupContent = popupContent;
+      if (feature.popup) {
+        if (feature.popupContent !== previousContent) {
+          return feature.popup.setContent(feature.popupContent);
+        }
+      } else if (this.popup && this.popup.associatedFeature === feature) {
+        if (feature.popupContent !== previousContent) {
+          return this.popup.setContent(feature.popupContent);
+        }
+      }
+    };
+
+    VectorLayer.prototype._getFeatureStyle = function(feature) {
+      var att, atts, i, key, len, style;
+
+      style = {};
+      atts = feature.properties;
+      if (this.options.symbology) {
+        switch (this.options.symbology.type) {
+          case "single":
+            for (key in this.options.symbology.style) {
+              style[key] = this.options.symbology.style[key];
+            }
+            break;
+          case "unique":
+            att = this.options.symbology.property;
+            i = 0;
+            len = this.options.symbology.values.length;
+            while (i < len) {
+              if (atts[att] === this.options.symbology.values[i].value) {
+                for (key in this.options.symbology.values[i].style) {
+                  style[key] = this.options.symbology.values[i].style[key];
+                }
+              }
+              i++;
+            }
+            break;
+          case "range":
+            att = this.options.symbology.property;
+            i = 0;
+            len = this.options.symbology.ranges.length;
+            while (i < len) {
+              if (atts[att] >= this.options.symbology.ranges[i].range[0] && atts[att] <= this.options.symbology.ranges[i].range[1]) {
+                for (key in this.options.symbology.ranges[i].style) {
+                  style[key] = this.options.symbology.ranges[i].style[key];
+                }
+              }
+              i++;
+            }
+        }
+      }
+      return style;
+    };
+
+    VectorLayer.prototype._updatePosition = function(feature) {
+      var i, _i, _ref3, _results;
+
+      if (feature.geometry.type === "Point") {
+        _results = [];
+        for (i = _i = 0, _ref3 = this.layer._layers.length; 0 <= _ref3 ? _i <= _ref3 : _i >= _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
+          if (feature.properties[this.options.uniqueField] === this.layer._layers[i].properties[this.options.uniqueField]) {
+            _results.push(this.layer._layers[i].setLatLngs[feature.geometry.coordinates].update());
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      }
+    };
+
+    return VectorLayer;
+
+  })();
+
+  H5.Leaflet.PostgisLayer = (function(_super) {
+    __extends(PostgisLayer, _super);
+
+    PostgisLayer.prototype.options = {
+      url: null,
+      srid: null,
+      geomFieldName: "the_geom",
+      table: null,
+      fields: null,
+      where: null,
+      limit: null,
+      uniqueField: null
+    };
+
+    function PostgisLayer(options) {
+      var i, len;
+
+      i = 0;
+      len = this._requiredParams.length;
+      while (i < len) {
+        if (!options[this._requiredParams[i]]) {
+          throw new Error("No \"" + this._requiredParams[i] + "\" parameter found.");
+        }
+        i++;
+      }
+      L.setOptions(this, options);
+      this.options.fields = (this.options.fields ? this.options.fields + "*" : "") + ", st_asgeojson(" + this.options.geomFieldName + ") as geojson";
+      console.log(this.options);
+      this._show();
+    }
+
+    PostgisLayer.prototype.update = function() {
+      var layer;
+
+      this._getGeoJson();
+      if (!this.layer) {
+        throw new Error("No layer founded");
+      } else {
+        return layer = new L.GeoJson(this.geoJson, {
+          onEachFeature: this._updatePosition
+        });
+      }
+    };
+
+    PostgisLayer.prototype._requiredParams = ["url", "table"];
+
+    PostgisLayer.prototype._show = function() {
+      var layer,
+        _this = this;
+
+      this._getGeoJson();
+      if (!this.layer) {
+        this.layer = L.geoJson(this.geoJson, {
+          style: this._getFeatureStyle,
+          onEachFeature: this._setPopupContent
+        });
+      } else {
+        layer = L.geoJson(this.geoJson, {
+          onEachFeature: this._updatePosition
+        });
+      }
+      if (this.options.autoUpdate && this.options.autoUpdateInterval) {
+        return this._autoUpdateInterval = setInterval(function() {
+          return _this._show();
+        }, this.options.autoUpdateInterval);
+      }
+    };
+
+    PostgisLayer.prototype._getGeoJson = function() {
+      var i, json, len, prop, rest;
+
+      rest = new H5.PgRest({
+        url: this.options.url,
+        table: this.options.table,
+        fields: this.options.fields,
+        parameters: this.options.where,
+        limit: this.options.limit
+      });
+      json = rest.request();
+      this.geoJson = {};
+      this.geoJson.features = [];
+      this.geoJson.total = json.length;
+      this.geoJson.type = "FeatureCollection";
+      i = 0;
+      len = json.length;
+      while (i < len) {
+        this.geoJson.features[i] = {};
+        this.geoJson.features[i].properties = {};
+        for (prop in json[i]) {
+          if (prop === "geojson") {
+            this.geoJson.features[i].geometry = JSON.parse(json[i].geojson);
+          } else if (prop !== "properties") {
+            this.geoJson.features[i].properties[prop] = json[i][prop];
+          }
+        }
+        this.geoJson.features[i].type = "Feature";
+        i++;
+      }
+      json = null;
+      return console.log(this.geoJson);
+    };
+
+    return PostgisLayer;
+
+  })(H5.Leaflet.VectorLayer);
+
+  H5.Leaflet.RapidEyeTMS = (function() {
+    RapidEyeTMS.prototype.options = {
+      url: null,
+      table: null,
+      numberOfLayers: 4
+    };
+
+    function RapidEyeTMS(options) {
+      this.listLayers = [];
+      this.layers = {};
+      this.layerGroup = [];
+      this.count = 1;
+      L.setOptions(this, options);
+      this._createTMSLayers();
+      this._loadGeoJSON();
+      this._addToLayerControl();
+    }
+
+    RapidEyeTMS.prototype._onEachFeature = function(feature, layer) {
+      var popupContent;
+
+      popupContent = "<p>I started out as a GeoJSON " + feature.geometry.type + ", but now I'm a Leaflet vector!</p>";
+      if (feature.properties && feature.properties.popupContent) {
+        popupContent += feature.properties.popupContent;
+      }
+      layer.bindPopup(popupContent);
+      layer.on("mouseover click", function(e) {
+        var tmsUrl;
+
+        tmsUrl = feature.properties.url_tiles + "{z}/{x}/{y}.png";
+        layer.setStyle({
+          fillColor: "transparent",
+          stroke: false
+        });
+        if (this._checkLayer(layer._leaflet_id)) {
+          this.layers[this.count].setUrl(tmsUrl);
+          this.layers[this.count].redraw();
+          this.listLayers.push(layer._leaflet_id);
+          if (this.listLayers.length > this.options.numberOfLayers) {
+            this.listLayers.shift();
+          }
+          this.count++;
+          if (this.count > this.options.numberOfLayers) {
+            return this.count = 1;
+          }
+        }
+      });
+      return layer.on("mouseout", function(e) {
+        return layer.setStyle({
+          stroke: true
+        });
+      });
+    };
+
+    RapidEyeTMS.prototype._createTMSLayers = function() {
+      var i, _results;
+
+      i = 1;
+      _results = [];
+      while (i <= this.options.numberOfLayers) {
+        this.layers[i] = new L.TileLayer("", {
+          minZoom: 3,
+          maxZoom: 17,
+          tms: true
+        });
+        this.layerGroup.push(this.layers[i]);
+        _results.push(i++);
+      }
+      return _results;
+    };
+
+    RapidEyeTMS.prototype._checkLayer = function(layerId) {
+      var i, _i, _ref3;
+
+      for (i = _i = 0, _ref3 = this.listLayers.length; 0 <= _ref3 ? _i <= _ref3 : _i >= _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
+        if (layerId === this.listLayers[i]) {
+          return false;
+        }
+      }
+      return true;
+    };
+
+    RapidEyeTMS.prototype._loadGeoJSON = function() {
+      var rest;
+
+      rest = new H5.PgRest({
+        url: this.options.url,
+        table: this.options.table
+      });
+      return this._vectors = L.geoJson(rest.request(), {
+        style: {
+          fillColor: "transparent",
+          color: "purple",
+          weight: 4
+        },
+        onEachFeature: this._onEachFeature
+      });
+    };
+
+    RapidEyeTMS.prototype._addToLayerControl = function() {
+      var rapidEyeLayer;
+
+      rapidEyeLayer = new L.LayerGroup(this.layerGroup);
+      rapidEyeLayer.addLayer(this._vectors);
+      if (H5.Leaflet.layersList) {
+        return H5.Leaflet.layersList.addLayer(rapidEyeLayer, "RapidEye");
+      }
+    };
+
+    return RapidEyeTMS;
+
+  })();
+
+  H5.Leaflet.LayerControl = L.Control.extend({
+    options: {
+      collapsed: true,
+      position: "topright",
+      autoZIndex: true
+    },
+    initialize: function(baseLayers, options) {
+      var i, _results;
+
+      L.setOptions(this, options);
+      this._layers = {};
+      this._lastZIndex = 0;
+      this._handlingClick = false;
+      _results = [];
+      for (i in baseLayers) {
+        _results.push(this._addLayer(baseLayers[i], i));
+      }
+      return _results;
+    },
+    onAdd: function(map) {
+      this._initLayout();
+      this._update();
+      map.on("layeradd", this._onLayerChange, this).on("layerremove", this._onLayerChange, this);
+      return this._container;
+    },
+    onRemove: function(map) {
+      return map.off("layeradd", this._onLayerChange).off("layerremove", this._onLayerChange);
+    },
+    addLayer: function(layer, name) {
+      this._addLayer(layer, name);
+      this._update();
+      return this;
+    },
+    removeLayer: function(layer) {
+      var id;
+
+      id = L.stamp(layer);
+      delete this._layers[id];
+      this._update();
+      return this;
+    },
+    _initLayout: function() {
+      var className, container, form, link;
+
+      className = "leaflet-control-layers";
+      container = this._container = L.DomUtil.create("div", className);
+      if (!L.Browser.touch) {
+        L.DomEvent.disableClickPropagation(container);
+        L.DomEvent.on(container, "mousewheel", L.DomEvent.stopPropagation);
+      } else {
+        L.DomEvent.on(container, "click", L.DomEvent.stopPropagation);
+      }
+      form = this._form = L.DomUtil.create("form", className + "-list form-layer-list");
+      if (this.options.collapsed) {
+        L.DomEvent.on(container, "mouseover", this._expand, this).on(container, "mouseout", this._collapse, this);
+        link = this._layersLink = L.DomUtil.create("a", className + "-toggle", container);
+        link.href = "#";
+        link.title = "Layers";
+        if (L.Browser.touch) {
+          L.DomEvent.on(link, "click", L.DomEvent.stopPropagation).on(link, "click", L.DomEvent.preventDefault).on(link, "click", this._expand, this);
+        } else {
+          L.DomEvent.on(link, "focus", this._expand, this);
+        }
+        this._map.on("movestart", this._collapse, this);
+      } else {
+        this._expand();
+      }
+      this._baseLayersList = L.DomUtil.create("div", className + "-base", form);
+      return container.appendChild(form);
+    },
+    _addLayer: function(layer, name) {
+      var id;
+
+      id = L.stamp(layer);
+      this._layers[id] = {
+        layer: layer,
+        name: name
+      };
+      if (this.options.autoZIndex && layer.setZIndex) {
+        this._lastZIndex++;
+        return layer.setZIndex(this._lastZIndex);
+      }
+    },
+    _update: function() {
+      var i, obj, _results;
+
+      if (!this._container) {
+        return;
+      }
+      this._baseLayersList.innerHTML = "";
+      i = void 0;
+      obj = void 0;
+      _results = [];
+      for (i in this._layers) {
+        obj = this._layers[i];
+        _results.push(this._addItem(obj));
+      }
+      return _results;
+    },
+    _onLayerChange: function(e) {
+      var id;
+
+      id = L.stamp(e.layer);
+      if (this._layers[id] && !this._handlingClick) {
+        return this._update();
+      }
+    },
+    _addItem: function(obj) {
+      var checked, container, control, controlgroup, input, label, toggle, _this;
+
+      _this = this;
+      container = this._baseLayersList;
+      controlgroup = L.DomUtil.create("div", "control-group", container);
+      checked = this._map.hasLayer(obj.layer);
+      label = L.DomUtil.create("label", "control-label pull-left", controlgroup);
+      label.innerHTML = " " + obj.name;
+      control = L.DomUtil.create("div", "control pull-right", controlgroup);
+      toggle = L.DomUtil.create("div", "switch switch-small", control);
+      input = L.DomUtil.create("input", "leaflet-control-layers-selector", toggle);
+      input.type = "checkbox";
+      input.defaultChecked = checked;
+      input.layerId = L.stamp(obj.layer);
+      $(toggle).on("switch-change", function(e, data) {
+        return _this._onInputClick(input, obj);
+      });
+      return controlgroup;
+    },
+    _onInputClick: function(input, obj) {
+      this._handlingClick = true;
+      if (input.checked) {
+        this._map.addLayer(obj.layer);
+        this._map.fire("layeradd", {
+          layer: obj
+        });
+      } else {
+        this._map.removeLayer(obj.layer);
+        this._map.fire("layerremove", {
+          layer: obj
+        });
+      }
+      return this._handlingClick = false;
+    },
+    _expand: function() {
+      return L.DomUtil.addClass(this._container, "leaflet-control-layers-expanded");
+    },
+    _collapse: function() {
+      return this._container.className = this._container.className.replace(" leaflet-control-layers-expanded", "");
+    }
+  });
 
 }).call(this);

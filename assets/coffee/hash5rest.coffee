@@ -140,16 +140,15 @@ lvector.Layer = lvector.Class.extend(
     @_addZoomChangeListener()  if @options.scaleRange and @options.scaleRange instanceof Array and @options.scaleRange.length is 2
     if @options.visibleAtScale
       if @options.autoUpdate and @options.autoUpdateInterval
-        me = this
-        @_autoUpdateInterval = setInterval(->
-          me._getFeatures()
+        @_autoUpdateInterval = setInterval=>
+          @_getFeatures()
         , @options.autoUpdateInterval)
       @options.map.fire("moveend").fire "zoomend"
 
   _hide: ->
     @options.map.off "moveend", @_idleListener  if @_idleListener
     @options.map.off "zoomend", @_zoomChangeListener  if @_zoomChangeListener
-    clearInterval @_autoUpdateInterval  if @_autoUpdateInterval
+    clearInterval @_autoUpdateInterval if @_autoUpdateInterval
     @_clearFeatures()
     @_lastQueriedBounds = null
     @_gotAll = false  if @_gotAll
@@ -397,7 +396,7 @@ lvector.Layer = lvector.Class.extend(
               for key of @options.symbology.ranges[i].vectorOptions
                 vectorOptions[key] = @options.symbology.ranges[i].vectorOptions[key]
             i++
-    vectorOptions
+    return vectorOptions
 
 
   # Check to see if any attributes have changed
@@ -530,7 +529,6 @@ lvector.GeoJSONLayer = lvector.Layer.extend(_geoJsonGeometryToLeaflet: (geometry
       vectors = []
       i = 0
       len = geometry.coordinates.length
-
       while i < len
         vectors.push new L.Marker(new L.LatLng(geometry.coordinates[i][1], geometry.coordinates[i][0]), opts)
         i++
@@ -547,12 +545,10 @@ lvector.GeoJSONLayer = lvector.Layer.extend(_geoJsonGeometryToLeaflet: (geometry
       vectors = []
       i = 0
       len = geometry.coordinates.length
-
       while i < len
         latlngs = []
         j = 0
         len2 = geometry.coordinates[i].length
-
         while j < len2
           latlngs.push new L.LatLng(geometry.coordinates[i][j][1], geometry.coordinates[i][j][0])
           j++
@@ -562,12 +558,10 @@ lvector.GeoJSONLayer = lvector.Layer.extend(_geoJsonGeometryToLeaflet: (geometry
       latlngss = []
       i = 0
       len = geometry.coordinates.length
-
       while i < len
         latlngs = []
         j = 0
         len2 = geometry.coordinates[i].length
-
         while j < len2
           latlngs.push new L.LatLng(geometry.coordinates[i][j][1], geometry.coordinates[i][j][0])
           j++
@@ -578,17 +572,14 @@ lvector.GeoJSONLayer = lvector.Layer.extend(_geoJsonGeometryToLeaflet: (geometry
       vectors = []
       i = 0
       len = geometry.coordinates.length
-
       while i < len
         latlngss = []
         j = 0
         len2 = geometry.coordinates[i].length
-
         while j < len2
           latlngs = []
           k = 0
           len3 = geometry.coordinates[i][j].length
-
           while k < len3
             latlngs.push new L.LatLng(geometry.coordinates[i][j][k][1], geometry.coordinates[i][j][k][0])
             k++
@@ -600,11 +591,10 @@ lvector.GeoJSONLayer = lvector.Layer.extend(_geoJsonGeometryToLeaflet: (geometry
       vectors = []
       i = 0
       len = geometry.geometries.length
-
       while i < len
         vectors.push @_geoJsonGeometryToLeaflet(geometry.geometries[i], opts)
         i++
-  vector or vectors
+  return vector or vectors
 )
 lvector.PRWSF = lvector.GeoJSONLayer.extend(
   initialize: (options) ->

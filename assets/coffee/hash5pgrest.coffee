@@ -38,6 +38,29 @@ class H5.PgRest
 
     return @data
 
+  getURLParam: (param) ->
+    search = window.location.search.substring(1)
+    compareKeyValuePair = (pair) ->
+      key_value = pair.split("=")
+      decodedKey = decodeURIComponent(key_value[0])
+      decodedValue = decodeURIComponent(key_value[1])
+      return decodedValue  if decodedKey is param
+      null
+
+    comparisonResult = null
+    if search.indexOf("&") > -1
+      params = search.split("&")
+      i = 0
+
+      while i < params.length
+        comparisonResult = compareKeyValuePair(params[i])
+        break  if comparisonResult isnt null
+        i++
+    else
+      comparisonResult = compareKeyValuePair(search)
+
+    return comparisonResult
+
   _get: (url, query) ->
     $.ajax
       type: "GET"
