@@ -595,28 +595,25 @@
     layersList: null
   };
 
-  H5.Leaflet.VectorLayer = (function() {
-    VectorLayer.prototype.options = {
-      fields: "",
+  H5.Leaflet.Layer = L.Class.extend({
+    options: {
       scaleRange: null,
-      layer: null,
+      map: null,
       uniqueField: null,
       visibleAtScale: true,
+      dynamic: false,
       autoUpdate: false,
       autoUpdateInterval: null,
       popupTemplate: null,
       popupOptions: {},
       singlePopup: false,
       symbology: null,
-      showAll: false,
-      symbology: {}
-    };
-
-    function VectorLayer(options) {
-      L.setOptions(this, options);
-    }
-
-    VectorLayer.prototype.setMap = function(map) {
+      showAll: false
+    },
+    initialize: function(options) {
+      return L.Util.setOptions(this, options);
+    },
+    setMap: function(map) {
       var sr, z;
 
       if (map && this.options.map) {
@@ -627,12 +624,169 @@
         if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
           z = this.options.map.getZoom();
           sr = this.options.scaleRange;
-          return this.options.visibleAtScale = z >= sr[0] && z <= sr[1];
+          this.options.visibleAtScale = z >= sr[0] && z <= sr[1];
+        }
+        return this._show();
+      } else if (this.options.map) {
+        this._hide();
+        return this.options.map = map;
+      }
+    },
+    getMap: function() {
+      return this.options.map;
+    },
+    setOptions: function(options) {
+      return L.Util.setOptions(this, options);
+    },
+    _show: function() {
+      var _this = this;
+
+      this._addIdleListener();
+      if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
+        this._addZoomChangeListener();
+      }
+      if (this.options.visibleAtScale) {
+        if (this.options.autoUpdate && this.options.autoUpdateInterval) {
+          this._autoUpdateInterval = setInterval(function() {
+            return _this._getFeatures();
+          }, this.options.autoUpdateInterval);
+        }
+        return this.options.map.fire("moveend").fire("zoomend");
+      }
+    },
+    _hide: function() {
+      if (this._idleListener) {
+        this.options.map.off("moveend", this._idleListener);
+      }
+      if (this._zoomChangeListener) {
+        this.options.map.off("zoomend", this._zoomChangeListener);
+      }
+      if (this._autoUpdateInterval) {
+        clearInterval(this._autoUpdateInterval);
+      }
+      this._clearFeatures();
+      this._lastQueriedBounds = null;
+      if (this._gotAll) {
+        return this._gotAll = false;
+      }
+    },
+    _hideVectors: function() {
+      var i, j, _i, _ref3, _results;
+
+      _results = [];
+      for (i = _i = 0, _ref3 = this._vectors.length; 0 <= _ref3 ? _i < _ref3 : _i > _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
+        if (this._vectors[i].vector) {
+          this.options.map.removeLayer(this._vectors[i].vector);
+          if (this._vectors[i].popup) {
+            this.options.map.removeLayer(this._vectors[i].popup);
+          } else if (this.popup && this.popup.associatedFeature && this.popup.associatedFeature === this._vectors[i]) {
+            this.options.map.removeLayer(this.popup);
+            this.popup = null;
+          }
+        }
+        if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
+          _results.push((function() {
+            var _j, _ref4, _results1;
+
+            _results1 = [];
+            for (j = _j = 0, _ref4 = this._vectors[i].vectors.length; 0 <= _ref4 ? _j < _ref4 : _j > _ref4; j = 0 <= _ref4 ? ++_j : --_j) {
+              this.options.map.removeLayer(this._vectors[i].vectors[j]);
+              if (this._vectors[i].vectors[j].popup) {
+                _results1.push(this.options.map.removeLayer(this._vectors[i].vectors[j].popup));
+              } else if (this.popup && this.popup.associatedFeature && this.popup.associatedFeature === this._vectors[i]) {
+                this.options.map.removeLayer(this.popup);
+                _results1.push(this.popup = null);
+              } else {
+                _results1.push(void 0);
+              }
+            }
+            return _results1;
+          }).call(this));
+        } else {
+          _results.push(void 0);
         }
       }
-    };
+      return _results;
+    },
+    _showVectors: function() {
+      var i, j, _i, _ref3, _results;
 
-    VectorLayer.prototype._setPopupContent = function(feature) {
+      _results = [];
+      for (i = _i = 0, _ref3 = this._vectors.length; 0 <= _ref3 ? _i < _ref3 : _i > _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
+        if (this._vectors[i].vector) {
+          this.options.map.addLayer(this._vectors[i].vector);
+        }
+        if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
+          _results.push((function() {
+            var _j, _ref4, _results1;
+
+            _results1 = [];
+            for (j = _j = 0, _ref4 = this._vectors[i].vectors.length; 0 <= _ref4 ? _j < _ref4 : _j > _ref4; j = 0 <= _ref4 ? ++_j : --_j) {
+              _results1.push(this.options.map.addLayer(this._vectors[i].vectors[j]));
+            }
+            return _results1;
+          }).call(this));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    },
+    _clearFeatures: function() {
+      this._hideVectors();
+      return this._vectors = [];
+    },
+    _addZoomChangeListener: function() {
+      this._zoomChangeListener = this._zoomChangeListenerTemplate();
+      return this.options.map.on("zoo@d", this._zoomChangeListener, this);
+    },
+    _zoomChangeListenerTemplate: function() {
+      var _this = this;
+
+      return function() {
+        return _this._checkLayerVisibility();
+      };
+    },
+    _idleListenerTemplate: function() {
+      var _this = this;
+
+      return function() {
+        if (_this.options.visibleAtScale) {
+          if (_this.options.showAll) {
+            if (!_this._gotAll) {
+              _this._getFeatures();
+              return _this._gotAll = true;
+            }
+          } else {
+            return _this._getFeatures();
+          }
+        }
+      };
+    },
+    _addIdleListener: function() {
+      this._idleListener = this._idleListenerTemplate();
+      return this.options.map.on("moveend", this._idleListener, this);
+    },
+    _checkLayerVisibility: function() {
+      var me, sr, visibilityBefore, z;
+
+      visibilityBefore = this.options.visibleAtScale;
+      z = this.options.map.getZoom();
+      sr = this.options.scaleRange;
+      this.options.visibleAtScale = z >= sr[0] && z <= sr[1];
+      if (visibilityBefore !== this.options.visibleAtScale) {
+        this[(this.options.visibleAtScale ? "_showVectors" : "_hideVectors")]();
+      }
+      if (visibilityBefore && !this.options.visibleAtScale && this._autoUpdateInterval) {
+        return clearInterval(this._autoUpdateInterval);
+      } else if (!visibilityBefore && this.options.autoUpdate && this.options.autoUpdateInterval) {
+        me = this;
+        return this._autoUpdateInterval = setInterval(function() {
+          return me._getFeatures();
+        }, this.options.autoUpdateInterval);
+      }
+    },
+    _setPopupContent: function(feature) {
       var atts, popupContent, previousContent, prop, re;
 
       previousContent = feature.popupContent;
@@ -659,175 +813,398 @@
           return this.popup.setContent(feature.popupContent);
         }
       }
-    };
+    },
+    _showPopup: function(feature, event) {
+      var isLineOrPolygon, ownsPopup;
 
-    VectorLayer.prototype._getFeatureStyle = function(feature) {
-      var att, atts, i, key, len, style;
+      isLineOrPolygon = event.latlng;
+      if (!isLineOrPolygon) {
+        L.Util.extend(this.options.popupOptions, {
+          offset: event.target.options.icon.options.popupAnchor
+        });
+      }
+      ownsPopup = void 0;
+      if (!this.options.singlePopup) {
+        feature.popup = new L.Popup(this.options.popupOptions, feature.vector);
+        ownsPopup = feature;
+      } else {
+        if (this.popup) {
+          this.options.map.removeLayer(this.popup);
+          this.popup = null;
+        }
+        this.popup = new L.Popup(this.options.popupOptions, feature.vector);
+        this.popup.associatedFeature = feature;
+        ownsPopup = this;
+      }
+      ownsPopup.popup.setLatLng((isLineOrPolygon ? event.latlng : event.target.getLatLng()));
+      ownsPopup.popup.setContent(feature.popupContent);
+      return this.options.map.addLayer(ownsPopup.popup);
+    },
+    _fireClickEvent: function(feature, event) {
+      return this.options.clickEvent(feature, event);
+    },
+    _getFeatureVectorOptions: function(feature) {
+      var att, atts, i, key, prop, re, vectorStyle, _i, _j, _ref3, _ref4;
 
-      style = {};
+      vectorStyle = {};
       atts = feature.properties;
       if (this.options.symbology) {
         switch (this.options.symbology.type) {
           case "single":
-            for (key in this.options.symbology.style) {
-              style[key] = this.options.symbology.style[key];
+            for (key in this.options.symbology.vectorStyle) {
+              vectorStyle[key] = this.options.symbology.vectorStyle[key];
+              if (vectorStyle.title) {
+                for (prop in atts) {
+                  re = new RegExp("{" + prop + "}", "g");
+                  vectorStyle.title = vectorStyle.title.replace(re, atts[prop]);
+                }
+              }
             }
             break;
           case "unique":
             att = this.options.symbology.property;
-            i = 0;
-            len = this.options.symbology.values.length;
-            while (i < len) {
+            for (i = _i = 0, _ref3 = this.options.symbology.values.length; 0 <= _ref3 ? _i < _ref3 : _i > _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
               if (atts[att] === this.options.symbology.values[i].value) {
-                for (key in this.options.symbology.values[i].style) {
-                  style[key] = this.options.symbology.values[i].style[key];
+                for (key in this.options.symbology.values[i].vectorStyle) {
+                  vectorStyle[key] = this.options.symbology.values[i].vectorStyle[key];
+                  if (vectorStyle.title) {
+                    for (prop in atts) {
+                      re = new RegExp("{" + prop + "}", "g");
+                      vectorStyle.title = vectorStyle.title.replace(re, atts[prop]);
+                    }
+                  }
                 }
               }
-              i++;
             }
             break;
           case "range":
             att = this.options.symbology.property;
-            i = 0;
-            len = this.options.symbology.ranges.length;
-            while (i < len) {
+            for (i = _j = 0, _ref4 = this.options.symbology.ranges.length; 0 <= _ref4 ? _j < _ref4 : _j > _ref4; i = 0 <= _ref4 ? ++_j : --_j) {
               if (atts[att] >= this.options.symbology.ranges[i].range[0] && atts[att] <= this.options.symbology.ranges[i].range[1]) {
-                for (key in this.options.symbology.ranges[i].style) {
-                  style[key] = this.options.symbology.ranges[i].style[key];
+                for (key in this.options.symbology.ranges[i].vectorStyle) {
+                  vectorStyle[key] = this.options.symbology.ranges[i].vectorStyle[key];
+                  if (vectorStyle.title) {
+                    for (prop in atts) {
+                      re = new RegExp("{" + prop + "}", "g");
+                      vectorStyle.title = vectorStyle.title.replace(re, atts[prop]);
+                    }
+                  }
                 }
               }
-              i++;
             }
         }
       }
-      return style;
-    };
+      return vectorStyle;
+    },
+    _getPropertiesChanged: function(oldAtts, newAtts) {
+      var changed, key;
 
-    VectorLayer.prototype._updatePosition = function(feature) {
-      var i, _i, _ref3, _results;
+      changed = false;
+      for (key in oldAtts) {
+        if (oldAtts[key] !== newAtts[key]) {
+          changed = true;
+        }
+      }
+      return changed;
+    },
+    _getPropertyChanged: function(oldAtts, newAtts, property) {
+      return oldAtts[property] !== newAtts[property];
+    },
+    _getGeometryChanged: function(oldGeom, newGeom) {
+      var changed;
 
-      if (feature.geometry.type === "Point") {
+      changed = false;
+      if (!oldGeom.coordinates[0] === newGeom.coordinates[0] && oldGeom.coordinates[1] === newGeom.coordinates[1]) {
+        changed = true;
+      }
+      return changed;
+    },
+    _makeJsonpRequest: function(url) {
+      var head, script;
+
+      head = document.getElementsByTagName("head")[0];
+      script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = url;
+      return head.appendChild(script);
+    },
+    _processRequest: function(json) {
+      var data, i, prop, _i, _ref3;
+
+      data = {};
+      data.features = [];
+      data.total = json.length;
+      data.type = "FeatureCollection";
+      for (i = _i = 0, _ref3 = json.length; 0 <= _ref3 ? _i < _ref3 : _i > _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
+        data.features[i] = {};
+        data.features[i].type = "Feature";
+        data.features[i].properties = {};
+        for (prop in json[i]) {
+          if (prop === "geojson") {
+            data.features[i].geometry = json[i].geojson;
+          } else {
+            if (prop !== "properties") {
+              data.features[i].properties[prop] = json[i][prop];
+            }
+          }
+        }
+      }
+      json = null;
+      return this._processFeatures(data);
+    },
+    _processFeatures: function(data) {
+      var bounds, feature, geometry, geometryOptions, i, j, k, me, onMap, propertiesChanged, symbologyPropertyChanged, vector_or_vectors, _i, _j, _k, _l, _ref3, _ref4, _ref5, _ref6, _results;
+
+      if (!this.options.map) {
+        return;
+      }
+      bounds = this.options.map.getBounds();
+      if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds) && !this.options.autoUpdate) {
+        return;
+      }
+      this._lastQueriedBounds = bounds;
+      if (data && data.features && data.features.length) {
         _results = [];
-        for (i = _i = 0, _ref3 = this.layer._layers.length; 0 <= _ref3 ? _i <= _ref3 : _i >= _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
-          if (feature.properties[this.options.uniqueField] === this.layer._layers[i].properties[this.options.uniqueField]) {
-            _results.push(this.layer._layers[i].setLatLngs[feature.geometry.coordinates].update());
+        for (i = _i = 0, _ref3 = data.features.length; 0 <= _ref3 ? _i < _ref3 : _i > _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
+          onMap = false;
+          if (this.options.uniqueField) {
+            for (j = _j = 0, _ref4 = this._vectors.length; 0 <= _ref4 ? _j < _ref4 : _j > _ref4; j = 0 <= _ref4 ? ++_j : --_j) {
+              if (data.features[i].properties[this.options.uniqueField] === this._vectors[j].properties[this.options.uniqueField]) {
+                onMap = true;
+                if (this.options.dynamic) {
+                  if (this._getGeometryChanged(this._vectors[j].geometry, data.features[i].geometry)) {
+                    if (!isNaN(data.features[i].geometry.coordinates[0]) && !isNaN(data.features[i].geometry.coordinates[1])) {
+                      this._vectors[j].geometry = data.features[i].geometry;
+                      this._vectors[j].vector.setLatLng(new L.LatLng(this._vectors[j].geometry.coordinates[1], this._vectors[j].geometry.coordinates[0]));
+                    }
+                  }
+                  propertiesChanged = this._getPropertiesChanged(this._vectors[j].properties, data.features[i].properties);
+                  if (propertiesChanged) {
+                    symbologyPropertyChanged = this._getPropertyChanged(this._vectors[j].properties, data.features[i].properties, this.options.symbology.property);
+                    this._vectors[j].properties = data.features[i].properties;
+                    if (this.options.popupTemplate) {
+                      this._setPopupContent(this._vectors[j]);
+                    }
+                    if (this.options.symbology && this.options.symbology.type !== "single" && symbologyPropertyChanged) {
+                      if (this._vectors[j].vectors) {
+                        for (k = _k = 0, _ref5 = this._vectors[j].vectors.length; 0 <= _ref5 ? _k < _ref5 : _k > _ref5; k = 0 <= _ref5 ? ++_k : --_k) {
+                          if (this._vectors[j].vectors[k].setStyle) {
+                            this._vectors[j].vectors[k].setStyle(this._getFeatureVectorOptions(this._vectors[j]));
+                          } else {
+                            if (this._vectors[j].vectors[k].setIcon) {
+                              this._vectors[j].vectors[k].setIcon(this._getFeatureVectorOptions(this._vectors[j]).icon);
+                            }
+                          }
+                        }
+                      } else if (this._vectors[j].vector) {
+                        if (this._vectors[j].vector.setStyle) {
+                          this._vectors[j].vector.setStyle(this._getFeatureVectorOptions(this._vectors[j]));
+                        } else {
+                          if (this._vectors[j].vector.setIcon) {
+                            this._vectors[j].vector.setIcon(this._getFeatureVectorOptions(this._vectors[j]).icon);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          if (!onMap || !this.options.uniqueField) {
+            geometry = $.parseJSON(data.features[i].geometry);
+            geometryOptions = this._getFeatureVectorOptions(data.features[i]);
+            vector_or_vectors = this._geoJsonGeometryToLeaflet(geometry, geometryOptions);
+            data.features[i][(vector_or_vectors instanceof Array ? "vectors" : "vector")] = vector_or_vectors;
+            if (data.features[i].vector) {
+              this.options.map.addLayer(data.features[i].vector);
+            } else if (data.features[i].vectors && data.features[i].vectors.length) {
+              for (k = _l = 0, _ref6 = data.features[i].vectors.length; 0 <= _ref6 ? _l < _ref6 : _l > _ref6; k = 0 <= _ref6 ? ++_l : --_l) {
+                this.options.map.addLayer(data.features[i].vectors[k]);
+              }
+            }
+            this._vectors.push(data.features[i]);
+            if (this.options.popupTemplate) {
+              me = this;
+              feature = data.features[i];
+              this._setPopupContent(feature);
+              (function(feature) {
+                var _m, _ref7, _results1;
+
+                if (feature.vector) {
+                  return feature.vector.on("click", function(event) {
+                    return me._showPopup(feature, event);
+                  });
+                } else if (feature.vectors) {
+                  _results1 = [];
+                  for (k = _m = 0, _ref7 = feature.vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
+                    _results1.push(feature.vectors[k].on("click", function(event) {
+                      return me._showPopup(feature, event);
+                    }));
+                  }
+                  return _results1;
+                }
+              })(feature);
+            }
+            if (this.options.clickEvent) {
+              me = this;
+              feature = data.features[i];
+              _results.push((function(feature) {
+                var _m, _ref7, _results1;
+
+                if (feature.vector) {
+                  return feature.vector.on("click", function(event) {
+                    return me._fireClickEvent(feature, event);
+                  });
+                } else if (feature.vectors) {
+                  _results1 = [];
+                  for (k = _m = 0, _ref7 = feature.vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
+                    _results1.push(feature.vectors[k].on("click", function(event) {
+                      return me._fireClickEvent(feature, event);
+                    }));
+                  }
+                  return _results1;
+                }
+              })(feature));
+            } else {
+              _results.push(void 0);
+            }
           } else {
             _results.push(void 0);
           }
         }
         return _results;
       }
-    };
+    }
+  });
 
-    return VectorLayer;
+  H5.Leaflet.GeoJSONLayer = H5.Leaflet.Layer.extend({
+    _geoJsonGeometryToLeaflet: function(geometry, opts) {
+      var i, j, k, latlngs, latlngss, vector, vectors, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _ref10, _ref11, _ref12, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
 
-  })();
+      vector = void 0;
+      vectors = void 0;
+      switch (geometry.type) {
+        case "Point":
+          if (opts.circleMarker) {
+            vector = new L.CircleMarker(new L.LatLng(geometry.coordinates[1], geometry.coordinates[0]), opts);
+          } else {
+            vector = new L.Marker(new L.LatLng(geometry.coordinates[1], geometry.coordinates[0]), opts);
+          }
+          break;
+        case "MultiPoint":
+          vectors = [];
+          for (i = _i = 0, _ref3 = geometry.coordinates.length; 0 <= _ref3 ? _i < _ref3 : _i > _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
+            vectors.push(new L.Marker(new L.LatLng(geometry.coordinates[i][1], geometry.coordinates[i][0]), opts));
+          }
+          break;
+        case "LineString":
+          latlngs = [];
+          for (i = _j = 0, _ref4 = geometry.coordinates.length; 0 <= _ref4 ? _j < _ref4 : _j > _ref4; i = 0 <= _ref4 ? ++_j : --_j) {
+            latlngs.push(new L.LatLng(geometry.coordinates[i][1], geometry.coordinates[i][0]));
+          }
+          vector = new L.Polyline(latlngs, opts);
+          break;
+        case "MultiLineString":
+          vectors = [];
+          for (i = _k = 0, _ref5 = geometry.coordinates.length; 0 <= _ref5 ? _k < _ref5 : _k > _ref5; i = 0 <= _ref5 ? ++_k : --_k) {
+            latlngs = [];
+            for (j = _l = 0, _ref6 = geometry.coordinates[i].length; 0 <= _ref6 ? _l < _ref6 : _l > _ref6; j = 0 <= _ref6 ? ++_l : --_l) {
+              latlngs.push(new L.LatLng(geometry.coordinates[i][j][1], geometry.coordinates[i][j][0]));
+            }
+            vectors.push(new L.Polyline(latlngs, opts));
+          }
+          break;
+        case "Polygon":
+          latlngss = [];
+          for (i = _m = 0, _ref7 = geometry.coordinates.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; i = 0 <= _ref7 ? ++_m : --_m) {
+            latlngs = [];
+            for (j = _n = 0, _ref8 = geometry.coordinates[i].length; 0 <= _ref8 ? _n < _ref8 : _n > _ref8; j = 0 <= _ref8 ? ++_n : --_n) {
+              latlngs.push(new L.LatLng(geometry.coordinates[i][j][1], geometry.coordinates[i][j][0]));
+            }
+            latlngss.push(latlngs);
+          }
+          vector = new L.Polygon(latlngss, opts);
+          break;
+        case "MultiPolygon":
+          vectors = [];
+          for (i = _o = 0, _ref9 = geometry.coordinates.length; 0 <= _ref9 ? _o < _ref9 : _o > _ref9; i = 0 <= _ref9 ? ++_o : --_o) {
+            latlngss = [];
+            for (j = _p = 0, _ref10 = geometry.coordinates[i].length; 0 <= _ref10 ? _p < _ref10 : _p > _ref10; j = 0 <= _ref10 ? ++_p : --_p) {
+              latlngs = [];
+              for (k = _q = 0, _ref11 = geometry.coordinates[i][j].length; 0 <= _ref11 ? _q < _ref11 : _q > _ref11; k = 0 <= _ref11 ? ++_q : --_q) {
+                latlngs.push(new L.LatLng(geometry.coordinates[i][j][k][1], geometry.coordinates[i][j][k][0]));
+              }
+              latlngss.push(latlngs);
+            }
+            vectors.push(new L.Polygon(latlngss, opts));
+          }
+          break;
+        case "GeometryCollection":
+          vectors = [];
+          for (i = _r = 0, _ref12 = geometry.coordinates.length; 0 <= _ref12 ? _r < _ref12 : _r > _ref12; i = 0 <= _ref12 ? ++_r : --_r) {
+            vectors.push(this._geoJsonGeometryToLeaflet(geometry.geometries[i], opts));
+          }
+      }
+      return vector || vectors;
+    }
+  });
 
-  H5.Leaflet.PostgisLayer = (function(_super) {
-    __extends(PostgisLayer, _super);
+  H5.Leaflet.Postgis = H5.Leaflet.GeoJSONLayer.extend({
+    initialize: function(options) {
+      var i, sr, z, _i, _ref3;
 
-    PostgisLayer.prototype.options = {
-      url: null,
-      srid: null,
-      geomFieldName: "the_geom",
-      table: null,
-      fields: null,
-      where: null,
-      limit: null,
-      uniqueField: null
-    };
-
-    function PostgisLayer(options) {
-      var i, len;
-
-      i = 0;
-      len = this._requiredParams.length;
-      while (i < len) {
+      for (i = _i = 0, _ref3 = this._requiredParams.length; 0 <= _ref3 ? _i < _ref3 : _i > _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
         if (!options[this._requiredParams[i]]) {
           throw new Error("No \"" + this._requiredParams[i] + "\" parameter found.");
         }
-        i++;
       }
-      L.setOptions(this, options);
-      this.options.fields = (this.options.fields ? this.options.fields + "*" : "") + ", st_asgeojson(" + this.options.geomFieldName + ") as geojson";
-      console.log(this.options);
-      this._show();
-    }
-
-    PostgisLayer.prototype.update = function() {
-      var layer;
-
-      this._getGeoJson();
-      if (!this.layer) {
-        throw new Error("No layer founded");
-      } else {
-        return layer = new L.GeoJson(this.geoJson, {
-          onEachFeature: this._updatePosition
-        });
+      if (options.url.substr(options.url.length - 1, 1) !== "/") {
+        options.url += "/";
       }
-    };
-
-    PostgisLayer.prototype._requiredParams = ["url", "table"];
-
-    PostgisLayer.prototype._show = function() {
-      var layer,
-        _this = this;
-
-      this._getGeoJson();
-      if (!this.layer) {
-        this.layer = L.geoJson(this.geoJson, {
-          style: this._getFeatureStyle,
-          onEachFeature: this._setPopupContent
-        });
-      } else {
-        layer = L.geoJson(this.geoJson, {
-          onEachFeature: this._updatePosition
-        });
-      }
-      if (this.options.autoUpdate && this.options.autoUpdateInterval) {
-        return this._autoUpdateInterval = setInterval(function() {
-          return _this._show();
-        }, this.options.autoUpdateInterval);
-      }
-    };
-
-    PostgisLayer.prototype._getGeoJson = function() {
-      var i, json, len, prop, rest;
-
-      rest = new H5.PgRest({
-        url: this.options.url,
-        table: this.options.table,
-        fields: this.options.fields,
-        parameters: this.options.where,
-        limit: this.options.limit
-      });
-      json = rest.request();
-      this.geoJson = {};
-      this.geoJson.features = [];
-      this.geoJson.total = json.length;
-      this.geoJson.type = "FeatureCollection";
-      i = 0;
-      len = json.length;
-      while (i < len) {
-        this.geoJson.features[i] = {};
-        this.geoJson.features[i].properties = {};
-        for (prop in json[i]) {
-          if (prop === "geojson") {
-            this.geoJson.features[i].geometry = JSON.parse(json[i].geojson);
-          } else if (prop !== "properties") {
-            this.geoJson.features[i].properties[prop] = json[i][prop];
-          }
+      H5.Leaflet.Layer.prototype.initialize.call(this, options);
+      this._globalPointer = "PRWSF_" + Math.floor(Math.random() * 100000);
+      window[this._globalPointer] = this;
+      this._vectors = [];
+      if (this.options.map) {
+        if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
+          z = this.options.map.getZoom();
+          sr = this.options.scaleRange;
+          this.options.visibleAtScale = z >= sr[0] && z <= sr[1];
         }
-        this.geoJson.features[i].type = "Feature";
-        i++;
+        return this._show();
       }
-      json = null;
-      return console.log(this.geoJson);
-    };
+    },
+    options: {
+      geotable: null,
+      srid: null,
+      geomFieldName: "the_geom",
+      fields: null,
+      where: null,
+      limit: 100,
+      uniqueField: null
+    },
+    _requiredParams: ["url", "geotable"],
+    _getFeatures: function() {
+      var bounds, fields, ne, sw, url, where;
 
-    return PostgisLayer;
-
-  })(H5.Leaflet.VectorLayer);
+      where = (this.options.where ? "&parameters=" + encodeURIComponent(this.options.where) : null);
+      if (!this.options.showAll) {
+        bounds = this.options.map.getBounds();
+        sw = bounds.getSouthWest();
+        ne = bounds.getNorthEast();
+        where += (where.length ? " AND " : "");
+        if (this.options.srid) {
+          where += this.options.geomFieldName + " && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))," + this.options.srid + ")";
+        } else {
+          where += "" + this.options.geomFieldName + ",4326) && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))";
+        }
+      }
+      fields = (this.options.fields ? this.options.fields : "*") + ", st_asgeojson(" + this.options.geomFieldName + "" + (this.options.geomPrecision ? "," + this.options.geomPrecision : "") + ") as geojson";
+      url = this.options.url + "v1/ws_geo_attributequery.php" + "?table=" + this.options.geotable + "&fields=" + encodeURIComponent(fields) + where + "&limit=" + this.options.limit + "&callback=" + this._globalPointer + "._processRequest";
+      return this._makeJsonpRequest(url);
+    }
+  });
 
   H5.Leaflet.RapidEyeTMS = (function() {
     RapidEyeTMS.prototype.options = {
@@ -903,7 +1280,7 @@
     RapidEyeTMS.prototype._checkLayer = function(layerId) {
       var i, _i, _ref3;
 
-      for (i = _i = 0, _ref3 = this.listLayers.length; 0 <= _ref3 ? _i <= _ref3 : _i >= _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
+      for (i = _i = 0, _ref3 = this.listLayers.length; 0 <= _ref3 ? _i < _ref3 : _i > _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
         if (layerId === this.listLayers[i]) {
           return false;
         }

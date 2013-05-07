@@ -9,12 +9,12 @@
   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
   <script src="<?= base_url()?>assets/js/bootstrap.min.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrapSwitch.js"></script>
-  <script src="<?= base_url()?>assets/js/lvector.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/custom.min.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/leaflet.min.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet-google.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet-bing.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.ajax.min.js"></script>
+  <script src="<?= base_url()?>assets/js/lvector.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/masonry.min.js"></script>
   <script src="<?= base_url()?>assets/js/knob.js"></script>
   <script src="<?= base_url()?>assets/js/sparkline.min.js"></script>
