@@ -425,7 +425,7 @@ lvector.Layer = L.Class.extend({
       data.features[i].properties = {};
       for (var prop in json[i]) {
         if (prop == "geojson") {
-          data.features[i].geometry = json[i].geojson;
+          data.features[i].geometry = JSON.parse(json[i].geojson);
         } else
         if (prop != "properties") {
           data.features[i].properties[prop] = json[i][prop];
@@ -517,7 +517,7 @@ lvector.Layer = L.Class.extend({
         }
         if (!onMap || !this.options.uniqueField) {
           // Convert GeoJSON to Leaflet vector (Point, Polyline, Polygon)
-          var geometry = $.parseJSON(data.features[i].geometry);
+          var geometry =  data.features[i].geometry;
           var geometryOptions = this._getFeatureVectorOptions(data.features[i]);
 
           var vector_or_vectors = this._geoJsonGeometryToLeaflet(geometry,geometryOptions);
@@ -700,7 +700,7 @@ lvector.Postgis = lvector.GeoJSONLayer.extend({
     geomFieldName: "the_geom",
     fields: null,
     where: null,
-    limit: 100,
+    limit: 1000,
     uniqueField: null
   },
 
@@ -709,7 +709,7 @@ lvector.Postgis = lvector.GeoJSONLayer.extend({
   _getFeatures: function() {
 
     // Build Query
-    var where = (this.options.where) ? "&parameters=" + encodeURIComponent(this.options.where) : null;
+    var where = this.options.where ? "&parameters=" + encodeURIComponent(this.options.where) : "";
     if (!this.options.showAll) {
       var bounds = this.options.map.getBounds();
       var sw = bounds.getSouthWest();

@@ -69,7 +69,7 @@
     }
   };
 
-  rest = new H5.PgRest({
+  rest = new H5.Rest({
     url: "../painel/rest",
     table: "alerta_acumulado_diario"
   });
@@ -118,7 +118,7 @@
     }
   };
 
-  rest = new H5.PgRest({
+  rest = new H5.Rest({
     url: "../painel/rest",
     table: "taxa_prodes"
   });
@@ -153,7 +153,7 @@
     }
   };
 
-  rest = new H5.PgRest({
+  rest = new H5.Rest({
     url: "../painel/rest",
     table: "nuvem_deter"
   });
@@ -164,7 +164,7 @@
     return tableNuvens.populate(properties.data, properties.percent);
   });
 
-  chart1 = new H5.GoogleCharts({
+  chart1 = new H5.Charts.GoogleCharts({
     type: "Line",
     container: "chart1",
     title: "Alerta DETER: Índice Diário",
@@ -302,7 +302,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  chart2 = new H5.GoogleCharts({
+  chart2 = new H5.Charts.GoogleCharts({
     type: "Area",
     container: "chart2",
     period: 2,
@@ -408,7 +408,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  chart3 = new H5.GoogleCharts({
+  chart3 = new H5.Charts.GoogleCharts({
     type: "Bar",
     container: "chart3",
     period: 1,
@@ -534,7 +534,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  chart4 = new H5.GoogleCharts({
+  chart4 = new H5.Charts.GoogleCharts({
     type: "Column",
     container: "chart4",
     period: 2,
@@ -635,7 +635,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  chart5 = new H5.GoogleCharts({
+  chart5 = new H5.Charts.GoogleCharts({
     type: "Area",
     container: "chart5",
     title: "Taxa PRODES|Alerta DETER: Acumulado Períodos",
@@ -736,7 +736,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  chart6 = new H5.GoogleCharts({
+  chart6 = new H5.Charts.GoogleCharts({
     type: "Column",
     container: "chart6",
     period: 1,
@@ -851,7 +851,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  chart7 = new H5.GoogleCharts({
+  chart7 = new H5.Charts.GoogleCharts({
     type: "Pie",
     container: "chart7",
     period: 0,
@@ -930,7 +930,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  chart8 = new H5.GoogleCharts({
+  chart8 = new H5.Charts.GoogleCharts({
     type: "Pie",
     container: "chart8",
     period: 1,
@@ -1016,7 +1016,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  chart9 = new H5.GoogleCharts({
+  chart9 = new H5.Charts.GoogleCharts({
     type: "Line",
     container: "chart9",
     period: 2,
@@ -1109,7 +1109,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  spark1 = new H5.Sparks({
+  spark1 = new H5.Charts.Sparks({
     container: "spark1",
     title: "Total Mensal"
   });
@@ -1156,7 +1156,7 @@
     return this.updateInfo(data, value);
   };
 
-  spark2 = new H5.Sparks({
+  spark2 = new H5.Charts.Sparks({
     container: "spark2",
     title: "Total Período"
   });
@@ -1210,7 +1210,7 @@
     return this.updateInfo(data, Math.round(value * 100) / 100);
   };
 
-  gauge1 = new H5.GoogleCharts({
+  gauge1 = new H5.Charts.GoogleCharts({
     type: "Gauge",
     container: "gauge1",
     title: "Demo"
@@ -1291,7 +1291,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  gauge2 = new H5.GoogleCharts({
+  gauge2 = new H5.Charts.GoogleCharts({
     type: "Gauge",
     container: "gauge2",
     title: "Demo"
@@ -1372,7 +1372,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  gauge3 = new H5.GoogleCharts({
+  gauge3 = new H5.Charts.GoogleCharts({
     type: "Gauge",
     container: "gauge3",
     title: "Demo"
@@ -1455,7 +1455,7 @@
     return this.chart.draw(this.data, options);
   };
 
-  knob1 = new H5.Knobs({
+  knob1 = new H5.Charts.Knobs({
     container: "knob1",
     title: "Taxa VAA",
     popover: "Taxa de variação em relação ao mesmo mês do ano anterior"
@@ -1506,7 +1506,7 @@
     return this.updateInfo(value);
   };
 
-  knob2 = new H5.Knobs({
+  knob2 = new H5.Charts.Knobs({
     container: "knob2",
     title: "Taxa VMA",
     popover: "Taxa de variação em relação ao mês anterior"
@@ -1557,7 +1557,7 @@
     return this.updateInfo(value);
   };
 
-  knob3 = new H5.Knobs({
+  knob3 = new H5.Charts.Knobs({
     container: "knob3",
     title: "Taxa VPA",
     popover: "Taxa de variação em relação ao período PRODES anterior"

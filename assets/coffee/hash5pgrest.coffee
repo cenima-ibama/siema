@@ -1,4 +1,4 @@
-class H5.PgRest
+class H5.Rest
 
   options:
     url: null

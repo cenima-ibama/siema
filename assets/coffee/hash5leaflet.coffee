@@ -319,7 +319,7 @@ H5.Leaflet.Layer = L.Class.extend(
       data.features[i].properties = {}
       for prop of json[i]
         if prop is "geojson"
-          data.features[i].geometry = json[i].geojson
+          data.features[i].geometry =  JSON.parse(json[i].geojson)
         else data.features[i].properties[prop] = json[i][prop]  unless prop is "properties"
 
     # remove json data
@@ -389,7 +389,7 @@ H5.Leaflet.Layer = L.Class.extend(
 
         if not onMap or not @options.uniqueField
           # Convert GeoJSON to Leaflet vector (Point, Polyline, Polygon)
-          geometry = $.parseJSON(data.features[i].geometry)
+          geometry = data.features[i].geometry
           geometryOptions = @_getFeatureVectorOptions(data.features[i])
           vector_or_vectors = @_geoJsonGeometryToLeaflet(geometry, geometryOptions)
           data.features[i][(if vector_or_vectors instanceof Array then "vectors" else "vector")] = vector_or_vectors

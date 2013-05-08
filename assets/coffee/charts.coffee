@@ -47,7 +47,7 @@ tableAlerta =
     self[date].month = convertDate(date).getMonth()
     self[date].day = convertDate(date).getDate()
 
-rest = new H5.PgRest (
+rest = new H5.Rest (
   url: "../painel/rest"
   table: "alerta_acumulado_diario"
 )
@@ -78,7 +78,7 @@ tableProdes =
     self.RR[period].area = rr
     self.TO[period].area = to
 
-rest = new H5.PgRest (
+rest = new H5.Rest (
   url: "../painel/rest"
   table: "taxa_prodes"
 )
@@ -111,7 +111,7 @@ tableNuvens =
     self[date].month = convertDate(date).getMonth()
     self[date].day = convertDate(date).getDate()
 
-rest = new H5.PgRest (
+rest = new H5.Rest (
   url: "../painel/rest"
   table: "nuvem_deter"
 )
@@ -123,7 +123,7 @@ $.each rest.request(), (i, properties) ->
   )
 #}}}
 # CHART1 {{{
-chart1 = new H5.GoogleCharts (
+chart1 = new H5.Charts.GoogleCharts (
   type: "Line"
   container: "chart1"
   title: "Alerta DETER: Índice Diário"
@@ -242,7 +242,7 @@ chart1.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART2 {{{
-chart2 = new H5.GoogleCharts(
+chart2 = new H5.Charts.GoogleCharts(
   type: "Area"
   container: "chart2"
   period: 2
@@ -331,7 +331,7 @@ chart2.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART3 {{{
-chart3 = new H5.GoogleCharts(
+chart3 = new H5.Charts.GoogleCharts(
   type: "Bar"
   container: "chart3"
   period: 1
@@ -439,7 +439,7 @@ chart3.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART4 {{{
-chart4 = new H5.GoogleCharts(
+chart4 = new H5.Charts.GoogleCharts(
   type: "Column"
   container: "chart4"
   period: 2
@@ -528,7 +528,7 @@ chart4.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART5 {{{
-chart5 = new H5.GoogleCharts(
+chart5 = new H5.Charts.GoogleCharts(
   type: "Area"
   container: "chart5"
   title: "Taxa PRODES|Alerta DETER: Acumulado Períodos"
@@ -609,7 +609,7 @@ chart5.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART6 {{{
-chart6 = new H5.GoogleCharts(
+chart6 = new H5.Charts.GoogleCharts(
   type: "Column"
   container: "chart6"
   period: 1
@@ -708,7 +708,7 @@ chart6.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART7 {{{
-chart7 = new H5.GoogleCharts(
+chart7 = new H5.Charts.GoogleCharts(
   type: "Pie"
   container: "chart7"
   period: 0
@@ -785,7 +785,7 @@ chart7.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART8 {{{
-chart8 = new H5.GoogleCharts(
+chart8 = new H5.Charts.GoogleCharts(
   type: "Pie"
   container: "chart8"
   period: 1
@@ -865,7 +865,7 @@ chart8.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART9 {{{
-chart9 = new H5.GoogleCharts(
+chart9 = new H5.Charts.GoogleCharts(
   type: "Line"
   container: "chart9"
   period: 2
@@ -949,7 +949,7 @@ chart9.drawChart = ->
   @chart.draw @data, options
 #}}}
 # SPARK1 {{{
-spark1 = new H5.Sparks(
+spark1 = new H5.Charts.Sparks(
   container: "spark1"
   title: "Total Mensal"
 )
@@ -987,7 +987,7 @@ spark1.drawChart = ->
   @updateInfo data, value
 #}}}
 # SPARK2 {{{
-spark2 = new H5.Sparks(
+spark2 = new H5.Charts.Sparks(
   container: "spark2"
   title: "Total Período"
 )
@@ -1030,7 +1030,7 @@ spark2.drawChart = ->
   @updateInfo data, Math.round(value*100)/100
 #}}}
 # GAUGE1 {{{
-gauge1 = new H5.GoogleCharts(
+gauge1 = new H5.Charts.GoogleCharts(
   type: "Gauge"
   container: "gauge1"
   title: "Demo"
@@ -1110,7 +1110,7 @@ gauge1.drawChart = ->
   @chart.draw @data, options
 #}}}
 # GAUGE2 {{{
-gauge2 = new H5.GoogleCharts(
+gauge2 = new H5.Charts.GoogleCharts(
   type: "Gauge"
   container: "gauge2"
   title: "Demo"
@@ -1190,7 +1190,7 @@ gauge2.drawChart = ->
   @chart.draw @data, options
 #}}}
 # GAUGE3 {{{
-gauge3 = new H5.GoogleCharts(
+gauge3 = new H5.Charts.GoogleCharts(
   type: "Gauge"
   container: "gauge3"
   title: "Demo"
@@ -1269,7 +1269,7 @@ gauge3.drawChart = ->
   @chart.draw @data, options
 #}}}
 # KNOB1 {{{
-knob1 = new H5.Knobs(
+knob1 = new H5.Charts.Knobs(
   container: "knob1"
   title: "Taxa VAA"
   popover: "Taxa de variação em relação ao mesmo mês do ano anterior"
@@ -1317,7 +1317,7 @@ knob1.drawChart = ->
   @updateInfo value
 #}}}
 # KNOB2 {{{
-knob2 = new H5.Knobs(
+knob2 = new H5.Charts.Knobs(
   container: "knob2"
   title: "Taxa VMA"
   popover: "Taxa de variação em relação ao mês anterior"
@@ -1365,7 +1365,7 @@ knob2.drawChart = ->
   @updateInfo value
 #}}}
 # KNOB3 {{{
-knob3 = new H5.Knobs(
+knob3 = new H5.Charts.Knobs(
   container: "knob3"
   title: "Taxa VPA"
   popover: "Taxa de variação em relação ao período PRODES anterior"

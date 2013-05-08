@@ -4,7 +4,9 @@ google.load "visualization", "1",
 google.load "visualization", "1",
   packages: ["gauge"]
 
-class H5.Charts
+H5.Charts = {}
+
+class H5.Charts.Container
 
   constructor: (options) ->
     defaultOptions =
@@ -252,7 +254,7 @@ class H5.Charts
     $(select).on "change", (event) =>
       @drawChart()
 
-class H5.GoogleCharts extends H5.Charts
+class H5.Charts.GoogleCharts extends H5.Charts.Container
 
   dataTable: ->
     @data = new google.visualization.DataTable()
@@ -282,7 +284,7 @@ class H5.GoogleCharts extends H5.Charts
       @drawChart()
     ),false
 
-class H5.MiniCharts
+class H5.Charts.SmallContainer
 
   constructor: (options) ->
     defaultOptions =
@@ -321,7 +323,7 @@ class H5.MiniCharts
       trigger: trigger
       html: html
 
-class H5.Knobs extends H5.MiniCharts
+class H5.Charts.Knobs extends H5.Charts.SmallContainer
 
   createContainer: ->
     super
@@ -379,7 +381,7 @@ class H5.Knobs extends H5.MiniCharts
         step: ->
           dial.val(Math.floor @value).trigger "change"
 
-class H5.Sparks extends H5.MiniCharts
+class H5.Charts.Sparks extends H5.Charts.SmallContainer
 
   createContainer: ->
     super

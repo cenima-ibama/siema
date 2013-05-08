@@ -10,8 +10,8 @@
     author: "Helmuth Saatkamp <helmuthdu@gmail.com>"
   };
 
-  H5.PgRest = (function() {
-    PgRest.prototype.options = {
+  H5.Rest = (function() {
+    Rest.prototype.options = {
       url: null,
       restService: null,
       table: null,
@@ -21,16 +21,16 @@
       limit: null
     };
 
-    PgRest.prototype.data = null;
+    Rest.prototype.data = null;
 
-    function PgRest(options) {
+    function Rest(options) {
       if (options.url.substr(options.url.length - 1, 1) !== "/") {
         options.url += "/";
       }
       this.options = $.extend(this.options, options);
     }
 
-    PgRest.prototype.request = function(service) {
+    Rest.prototype.request = function(service) {
       var query, url;
 
       if (service) {
@@ -59,7 +59,7 @@
       return this.data;
     };
 
-    PgRest.prototype.getURLParam = function(param) {
+    Rest.prototype.getURLParam = function(param) {
       var compareKeyValuePair, comparisonResult, i, params, search;
 
       search = window.location.search.substring(1);
@@ -91,7 +91,7 @@
       return comparisonResult;
     };
 
-    PgRest.prototype._get = function(url, query) {
+    Rest.prototype._get = function(url, query) {
       var _this = this;
 
       return $.ajax({
@@ -109,11 +109,11 @@
       });
     };
 
-    PgRest.prototype._done = function(data) {
+    Rest.prototype._done = function(data) {
       return this.data = data;
     };
 
-    return PgRest;
+    return Rest;
 
   })();
 
@@ -125,8 +125,10 @@
     packages: ["gauge"]
   });
 
-  H5.Charts = (function() {
-    function Charts(options) {
+  H5.Charts = {};
+
+  H5.Charts.Container = (function() {
+    function Container(options) {
       var defaultOptions;
 
       defaultOptions = {
@@ -149,7 +151,7 @@
       this.options = $.extend(defaultOptions, options);
     }
 
-    Charts.prototype.createContainer = function() {
+    Container.prototype.createContainer = function() {
       var addBtn, addIcon, chartContent, chartHeader, chartTitle, closeBtn, closeIcon, delBtn, delIcon, formBtn, leftBtn, leftCtrl, leftIcon, maxBtn, maxIcon, minBtn, minIcon, pipeline, rightBtn, rightCtrl, rightIcon,
         _this = this;
 
@@ -272,7 +274,7 @@
       }
     };
 
-    Charts.prototype.createMinimalContainer = function() {
+    Container.prototype.createMinimalContainer = function() {
       var chartContent;
 
       this._container = document.getElementById(this.options.container);
@@ -283,7 +285,7 @@
       return $(this._container).append(this._chartContent);
     };
 
-    Charts.prototype.changeTitle = function(title) {
+    Container.prototype.changeTitle = function(title) {
       var pipeline;
 
       $(this._chartTitle).html(title);
@@ -293,7 +295,7 @@
       }
     };
 
-    Charts.prototype.enableMinimize = function() {
+    Container.prototype.enableMinimize = function() {
       var _this = this;
 
       return $(this._minBtn).on("click", function(event) {
@@ -321,7 +323,7 @@
       });
     };
 
-    Charts.prototype.enableMaximize = function() {
+    Container.prototype.enableMaximize = function() {
       var _this = this;
 
       return $(this._maxBtn).on("click", function(event) {
@@ -347,7 +349,7 @@
       });
     };
 
-    Charts.prototype.enableClose = function() {
+    Container.prototype.enableClose = function() {
       var _this = this;
 
       return $(this._closeBtn).on("click", function(event) {
@@ -356,7 +358,7 @@
       });
     };
 
-    Charts.prototype.enableSelect = function(select) {
+    Container.prototype.enableSelect = function(select) {
       var _this = this;
 
       return $(select).on("change", function(event) {
@@ -364,11 +366,11 @@
       });
     };
 
-    return Charts;
+    return Container;
 
   })();
 
-  H5.GoogleCharts = (function(_super) {
+  H5.Charts.GoogleCharts = (function(_super) {
     __extends(GoogleCharts, _super);
 
     function GoogleCharts() {
@@ -403,10 +405,10 @@
 
     return GoogleCharts;
 
-  })(H5.Charts);
+  })(H5.Charts.Container);
 
-  H5.MiniCharts = (function() {
-    function MiniCharts(options) {
+  H5.Charts.SmallContainer = (function() {
+    function SmallContainer(options) {
       var defaultOptions;
 
       defaultOptions = {
@@ -418,7 +420,7 @@
       this.options = $.extend(defaultOptions, options);
     }
 
-    MiniCharts.prototype.createContainer = function() {
+    SmallContainer.prototype.createContainer = function() {
       var leftCtrl, rightCtrl;
 
       this._container = document.getElementById(this.options.container);
@@ -435,7 +437,7 @@
       }
     };
 
-    MiniCharts.prototype.createPopover = function() {
+    SmallContainer.prototype.createPopover = function() {
       var html, placement, trigger;
 
       placement = "bottom";
@@ -453,11 +455,11 @@
       });
     };
 
-    return MiniCharts;
+    return SmallContainer;
 
   })();
 
-  H5.Knobs = (function(_super) {
+  H5.Charts.Knobs = (function(_super) {
     __extends(Knobs, _super);
 
     function Knobs() {
@@ -548,9 +550,9 @@
 
     return Knobs;
 
-  })(H5.MiniCharts);
+  })(H5.Charts.SmallContainer);
 
-  H5.Sparks = (function(_super) {
+  H5.Charts.Sparks = (function(_super) {
     __extends(Sparks, _super);
 
     function Sparks() {
@@ -589,7 +591,7 @@
 
     return Sparks;
 
-  })(H5.MiniCharts);
+  })(H5.Charts.SmallContainer);
 
   H5.Leaflet = {
     layersList: null
@@ -941,7 +943,7 @@
         data.features[i].properties = {};
         for (prop in json[i]) {
           if (prop === "geojson") {
-            data.features[i].geometry = json[i].geojson;
+            data.features[i].geometry = JSON.parse(json[i].geojson);
           } else {
             if (prop !== "properties") {
               data.features[i].properties[prop] = json[i][prop];
@@ -1012,7 +1014,7 @@
             }
           }
           if (!onMap || !this.options.uniqueField) {
-            geometry = $.parseJSON(data.features[i].geometry);
+            geometry = data.features[i].geometry;
             geometryOptions = this._getFeatureVectorOptions(data.features[i]);
             vector_or_vectors = this._geoJsonGeometryToLeaflet(geometry, geometryOptions);
             data.features[i][(vector_or_vectors instanceof Array ? "vectors" : "vector")] = vector_or_vectors;
