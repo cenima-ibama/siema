@@ -125,7 +125,9 @@
     packages: ["gauge"]
   });
 
-  H5.Charts = {};
+  H5.Charts = {
+    chartList: null
+  };
 
   H5.Charts.Container = (function() {
     function Container(options) {

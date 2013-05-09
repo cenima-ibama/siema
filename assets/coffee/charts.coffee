@@ -565,7 +565,6 @@ chart5.drawChart = ->
 
     return sum if sum >= 0
 
-
   # create new chart
   if @options.started
     @createChart()
