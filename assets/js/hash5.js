@@ -126,31 +126,30 @@
   });
 
   H5.Charts = {
-    chartList: null
+    chartList: []
   };
 
   H5.Charts.Container = (function() {
-    function Container(options) {
-      var defaultOptions;
+    Container.prototype.options = {
+      type: null,
+      container: null,
+      period: 1,
+      started: false,
+      title: "",
+      defaultClass: "",
+      selects: void 0,
+      resizing: 0,
+      buttons: {
+        minusplus: false,
+        arrows: false,
+        minimize: false,
+        maximize: false,
+        close: false
+      }
+    };
 
-      defaultOptions = {
-        type: null,
-        container: null,
-        period: 1,
-        started: true,
-        title: "",
-        defaultClass: "",
-        selects: void 0,
-        resizing: 0,
-        buttons: {
-          minusplus: false,
-          arrows: false,
-          minimize: false,
-          maximize: false,
-          close: false
-        }
-      };
-      this.options = $.extend(defaultOptions, options);
+    function Container(options) {
+      this.options = $.extend({}, this.options, options);
     }
 
     Container.prototype.createContainer = function() {
@@ -380,18 +379,20 @@
       return _ref;
     }
 
-    GoogleCharts.prototype.dataTable = function() {
+    GoogleCharts.prototype.createDataTable = function() {
       return this.data = new google.visualization.DataTable();
     };
 
     GoogleCharts.prototype.createChart = function() {
-      if (this.options.type === "Gauge") {
-        this.chart = new google.visualization.Gauge(this._chartContent);
-      } else {
-        this.chart = new google.visualization[this.options.type + "Chart"](this._chartContent);
+      if (!this.options.started) {
+        if (this.options.type === "Gauge") {
+          this.chart = new google.visualization.Gauge(this._chartContent);
+        } else {
+          this.chart = new google.visualization[this.options.type + "Chart"](this._chartContent);
+        }
+        this.options.started = true;
+        return this.detectScreenChanges();
       }
-      this.options.started = false;
-      return this.detectScreenChanges();
     };
 
     GoogleCharts.prototype.detectScreenChanges = function() {
@@ -410,16 +411,15 @@
   })(H5.Charts.Container);
 
   H5.Charts.SmallContainer = (function() {
-    function SmallContainer(options) {
-      var defaultOptions;
+    SmallContainer.prototype.options = {
+      type: null,
+      container: null,
+      title: "",
+      popover: false
+    };
 
-      defaultOptions = {
-        type: null,
-        container: null,
-        title: "",
-        popover: false
-      };
-      this.options = $.extend(defaultOptions, options);
+    function SmallContainer(options) {
+      this.options = $.extend({}, this.options, options);
     }
 
     SmallContainer.prototype.createContainer = function() {

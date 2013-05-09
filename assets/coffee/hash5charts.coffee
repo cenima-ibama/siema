@@ -5,29 +5,30 @@ google.load "visualization", "1",
   packages: ["gauge"]
 
 H5.Charts = {
-  chartList: null
+  chartList: []
 }
 
 class H5.Charts.Container
 
+  options:
+    type: null
+    container: null
+    period: 1
+    started: false
+    title: ""
+    defaultClass: ""
+    selects: undefined
+    resizing: 0
+    buttons:
+      minusplus: false
+      arrows: false
+      minimize: false
+      maximize: false
+      close: false
+
   constructor: (options) ->
-    defaultOptions =
-      type: null
-      container: null
-      period: 1
-      started: true
-      title: ""
-      defaultClass: ""
-      selects: undefined
-      resizing: 0
-      buttons:
-        minusplus: false
-        arrows: false
-        minimize: false
-        maximize: false
-        close: false
     # configure object with the options
-    @options = $.extend(defaultOptions, options)
+    @options = $.extend({}, @options, options)
 
   createContainer: ->
     @_container = document.getElementById(@options.container)
@@ -258,22 +259,23 @@ class H5.Charts.Container
 
 class H5.Charts.GoogleCharts extends H5.Charts.Container
 
-  dataTable: ->
+  createDataTable: ->
     @data = new google.visualization.DataTable()
 
   createChart: ->
-    # setup new chart
-    if @options.type is "Gauge"
-      @chart = new google.visualization.Gauge(
-        @_chartContent
-      )
-    else
-      @chart = new google.visualization[@options.type + "Chart"](
-        @_chartContent
-      )
-    # only init one time
-    @options.started = false
-    @detectScreenChanges()
+    if not @options.started
+      # setup new chart
+      if @options.type is "Gauge"
+        @chart = new google.visualization.Gauge(
+          @_chartContent
+        )
+      else
+        @chart = new google.visualization[@options.type + "Chart"](
+          @_chartContent
+        )
+      # only init one time
+      @options.started = true
+      @detectScreenChanges()
 
   detectScreenChanges: ->
     # Detect whether device supports orientationchange event,
@@ -288,14 +290,15 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
 
 class H5.Charts.SmallContainer
 
+  options:
+    type: null
+    container: null
+    title: ""
+    popover: false
+
   constructor: (options) ->
-    defaultOptions =
-      type: null
-      container: null
-      title: ""
-      popover: false
     # configure object with the options
-    @options = $.extend(defaultOptions, options)
+    @options = $.extend({}, @options, options)
 
   createContainer: ->
     @_container = document.getElementById(@options.container)

@@ -1,10 +1,16 @@
 #!/bin/bash
 
 case $1 in
+  "--map")
+    coffee --join js/h5map.js -cw coffee/h5map.coffee
+    ;;
   "--charts")
-    coffee --join js/h5charts.js -cw coffee/charts.coffee
+    coffee --join js/h5charts.js -cw coffee/h5charts.coffee
+    ;;
+  "--misc")
+    coffee --join js/h5custom.js -cw coffee/h5custom.coffee
     ;;
   "--hash5")
-    coffee --join js/hash5.js -cw coffee/hash5.coffee coffee/hash5pgrest.coffee coffee/hash5charts.coffee coffee/hash5leaflet.coffee
+    coffee --join js/hash5.js -cw coffee/hash5.coffee coffee/hash5rest.coffee coffee/hash5charts.coffee coffee/hash5leaflet.coffee
     ;;
 esac
