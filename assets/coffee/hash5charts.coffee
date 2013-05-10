@@ -5,7 +5,8 @@ google.load "visualization", "1",
   packages: ["gauge"]
 
 H5.Charts = {
-  chartList: []
+  data: {}
+  tables: {}
 }
 
 class H5.Charts.Container

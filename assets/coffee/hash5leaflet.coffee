@@ -1,4 +1,6 @@
 H5.Leaflet = {
+  map: null
+  layers: {}
   layersList: null
 }
 # H5.Leaflet.VectorLayer {{{
@@ -10,6 +12,7 @@ H5.Leaflet.Layer = L.Class.extend(
   options:
     scaleRange: null
     map: null
+    cluster: false
     uniqueField: null
     visibleAtScale: true
     dynamic: false
@@ -44,6 +47,9 @@ H5.Leaflet.Layer = L.Class.extend(
 
   setOptions: (options) ->
     L.Util.setOptions this, options
+
+  redraw: ->
+    @_getFeatures()
 
   _show: ->
     @_addIdleListener()
@@ -337,6 +343,10 @@ H5.Leaflet.Layer = L.Class.extend(
     # If true, don't bother querying again.
     return  if @_lastQueriedBounds and @_lastQueriedBounds.equals(bounds) and not @options.autoUpdate
 
+    # Create a cluster layer
+    if @options.cluster
+      markers = new L.MarkerClusterGroup()
+
     # Store the bounds in the _lastQueriedBounds member so we don't have
     # to query the layer again if someone simply turns a layer on/off
     @_lastQueriedBounds = bounds
@@ -388,18 +398,25 @@ H5.Leaflet.Layer = L.Class.extend(
                       else @_vectors[j].vector.setIcon @_getFeatureVectorOptions(@_vectors[j]).icon  if @_vectors[j].vector.setIcon
 
         if not onMap or not @options.uniqueField
-          # Convert GeoJSON to Leaflet vector (Point, Polyline, Polygon)
           geometry = data.features[i].geometry
           geometryOptions = @_getFeatureVectorOptions(data.features[i])
+          # Convert GeoJSON to Leaflet vector (Point, Polyline, Polygon)
           vector_or_vectors = @_geoJsonGeometryToLeaflet(geometry, geometryOptions)
           data.features[i][(if vector_or_vectors instanceof Array then "vectors" else "vector")] = vector_or_vectors
 
           # Show the vector or vectors on the map
-          if data.features[i].vector
-            @options.map.addLayer data.features[i].vector
-          else if data.features[i].vectors and data.features[i].vectors.length
-            for k in [0 ... data.features[i].vectors.length]
-              @options.map.addLayer data.features[i].vectors[k]
+          if @options.cluster
+            if data.features[i].vector
+              markers.addLayer(data.features[i].vector)
+            else if data.features[i].vectors and data.features[i].vectors.length
+              for k in [0 ... data.features[i].vectors.length]
+                markers.addLayer(data.features[i].vectors[k])
+          else
+            if data.features[i].vector
+              @options.map.addLayer data.features[i].vector
+            else if data.features[i].vectors and data.features[i].vectors.length
+              for k in [0 ... data.features[i].vectors.length]
+                @options.map.addLayer data.features[i].vectors[k]
 
           # Store the vector in an array so we can remove it later
           @_vectors.push data.features[i]
@@ -429,6 +446,10 @@ H5.Leaflet.Layer = L.Class.extend(
                   feature.vectors[k].on "click", (event) ->
                     me._fireClickEvent feature, event
             ) feature
+
+        # Add cluster to the map
+        if @options.cluster
+          @options.map.addLayer markers
 )
 # Extend Layer to support GeoJSON geometry parsing
 # Convert GeoJSON to Leaflet vectors

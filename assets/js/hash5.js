@@ -126,7 +126,8 @@
   });
 
   H5.Charts = {
-    chartList: []
+    data: {},
+    tables: {}
   };
 
   H5.Charts.Container = (function() {
@@ -596,6 +597,8 @@
   })(H5.Charts.SmallContainer);
 
   H5.Leaflet = {
+    map: null,
+    layers: {},
     layersList: null
   };
 
@@ -603,6 +606,7 @@
     options: {
       scaleRange: null,
       map: null,
+      cluster: false,
       uniqueField: null,
       visibleAtScale: true,
       dynamic: false,
@@ -641,6 +645,9 @@
     },
     setOptions: function(options) {
       return L.Util.setOptions(this, options);
+    },
+    redraw: function() {
+      return this._getFeatures();
     },
     _show: function() {
       var _this = this;
@@ -957,7 +964,7 @@
       return this._processFeatures(data);
     },
     _processFeatures: function(data) {
-      var bounds, feature, geometry, geometryOptions, i, j, k, me, onMap, propertiesChanged, symbologyPropertyChanged, vector_or_vectors, _i, _j, _k, _l, _ref3, _ref4, _ref5, _ref6, _results;
+      var bounds, feature, geometry, geometryOptions, i, j, k, markers, me, onMap, propertiesChanged, symbologyPropertyChanged, vector_or_vectors, _i, _j, _k, _l, _m, _ref3, _ref4, _ref5, _ref6, _ref7, _results;
 
       if (!this.options.map) {
         return;
@@ -965,6 +972,9 @@
       bounds = this.options.map.getBounds();
       if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds) && !this.options.autoUpdate) {
         return;
+      }
+      if (this.options.cluster) {
+        markers = new L.MarkerClusterGroup();
       }
       this._lastQueriedBounds = bounds;
       if (data && data.features && data.features.length) {
@@ -1020,11 +1030,21 @@
             geometryOptions = this._getFeatureVectorOptions(data.features[i]);
             vector_or_vectors = this._geoJsonGeometryToLeaflet(geometry, geometryOptions);
             data.features[i][(vector_or_vectors instanceof Array ? "vectors" : "vector")] = vector_or_vectors;
-            if (data.features[i].vector) {
-              this.options.map.addLayer(data.features[i].vector);
-            } else if (data.features[i].vectors && data.features[i].vectors.length) {
-              for (k = _l = 0, _ref6 = data.features[i].vectors.length; 0 <= _ref6 ? _l < _ref6 : _l > _ref6; k = 0 <= _ref6 ? ++_l : --_l) {
-                this.options.map.addLayer(data.features[i].vectors[k]);
+            if (this.options.cluster) {
+              if (data.features[i].vector) {
+                markers.addLayer(data.features[i].vector);
+              } else if (data.features[i].vectors && data.features[i].vectors.length) {
+                for (k = _l = 0, _ref6 = data.features[i].vectors.length; 0 <= _ref6 ? _l < _ref6 : _l > _ref6; k = 0 <= _ref6 ? ++_l : --_l) {
+                  markers.addLayer(data.features[i].vectors[k]);
+                }
+              }
+            } else {
+              if (data.features[i].vector) {
+                this.options.map.addLayer(data.features[i].vector);
+              } else if (data.features[i].vectors && data.features[i].vectors.length) {
+                for (k = _m = 0, _ref7 = data.features[i].vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
+                  this.options.map.addLayer(data.features[i].vectors[k]);
+                }
               }
             }
             this._vectors.push(data.features[i]);
@@ -1033,7 +1053,7 @@
               feature = data.features[i];
               this._setPopupContent(feature);
               (function(feature) {
-                var _m, _ref7, _results1;
+                var _n, _ref8, _results1;
 
                 if (feature.vector) {
                   return feature.vector.on("click", function(event) {
@@ -1041,7 +1061,7 @@
                   });
                 } else if (feature.vectors) {
                   _results1 = [];
-                  for (k = _m = 0, _ref7 = feature.vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
+                  for (k = _n = 0, _ref8 = feature.vectors.length; 0 <= _ref8 ? _n < _ref8 : _n > _ref8; k = 0 <= _ref8 ? ++_n : --_n) {
                     _results1.push(feature.vectors[k].on("click", function(event) {
                       return me._showPopup(feature, event);
                     }));
@@ -1053,8 +1073,8 @@
             if (this.options.clickEvent) {
               me = this;
               feature = data.features[i];
-              _results.push((function(feature) {
-                var _m, _ref7, _results1;
+              (function(feature) {
+                var _n, _ref8, _results1;
 
                 if (feature.vector) {
                   return feature.vector.on("click", function(event) {
@@ -1062,17 +1082,18 @@
                   });
                 } else if (feature.vectors) {
                   _results1 = [];
-                  for (k = _m = 0, _ref7 = feature.vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
+                  for (k = _n = 0, _ref8 = feature.vectors.length; 0 <= _ref8 ? _n < _ref8 : _n > _ref8; k = 0 <= _ref8 ? ++_n : --_n) {
                     _results1.push(feature.vectors[k].on("click", function(event) {
                       return me._fireClickEvent(feature, event);
                     }));
                   }
                   return _results1;
                 }
-              })(feature));
-            } else {
-              _results.push(void 0);
+              })(feature);
             }
+          }
+          if (this.options.cluster) {
+            _results.push(this.options.map.addLayer(markers));
           } else {
             _results.push(void 0);
           }

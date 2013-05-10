@@ -80,7 +80,7 @@ $(document).ready ->
       $("#btn-charts").prop "disabled", true
       $(".loading").fadeOut 700
       $("#navbar").slideDown 300
-      reloadCharts()
+      H5.Charts.reloadCharts()
   , 1000)
 
   # Detect whether device supports orientationchange event, otherwise fall back to
@@ -95,15 +95,21 @@ $(document).ready ->
 
   $(".quick-btn a").on "click", (event) ->
     event.preventDefault()
-    # save the selected option
-    H5.Charts.state = $(@).prop("id")
+
     # clean all selection
     $(@).each ->
       $("a").removeClass "active"
     # mark selected option
     $(@).addClass "active"
+
+    # save the selected option
+    H5.Charts.data.state = $(@).prop("id")
+
+    # update map
+    H5.Charts.updateMap()
+
     # reload charts
-    reloadCharts()
+    H5.Charts.reloadCharts()
 
   #change the case to Letter case, ex: helmuth saatkamp to Helmuth Saatkamp
   String::toProperCase = ->

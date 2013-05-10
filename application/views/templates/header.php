@@ -9,6 +9,7 @@
 
     <!-- Le styles -->
     <link href="<?= base_url()?>assets/css/leaflet.css" rel="stylesheet">
+    <link href="<?= base_url()?>assets/css/MarkerCluster.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrapSwitch.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/jquery-ui-1.9.2.css" rel="stylesheet">

@@ -1,17 +1,21 @@
-# PERIODOS E VARIAVEIS {{{
-H5.Charts.state = "Todos"
-today = new Date()
-totalPeriodos = today.getFullYear() - 2005
-periodos = new Array(totalPeriodos)
+# DATA {{{
+H5.Charts.data.state = "Todos"
+H5.Charts.data.states = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"]
 
-curYear = if today.getMonth() < 6 then today.getFullYear() else today.getFullYear() + 1
-curMonth = new Date().getMonth()
-curDay = new Date().getDate()
+H5.Charts.data.thisDate = new Date()
+H5.Charts.data.thisYear = if H5.Charts.data.thisDate.getMonth() < 6 then H5.Charts.data.thisDate.getFullYear() else H5.Charts.data.thisDate.getFullYear() + 1
+H5.Charts.data.thisMonth = new Date().getMonth()
+H5.Charts.data.thisDay = new Date().getDate()
 
-for i in [0..totalPeriodos]
-  periodos[i] = (today.getFullYear() - i - 1) + "-" + (today.getFullYear() - i)
+H5.Charts.data.selectedYear = H5.Charts.data.thisYear
+H5.Charts.data.selectedMonth = H5.Charts.data.thisMonth
 
-months =
+H5.Charts.data.totalPeriods = H5.Charts.data.thisDate.getFullYear() - 2005
+H5.Charts.data.periods = new Array(H5.Charts.data.totalPeriods)
+for i in [0..H5.Charts.data.totalPeriods]
+  H5.Charts.data.periods[i] = (H5.Charts.data.thisDate.getFullYear() - i - 1) + "-" + (H5.Charts.data.thisDate.getFullYear() - i)
+
+H5.Charts.data.months =
   0: "Ago"
   1: "Set"
   2: "Out"
@@ -25,14 +29,13 @@ months =
   10: "Jun"
   11: "Jul"
 
-estados = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"]
 #}}}
 # DATABASES {{{
-tableAlerta =
+H5.Charts.tables.alerta =
   init: ->
     @states = {}
-    for estado in estados
-      @states[estado] = {}
+    for state in H5.Charts.data.states
+      @states[state] = {}
 
   populate: (state, date, value) ->
     convertDate = (dateStr) ->
@@ -52,19 +55,19 @@ rest = new H5.Rest (
   table: "alerta_acumulado_diario"
 )
 
-tableAlerta.init()
+H5.Charts.tables.alerta.init()
 $.each rest.request(), (i, properties) ->
-  tableAlerta.populate(
+  H5.Charts.tables.alerta.populate(
     properties.estado, properties.data, parseFloat(properties.total)
   )
 
-tableProdes =
+H5.Charts.tables.prodes =
   init: ->
     @states = {}
-    for estado in estados
-      @states[estado] = {}
-      for period in periodos
-        @states[estado][period] = {}
+    for state in H5.Charts.data.states
+      @states[state] = {}
+      for period in H5.Charts.data.periods
+        @states[state][period] = {}
 
   populate: (period, ac, am, ap, ma, mt, pa, ro, rr, to) ->
     self = @states
@@ -83,9 +86,9 @@ rest = new H5.Rest (
   table: "taxa_prodes"
 )
 
-tableProdes.init()
+H5.Charts.tables.prodes.init()
 $.each rest.request(), (i, properties) ->
-  tableProdes.populate(
+  H5.Charts.tables.prodes.populate(
     properties.ano_prodes.replace('/','-'),
     parseFloat(properties.ac), parseFloat(properties.am),
     parseFloat(properties.ap), parseFloat(properties.ma),
@@ -94,7 +97,7 @@ $.each rest.request(), (i, properties) ->
     parseFloat(properties.to)
   )
 
-tableNuvens =
+H5.Charts.tables.nuvens =
   init: ->
     @nuvem = {}
 
@@ -116,9 +119,9 @@ rest = new H5.Rest (
   table: "nuvem_deter"
 )
 
-tableNuvens.init()
+H5.Charts.tables.nuvens.init()
 $.each rest.request(), (i, properties) ->
-  tableNuvens.populate(
+  H5.Charts.tables.nuvens.populate(
     properties.data, properties.percent,
   )
 #}}}
@@ -159,18 +162,21 @@ chart1 = new H5.Charts.GoogleCharts (
 chart1.createContainer()
 
 # make those options selected
-chart1._yearsSlct.options[totalPeriodos+1].selected = true
-chart1._monthsSlct.options[curMonth].selected = true
+chart1._yearsSlct.options[H5.Charts.data.totalPeriods+1].selected = true
+chart1._monthsSlct.options[H5.Charts.data.thisMonth].selected = true
 
 $("#yearsSlct").on "change", (event) ->
+  H5.Charts.data.selectedYear = chart1._yearsSlct.value
   chart8.drawChart()
   knob1.drawChart()
   knob2.drawChart()
   knob3.drawChart()
   spark1.drawChart()
   spark2.drawChart()
+  H5.Charts.updateMap()
 
 $("#monthsSlct").on "change", (event) ->
+  H5.Charts.data.selectedMonth = chart1._monthsSlct.value
   chart3.drawChart()
   chart8.drawChart()
   knob1.drawChart()
@@ -178,12 +184,13 @@ $("#monthsSlct").on "change", (event) ->
   knob3.drawChart()
   spark1.drawChart()
   spark2.drawChart()
+  H5.Charts.updateMap()
 
 chart1.drawChart = ->
   createTable = (state) =>
     sum = 0
     for day in [1..daysInMonth]
-      $.each tableAlerta.states[state], (key, reg) ->
+      $.each H5.Charts.tables.alerta.states[state], (key, reg) ->
         if firstPeriod <= reg.date <= secondPeriod and reg.day is day
           sum += reg.area
           return false
@@ -210,11 +217,11 @@ chart1.drawChart = ->
     @data.addRow data
 
   # populate table with real values
-  if H5.Charts.state is "Todos"
-    $.each tableAlerta.states, (state, value) ->
+  if H5.Charts.data.state is "Todos"
+    $.each H5.Charts.tables.alerta.states, (state, value) ->
       createTable state
   else
-    createTable H5.Charts.state
+    createTable H5.Charts.data.state
 
   options =
     title: ""
@@ -267,13 +274,13 @@ chart2.drawChart = ->
     sum = 0
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
-    if H5.Charts.state is "Todos"
-      $.each tableAlerta.states, (key, state) ->
+    if H5.Charts.data.state is "Todos"
+      $.each H5.Charts.tables.alerta.states, (key, state) ->
         $.each state, (key, reg) ->
           if firstPeriod <= reg.date <= secondPeriod and reg.month == month
             sum += reg.area
     else
-      $.each tableAlerta.states[H5.Charts.state], (key, reg) ->
+      $.each H5.Charts.tables.alerta.states[H5.Charts.data.state], (key, reg) ->
         if firstPeriod <= reg.date <= secondPeriod and reg.month == month
           sum += reg.area
 
@@ -288,14 +295,14 @@ chart2.drawChart = ->
   # init table
   @data.addColumn "string", "mes"
   for i in [0...@options.period]
-    @data.addColumn "number", periodos[i]
+    @data.addColumn "number", H5.Charts.data.periods[i]
 
-  for month of months
-    data = [months[month]]
+  for month of H5.Charts.data.months
+    data = [H5.Charts.data.months[month]]
     month = parseInt month
     if 7 <= (month + 7) <= 11 then month+= 7 else month-= 5
     for i in [1..@options.period]
-      data[i] = sumValues(curYear - i + 1, month)
+      data[i] = sumValues(H5.Charts.data.thisYear - i + 1, month)
     @data.addRow data
 
   options =
@@ -323,7 +330,7 @@ chart2.drawChart = ->
 
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
-    @_addBtn.disabled = @options.period > totalPeriodos
+    @_addBtn.disabled = @options.period > H5.Charts.data.totalPeriods
     @_delBtn.disabled = @options.period < 2
 
   @chart.draw @data, options
@@ -353,13 +360,13 @@ chart3.drawChart = ->
   # sum values
   sumValues = (firstPeriod, secondPeriod) ->
     sum = 0
-    if H5.Charts.state is "Todos"
-      $.each tableAlerta.states, (key, state) ->
+    if H5.Charts.data.state is "Todos"
+      $.each H5.Charts.tables.alerta.states, (key, state) ->
         $.each state, (key, reg) ->
           if firstPeriod <= reg.date <= secondPeriod
             sum += reg.area
     else
-      $.each tableAlerta.states[H5.Charts.state], (key, reg) ->
+      $.each H5.Charts.tables.alerta.states[H5.Charts.data.state], (key, reg) ->
         if firstPeriod <= reg.date <= secondPeriod
           sum += reg.area
     return Math.round(sum * 100) / 100
@@ -376,10 +383,10 @@ chart3.drawChart = ->
     firstPeriod = new Date(year - 1, 7, 1)
     if month > 6
       secondPeriod = new Date(year-1, month+1, 0)
-    else if month != curMonth
+    else if month != H5.Charts.data.thisMonth
       secondPeriod = new Date(year, month+1, 0)
     else
-      secondPeriod = new Date(year, month, curDay)
+      secondPeriod = new Date(year, month, H5.Charts.data.thisDay)
     sumValues firstPeriod, secondPeriod
 
   # create new chart
@@ -395,9 +402,9 @@ chart3.drawChart = ->
 
   # populate table
   for i in [0..@options.period]
-    data = [periodos[i]]
-    sumTotal = sumTotalValues(curYear - i)
-    sumAvg = sumAvgValues(curYear - i)
+    data = [H5.Charts.data.periods[i]]
+    sumTotal = sumTotalValues(H5.Charts.data.thisYear - i)
+    sumAvg = sumAvgValues(H5.Charts.data.thisYear - i)
     data[1] = sumAvg
     data[2] = Math.round((sumTotal - sumAvg) * 100) / 100
     @data.addRow data
@@ -414,7 +421,7 @@ chart3.drawChart = ->
       height: "76%"
     colors: ['#3ABCFC', '#FC2121']
     vAxis:
-      title: "Periodos"
+      title: "H5.Charts.data.periods"
     hAxis:
       title: "Área Km2"
     bar:
@@ -430,7 +437,7 @@ chart3.drawChart = ->
 
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
-    @_addBtn.disabled = @options.period > totalPeriodos - 1
+    @_addBtn.disabled = @options.period > H5.Charts.data.totalPeriods - 1
     @_delBtn.disabled = @options.period < 2
 
   @chart.draw @data, options
@@ -462,7 +469,7 @@ chart4.drawChart = ->
     sum = 0
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
-    $.each tableAlerta.states[state], (key, reg) ->
+    $.each H5.Charts.tables.alerta.states[state], (key, reg) ->
       if firstPeriod <= reg.date <= secondPeriod
         sum += reg.area
     Math.round(sum * 100) / 100
@@ -476,19 +483,19 @@ chart4.drawChart = ->
   # init table
   @data.addColumn "string", "mes"
   for i in [0...@options.period]
-    @data.addColumn "number", periodos[i]
+    @data.addColumn "number", H5.Charts.data.periods[i]
 
   # populate table with real values
-  if H5.Charts.state is "Todos"
-    $.each tableAlerta.states, (state, reg) =>
+  if H5.Charts.data.state is "Todos"
+    $.each H5.Charts.tables.alerta.states, (state, reg) =>
       data = [state]
       for j in [1..@options.period]
-        data[j] = sumValues(state, curYear - j + 1)
+        data[j] = sumValues(state, H5.Charts.data.thisYear - j + 1)
       @data.addRow data
   else
-    data = [H5.Charts.state]
+    data = [H5.Charts.data.state]
     for j in [1..@options.period]
-      data[j] = sumValues(H5.Charts.state, curYear - j + 1)
+      data[j] = sumValues(H5.Charts.data.state, H5.Charts.data.thisYear - j + 1)
     @data.addRow data
 
   options =
@@ -518,7 +525,7 @@ chart4.drawChart = ->
 
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
-    @_addBtn.disabled = @options.period > totalPeriodos
+    @_addBtn.disabled = @options.period > H5.Charts.data.totalPeriods
     @_delBtn.disabled = @options.period < 2
 
   @chart.draw @data, options
@@ -540,24 +547,24 @@ chart5.drawChart = ->
     sum = 0
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
-    if H5.Charts.state is "Todos"
-      $.each tableAlerta.states, (key, state) ->
+    if H5.Charts.data.state is "Todos"
+      $.each H5.Charts.tables.alerta.states, (key, state) ->
         $.each state, (key, reg) ->
           if firstPeriod <= reg.date <= secondPeriod
             sum += reg.area
     else
-      $.each tableAlerta.states[H5.Charts.state], (key, reg) ->
+      $.each H5.Charts.tables.alerta.states[H5.Charts.data.state], (key, reg) ->
         if firstPeriod <= reg.date <= secondPeriod
           sum += reg.area
     return Math.round(sum * 100) / 100 if sum >= 0
 
   sumProdes = (period) ->
     sum = 0
-    if H5.Charts.state is "Todos"
-      $.each tableProdes.states, (key, state) ->
+    if H5.Charts.data.state is "Todos"
+      $.each H5.Charts.tables.prodes.states, (key, state) ->
         sum+= state[period].area
     else
-      sum = tableProdes.states[H5.Charts.state][period].area
+      sum = H5.Charts.tables.prodes.states[H5.Charts.data.state][period].area
 
     return sum if sum >= 0
 
@@ -573,11 +580,11 @@ chart5.drawChart = ->
   @data.addColumn "number", "Taxa PRODES"
 
   # populate table
-  i = totalPeriodos
+  i = H5.Charts.data.totalPeriods
   while i >= 0
-    data = [periodos[i]]
-    data[1] = sumDeter(curYear - i)
-    data[2] = sumProdes(periodos[i])
+    data = [H5.Charts.data.periods[i]]
+    data[1] = sumDeter(H5.Charts.data.thisYear - i)
+    data[2] = sumProdes(H5.Charts.data.periods[i])
     @data.addRow data
     i--
 
@@ -595,7 +602,7 @@ chart5.drawChart = ->
     vAxis:
       title: "Área Km2"
     hAxis:
-      title: "Periodos"
+      title: "H5.Charts.data.periods"
     animation:
       duration: 500
       easing: "inAndOut"
@@ -615,7 +622,7 @@ chart6 = new H5.Charts.GoogleCharts(
 )
 chart6.createContainer()
 
-chart6.changeTitle periodos[chart6.options.period]
+chart6.changeTitle H5.Charts.data.periods[chart6.options.period]
 
 chart6._leftBtn.onclick = ->
   chart6.options.period++
@@ -631,7 +638,7 @@ chart6.drawChart = ->
     sum = 0
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
-    $.each tableAlerta.states[state], (key, reg) ->
+    $.each H5.Charts.tables.alerta.states[state], (key, reg) ->
       if firstPeriod <= reg.date <= secondPeriod
         sum+= reg.area
     return Math.round(sum * 100) / 100
@@ -639,7 +646,7 @@ chart6.drawChart = ->
   sumProdes = (state, year) ->
     sum = 0
     period = (year - 1) + "-" + (year)
-    $.each tableProdes.states[state], (key, reg) ->
+    $.each H5.Charts.tables.prodes.states[state], (key, reg) ->
       if key is period
         sum+= reg.area if reg.area?
     return Math.round(sum * 100) / 100
@@ -656,16 +663,16 @@ chart6.drawChart = ->
   @data.addColumn "number", "Taxa PRODES"
 
   # populate table with real values
-  if H5.Charts.state is "Todos"
-    $.each tableAlerta.states, (state, reg) =>
+  if H5.Charts.data.state is "Todos"
+    $.each H5.Charts.tables.alerta.states, (state, reg) =>
       data = [state]
-      data[1] = sumDeter(state, curYear - @options.period)
-      data[2] = sumProdes(state, curYear - @options.period)
+      data[1] = sumDeter(state, H5.Charts.data.thisYear - @options.period)
+      data[2] = sumProdes(state, H5.Charts.data.thisYear - @options.period)
       @data.addRow data
   else
-    data = [H5.Charts.state]
-    data[1] = sumDeter(H5.Charts.state, curYear - @options.period)
-    data[2] = sumProdes(H5.Charts.state, curYear - @options.period)
+    data = [H5.Charts.data.state]
+    data[1] = sumDeter(H5.Charts.data.state, H5.Charts.data.thisYear - @options.period)
+    data[2] = sumProdes(H5.Charts.data.state, H5.Charts.data.thisYear - @options.period)
     @data.addRow data
 
   options =
@@ -687,7 +694,7 @@ chart6.drawChart = ->
       duration: 500
       easing: "inAndOut"
 
-  @changeTitle "Taxa PRODES|Alerta DETER: UFs [" + periodos[@options.period] + "]"
+  @changeTitle "Taxa PRODES|Alerta DETER: UFs [" + H5.Charts.data.periods[@options.period] + "]"
 
   # Disabling the buttons while the chart is drawing.
   @_rightBtn.disabled = true
@@ -696,7 +703,7 @@ chart6.drawChart = ->
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
     @_rightBtn.disabled = @options.period < 2
-    @_leftBtn.disabled = @options.period >= totalPeriodos
+    @_leftBtn.disabled = @options.period >= H5.Charts.data.totalPeriods
 
   @chart.draw @data, options
 #}}}
@@ -712,7 +719,7 @@ chart7 = new H5.Charts.GoogleCharts(
 )
 chart7.createContainer()
 
-chart7.changeTitle periodos[chart7.options.period]
+chart7.changeTitle H5.Charts.data.periods[chart7.options.period]
 
 chart7._leftBtn.onclick = ->
   chart7.options.period++
@@ -728,7 +735,7 @@ chart7.drawChart = ->
     sum = 0
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
-    $.each tableAlerta.states[state], (key, reg) ->
+    $.each H5.Charts.tables.alerta.states[state], (key, reg) ->
       if firstPeriod <= reg.date <= secondPeriod
         sum += reg.area
     Math.round(sum * 100) / 100
@@ -741,13 +748,13 @@ chart7.drawChart = ->
 
   # init table
   @data.addColumn "string", "mes"
-  @data.addColumn "number", periodos[totalPeriodos]
+  @data.addColumn "number", H5.Charts.data.periods[H5.Charts.data.totalPeriods]
 
   # populate table
-  for i in [0...estados.length]
-    estado = estados[i]
+  for i in [0...H5.Charts.data.states.length]
+    estado = H5.Charts.data.states[i]
     data = [estado]
-    data[1] = sumValues(estados[i], curYear - @options.period)
+    data[1] = sumValues(H5.Charts.data.states[i], H5.Charts.data.thisYear - @options.period)
     @data.addRow data
 
   options =
@@ -763,7 +770,7 @@ chart7.drawChart = ->
              '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
     backgroundColor: "transparent"
 
-  @changeTitle periodos[@options.period]
+  @changeTitle H5.Charts.data.periods[@options.period]
 
   # Disabling the buttons while the chart is drawing.
   @_rightBtn.disabled = true
@@ -772,7 +779,7 @@ chart7.drawChart = ->
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
     @_rightBtn.disabled = @options.period < 1
-    @_leftBtn.disabled = @options.period >= totalPeriodos
+    @_leftBtn.disabled = @options.period >= H5.Charts.data.totalPeriods
 
   @chart.draw @data, options
 #}}}
@@ -791,10 +798,10 @@ chart8.drawChart = ->
   # sum values
   sumValues = (state) ->
     sum = 0
-    $.each tableAlerta.states[state], (key, reg) ->
+    $.each H5.Charts.tables.alerta.states[state], (key, reg) ->
       if firstPeriod <= reg.date <= secondPeriod
         sum += reg.area
-    if firstPeriod > today
+    if firstPeriod > H5.Charts.data.thisDate
       return 1
     else
       Math.round(sum * 100) / 100
@@ -813,7 +820,7 @@ chart8.drawChart = ->
   firstPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, 1)
   secondPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, daysInMonth)
 
-  if firstPeriod > today
+  if firstPeriod > H5.Charts.data.thisDate
     pieText = "none"
     pieTooltip = "none"
   else
@@ -821,10 +828,10 @@ chart8.drawChart = ->
     pieTooltip = "focus"
 
   # populate table
-  for i in [0...estados.length]
-    estado = estados[i]
+  for i in [0...H5.Charts.data.states.length]
+    estado = H5.Charts.data.states[i]
     data = [estado]
-    data[1] = sumValues(estados[i])
+    data[1] = sumValues(H5.Charts.data.states[i])
     @data.addRow data
 
   @changeTitle chart1._monthsSlct.options[chart1._monthsSlct.value].label + ", " + chart1._yearsSlct.value
@@ -882,7 +889,7 @@ chart9.drawChart = ->
     percent = 0
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
-    $.each tableNuvens.nuvem, (key, nuvem) ->
+    $.each H5.Charts.tables.nuvens.nuvem, (key, nuvem) ->
       if nuvem.date >= firstPeriod and nuvem.date <= secondPeriod and nuvem.month is month
         percent = nuvem.value
         return false
@@ -898,14 +905,14 @@ chart9.drawChart = ->
   # init table
   @data.addColumn "string", "mes"
   for i in [0...@options.period]
-    @data.addColumn "number", periodos[i]
+    @data.addColumn "number", H5.Charts.data.periods[i]
 
-  for month of months
-    data = [months[month]]
+  for month of H5.Charts.data.months
+    data = [H5.Charts.data.months[month]]
     month = parseInt month
     if 7 <= (month + 7) <= 11 then month+= 7 else month-= 5
     for i in [1..@options.period]
-      data[i] = sumValues(curYear - i + 1, month)
+      data[i] = sumValues(H5.Charts.data.thisYear - i + 1, month)
     @data.addRow data
 
   options =
@@ -933,7 +940,7 @@ chart9.drawChart = ->
 
   google.visualization.events.addListener @chart, "ready", =>
     # Enabling only relevant buttons.
-    @_addBtn.disabled = @options.period > totalPeriodos - 4
+    @_addBtn.disabled = @options.period > H5.Charts.data.totalPeriods - 4
     @_delBtn.disabled = @options.period < 2
 
   @chart.draw @data, options
@@ -951,7 +958,7 @@ spark1.drawChart = ->
   createTable = (state) =>
     dayValue = 0
     for day in [1..daysInMonth]
-      $.each tableAlerta.states[state], (key, reg) ->
+      $.each H5.Charts.tables.alerta.states[state], (key, reg) ->
         if firstPeriod <= reg.date <= secondPeriod and reg.day is day
           dayValue += reg.area
           return false
@@ -967,11 +974,11 @@ spark1.drawChart = ->
     data[(day-1)] = 0
 
   # populate table with real values
-  if H5.Charts.state is "Todos"
-    $.each tableAlerta.states, (state, value) ->
+  if H5.Charts.data.state is "Todos"
+    $.each H5.Charts.tables.alerta.states, (state, value) ->
       createTable state
   else
-    createTable H5.Charts.state
+    createTable H5.Charts.data.state
 
   value = data[daysInMonth-1]
   @updateInfo data, value
@@ -991,13 +998,13 @@ spark2.drawChart = ->
     sum = 0
     firstPeriod = new Date(year - 1, 7, 1)
     secondPeriod = new Date(year , 7, 0)
-    if H5.Charts.state is "Todos"
-      $.each tableAlerta.states, (key, state) ->
+    if H5.Charts.data.state is "Todos"
+      $.each H5.Charts.tables.alerta.states, (key, state) ->
         $.each state, (key, reg) ->
           if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
             sum += reg.area
     else
-      $.each tableAlerta.states[H5.Charts.state], (key, reg) ->
+      $.each H5.Charts.tables.alerta.states[H5.Charts.data.state], (key, reg) ->
         if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
           sum += reg.area
     return Math.round(sum * 100) / 100
@@ -1007,7 +1014,7 @@ spark2.drawChart = ->
 
   # populate table
   # list months
-  $.each months, (number, month) =>
+  $.each H5.Charts.data.months, (number, month) =>
     i = number
     number = parseInt number
     if 7 <= (number + 7) <= 11 then number+= 7 else number-= 5
@@ -1033,15 +1040,15 @@ knob1.drawChart = ->
   periodDeforestationRate = (year, month) ->
     sumValues = (date) ->
       sum = 0
-      if H5.Charts.state is "Todos"
-        for state of tableAlerta.states
-          for reg of tableAlerta.states[state]
-            reg = tableAlerta.states[state][reg]
+      if H5.Charts.data.state is "Todos"
+        for state of H5.Charts.tables.alerta.states
+          for reg of H5.Charts.tables.alerta.states[state]
+            reg = H5.Charts.tables.alerta.states[state][reg]
             if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
               sum += reg.area
       else
-        for reg of tableAlerta.states[H5.Charts.state]
-          reg = tableAlerta.states[H5.Charts.state][reg]
+        for reg of H5.Charts.tables.alerta.states[H5.Charts.data.state]
+          reg = H5.Charts.tables.alerta.states[H5.Charts.data.state][reg]
           if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
             sum += reg.area
       return sum
@@ -1081,15 +1088,15 @@ knob2.drawChart = ->
   periodDeforestationRate = (year, month) ->
     sumValues = (date) ->
       sum = 0
-      if H5.Charts.state is "Todos"
-        for state of tableAlerta.states
-          for reg of tableAlerta.states[state]
-            reg = tableAlerta.states[state][reg]
+      if H5.Charts.data.state is "Todos"
+        for state of H5.Charts.tables.alerta.states
+          for reg of H5.Charts.tables.alerta.states[state]
+            reg = H5.Charts.tables.alerta.states[state][reg]
             if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
               sum += reg.area
       else
-        for reg of tableAlerta.states[H5.Charts.state]
-          reg = tableAlerta.states[H5.Charts.state][reg]
+        for reg of H5.Charts.tables.alerta.states[H5.Charts.data.state]
+          reg = H5.Charts.tables.alerta.states[H5.Charts.data.state][reg]
           if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
             sum += reg.area
       return sum
@@ -1129,13 +1136,13 @@ knob3.drawChart = ->
   periodDeforestationAvgRate = (year, month) ->
     sumValues = (firstPeriod, secondPeriod) ->
       sum = 0
-      if H5.Charts.state is "Todos"
-        $.each tableAlerta.states, (key, state) ->
+      if H5.Charts.data.state is "Todos"
+        $.each H5.Charts.tables.alerta.states, (key, state) ->
           $.each state, (key, reg) ->
             if firstPeriod <= reg.date <= secondPeriod
               sum += reg.area
       else
-        $.each tableAlerta.states[H5.Charts.state], (key, reg) ->
+        $.each H5.Charts.tables.alerta.states[H5.Charts.data.state], (key, reg) ->
           if firstPeriod <= reg.date <= secondPeriod
             sum += reg.area
       return Math.round(sum * 100) / 100
@@ -1163,7 +1170,7 @@ knob3.drawChart = ->
   @updateInfo value
 #}}}
 # CONTROLS {{{
-@reloadCharts = ->
+H5.Charts.reloadCharts = ->
   chart1.drawChart()
   chart2.drawChart()
   chart3.drawChart()
@@ -1178,3 +1185,14 @@ knob3.drawChart = ->
   knob3.drawChart()
   spark1.drawChart()
   spark2.drawChart()
+
+H5.Charts.updateMap = ->
+  if H5.Charts.data.state is "Todos"
+    where = "ano='" + H5.Charts.data.selectedYear + "'"
+  else
+    where = "estado='" + H5.Charts.data.state + "' AND ano='" + H5.Charts.data.selectedYear + "'"
+  H5.Leaflet.layers.alerta.setOptions(
+    where: where
+  )
+  H5.Leaflet.layers.alerta.setMap(null)
+  H5.Leaflet.layers.alerta.setMap(H5.Leaflet.map)

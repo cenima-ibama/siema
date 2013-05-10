@@ -6,13 +6,13 @@
   <section>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-  <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script> -->
   <script src="<?= base_url()?>assets/js/bootstrap.min.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrapSwitch.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.min.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet-google.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet-bing.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.ajax.min.js"></script>
+  <script src="<?= base_url()?>assets/js/leaflet.markercluster.js"></script>
   <script src="<?= base_url()?>assets/js/lvector.js"></script>
   <script src="<?= base_url()?>assets/js/masonry.min.js"></script>
   <script src="<?= base_url()?>assets/js/knob.js"></script>

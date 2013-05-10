@@ -77,7 +77,7 @@
         $("#btn-charts").prop("disabled", true);
         $(".loading").fadeOut(700);
         $("#navbar").slideDown(300);
-        return reloadCharts();
+        return H5.Charts.reloadCharts();
       }
     }, 1000);
     supportsOrientationChange = "onorientationchange" in window;
@@ -87,12 +87,13 @@
     }), false);
     $(".quick-btn a").on("click", function(event) {
       event.preventDefault();
-      H5.Charts.state = $(this).prop("id");
       $(this).each(function() {
         return $("a").removeClass("active");
       });
       $(this).addClass("active");
-      return reloadCharts();
+      H5.Charts.data.state = $(this).prop("id");
+      H5.Charts.updateMap();
+      return H5.Charts.reloadCharts();
     });
     String.prototype.toProperCase = function() {
       return this.replace(/\w\S*/g, function(txt) {

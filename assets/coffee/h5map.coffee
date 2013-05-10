@@ -27,7 +27,7 @@ cloudmade = new L.TileLayer(cloudmadeUrl,
   attribution: cloudmadeAttribution
 )
 
-map = new L.Map("map-container",
+H5.Leaflet.map = new L.Map("map-container",
   center: new L.LatLng(-10.0, -58.0)
   zoom: 6
   layers: [openstreet]
@@ -35,13 +35,13 @@ map = new L.Map("map-container",
 )
 
 # add custom attribution
-map.attributionControl.setPrefix "Hexgis Hash5"
+H5.Leaflet.map.attributionControl.setPrefix "Hexgis Hash5"
 
 # add scale
-L.control.scale().addTo map
+L.control.scale().addTo H5.Leaflet.map
 
 # display stations
-alertaLayer = new H5.Leaflet.Postgis(
+H5.Leaflet.layers.alerta = new H5.Leaflet.Postgis(
   url: "../painel/rest/"
   geotable: "alerta"
   fields: "objectid"
@@ -56,13 +56,13 @@ alertaLayer = new H5.Leaflet.Postgis(
     vectorStyle:
       fillColor: "#ff0000"
       fillOpacity: 0.6
-      weight: 1.2
+      weight: 4.0
       color: "#ff0000"
       opacity: 0.8
 )
-alertaLayer.setMap map
+H5.Leaflet.layers.alerta.setMap H5.Leaflet.map
 
-layersList = new H5.Leaflet.LayerControl(
+H5.Leaflet.layersList = new H5.Leaflet.LayerControl(
   OSM: openstreet
   "Bing Aerial": bingaerial
   "Bing Road": bingroad
@@ -70,4 +70,4 @@ layersList = new H5.Leaflet.LayerControl(
 )
 
 # add layer menu
-map.addControl layersList
+H5.Leaflet.map.addControl H5.Leaflet.layersList
