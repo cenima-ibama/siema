@@ -1,9 +1,6 @@
 <section class="content">
   <section id="loading" class="loading">
     <img id="loading_logo"src="<?= base_url()?>/assets/img/ibama_logo.png">
-    <div id="progress" class="progress">
-      <div id="progressbar" class="bar bar-warning"></div>
-    </div>
   </section>
   <section id="map">
     <div id="sidebar-map">
@@ -81,11 +78,11 @@
         <div id="chart8" class="chart-small"> </div>
       </div>
     </section>
+    <footer>
+      <p>
+        <span style="text-align:left;float:left"> &copy; <a href="">Ibama - MMA</a> 2013</span>
+        <span style="text-align:right;float:right" class="hidden-phone">Powered by: <a target="_blank" href="http://www.hexgis.com">Hexgis HASH5</a></span>
+      </p>
+    </footer>
   </section>
 </section>
-<footer>
-  <p>
-    <span style="text-align:left;float:left"> &copy; <a href="">Ibama - MMA</a> 2013</span>
-    <span style="text-align:right;float:right" class="hidden-phone">Powered by: <a target="_blank" href="http://www.hexgis.com">Hexgis HASH5</a></span>
-  </p>
-</footer>

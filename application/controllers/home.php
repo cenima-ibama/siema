@@ -2,24 +2,27 @@
 
 class Home extends CI_Controller {
 
-  function __construct() {
-    parent::__construct();
-  }
+    function __construct() {
+        parent::__construct();
 
-  public function index($page = 'home')
-  {
-    if ( ! file_exists('application/views/pages/'.$page.'.php'))
-    {
-      // Whoops, we don't have a page for that!
-      show_404();
+        // Enable firebug
+        $this->load->library('firephp');
+        $this->firephp->setEnabled(TRUE);
     }
 
-    $data['page_content'] = 'pages/home';
+    public function index()
+    {
+        if (! file_exists('application/views/pages/home.php')) {
+            // Whoops, we don't have a page for that!
+            show_404();
+        }
 
-    //$this->load->library('firephp');
-    //$this->firephp->setEnabled(TRUE);
-    //$this->firephp->log($data);
+        $this->load->view('includes/header');
+        $this->load->view('includes/topbar');
+        $this->load->view('pages/home');
+        $this->load->view('includes/scripts');
+        $this->load->view('includes/footer');
 
-    $this->load->view('templates/base_template', $data);
-  }
+    }
+
 }

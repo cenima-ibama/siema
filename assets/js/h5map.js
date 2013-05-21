@@ -38,7 +38,7 @@
   H5.Leaflet.map = new L.Map("map-container", {
     center: new L.LatLng(-10.0, -58.0),
     zoom: 6,
-    layers: [openstreet],
+    layers: [bingroad],
     zoomControl: true
   });
 
