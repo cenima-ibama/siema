@@ -34,7 +34,7 @@
         background-image: url("/painel/assets/img/login_bg.jpg");
       }
 
-	  .form-login{
+	  .form-login {
         background: linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 77%, #F5F5F5 100%) repeat scroll 0 0 transparent;
         border-radius: 2px 2px 2px 2px;
         box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.15);

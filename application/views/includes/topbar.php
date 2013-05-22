@@ -11,6 +11,18 @@
         <li class=""><a id="btn-map" href="#"><i class="icon-globe icon-white"></i> Mapa</a></li>
         <li class="active"><a id="btn-charts" href="#"><i class="icon-signal icon-white"></i> Estatística</a></li>
       </ul>
+      <?php
+        if($logged_in) {
+          echo '<ul class="nav pull-right">';
+            echo '<li class="dropdown pull-right">';
+              echo('<a id="btn-login" class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon-user icon-white"></i> ' . $name . '<strong class="caret"></strong></a>');
+              echo '<ul class="dropdown-menu">';
+                echo '<li>' . anchor(base_url() . 'index.php/auth/logout', 'Logout', '') . '</li>';
+              echo '</ul>';
+            echo '</li>';
+          echo '</ul>';
+        }
+      ?>
     </div>
   </div>
   <!--/

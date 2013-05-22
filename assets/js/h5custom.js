@@ -18,7 +18,6 @@
       });
     });
     $(".navbar a").on("click", function(event) {
-      event.preventDefault();
       if ($(this).prop("id") !== "btn-login") {
         $(this).each(function() {
           return $("a").parent().removeClass("active");

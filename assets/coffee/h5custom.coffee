@@ -18,7 +18,6 @@ $(document).ready ->
         duration: 1000
 
   $(".navbar a").on "click", (event) ->
-    event.preventDefault()
     # clean all selection
     if $(@).prop("id") isnt "btn-login"
       $(@).each ->

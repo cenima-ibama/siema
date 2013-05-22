@@ -232,15 +232,10 @@ class AuthLDAP {
             $this->_audit("Failed login attempt: ".$username." from ".$_SERVER['REMOTE_ADDR']);
             show_error('Unable to bind to server: Invalid credentials for '.$username);
         }
-        $cn = $entries[0]['cn'][0];
+        $cn = $this->_normalize_case($entries[0]['cn'][0]);
         $dn = stripslashes($entries[0]['dn']);
         $id = $entries[0][$this->login_attribute][0];
 
-        if($this->schema_type == 'rfc2307') {
-            $get_role_arg = $id;
-        }else if($this->schema_type == 'rfc2307bis' || $this->schema_type == 'ad') {
-            $get_role_arg = $this->ldap_escape($dn, false);
-        }
         $role_level = $this->_get_role($get_role_arg);
         return array('cn' => $cn, 'dn' => $entries[0]['dn'], 'id' => $id,
             'role_name' => $this->roles[$role_level],
@@ -291,6 +286,21 @@ class AuthLDAP {
      */
     private function _get_role($username) {
         return $this->_get_role_level(strtolower('User'));
+    }
+
+    private function _normalize_case($String) {
+        $StrA = explode(" ", $String);
+        $StrAc = count($StrA);
+        $Out = "";
+        for($i=0;$i<$StrAc;$i++) {
+            $tmp = preg_replace('/[^a-zA-ZäÄöÖüÜß]/', '', $StrA[$i]);
+            if(!empty($tmp) && strtoupper($tmp) == $tmp) {
+                //Make First Letter Big
+                $StrA[$i] = ucfirst(mb_strtolower($StrA[$i],'UTF-8'));
+            }
+            $Out .= $StrA[$i]." ";
+        }
+        return $Out;
     }
 }
 
