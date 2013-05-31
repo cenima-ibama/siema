@@ -2,9 +2,14 @@
     <div class="form-login">
         <?php echo form_fieldset('SISCOM'); ?>
         <?php
-            if (validation_errors() || isset($login_fail_msg)) {
+            if (validation_errors()) {
                 echo '<div class="alert alert-block alert-error fade in">';
-                echo '<button class="close" data-dismiss="alert">&times;</button><span>' . validation_errors() . $login_fail_msg .'</span>';
+                echo '<button class="close" data-dismiss="alert">&times;</button><span>' . validation_errors() .'</span>';
+                echo '</div>';
+            }
+            else if (isset($login_fail_msg)) {
+                echo '<div class="alert alert-block alert-error fade in">';
+                echo '<button class="close" data-dismiss="alert">&times;</button><span>' . $login_fail_msg .'</span>';
                 echo '</div>';
             }
          ?>
