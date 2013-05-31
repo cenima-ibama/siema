@@ -9,7 +9,7 @@ application_folder	/home/helmuth/Github/hash5/index.php	/^$application_folder = 
 APPPATH	/home/helmuth/Github/hash5/index.php	/^    define('APPPATH', $application_folder.'\/');$/;"	d	language:PHP
 APPPATH	/home/helmuth/Github/hash5/index.php	/^    define('APPPATH', BASEPATH.$application_folder.'\/');$/;"	d	language:PHP
 BASEPATH	/home/helmuth/Github/hash5/index.php	/^define('BASEPATH', str_replace('\\\\', '\/', $system_path));$/;"	d	language:PHP
-ENVIRONMENT	/home/helmuth/Github/hash5/index.php	/^define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');$/;"	d	language:PHP
+ENVIRONMENT	/home/helmuth/Github/hash5/index.php	/^define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'production');$/;"	d	language:PHP
 FCPATH	/home/helmuth/Github/hash5/index.php	/^define('FCPATH', str_replace(SELF, '', __FILE__));$/;"	d	language:PHP
 file	/home/helmuth/Github/hash5/index.php	/^\/\/ The controller class file name.  Example:  mycontroller$/;"	c	language:PHP
 name	/home/helmuth/Github/hash5/index.php	/^ * specific controller. Leave the function name blank if you need$/;"	f	language:PHP
