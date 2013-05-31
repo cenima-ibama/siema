@@ -1,0 +1,28 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	2	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+application_folder	/home/helmuth/Github/hash5/index.php	/^        $application_folder = $_temp;$/;"	v	language:PHP
+application_folder	/home/helmuth/Github/hash5/index.php	/^$application_folder = 'application';$/;"	v	language:PHP
+APPPATH	/home/helmuth/Github/hash5/index.php	/^    define('APPPATH', $application_folder.'\/');$/;"	d	language:PHP
+APPPATH	/home/helmuth/Github/hash5/index.php	/^    define('APPPATH', BASEPATH.$application_folder.'\/');$/;"	d	language:PHP
+BASEPATH	/home/helmuth/Github/hash5/index.php	/^define('BASEPATH', str_replace('\\\\', '\/', $system_path));$/;"	d	language:PHP
+ENVIRONMENT	/home/helmuth/Github/hash5/index.php	/^define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');$/;"	d	language:PHP
+FCPATH	/home/helmuth/Github/hash5/index.php	/^define('FCPATH', str_replace(SELF, '', __FILE__));$/;"	d	language:PHP
+file	/home/helmuth/Github/hash5/index.php	/^\/\/ The controller class file name.  Example:  mycontroller$/;"	c	language:PHP
+name	/home/helmuth/Github/hash5/index.php	/^ * specific controller. Leave the function name blank if you need$/;"	f	language:PHP
+SELF	/home/helmuth/Github/hash5/index.php	/^define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));$/;"	d	language:PHP
+SYSDIR	/home/helmuth/Github/hash5/index.php	/^define('SYSDIR', trim(strrchr(trim(BASEPATH, '\/'), '\/'), '\/'));$/;"	d	language:PHP
+system_path	/home/helmuth/Github/hash5/index.php	/^    $system_path = $_temp.'\/';$/;"	v	language:PHP
+system_path	/home/helmuth/Github/hash5/index.php	/^    $system_path = rtrim($system_path, '\/').'\/';$/;"	v	language:PHP
+system_path	/home/helmuth/Github/hash5/index.php	/^$system_path = 'system';$/;"	v	language:PHP
+VIEWPATH	/home/helmuth/Github/hash5/index.php	/^define('VIEWPATH', $view_folder);$/;"	d	language:PHP
+view_folder	/home/helmuth/Github/hash5/index.php	/^        $view_folder = APPPATH.$view_folder;$/;"	v	language:PHP
+view_folder	/home/helmuth/Github/hash5/index.php	/^        $view_folder = APPPATH.'views';$/;"	v	language:PHP
+view_folder	/home/helmuth/Github/hash5/index.php	/^    $view_folder = $_temp.'\/';$/;"	v	language:PHP
+view_folder	/home/helmuth/Github/hash5/index.php	/^    $view_folder = rtrim($view_folder, '\/').'\/';$/;"	v	language:PHP
+view_folder	/home/helmuth/Github/hash5/index.php	/^$view_folder = '';$/;"	v	language:PHP
+when	/home/helmuth/Github/hash5/index.php	/^ * config class when initialized. This allows you to set custom config$/;"	c	language:PHP
+you	/home/helmuth/Github/hash5/index.php	/^\/\/ The controller function you wish to be called.$/;"	f	language:PHP
