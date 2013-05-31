@@ -58,8 +58,8 @@ class AuthLDAP {
         // Verify that the LDAP extension has been loaded/built-in
         // No sense continuing if we can't
         if (! function_exists('ldap_connect')) {
-            show_error('LDAP functionality not present.  Either load the module ldap php module or use a php with ldap support compiled in.');
             log_message('error', 'LDAP functionality not present in php.');
+            show_error('LDAP functionality not present.  Either load the module ldap php module or use a php with ldap support compiled in.');
         }
 
         $this->ldap_uri            = $this->ci->config->item('ldap_uri');
@@ -109,6 +109,9 @@ class AuthLDAP {
          */
 
         $user_info = $this->_authenticate($username,$password);
+        if(empty($user_info['cn'])) {
+            return FALSE;
+        }
         if(empty($user_info['role_level'])) {
             log_message('info', $username." has no role to play.");
             show_error($username.' succssfully authenticated, but is not allowed because the username was not found in an allowed access group.');
@@ -224,12 +227,14 @@ class AuthLDAP {
         }
 
         if(empty($binddn)) {
+            return FALSE;
             show_error("Error looking up DN for ".$username.": ".ldap_error($this->ldapconn));
         }
         // Now actually try to bind as the user
         $bind = ldap_bind($this->ldapconn, $binddn, $password);
         if(! $bind) {
             $this->_audit("Failed login attempt: ".$username." from ".$_SERVER['REMOTE_ADDR']);
+            return FALSE;
             show_error('Unable to bind to server: Invalid credentials for '.$username);
         }
         $cn = $this->_normalize_case($entries[0]['cn'][0]);

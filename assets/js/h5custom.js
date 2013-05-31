@@ -6,6 +6,7 @@
     $("[rel=tooltip]").tooltip({
       placement: "bottom"
     });
+    $(".alert").alert();
     $(".dropdown-menu input, .dropdown-menu label").click(function(e) {
       return e.stopPropagation();
     });
@@ -37,7 +38,7 @@
         return $("a").removeClass("active");
       });
       $(this).addClass("active");
-      H5.Charts.data.state = $(this).prop("id");
+      H5.Data.state = $(this).prop("id");
       H5.Charts.updateMap();
       return H5.Charts.reloadCharts();
     });

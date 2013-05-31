@@ -27,7 +27,7 @@ cloudmade = new L.TileLayer(cloudmadeUrl,
   attribution: cloudmadeAttribution
 )
 
-H5.Leaflet.map = new L.Map("map-container",
+H5.Map.base = new L.Map("map-container",
   center: new L.LatLng(-10.0, -58.0)
   zoom: 6
   layers: [bingroad]
@@ -35,15 +35,15 @@ H5.Leaflet.map = new L.Map("map-container",
 )
 
 # add custom attribution
-H5.Leaflet.map.attributionControl.setPrefix "Hexgis Hash5"
+H5.Map.base.attributionControl.setPrefix "Hexgis Hash5"
 
 # add scale
-L.control.scale().addTo H5.Leaflet.map
+L.control.scale().addTo H5.Map.base
 
 # display stations
-H5.Leaflet.layers.alerta = new H5.Leaflet.Postgis(
+H5.Map.layer.alerta = new H5.Leaflet.Postgis(
   url: "../painel/rest/"
-  geotable: "alerta"
+  geotable: H5.DB.alert.table
   fields: "objectid"
   srid: 4618
   geomFieldName: "shape"
@@ -60,14 +60,14 @@ H5.Leaflet.layers.alerta = new H5.Leaflet.Postgis(
       color: "#ff0000"
       opacity: 0.8
 )
-H5.Leaflet.layers.alerta.setMap H5.Leaflet.map
+H5.Map.layer.alerta.setMap H5.Map.base
 
-H5.Leaflet.layersList = new H5.Leaflet.LayerControl(
-  OSM: openstreet
+H5.Map.layerList = new H5.Leaflet.LayerControl(
+  "OSM": openstreet
   "Bing Aerial": bingaerial
   "Bing Road": bingroad
   "Bing Hybrid": binghybrid
 )
 
 # add layer menu
-H5.Leaflet.map.addControl H5.Leaflet.layersList
+H5.Map.base.addControl H5.Map.layerList

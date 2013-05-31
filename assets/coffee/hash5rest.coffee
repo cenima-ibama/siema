@@ -17,7 +17,7 @@ class H5.Rest
       options.url += "/"
 
     # configure object with the options
-    @options = $.extend(@options, options)
+    @options = $.extend({}, @options, options)
 
   request: (service) ->
     if service

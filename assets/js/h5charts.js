@@ -2,31 +2,31 @@
 (function() {
   var chart1, chart2, chart3, chart4, chart5, chart6, chart7, chart8, chart9, i, knob1, knob2, knob3, rest, spark1, spark2, _i, _ref;
 
-  H5.Charts.data.state = "Todos";
+  H5.Data.state = "Todos";
 
-  H5.Charts.data.states = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"];
+  H5.Data.states = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"];
 
-  H5.Charts.data.thisDate = new Date();
+  H5.Data.thisDate = new Date();
 
-  H5.Charts.data.thisYear = H5.Charts.data.thisDate.getMonth() < 6 ? H5.Charts.data.thisDate.getFullYear() : H5.Charts.data.thisDate.getFullYear() + 1;
+  H5.Data.thisYear = H5.Data.thisDate.getMonth() < 6 ? H5.Data.thisDate.getFullYear() : H5.Data.thisDate.getFullYear() + 1;
 
-  H5.Charts.data.thisMonth = new Date().getMonth();
+  H5.Data.thisMonth = new Date().getMonth();
 
-  H5.Charts.data.thisDay = new Date().getDate();
+  H5.Data.thisDay = new Date().getDate();
 
-  H5.Charts.data.selectedYear = H5.Charts.data.thisYear;
+  H5.Data.selectedYear = H5.Data.thisYear;
 
-  H5.Charts.data.selectedMonth = H5.Charts.data.thisMonth;
+  H5.Data.selectedMonth = H5.Data.thisMonth;
 
-  H5.Charts.data.totalPeriods = H5.Charts.data.thisDate.getFullYear() - 2005;
+  H5.Data.totalPeriods = H5.Data.thisDate.getFullYear() - 2005;
 
-  H5.Charts.data.periods = new Array(H5.Charts.data.totalPeriods);
+  H5.Data.periods = new Array(H5.Data.totalPeriods);
 
-  for (i = _i = 0, _ref = H5.Charts.data.totalPeriods; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-    H5.Charts.data.periods[i] = (H5.Charts.data.thisDate.getFullYear() - i - 1) + "-" + (H5.Charts.data.thisDate.getFullYear() - i);
+  for (i = _i = 0, _ref = H5.Data.totalPeriods; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+    H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i - 1) + "-" + (H5.Data.thisDate.getFullYear() - i);
   }
 
-  H5.Charts.data.months = {
+  H5.Data.months = {
     0: "Ago",
     1: "Set",
     2: "Out",
@@ -41,12 +41,12 @@
     11: "Jul"
   };
 
-  H5.Charts.tables.alerta = {
+  H5.DB.diary.data = {
     init: function() {
       var state, _j, _len, _ref1, _results;
 
       this.states = {};
-      _ref1 = H5.Charts.data.states;
+      _ref1 = H5.Data.states;
       _results = [];
       for (_j = 0, _len = _ref1.length; _j < _len; _j++) {
         state = _ref1[_j];
@@ -76,21 +76,21 @@
 
   rest = new H5.Rest({
     url: "../painel/rest",
-    table: "alerta_acumulado_diario"
+    table: H5.DB.diary.table
   });
 
-  H5.Charts.tables.alerta.init();
+  H5.DB.diary.data.init();
 
   $.each(rest.request(), function(i, properties) {
-    return H5.Charts.tables.alerta.populate(properties.estado, properties.data, parseFloat(properties.total));
+    return H5.DB.diary.data.populate(properties.estado, properties.data, parseFloat(properties.total));
   });
 
-  H5.Charts.tables.prodes = {
+  H5.DB.prodes.data = {
     init: function() {
       var period, state, _j, _len, _ref1, _results;
 
       this.states = {};
-      _ref1 = H5.Charts.data.states;
+      _ref1 = H5.Data.states;
       _results = [];
       for (_j = 0, _len = _ref1.length; _j < _len; _j++) {
         state = _ref1[_j];
@@ -98,7 +98,7 @@
         _results.push((function() {
           var _k, _len1, _ref2, _results1;
 
-          _ref2 = H5.Charts.data.periods;
+          _ref2 = H5.Data.periods;
           _results1 = [];
           for (_k = 0, _len1 = _ref2.length; _k < _len1; _k++) {
             period = _ref2[_k];
@@ -127,16 +127,16 @@
 
   rest = new H5.Rest({
     url: "../painel/rest",
-    table: "taxa_prodes"
+    table: H5.DB.prodes.table
   });
 
-  H5.Charts.tables.prodes.init();
+  H5.DB.prodes.data.init();
 
   $.each(rest.request(), function(i, properties) {
-    return H5.Charts.tables.prodes.populate(properties.ano_prodes.replace('/', '-'), parseFloat(properties.ac), parseFloat(properties.am), parseFloat(properties.ap), parseFloat(properties.ma), parseFloat(properties.mt), parseFloat(properties.pa), parseFloat(properties.ro), parseFloat(properties.rr), parseFloat(properties.to));
+    return H5.DB.prodes.data.populate(properties.ano_prodes.replace('/', '-'), parseFloat(properties.ac), parseFloat(properties.am), parseFloat(properties.ap), parseFloat(properties.ma), parseFloat(properties.mt), parseFloat(properties.pa), parseFloat(properties.ro), parseFloat(properties.rr), parseFloat(properties.to));
   });
 
-  H5.Charts.tables.nuvens = {
+  H5.DB.cloud.data = {
     init: function() {
       return this.nuvem = {};
     },
@@ -162,13 +162,13 @@
 
   rest = new H5.Rest({
     url: "../painel/rest",
-    table: "nuvem_deter"
+    table: H5.DB.cloud.table
   });
 
-  H5.Charts.tables.nuvens.init();
+  H5.DB.cloud.data.init();
 
   $.each(rest.request(), function(i, properties) {
-    return H5.Charts.tables.nuvens.populate(properties.data, properties.percent);
+    return H5.DB.cloud.data.populate(properties.data, properties.percent);
   });
 
   chart1 = new H5.Charts.GoogleCharts({
@@ -211,12 +211,12 @@
 
   chart1.createContainer();
 
-  chart1._yearsSlct.options[H5.Charts.data.totalPeriods + 1].selected = true;
+  chart1._yearsSlct.options[H5.Data.totalPeriods + 1].selected = true;
 
-  chart1._monthsSlct.options[H5.Charts.data.thisMonth].selected = true;
+  chart1._monthsSlct.options[H5.Data.thisMonth].selected = true;
 
   $("#yearsSlct").on("change", function(event) {
-    H5.Charts.data.selectedYear = chart1._yearsSlct.value;
+    H5.Data.selectedYear = chart1._yearsSlct.value;
     chart8.drawChart();
     knob1.drawChart();
     knob2.drawChart();
@@ -227,7 +227,7 @@
   });
 
   $("#monthsSlct").on("change", function(event) {
-    H5.Charts.data.selectedMonth = chart1._monthsSlct.value;
+    H5.Data.selectedMonth = chart1._monthsSlct.value;
     chart3.drawChart();
     chart8.drawChart();
     knob1.drawChart();
@@ -248,7 +248,7 @@
       sum = 0;
       _results = [];
       for (day = _j = 1; 1 <= daysInMonth ? _j <= daysInMonth : _j >= daysInMonth; day = 1 <= daysInMonth ? ++_j : --_j) {
-        $.each(H5.Charts.tables.alerta.states[state], function(key, reg) {
+        $.each(H5.DB.diary.data.states[state], function(key, reg) {
           var _ref1;
 
           if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod) && reg.day === day) {
@@ -273,12 +273,12 @@
       data[1] = 0;
       this.data.addRow(data);
     }
-    if (H5.Charts.data.state === "Todos") {
-      $.each(H5.Charts.tables.alerta.states, function(state, value) {
+    if (H5.Data.state === "Todos") {
+      $.each(H5.DB.diary.data.states, function(state, value) {
         return createTable(state);
       });
     } else {
-      createTable(H5.Charts.data.state);
+      createTable(H5.Data.state);
     }
     options = {
       title: "",
@@ -345,8 +345,8 @@
       sum = 0;
       firstPeriod = new Date(year - 1, 7, 1);
       secondPeriod = new Date(year, 7, 0);
-      if (H5.Charts.data.state === "Todos") {
-        $.each(H5.Charts.tables.alerta.states, function(key, state) {
+      if (H5.Data.state === "Todos") {
+        $.each(H5.DB.diary.data.states, function(key, state) {
           return $.each(state, function(key, reg) {
             var _ref1;
 
@@ -356,7 +356,7 @@
           });
         });
       } else {
-        $.each(H5.Charts.tables.alerta.states[H5.Charts.data.state], function(key, reg) {
+        $.each(H5.DB.diary.data.states[H5.Data.state], function(key, reg) {
           var _ref1;
 
           if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod) && reg.month === month) {
@@ -370,10 +370,10 @@
     this.createDataTable();
     this.data.addColumn("string", "mes");
     for (i = _j = 0, _ref1 = this.options.period; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
-      this.data.addColumn("number", H5.Charts.data.periods[i]);
+      this.data.addColumn("number", H5.Data.periods[i]);
     }
-    for (month in H5.Charts.data.months) {
-      data = [H5.Charts.data.months[month]];
+    for (month in H5.Data.months) {
+      data = [H5.Data.months[month]];
       month = parseInt(month);
       if ((7 <= (_ref2 = month + 7) && _ref2 <= 11)) {
         month += 7;
@@ -381,7 +381,7 @@
         month -= 5;
       }
       for (i = _k = 1, _ref3 = this.options.period; 1 <= _ref3 ? _k <= _ref3 : _k >= _ref3; i = 1 <= _ref3 ? ++_k : --_k) {
-        data[i] = sumValues(H5.Charts.data.thisYear - i + 1, month);
+        data[i] = sumValues(H5.Data.thisYear - i + 1, month);
       }
       this.data.addRow(data);
     }
@@ -409,7 +409,7 @@
     this._addBtn.disabled = true;
     this._delBtn.disabled = true;
     google.visualization.events.addListener(this.chart, "ready", function() {
-      _this._addBtn.disabled = _this.options.period > H5.Charts.data.totalPeriods;
+      _this._addBtn.disabled = _this.options.period > H5.Data.totalPeriods;
       return _this._delBtn.disabled = _this.options.period < 2;
     });
     return this.chart.draw(this.data, options);
@@ -447,8 +447,8 @@
       var sum;
 
       sum = 0;
-      if (H5.Charts.data.state === "Todos") {
-        $.each(H5.Charts.tables.alerta.states, function(key, state) {
+      if (H5.Data.state === "Todos") {
+        $.each(H5.DB.diary.data.states, function(key, state) {
           return $.each(state, function(key, reg) {
             var _ref1;
 
@@ -458,7 +458,7 @@
           });
         });
       } else {
-        $.each(H5.Charts.tables.alerta.states[H5.Charts.data.state], function(key, reg) {
+        $.each(H5.DB.diary.data.states[H5.Data.state], function(key, reg) {
           var _ref1;
 
           if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod)) {
@@ -482,10 +482,10 @@
       firstPeriod = new Date(year - 1, 7, 1);
       if (month > 6) {
         secondPeriod = new Date(year - 1, month + 1, 0);
-      } else if (month !== H5.Charts.data.thisMonth) {
+      } else if (month !== H5.Data.thisMonth) {
         secondPeriod = new Date(year, month + 1, 0);
       } else {
-        secondPeriod = new Date(year, month, H5.Charts.data.thisDay);
+        secondPeriod = new Date(year, month, H5.Data.thisDay);
       }
       return sumValues(firstPeriod, secondPeriod);
     };
@@ -495,9 +495,9 @@
     this.data.addColumn("number", "Parcial");
     this.data.addColumn("number", "Diferença");
     for (i = _j = 0, _ref1 = this.options.period; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
-      data = [H5.Charts.data.periods[i]];
-      sumTotal = sumTotalValues(H5.Charts.data.thisYear - i);
-      sumAvg = sumAvgValues(H5.Charts.data.thisYear - i);
+      data = [H5.Data.periods[i]];
+      sumTotal = sumTotalValues(H5.Data.thisYear - i);
+      sumAvg = sumAvgValues(H5.Data.thisYear - i);
       data[1] = sumAvg;
       data[2] = Math.round((sumTotal - sumAvg) * 100) / 100;
       this.data.addRow(data);
@@ -516,7 +516,7 @@
       },
       colors: ['#3ABCFC', '#FC2121'],
       vAxis: {
-        title: "H5.Charts.data.periods"
+        title: "H5.Data.periods"
       },
       hAxis: {
         title: "Área Km2"
@@ -533,7 +533,7 @@
     this._addBtn.disabled = true;
     this._delBtn.disabled = true;
     google.visualization.events.addListener(this.chart, "ready", function() {
-      _this._addBtn.disabled = _this.options.period > H5.Charts.data.totalPeriods - 1;
+      _this._addBtn.disabled = _this.options.period > H5.Data.totalPeriods - 1;
       return _this._delBtn.disabled = _this.options.period < 2;
     });
     return this.chart.draw(this.data, options);
@@ -573,7 +573,7 @@
       sum = 0;
       firstPeriod = new Date(year - 1, 7, 1);
       secondPeriod = new Date(year, 7, 0);
-      $.each(H5.Charts.tables.alerta.states[state], function(key, reg) {
+      $.each(H5.DB.diary.data.states[state], function(key, reg) {
         var _ref1;
 
         if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod)) {
@@ -586,22 +586,22 @@
     this.createDataTable();
     this.data.addColumn("string", "mes");
     for (i = _j = 0, _ref1 = this.options.period; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
-      this.data.addColumn("number", H5.Charts.data.periods[i]);
+      this.data.addColumn("number", H5.Data.periods[i]);
     }
-    if (H5.Charts.data.state === "Todos") {
-      $.each(H5.Charts.tables.alerta.states, function(state, reg) {
+    if (H5.Data.state === "Todos") {
+      $.each(H5.DB.diary.data.states, function(state, reg) {
         var data, j, _k, _ref2;
 
         data = [state];
         for (j = _k = 1, _ref2 = _this.options.period; 1 <= _ref2 ? _k <= _ref2 : _k >= _ref2; j = 1 <= _ref2 ? ++_k : --_k) {
-          data[j] = sumValues(state, H5.Charts.data.thisYear - j + 1);
+          data[j] = sumValues(state, H5.Data.thisYear - j + 1);
         }
         return _this.data.addRow(data);
       });
     } else {
-      data = [H5.Charts.data.state];
+      data = [H5.Data.state];
       for (j = _k = 1, _ref2 = this.options.period; 1 <= _ref2 ? _k <= _ref2 : _k >= _ref2; j = 1 <= _ref2 ? ++_k : --_k) {
-        data[j] = sumValues(H5.Charts.data.state, H5.Charts.data.thisYear - j + 1);
+        data[j] = sumValues(H5.Data.state, H5.Data.thisYear - j + 1);
       }
       this.data.addRow(data);
     }
@@ -632,7 +632,7 @@
     this._addBtn.disabled = true;
     this._delBtn.disabled = true;
     google.visualization.events.addListener(this.chart, "ready", function() {
-      _this._addBtn.disabled = _this.options.period > H5.Charts.data.totalPeriods;
+      _this._addBtn.disabled = _this.options.period > H5.Data.totalPeriods;
       return _this._delBtn.disabled = _this.options.period < 2;
     });
     return this.chart.draw(this.data, options);
@@ -659,8 +659,8 @@
       sum = 0;
       firstPeriod = new Date(year - 1, 7, 1);
       secondPeriod = new Date(year, 7, 0);
-      if (H5.Charts.data.state === "Todos") {
-        $.each(H5.Charts.tables.alerta.states, function(key, state) {
+      if (H5.Data.state === "Todos") {
+        $.each(H5.DB.diary.data.states, function(key, state) {
           return $.each(state, function(key, reg) {
             var _ref1;
 
@@ -670,7 +670,7 @@
           });
         });
       } else {
-        $.each(H5.Charts.tables.alerta.states[H5.Charts.data.state], function(key, reg) {
+        $.each(H5.DB.diary.data.states[H5.Data.state], function(key, reg) {
           var _ref1;
 
           if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod)) {
@@ -686,12 +686,12 @@
       var sum;
 
       sum = 0;
-      if (H5.Charts.data.state === "Todos") {
-        $.each(H5.Charts.tables.prodes.states, function(key, state) {
+      if (H5.Data.state === "Todos") {
+        $.each(H5.DB.prodes.data.states, function(key, state) {
           return sum += state[period].area;
         });
       } else {
-        sum = H5.Charts.tables.prodes.states[H5.Charts.data.state][period].area;
+        sum = H5.DB.prodes.data.states[H5.Data.state][period].area;
       }
       if (sum >= 0) {
         return sum;
@@ -702,11 +702,11 @@
     this.data.addColumn("string", "Ano");
     this.data.addColumn("number", "Alerta DETER");
     this.data.addColumn("number", "Taxa PRODES");
-    i = H5.Charts.data.totalPeriods;
+    i = H5.Data.totalPeriods;
     while (i >= 0) {
-      data = [H5.Charts.data.periods[i]];
-      data[1] = sumDeter(H5.Charts.data.thisYear - i);
-      data[2] = sumProdes(H5.Charts.data.periods[i]);
+      data = [H5.Data.periods[i]];
+      data[1] = sumDeter(H5.Data.thisYear - i);
+      data[2] = sumProdes(H5.Data.periods[i]);
       this.data.addRow(data);
       i--;
     }
@@ -727,7 +727,7 @@
         title: "Área Km2"
       },
       hAxis: {
-        title: "H5.Charts.data.periods"
+        title: "H5.Data.periods"
       },
       animation: {
         duration: 500,
@@ -751,7 +751,7 @@
 
   chart6.createContainer();
 
-  chart6.changeTitle(H5.Charts.data.periods[chart6.options.period]);
+  chart6.changeTitle(H5.Data.periods[chart6.options.period]);
 
   chart6._leftBtn.onclick = function() {
     chart6.options.period++;
@@ -773,7 +773,7 @@
       sum = 0;
       firstPeriod = new Date(year - 1, 7, 1);
       secondPeriod = new Date(year, 7, 0);
-      $.each(H5.Charts.tables.alerta.states[state], function(key, reg) {
+      $.each(H5.DB.diary.data.states[state], function(key, reg) {
         var _ref1;
 
         if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod)) {
@@ -787,7 +787,7 @@
 
       sum = 0;
       period = (year - 1) + "-" + year;
-      $.each(H5.Charts.tables.prodes.states[state], function(key, reg) {
+      $.each(H5.DB.prodes.data.states[state], function(key, reg) {
         if (key === period) {
           if (reg.area != null) {
             return sum += reg.area;
@@ -801,19 +801,19 @@
     this.data.addColumn("string", "Estado");
     this.data.addColumn("number", "Alerta DETER");
     this.data.addColumn("number", "Taxa PRODES");
-    if (H5.Charts.data.state === "Todos") {
-      $.each(H5.Charts.tables.alerta.states, function(state, reg) {
+    if (H5.Data.state === "Todos") {
+      $.each(H5.DB.diary.data.states, function(state, reg) {
         var data;
 
         data = [state];
-        data[1] = sumDeter(state, H5.Charts.data.thisYear - _this.options.period);
-        data[2] = sumProdes(state, H5.Charts.data.thisYear - _this.options.period);
+        data[1] = sumDeter(state, H5.Data.thisYear - _this.options.period);
+        data[2] = sumProdes(state, H5.Data.thisYear - _this.options.period);
         return _this.data.addRow(data);
       });
     } else {
-      data = [H5.Charts.data.state];
-      data[1] = sumDeter(H5.Charts.data.state, H5.Charts.data.thisYear - this.options.period);
-      data[2] = sumProdes(H5.Charts.data.state, H5.Charts.data.thisYear - this.options.period);
+      data = [H5.Data.state];
+      data[1] = sumDeter(H5.Data.state, H5.Data.thisYear - this.options.period);
+      data[2] = sumProdes(H5.Data.state, H5.Data.thisYear - this.options.period);
       this.data.addRow(data);
     }
     options = {
@@ -840,12 +840,12 @@
         easing: "inAndOut"
       }
     };
-    this.changeTitle("Taxa PRODES|Alerta DETER: UFs [" + H5.Charts.data.periods[this.options.period] + "]");
+    this.changeTitle("Taxa PRODES|Alerta DETER: UFs [" + H5.Data.periods[this.options.period] + "]");
     this._rightBtn.disabled = true;
     this._leftBtn.disabled = true;
     google.visualization.events.addListener(this.chart, "ready", function() {
       _this._rightBtn.disabled = _this.options.period < 2;
-      return _this._leftBtn.disabled = _this.options.period >= H5.Charts.data.totalPeriods;
+      return _this._leftBtn.disabled = _this.options.period >= H5.Data.totalPeriods;
     });
     return this.chart.draw(this.data, options);
   };
@@ -863,7 +863,7 @@
 
   chart7.createContainer();
 
-  chart7.changeTitle(H5.Charts.data.periods[chart7.options.period]);
+  chart7.changeTitle(H5.Data.periods[chart7.options.period]);
 
   chart7._leftBtn.onclick = function() {
     chart7.options.period++;
@@ -885,7 +885,7 @@
       sum = 0;
       firstPeriod = new Date(year - 1, 7, 1);
       secondPeriod = new Date(year, 7, 0);
-      $.each(H5.Charts.tables.alerta.states[state], function(key, reg) {
+      $.each(H5.DB.diary.data.states[state], function(key, reg) {
         var _ref1;
 
         if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod)) {
@@ -897,11 +897,11 @@
     this.createChart();
     this.createDataTable();
     this.data.addColumn("string", "mes");
-    this.data.addColumn("number", H5.Charts.data.periods[H5.Charts.data.totalPeriods]);
-    for (i = _j = 0, _ref1 = H5.Charts.data.states.length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
-      estado = H5.Charts.data.states[i];
+    this.data.addColumn("number", H5.Data.periods[H5.Data.totalPeriods]);
+    for (i = _j = 0, _ref1 = H5.Data.states.length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
+      estado = H5.Data.states[i];
       data = [estado];
-      data[1] = sumValues(H5.Charts.data.states[i], H5.Charts.data.thisYear - this.options.period);
+      data[1] = sumValues(H5.Data.states[i], H5.Data.thisYear - this.options.period);
       this.data.addRow(data);
     }
     options = {
@@ -917,12 +917,12 @@
       colors: ['#3ABCFC', '#FC2121', '#D0FC3F', '#FCAC0A', '#67C2EF', '#FF5454', '#CBE968', '#FABB3D', '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258'],
       backgroundColor: "transparent"
     };
-    this.changeTitle(H5.Charts.data.periods[this.options.period]);
+    this.changeTitle(H5.Data.periods[this.options.period]);
     this._rightBtn.disabled = true;
     this._leftBtn.disabled = true;
     google.visualization.events.addListener(this.chart, "ready", function() {
       _this._rightBtn.disabled = _this.options.period < 1;
-      return _this._leftBtn.disabled = _this.options.period >= H5.Charts.data.totalPeriods;
+      return _this._leftBtn.disabled = _this.options.period >= H5.Data.totalPeriods;
     });
     return this.chart.draw(this.data, options);
   };
@@ -946,14 +946,14 @@
       var sum;
 
       sum = 0;
-      $.each(H5.Charts.tables.alerta.states[state], function(key, reg) {
+      $.each(H5.DB.diary.data.states[state], function(key, reg) {
         var _ref1;
 
         if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod)) {
           return sum += reg.area;
         }
       });
-      if (firstPeriod > H5.Charts.data.thisDate) {
+      if (firstPeriod > H5.Data.thisDate) {
         return 1;
       } else {
         return Math.round(sum * 100) / 100;
@@ -966,17 +966,17 @@
     daysInMonth = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value + 1, 0).getDate();
     firstPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, 1);
     secondPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, daysInMonth);
-    if (firstPeriod > H5.Charts.data.thisDate) {
+    if (firstPeriod > H5.Data.thisDate) {
       pieText = "none";
       pieTooltip = "none";
     } else {
       pieText = "percent";
       pieTooltip = "focus";
     }
-    for (i = _j = 0, _ref1 = H5.Charts.data.states.length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
-      estado = H5.Charts.data.states[i];
+    for (i = _j = 0, _ref1 = H5.Data.states.length; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
+      estado = H5.Data.states[i];
       data = [estado];
-      data[1] = sumValues(H5.Charts.data.states[i]);
+      data[1] = sumValues(H5.Data.states[i]);
       this.data.addRow(data);
     }
     this.changeTitle(chart1._monthsSlct.options[chart1._monthsSlct.value].label + ", " + chart1._yearsSlct.value);
@@ -1045,7 +1045,7 @@
       percent = 0;
       firstPeriod = new Date(year - 1, 7, 1);
       secondPeriod = new Date(year, 7, 0);
-      $.each(H5.Charts.tables.nuvens.nuvem, function(key, nuvem) {
+      $.each(H5.DB.cloud.data.nuvem, function(key, nuvem) {
         if (nuvem.date >= firstPeriod && nuvem.date <= secondPeriod && nuvem.month === month) {
           percent = nuvem.value;
           return false;
@@ -1057,10 +1057,10 @@
     this.createDataTable();
     this.data.addColumn("string", "mes");
     for (i = _j = 0, _ref1 = this.options.period; 0 <= _ref1 ? _j < _ref1 : _j > _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
-      this.data.addColumn("number", H5.Charts.data.periods[i]);
+      this.data.addColumn("number", H5.Data.periods[i]);
     }
-    for (month in H5.Charts.data.months) {
-      data = [H5.Charts.data.months[month]];
+    for (month in H5.Data.months) {
+      data = [H5.Data.months[month]];
       month = parseInt(month);
       if ((7 <= (_ref2 = month + 7) && _ref2 <= 11)) {
         month += 7;
@@ -1068,7 +1068,7 @@
         month -= 5;
       }
       for (i = _k = 1, _ref3 = this.options.period; 1 <= _ref3 ? _k <= _ref3 : _k >= _ref3; i = 1 <= _ref3 ? ++_k : --_k) {
-        data[i] = sumValues(H5.Charts.data.thisYear - i + 1, month);
+        data[i] = sumValues(H5.Data.thisYear - i + 1, month);
       }
       this.data.addRow(data);
     }
@@ -1096,7 +1096,7 @@
     this._addBtn.disabled = true;
     this._delBtn.disabled = true;
     google.visualization.events.addListener(this.chart, "ready", function() {
-      _this._addBtn.disabled = _this.options.period > H5.Charts.data.totalPeriods - 4;
+      _this._addBtn.disabled = _this.options.period > H5.Data.totalPeriods - 4;
       return _this._delBtn.disabled = _this.options.period < 2;
     });
     return this.chart.draw(this.data, options);
@@ -1119,7 +1119,7 @@
       dayValue = 0;
       _results = [];
       for (day = _j = 1; 1 <= daysInMonth ? _j <= daysInMonth : _j >= daysInMonth; day = 1 <= daysInMonth ? ++_j : --_j) {
-        $.each(H5.Charts.tables.alerta.states[state], function(key, reg) {
+        $.each(H5.DB.diary.data.states[state], function(key, reg) {
           var _ref1;
 
           if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod) && reg.day === day) {
@@ -1138,12 +1138,12 @@
     for (day = _j = 1; 1 <= daysInMonth ? _j <= daysInMonth : _j >= daysInMonth; day = 1 <= daysInMonth ? ++_j : --_j) {
       data[day - 1] = 0;
     }
-    if (H5.Charts.data.state === "Todos") {
-      $.each(H5.Charts.tables.alerta.states, function(state, value) {
+    if (H5.Data.state === "Todos") {
+      $.each(H5.DB.diary.data.states, function(state, value) {
         return createTable(state);
       });
     } else {
-      createTable(H5.Charts.data.state);
+      createTable(H5.Data.state);
     }
     value = data[daysInMonth - 1];
     return this.updateInfo(data, value);
@@ -1166,8 +1166,8 @@
       sum = 0;
       firstPeriod = new Date(year - 1, 7, 1);
       secondPeriod = new Date(year, 7, 0);
-      if (H5.Charts.data.state === "Todos") {
-        $.each(H5.Charts.tables.alerta.states, function(key, state) {
+      if (H5.Data.state === "Todos") {
+        $.each(H5.DB.diary.data.states, function(key, state) {
           return $.each(state, function(key, reg) {
             if (reg.date >= firstPeriod && reg.date <= secondPeriod && reg.month === month) {
               return sum += reg.area;
@@ -1175,7 +1175,7 @@
           });
         });
       } else {
-        $.each(H5.Charts.tables.alerta.states[H5.Charts.data.state], function(key, reg) {
+        $.each(H5.DB.diary.data.states[H5.Data.state], function(key, reg) {
           if (reg.date >= firstPeriod && reg.date <= secondPeriod && reg.month === month) {
             return sum += reg.area;
           }
@@ -1184,7 +1184,7 @@
       return Math.round(sum * 100) / 100;
     };
     data = [];
-    $.each(H5.Charts.data.months, function(number, month) {
+    $.each(H5.Data.months, function(number, month) {
       var _ref1;
 
       i = number;
@@ -1221,18 +1221,18 @@
         var reg, state, sum, _ref1, _ref2;
 
         sum = 0;
-        if (H5.Charts.data.state === "Todos") {
-          for (state in H5.Charts.tables.alerta.states) {
-            for (reg in H5.Charts.tables.alerta.states[state]) {
-              reg = H5.Charts.tables.alerta.states[state][reg];
+        if (H5.Data.state === "Todos") {
+          for (state in H5.DB.diary.data.states) {
+            for (reg in H5.DB.diary.data.states[state]) {
+              reg = H5.DB.diary.data.states[state][reg];
               if ((date.getFullYear() <= (_ref1 = reg.year) && _ref1 <= date.getFullYear()) && reg.month === date.getMonth()) {
                 sum += reg.area;
               }
             }
           }
         } else {
-          for (reg in H5.Charts.tables.alerta.states[H5.Charts.data.state]) {
-            reg = H5.Charts.tables.alerta.states[H5.Charts.data.state][reg];
+          for (reg in H5.DB.diary.data.states[H5.Data.state]) {
+            reg = H5.DB.diary.data.states[H5.Data.state][reg];
             if ((date.getFullYear() <= (_ref2 = reg.year) && _ref2 <= date.getFullYear()) && reg.month === date.getMonth()) {
               sum += reg.area;
             }
@@ -1272,18 +1272,18 @@
         var reg, state, sum, _ref1, _ref2;
 
         sum = 0;
-        if (H5.Charts.data.state === "Todos") {
-          for (state in H5.Charts.tables.alerta.states) {
-            for (reg in H5.Charts.tables.alerta.states[state]) {
-              reg = H5.Charts.tables.alerta.states[state][reg];
+        if (H5.Data.state === "Todos") {
+          for (state in H5.DB.diary.data.states) {
+            for (reg in H5.DB.diary.data.states[state]) {
+              reg = H5.DB.diary.data.states[state][reg];
               if ((date.getFullYear() <= (_ref1 = reg.year) && _ref1 <= date.getFullYear()) && reg.month === date.getMonth()) {
                 sum += reg.area;
               }
             }
           }
         } else {
-          for (reg in H5.Charts.tables.alerta.states[H5.Charts.data.state]) {
-            reg = H5.Charts.tables.alerta.states[H5.Charts.data.state][reg];
+          for (reg in H5.DB.diary.data.states[H5.Data.state]) {
+            reg = H5.DB.diary.data.states[H5.Data.state][reg];
             if ((date.getFullYear() <= (_ref2 = reg.year) && _ref2 <= date.getFullYear()) && reg.month === date.getMonth()) {
               sum += reg.area;
             }
@@ -1323,8 +1323,8 @@
         var sum;
 
         sum = 0;
-        if (H5.Charts.data.state === "Todos") {
-          $.each(H5.Charts.tables.alerta.states, function(key, state) {
+        if (H5.Data.state === "Todos") {
+          $.each(H5.DB.diary.data.states, function(key, state) {
             return $.each(state, function(key, reg) {
               var _ref1;
 
@@ -1334,7 +1334,7 @@
             });
           });
         } else {
-          $.each(H5.Charts.tables.alerta.states[H5.Charts.data.state], function(key, reg) {
+          $.each(H5.DB.diary.data.states[H5.Data.state], function(key, reg) {
             var _ref1;
 
             if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod)) {
@@ -1388,16 +1388,16 @@
   H5.Charts.updateMap = function() {
     var where;
 
-    if (H5.Charts.data.state === "Todos") {
-      where = "ano='" + H5.Charts.data.selectedYear + "'";
+    if (H5.Data.state === "Todos") {
+      where = "ano='" + H5.Data.selectedYear + "'";
     } else {
-      where = "estado='" + H5.Charts.data.state + "' AND ano='" + H5.Charts.data.selectedYear + "'";
+      where = "estado='" + H5.Data.state + "' AND ano='" + H5.Data.selectedYear + "'";
     }
-    H5.Leaflet.layers.alerta.setOptions({
+    H5.Map.layer.alerta.setOptions({
       where: where
     });
-    H5.Leaflet.layers.alerta.setMap(null);
-    return H5.Leaflet.layers.alerta.setMap(H5.Leaflet.map);
+    H5.Map.layer.alerta.setMap(null);
+    return H5.Map.layer.alerta.setMap(H5.Map.base);
   };
 
 }).call(this);

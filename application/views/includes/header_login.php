@@ -18,7 +18,7 @@
     <link href="<?= base_url()?>assets/css/jquery-ui-1.9.2.css" rel="stylesheet">
     <style type="text/css">
       body {
-        padding-top: 60px;
+        padding-top: 0;
       }
     </style>
     <link href="<?= base_url()?>assets/css/bootstrap-responsive.css" rel="stylesheet">
@@ -30,7 +30,7 @@
       html, body {
         background-color: #FFF;
         background-repeat: no-repeat;
-        background-position: center;
+        background-position: center top;
         background-image: url("/painel/assets/img/login_bg.jpg");
       }
 

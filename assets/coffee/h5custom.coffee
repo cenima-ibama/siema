@@ -6,6 +6,8 @@ $(document).ready ->
 
   $("[rel=tooltip]").tooltip placement: "bottom"
 
+  $(".alert").alert()
+
   $(".dropdown-menu input, .dropdown-menu label").click (e) ->
     e.stopPropagation()
 
@@ -45,7 +47,7 @@ $(document).ready ->
     $(@).addClass "active"
 
     # save the selected option
-    H5.Charts.data.state = $(@).prop("id")
+    H5.Data.state = $(@).prop("id")
 
     # update map
     H5.Charts.updateMap()

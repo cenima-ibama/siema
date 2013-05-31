@@ -1,8 +1,9 @@
-H5.Leaflet = {
-  map: null
-  layers: {}
-  layersList: null
-}
+H5.Map =
+  base: null
+  layer: {}
+  layerList: null
+
+H5.Leaflet = {}
 # H5.Leaflet.VectorLayer {{{
 # this Project is a fork from the LeafletVectorlayers from Json Sanfora
 # H5.Leaflet.Layer is a base class for rendering vector layers on a Leaflet map. It's inherited by AGS, A2E, CartoDB, GeoIQ, etc.
@@ -541,7 +542,7 @@ H5.Leaflet.Postgis = H5.Leaflet.GeoJSONLayer.extend(
     geomFieldName: "the_geom"
     fields: null
     where: null
-    limit: 100
+    limit: 3000
     uniqueField: null
 
   _requiredParams: ["url", "geotable"]
@@ -677,7 +678,7 @@ class H5.Leaflet.RapidEyeTMS
     # create a group of layers and add then to the layers list
     rapidEyeLayer = new L.LayerGroup(@layerGroup)
     rapidEyeLayer.addLayer @_vectors
-    if H5.Leaflet.layersList then H5.Leaflet.layersList.addLayer rapidEyeLayer, "RapidEye"
+    if H5.Map.layerList then H5.Map.layerList.addLayer rapidEyeLayer, "RapidEye"
 # }}}
 # H5.Leaflet.LayerControl {{{
 H5.Leaflet.LayerControl = L.Control.extend (

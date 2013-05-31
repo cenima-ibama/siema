@@ -27,7 +27,7 @@
       if (options.url.substr(options.url.length - 1, 1) !== "/") {
         options.url += "/";
       }
-      this.options = $.extend(this.options, options);
+      this.options = $.extend({}, this.options, options);
     }
 
     Rest.prototype.request = function(service) {
@@ -125,10 +125,17 @@
     packages: ["gauge"]
   });
 
-  H5.Charts = {
-    data: {},
-    tables: {}
+  H5.Data = {};
+
+  H5.DB = {
+    addDB: function(opt) {
+      this[opt.name] = {};
+      this[opt.name].table = opt.table;
+      return this[opt.name].data = null;
+    }
   };
+
+  H5.Charts = {};
 
   H5.Charts.Container = (function() {
     Container.prototype.options = {
@@ -596,11 +603,13 @@
 
   })(H5.Charts.SmallContainer);
 
-  H5.Leaflet = {
-    map: null,
-    layers: {},
-    layersList: null
+  H5.Map = {
+    base: null,
+    layer: {},
+    layerList: null
   };
+
+  H5.Leaflet = {};
 
   H5.Leaflet.Layer = L.Class.extend({
     options: {
@@ -1206,7 +1215,7 @@
       geomFieldName: "the_geom",
       fields: null,
       where: null,
-      limit: 100,
+      limit: 3000,
       uniqueField: null
     },
     _requiredParams: ["url", "geotable"],
@@ -1335,8 +1344,8 @@
 
       rapidEyeLayer = new L.LayerGroup(this.layerGroup);
       rapidEyeLayer.addLayer(this._vectors);
-      if (H5.Leaflet.layersList) {
-        return H5.Leaflet.layersList.addLayer(rapidEyeLayer, "RapidEye");
+      if (H5.Map.layerList) {
+        return H5.Map.layerList.addLayer(rapidEyeLayer, "RapidEye");
       }
     };
 

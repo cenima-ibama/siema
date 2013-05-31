@@ -1,7 +1,13 @@
 <div class="container">
     <div class="form-login">
         <?php echo form_fieldset('SISCOM'); ?>
-        <?php echo validation_errors();?>
+        <?php
+            if (validation_errors() || isset($login_fail_msg)) {
+                echo '<div class="alert alert-block alert-error fade in">';
+                echo '<button class="close" data-dismiss="alert">&times;</button><span>' . validation_errors() . $login_fail_msg .'</span>';
+                echo '</div>';
+            }
+         ?>
 
         <?php echo form_open('auth/login', array('id' => 'loginform', 'class' => 'form-horizontal')); ?>
 
