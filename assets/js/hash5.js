@@ -1215,7 +1215,7 @@
       geomFieldName: "the_geom",
       fields: null,
       where: null,
-      limit: 3000,
+      limit: 1000,
       uniqueField: null
     },
     _requiredParams: ["url", "geotable"],
