@@ -7,9 +7,6 @@ H5.Data.thisYear = if H5.Data.thisDate.getMonth() < 6 then H5.Data.thisDate.getF
 H5.Data.thisMonth = new Date().getMonth()
 H5.Data.thisDay = new Date().getDate()
 
-H5.Data.selectedYear = H5.Data.thisYear
-H5.Data.selectedMonth = H5.Data.thisMonth
-
 H5.Data.totalPeriods = H5.Data.thisDate.getFullYear() - 2005
 H5.Data.periods = new Array(H5.Data.totalPeriods)
 for i in [0..H5.Data.totalPeriods]
@@ -38,10 +35,12 @@ H5.DB.diary.data =
       @states[state] = {}
 
   populate: (state, date, value) ->
+    # convert string into date
     convertDate = (dateStr) ->
       dateStr = String(dateStr)
       dArr = dateStr.split("-")
-      new Date(dArr[0], (dArr[1]) - 1, dArr[2])
+      return new Date(dArr[0], (dArr[1]) - 1, dArr[2])
+    # populate object
     self = @states[state]
     self[date] = {}
     self[date].area = value
@@ -49,6 +48,14 @@ H5.DB.diary.data =
     self[date].year = convertDate(date).getFullYear()
     self[date].month = convertDate(date).getMonth()
     self[date].day = convertDate(date).getDate()
+
+    # set the value of the last value
+    if @lastValue
+      if @lastValue.date < self[date].date
+        @lastValue = self[date]
+    else
+      @lastValue = self[date]
+    return
 
 rest = new H5.Rest (
   url: "../painel/rest"
@@ -125,6 +132,25 @@ $.each rest.request(), (i, properties) ->
     properties.data, properties.percent,
   )
 #}}}
+# RELOAD DATE {{{
+# reload date based on database
+H5.Data.thisDate = H5.DB.diary.data.lastValue.date
+H5.Data.thisYear = if H5.DB.diary.data.lastValue.month < 6 then H5.DB.diary.data.lastValue.year else H5.DB.diary.data.lastValue.year + 1
+H5.Data.thisMonth = H5.DB.diary.data.lastValue.month
+H5.Data.thisDay = H5.DB.diary.data.lastValue.day
+
+H5.Data.selectedYear = H5.Data.thisYear
+H5.Data.selectedMonth = H5.Data.thisMonth
+
+H5.Data.totalPeriods = H5.Data.thisDate.getFullYear() - 2005
+H5.Data.periods = new Array(H5.Data.totalPeriods)
+for i in [0..H5.Data.totalPeriods]
+  H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i - 1) + "-" + (H5.Data.thisDate.getFullYear() - i)
+#}}}
+# DATE PICKER {{{
+# reload date based on database
+
+#}}}
 # CHART1 {{{
 chart1 = new H5.Charts.GoogleCharts (
   type: "Line"
@@ -133,50 +159,30 @@ chart1 = new H5.Charts.GoogleCharts (
   buttons:
     minimize: true
     maximize: true
-  selects:
-    months:
-      0: 'Jan'
-      1: 'Fev'
-      2: 'Mar'
-      3: 'Abr'
-      4: 'Mai'
-      5: 'Jun'
-      6: 'Jul'
-      7: 'Ago'
-      8: 'Set'
-      9: 'Out'
-      10: 'Nov'
-      11: 'Dez'
-    years:
-      2004: '2004'
-      2005: '2005'
-      2006: '2006'
-      2007: '2007'
-      2008: '2008'
-      2009: '2009'
-      2010: '2010'
-      2011: '2011'
-      2012: '2012'
-      2013: '2013'
 )
 chart1.createContainer()
+
+chart1._yearsSlct = document.getElementById('yearsSlct')
+chart1._monthsSlct = document.getElementById('monthsSlct')
 
 # make those options selected
 chart1._yearsSlct.options[H5.Data.totalPeriods+1].selected = true
 chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
 
-$("#yearsSlct").on "change", (event) ->
+$(chart1._monthsSlct).on "change", (event) ->
   H5.Data.selectedYear = chart1._yearsSlct.value
+  chart1.drawChart()
+  chart3.drawChart()
   chart8.drawChart()
   knob1.drawChart()
   knob2.drawChart()
   knob3.drawChart()
   spark1.drawChart()
   spark2.drawChart()
-  H5.Charts.updateMap()
 
-$("#monthsSlct").on "change", (event) ->
+$(chart1._yearsSlct).on "change", (event) ->
   H5.Data.selectedMonth = chart1._monthsSlct.value
+  chart1.drawChart()
   chart3.drawChart()
   chart8.drawChart()
   knob1.drawChart()
@@ -205,9 +211,9 @@ chart1.drawChart = ->
   @data.addColumn "number", "Dia"
   @data.addColumn "number", "Área"
 
-  daysInMonth = new Date(@_yearsSlct.value, @_monthsSlct.value + 1, 0).getDate()
-  firstPeriod = new Date(@_yearsSlct.value, @_monthsSlct.value, 1)
-  secondPeriod = new Date(@_yearsSlct.value, @_monthsSlct.value, daysInMonth)
+  daysInMonth = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value + 1, 0).getDate()
+  firstPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, 1)
+  secondPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, daysInMonth)
   data = []
 
   # populate table with 0

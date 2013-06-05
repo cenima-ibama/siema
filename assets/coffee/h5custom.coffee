@@ -8,6 +8,11 @@ $(document).ready ->
 
   $(".alert").alert()
 
+  $("select").selectpicker({
+    width: '80px'
+    size: 'auto'
+  })
+
   $(".dropdown-menu input, .dropdown-menu label").click (e) ->
     e.stopPropagation()
 

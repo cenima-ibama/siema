@@ -231,7 +231,7 @@
     line-height: 18px;
     margin: 0 10px;
     padding: 0;
-    @media (max-width: 979px) {
+    @media (max-width: 1024px) {
       margin: 0 10px 16px;
     }
   }
@@ -378,6 +378,25 @@
     }
     i.icon-am {
       background-image: url("../img/icons/AM.png");
+    }
+  }
+}
+.quick-slct{
+  display: inline-block;
+  margin: -10px 10px;
+  padding: 0;
+  label {
+    font-weight: bold;
+    color: #666666;
+    font-size: 12px;
+  }
+  .item {
+    float: left;
+    @media (min-width: 1024px) {
+      margin: 0 10px 20px;
+    }
+    @media (max-width: 1024px) {
+      margin: 25px 10px -20px;
     }
   }
 }

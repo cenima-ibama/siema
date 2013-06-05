@@ -7,6 +7,10 @@
       placement: "bottom"
     });
     $(".alert").alert();
+    $("select").selectpicker({
+      width: '80px',
+      size: 'auto'
+    });
     $(".dropdown-menu input, .dropdown-menu label").click(function(e) {
       return e.stopPropagation();
     });

@@ -4,7 +4,7 @@ google.load "visualization", "1",
 google.load "visualization", "1",
   packages: ["gauge"]
 
-H5.Data = {};
+H5.Data = {}
 
 H5.DB =
   addDB: (opt) ->

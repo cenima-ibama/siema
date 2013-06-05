@@ -12,6 +12,40 @@
   <section class="dash">
     <section class="charts-content">
       <div class="row-fluid">
+        <div class="quick-slct">
+            <div class="item">
+            <label>Mês</label>
+            <select id="monthsSlct" class="" name="months">
+                <option value="0">Jan</option>
+                <option value="1">Fev</option>
+                <option value="2">Mar</option>
+                <option value="3">Abr</option>
+                <option value="4">Mai</option>
+                <option value="5">Jun</option>
+                <option value="6">Jul</option>
+                <option value="7">Ago</option>
+                <option value="8">Set</option>
+                <option value="9">Out</option>
+                <option value="10">Nov</option>
+                <option value="11">Dez</option>
+            </select>
+            </div>
+            <div class="item">
+            <label>Ano</label>
+            <select id="yearsSlct" class="" name="years">
+                <option value="2004">2004</option>
+                <option value="2005">2005</option>
+                <option value="2006">2006</option>
+                <option value="2007">2007</option>
+                <option value="2008">2008</option>
+                <option value="2009">2009</option>
+                <option value="2010">2010</option>
+                <option value="2011">2011</option>
+                <option value="2012">2012</option>
+                <option value="2013">2013</option>
+            </select>
+            </div>
+        </div>
         <div class="quick-btn">
           <a id="AC" href="#" class="item">
             <i class="icon-ac"></i>
@@ -67,6 +101,18 @@
       </div>
       <hr>
       <div id="charts" class="row-fluid">
+        <?php
+            if(!$logged_in) {
+                echo '<div class="alert alert-info alert-block fade in" style="margin: 0 4% 20px">';
+                echo '<button class="close" data-dismiss="alert">&times;</button>
+                    <h4 style="text-align: left">Informação importante:</h4></br>
+                    <p style="text-align: left">
+                    As estatísticas do DETER devem ser usados com cuidado, pois este sistema não foi concebido para medição de áreas desmatadas assim como o PRODES.
+                    Maiores informações: '. anchor('http://www.obt.inpe.br/deter/metodologia_v2.pdf', 'DETER') . '
+                    </p>';
+                echo '</div>';
+            }
+        ?>
         <div id="chart1" class="chart"> </div>
         <div id="chart2" class="chart"> </div>
         <div id="chart3" class="chart"> </div>

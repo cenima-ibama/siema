@@ -1,6 +1,6 @@
 <div class="container">
     <div class="form-login">
-        <?php echo form_fieldset('SISCOM'); ?>
+        <?php echo form_fieldset('<img src="' . base_url() . '/assets/img/ibama_inv.png"> <span class="label label-inverse">Login</span>'); ?>
         <?php
             if (validation_errors()) {
                 echo '<div class="alert alert-block alert-error fade in">';

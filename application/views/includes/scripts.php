@@ -9,6 +9,7 @@
   <script src="//www.google.com/jsapi" type="text/javascript"></script>
 
   <script src="<?= base_url()?>assets/js/bootstrap.min.js"></script>
+  <script src="<?= base_url()?>assets/js/bootstrap-select.min.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrapSwitch.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet-bing.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.markercluster.js"></script>
