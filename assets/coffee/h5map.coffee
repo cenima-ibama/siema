@@ -44,11 +44,20 @@ L.control.scale().addTo H5.Map.base
 H5.Map.layer.alerta = new H5.Leaflet.Postgis(
   url: "../painel/rest/"
   geotable: H5.DB.alert.table
-  fields: "objectid"
+  fields: "id_des, tipo, data_imagem, area_km2, dominio"
   srid: 4618
   geomFieldName: "shape"
   showAll: true
-  popupTemplate: "<div class=\"iw-content\"><center><h3>{objectid}</h3></center></div>"
+  popupTemplate: (properties) ->
+    html = '<div class="iw-content"><h4>' + properties.id_des + '</h4>'
+    html += '<h5>' + properties.tipo + '</h5>'
+    html += '<table class="condensed-table bordered-table zebra-striped"><tbody>'
+    html += '<tr><th>Data: </th><td>' + properties.data_imagem.split(" ", 1) + '</td></tr>'
+    html += '<tr><th>Área: </th><td>' + properties.area_km2+ '</td></tr>'
+    if properties.dominio.length > 1
+      html += '<tr><th>Domínio: </th><td>' + properties.dominio + '</td></tr>'
+    html += '</tbody></table></div>'
+    return html
   singlePopup: true
   where: "ano = '2013'"
   symbology:

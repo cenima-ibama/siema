@@ -27,18 +27,13 @@
   background-image: -webkit-linear-gradient(top, @color1, @color2); /* Chrome10+,Safari5.1+ */
   background-image: linear-gradient(to bottom, @color1, @color2); /* W3C */
 }
-@media (max-width: 979px) {
-  html, body {
-    overflow: hidden;
-  }
-}
 .content {
   height: 100%;
 }
 .map {
   position: absolute;
   top: 42px;
-  bottom: 44px;
+  bottom: 0;
   right: 0;
   left: 0;
   z-index: 1;
@@ -75,7 +70,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 50%;
+    bottom: 45%;
     margin: 0 auto;
     @media (max-width: 979px) {
       bottom: 40%;
@@ -388,14 +383,14 @@
   label {
     font-weight: bold;
     color: #666666;
-    font-size: 12px;
+    font-size: 14px;
   }
   .item {
     float: left;
     @media (min-width: 1024px) {
       margin: 0 10px 20px;
     }
-    @media (max-width: 1024px) {
+    @media (max-width: 1023px) {
       margin: 25px 10px -20px;
     }
   }

@@ -100,19 +100,18 @@
         </div>
       </div>
       <hr>
-      <div id="charts" class="row-fluid">
         <?php
             if(!$logged_in) {
-                echo '<div class="alert alert-info alert-block fade in" style="margin: 0 4% 20px">';
+                echo '<div class="alert alert-info alert-block fade in" style="margin: 0 8.5% 20px">';
                 echo '<button class="close" data-dismiss="alert">&times;</button>
                     <h4 style="text-align: left">Informação importante:</h4></br>
                     <p style="text-align: left">
-                    As estatísticas do DETER devem ser usados com cuidado, pois este sistema não foi concebido para medição de áreas desmatadas assim como o PRODES.
-                    Maiores informações: '. anchor('http://www.obt.inpe.br/deter/metodologia_v2.pdf', 'DETER') . '
-                    </p>';
+                    As estatísticas do DETER/INPE devem ser usados com cuidado, pois este sistema não foi concebido para medição de áreas desmatadas assim como o PRODES/INPE.
+                    Maiores informações: '. anchor('http://www.obt.inpe.br/deter/metodologia_v2.pdf', 'DETER') . '</p>';
                 echo '</div>';
             }
         ?>
+      <div id="charts" class="row-fluid">
         <div id="chart1" class="chart"> </div>
         <div id="chart2" class="chart"> </div>
         <div id="chart3" class="chart"> </div>

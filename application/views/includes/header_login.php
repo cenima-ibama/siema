@@ -28,16 +28,13 @@
     <style type="text/css">
       /* Override some defaults */
       html, body {
-        background-color: #FFF;
-        background-repeat: no-repeat;
-        background-position: center top;
-        background-image: url("/painel/assets/img/login_bg.jpg");
+        background-color: #111111;
       }
 
 	  .form-login {
-        background: linear-gradient(to bottom, #FFFFFF 0%, #FFFFFF 77%, #F5F5F5 100%) repeat scroll 0 0 transparent;
-        border-radius: 2px 2px 2px 2px;
-        box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(to bottom, #FEFEFE 0%, #FEFEFE 77%, #EEEEEE 100%) repeat scroll 0 0 transparent;
+        border-radius: 6px;
+        box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.15);
         padding: 20px 30px;
         color: #000000;
         margin: 100px auto;
