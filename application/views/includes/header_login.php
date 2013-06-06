@@ -32,7 +32,7 @@
       }
 
 	  .form-login {
-        background: linear-gradient(to bottom, #FEFEFE 0%, #FEFEFE 77%, #EEEEEE 100%) repeat scroll 0 0 transparent;
+        background: #F5F5F5;
         border-radius: 6px;
         box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.15);
         padding: 20px 30px;
