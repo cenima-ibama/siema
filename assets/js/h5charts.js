@@ -37,6 +37,15 @@
     11: "Jul"
   };
 
+  if (!H5.isMobile.any()) {
+    H5.Data.animate = {
+      duration: 500,
+      easing: "inAndOut"
+    };
+  } else {
+    H5.Data.animate = {};
+  }
+
   H5.DB.diary.data = {
     init: function() {
       var state, _j, _len, _ref1, _results;
@@ -240,7 +249,7 @@
   });
 
   chart1.drawChart = function() {
-    var createTable, data, day, daysInMonth, firstPeriod, options, secondPeriod, _k,
+    var createTable, data, day, daysInMonth, firstPeriod, months, options, secondPeriod, _k,
       _this = this;
 
     createTable = function(state) {
@@ -281,6 +290,21 @@
     } else {
       createTable(H5.Data.state);
     }
+    months = {
+      0: "Janeiro",
+      1: "Fevereiro",
+      2: "Março",
+      3: "Abril",
+      4: "Maio",
+      5: "Junho",
+      6: "Julho",
+      7: "Agosto",
+      8: "Setembro",
+      9: "Outubro",
+      10: "Novembro",
+      11: "Dezembro"
+    };
+    this.changeTitle("Alerta DETER: Índice Diário [" + months[chart1._monthsSlct.value] + "]");
     options = {
       title: "",
       titleTextStyle: {
@@ -304,10 +328,7 @@
           count: daysInMonth / 5
         }
       },
-      animation: {
-        duration: 500,
-        easing: "inAndOut"
-      }
+      animation: H5.Data.animate
     };
     return this.chart.draw(this.data, options);
   };
@@ -402,10 +423,7 @@
       vAxis: {
         title: "Área Km2"
       },
-      animation: {
-        duration: 500,
-        easing: "inAndOut"
-      }
+      animation: H5.Data.animate
     };
     this._addBtn.disabled = true;
     this._delBtn.disabled = true;
@@ -526,10 +544,7 @@
         groupWidth: "80%"
       },
       isStacked: true,
-      animation: {
-        duration: 500,
-        easing: "inAndOut"
-      }
+      animation: H5.Data.animate
     };
     this._addBtn.disabled = true;
     this._delBtn.disabled = true;
@@ -625,10 +640,7 @@
       vAxis: {
         title: "Área Km2"
       },
-      animation: {
-        duration: 500,
-        easing: "inAndOut"
-      }
+      animation: H5.Data.animate
     };
     this._addBtn.disabled = true;
     this._delBtn.disabled = true;
@@ -730,10 +742,7 @@
       hAxis: {
         title: "H5.Data.periods"
       },
-      animation: {
-        duration: 500,
-        easing: "inAndOut"
-      }
+      animation: H5.Data.animate
     };
     return this.chart.draw(this.data, options);
   };
@@ -836,10 +845,7 @@
       vAxis: {
         title: "Área Km2"
       },
-      animation: {
-        duration: 500,
-        easing: "inAndOut"
-      }
+      animation: H5.Data.animate
     };
     this.changeTitle("Taxa PRODES|Alerta DETER: UFs [" + H5.Data.periods[this.options.period] + "]");
     this._rightBtn.disabled = true;
@@ -1004,10 +1010,7 @@
       vAxis: {
         title: "Área Km2"
       },
-      animation: {
-        duration: 500,
-        easing: "inAndOut"
-      }
+      animation: H5.Data.animate
     };
     return this.chart.draw(this.data, options);
   };
@@ -1089,10 +1092,7 @@
       vAxis: {
         title: "Porcentagem"
       },
-      animation: {
-        duration: 500,
-        easing: "inAndOut"
-      }
+      animation: H5.Data.animate
     };
     this._addBtn.disabled = true;
     this._delBtn.disabled = true;

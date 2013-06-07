@@ -12,6 +12,25 @@
   <section class="dash">
     <section class="charts-content">
       <div class="row-fluid">
+        <?php
+            if(!$logged_in) {
+                echo '<div class="alert alert-warning alert-block fade in" style="margin: 0 20% 20px">';
+                echo '<button class="close" data-dismiss="alert">&times;</button>
+                    <h4 style="text-align: left">Acesso Público:</h4></br>
+                    <p style="text-align: left">
+                    As informações abaixo são limitadas por questões de sígilo das operações de fiscalização.
+                    Para visualizar as detecções em tempo real é necessário login do usuário (canto superior direito).
+                    </p>';
+                echo '</div>';
+                echo '<div class="alert alert-info alert-block fade in" style="margin: 0 20% 20px">';
+                echo '<button class="close" data-dismiss="alert">&times;</button>
+                    <h4 style="text-align: left">Importante:</h4></br>
+                    <p style="text-align: left">
+                    As informações do DETER/INPE devem ser usadas com cuidado, pois este sistema não foi concebido para medição de áreas desmatadas.
+                    Informação: '. anchor('http://www.obt.inpe.br/deter/metodologia_v2.pdf', 'Metodologia DETER') . '</p>';
+                echo '</div>';
+            }
+        ?>
         <div class="quick-slct">
             <div class="item">
             <label>Mês</label>
@@ -100,17 +119,6 @@
         </div>
       </div>
       <hr>
-        <?php
-            if(!$logged_in) {
-                echo '<div class="alert alert-info alert-block fade in" style="margin: 0 8.5% 20px">';
-                echo '<button class="close" data-dismiss="alert">&times;</button>
-                    <h4 style="text-align: left">Informação importante:</h4></br>
-                    <p style="text-align: left">
-                    As estatísticas do DETER/INPE devem ser usados com cuidado, pois este sistema não foi concebido para medição de áreas desmatadas assim como o PRODES/INPE.
-                    Maiores informações: '. anchor('http://www.obt.inpe.br/deter/metodologia_v2.pdf', 'DETER') . '</p>';
-                echo '</div>';
-            }
-        ?>
       <div id="charts" class="row-fluid">
         <div id="chart1" class="chart"> </div>
         <div id="chart2" class="chart"> </div>

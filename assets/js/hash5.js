@@ -7,7 +7,27 @@
   this.H5 = {
     version: 0.6,
     company: "Hexgis <www.hexgis.com>",
-    author: "Helmuth Saatkamp <helmuthdu@gmail.com>"
+    author: "Helmuth Saatkamp <helmuthdu@gmail.com>",
+    isMobile: {
+      Android: function() {
+        return navigator.userAgent.match(/Android/i);
+      },
+      BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+      },
+      iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+      },
+      Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+      },
+      Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i);
+      },
+      any: function() {
+        return this.Android() || this.BlackBerry() || this.iOS() || this.Opera() || this.Windows();
+      }
+    }
   };
 
   H5.Rest = (function() {
@@ -255,7 +275,7 @@
         this._minIcon = minIcon;
         $(this._minBtn).append(this._minIcon);
         $(this._rightCtrl).append(this._minBtn);
-        this.enableMinimize();
+        this._enableMinimize();
       }
       if (this.options.buttons.maximize) {
         maxBtn = document.createElement("button");
@@ -304,7 +324,7 @@
       }
     };
 
-    Container.prototype.enableMinimize = function() {
+    Container.prototype._enableMinimize = function() {
       var _this = this;
 
       return $(this._minBtn).on("click", function(event) {
@@ -399,11 +419,11 @@
           this.chart = new google.visualization[this.options.type + "Chart"](this._chartContent);
         }
         this.options.started = true;
-        return this.detectScreenChanges();
+        return this._detectScreenChanges();
       }
     };
 
-    GoogleCharts.prototype.detectScreenChanges = function() {
+    GoogleCharts.prototype._detectScreenChanges = function() {
       var orientationEvent, supportsOrientationChange,
         _this = this;
 
@@ -545,17 +565,21 @@
       var dial;
 
       dial = $(this._leftCtrl).find('.dial');
-      return $({
-        value: dial.val()
-      }).animate({
-        value: total
-      }, {
-        duration: 2000,
-        easing: "easeOutSine",
-        step: function() {
-          return dial.val(Math.floor(this.value)).trigger("change");
-        }
-      });
+      if (!H5.isMobile.any()) {
+        return $({
+          value: dial.val()
+        }).animate({
+          value: total
+        }, {
+          duration: 2000,
+          easing: "easeOutSine",
+          step: function() {
+            return dial.val(Math.floor(this.value)).trigger("change");
+          }
+        });
+      } else {
+        return dial.val(Math.floor(total)).trigger("change");
+      }
     };
 
     return Knobs;

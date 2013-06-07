@@ -26,6 +26,15 @@ H5.Data.months =
   10: "Jun"
   11: "Jul"
 
+# disable animation on mobile devices
+if (!H5.isMobile.any())
+  H5.Data.animate = {
+    duration: 500
+    easing: "inAndOut"
+  }
+else
+  H5.Data.animate = {}
+
 #}}}
 # DATABASES {{{
 H5.DB.diary.data =
@@ -229,6 +238,22 @@ chart1.drawChart = ->
   else
     createTable H5.Data.state
 
+  months =
+    0: "Janeiro"
+    1: "Fevereiro"
+    2: "Março"
+    3: "Abril"
+    4: "Maio"
+    5: "Junho"
+    6: "Julho"
+    7: "Agosto"
+    8: "Setembro"
+    9: "Outubro"
+    10: "Novembro"
+    11: "Dezembro"
+
+  @changeTitle "Alerta DETER: Índice Diário [" + months[chart1._monthsSlct.value] + "]"
+
   options =
     title: ""
     titleTextStyle:
@@ -247,9 +272,7 @@ chart1.drawChart = ->
       gridlines:
         color: "#CCC"
         count: daysInMonth / 5
-    animation:
-      duration: 500
-      easing: "inAndOut"
+    animation: H5.Data.animate
 
   @chart.draw @data, options
 #}}}
@@ -326,9 +349,7 @@ chart2.drawChart = ->
              '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
     vAxis:
       title: "Área Km2"
-    animation:
-      duration: 500
-      easing: "inAndOut"
+    animation: H5.Data.animate
 
   # Disabling the buttons while the chart is drawing.
   @_addBtn.disabled = true
@@ -433,9 +454,7 @@ chart3.drawChart = ->
     bar:
       groupWidth: "80%"
     isStacked: true
-    animation:
-      duration: 500
-      easing: "inAndOut"
+    animation: H5.Data.animate
 
   # Disabling the buttons while the chart is drawing.
   @_addBtn.disabled = true
@@ -521,9 +540,7 @@ chart4.drawChart = ->
       groupWidth: "100%"
     vAxis:
       title: "Área Km2"
-    animation:
-      duration: 500
-      easing: "inAndOut"
+    animation: H5.Data.animate
 
   # Disabling the buttons while the chart is drawing.
   @_addBtn.disabled = true
@@ -609,9 +626,7 @@ chart5.drawChart = ->
       title: "Área Km2"
     hAxis:
       title: "H5.Data.periods"
-    animation:
-      duration: 500
-      easing: "inAndOut"
+    animation: H5.Data.animate
 
   @chart.draw @data, options
 #}}}
@@ -696,9 +711,7 @@ chart6.drawChart = ->
       groupWidth: "100%"
     vAxis:
       title: "Área Km2"
-    animation:
-      duration: 500
-      easing: "inAndOut"
+    animation: H5.Data.animate
 
   @changeTitle "Taxa PRODES|Alerta DETER: UFs [" + H5.Data.periods[@options.period] + "]"
 
@@ -862,9 +875,7 @@ chart8.drawChart = ->
       groupWidth: "100%"
     vAxis:
       title: "Área Km2"
-    animation:
-      duration: 500
-      easing: "inAndOut"
+    animation: H5.Data.animate
 
   @chart.draw @data, options
 #}}}
@@ -936,9 +947,7 @@ chart9.drawChart = ->
              '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
     vAxis:
       title: "Porcentagem"
-    animation:
-      duration: 500
-      easing: "inAndOut"
+    animation: H5.Data.animate
 
   # Disabling the buttons while the chart is drawing.
   @_addBtn.disabled = true

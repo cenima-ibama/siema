@@ -156,7 +156,7 @@ class H5.Charts.Container
 
       $(@_rightCtrl).append @_minBtn
 
-      @enableMinimize()
+      @_enableMinimize()
 
     if @options.buttons.maximize
 
@@ -208,7 +208,7 @@ class H5.Charts.Container
       pipeline = "<span class=\"break\"></span>"
       $(@_chartTitle).prepend pipeline
 
-  enableMinimize: ->
+  _enableMinimize: ->
     $(@_minBtn).on "click", (event) =>
       event.preventDefault()
 
@@ -282,9 +282,9 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
         )
       # only init one time
       @options.started = true
-      @detectScreenChanges()
+      @_detectScreenChanges()
 
-  detectScreenChanges: ->
+  _detectScreenChanges: ->
     # Detect whether device supports orientationchange event,
     # otherwise fall back to the resize event.
     supportsOrientationChange = "onorientationchange" of window
@@ -385,13 +385,18 @@ class H5.Charts.Knobs extends H5.Charts.SmallContainer
     @updateChart(parseFloat(value))
 
   updateChart: (total) ->
+
     dial = $(@_leftCtrl).find('.dial')
-    $(value: dial.val()).animate
-      value: total,
-        duration: 2000
-        easing: "easeOutSine"
-        step: ->
-          dial.val(Math.floor @value).trigger "change"
+
+    if(!H5.isMobile.any())
+      $(value: dial.val()).animate
+        value: total,
+          duration: 2000
+          easing: "easeOutSine"
+          step: ->
+            dial.val(Math.floor @value).trigger "change"
+    else
+      dial.val(Math.floor total).trigger "change"
 
 class H5.Charts.Sparks extends H5.Charts.SmallContainer
 

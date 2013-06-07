@@ -22,8 +22,9 @@
     <link href="<?= base_url()?>assets/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/global.css" rel="stylesheet" media="all">
     <link href="<?= base_url()?>assets/css/hash5charts.css" rel="stylesheet" media="screen">
-    <!-- <link href="<?= base_url()?>assets/css/hash5Map.css" rel="stylesheet" media="screen"> -->
-    <link href="<?= base_url()?>assets/less/hash5charts.less" rel="stylesheet/less" type="text/css" />
+    <link href="<?= base_url()?>assets/css/hash5Map.css" rel="stylesheet" media="screen">
+    <!-- <link href="<?= base_url()?>assets/less/hash5Map.less" rel="stylesheet/less" type="text/css" /> -->
+    <!-- <link href="<?= base_url()?>assets/less/hash5charts.less" rel="stylesheet/less" type="text/css" /> -->
     <!-- <link href="<?= base_url()?>assets/css/paper.css" rel="stylesheet" media="print"> -->
     <!-- <link href="<?= base_url()?>assets/css/mobile.css" rel="stylesheet" media="handheld"> -->
 
