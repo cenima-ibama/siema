@@ -16,9 +16,8 @@
             if(!$logged_in) {
                 echo '<div class="alert alert-warning alert-block fade in" style="margin: 0 20% 20px">';
                 echo '<button class="close" data-dismiss="alert">&times;</button>
-                    <h4 style="text-align: left">Acesso Público:</h4></br>
+                    <h4 style="text-align: left">Aviso:</h4></br>
                     <p style="text-align: left">
-                    As informações abaixo são limitadas por questões de sígilo das operações de fiscalização.
                     Para visualizar as detecções em tempo real é necessário login do usuário (canto superior direito).
                     </p>';
                 echo '</div>';
