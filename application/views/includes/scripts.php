@@ -5,7 +5,7 @@
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-  <script src="//cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+  <script src="//cdn.leafletjs.com/leaflet-0.6/leaflet.js"></script>
   <script src="//www.google.com/jsapi" type="text/javascript"></script>
 
   <script src="<?= base_url()?>assets/js/bootstrap.min.js"></script>
