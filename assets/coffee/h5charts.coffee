@@ -167,6 +167,7 @@ chart1 = new H5.Charts.GoogleCharts (
   title: "Alerta DETER: Índice Diário"
   buttons:
     export: true
+    table: true
     minimize: true
     maximize: true
 )
@@ -284,6 +285,8 @@ chart2 = new H5.Charts.GoogleCharts(
   title: "Alerta DETER: Índice Mensal"
   buttons:
     minusplus: true
+    export: true
+    table: true
     minimize: true
     maximize: true
 )
@@ -369,6 +372,8 @@ chart3 = new H5.Charts.GoogleCharts(
   title: "Alerta DETER: Índice Períodos"
   buttons:
     minusplus: true
+    export: true
+    table: true
     minimize: true
     maximize: true
 )
@@ -473,6 +478,8 @@ chart4 = new H5.Charts.GoogleCharts(
   title: "Alerta DETER: UFs"
   buttons:
     minusplus: true
+    export: true
+    table: true
     minimize: true
     maximize: true
 )
@@ -503,7 +510,7 @@ chart4.drawChart = ->
   @createDataTable()
 
   # init table
-  @data.addColumn "string", "mes"
+  @data.addColumn "string", "Estado"
   for i in [0...@options.period]
     @data.addColumn "number", H5.Data.periods[i]
 
@@ -556,6 +563,8 @@ chart5 = new H5.Charts.GoogleCharts(
   container: "chart5"
   title: "Taxa PRODES|Alerta DETER: Acumulado Períodos"
   buttons:
+    export: true
+    table: true
     minimize: true
     maximize: true
 )
@@ -633,6 +642,8 @@ chart6 = new H5.Charts.GoogleCharts(
   period: 1
   title: "Taxa PRODES|Alerta DETER: UFs"
   buttons:
+    export: true
+    table: true
     minimize: true
     maximize: true
     arrows: true
@@ -728,6 +739,8 @@ chart7 = new H5.Charts.GoogleCharts(
   period: 0
   buttons:
     arrows: true
+    export: true
+    table: true
     minimize: true
     maximize: true
 )
@@ -802,6 +815,8 @@ chart8 = new H5.Charts.GoogleCharts(
   container: "chart8"
   period: 1
   buttons:
+    export: true
+    table: true
     minimize: true
     maximize: true
 )
@@ -880,6 +895,8 @@ chart9 = new H5.Charts.GoogleCharts(
   title: "Alerta DETER: Taxa(%) de Nuvens"
   buttons:
     minusplus: true
+    export: true
+    table: true
     minimize: true
     maximize: true
 )

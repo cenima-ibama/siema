@@ -4,6 +4,9 @@ google.load "visualization", "1",
 google.load "visualization", "1",
   packages: ["gauge"]
 
+google.load "visualization", "1",
+  packages: ["table"]
+
 H5.Data = {}
 
 H5.DB =
@@ -29,6 +32,8 @@ class H5.Charts.Container
     buttons:
       minusplus: false
       arrows: false
+      table: false
+      export: false
       minimize: false
       maximize: false
       close: false
@@ -163,6 +168,12 @@ class H5.Charts.Container
 
       $(@_rightCtrl).append @_tableBtn
 
+      chartTable = document.createElement("div")
+      chartTable.id = "table-" + @options.container
+      chartTable.className = "chart-table"
+      @_chartTable = chartTable
+      $(@_container).append @_chartTable
+
       @_enableTable()
 
     if @options.buttons.export
@@ -174,7 +185,7 @@ class H5.Charts.Container
       @_exportBtn = exportBtn
 
       exportIcon = document.createElement("i")
-      exportIcon.className = "icon-share-alt"
+      exportIcon.className = "icon-file"
       @_exportIcon = exportIcon
       $(@_exportBtn).append @_exportIcon
 
@@ -233,18 +244,6 @@ class H5.Charts.Container
 
       @_enableClose()
 
-  _enableTable: ->
-    chartTable = document.createElement("div")
-    chartTable.id = "chart-" + @options.container
-    chartTable.className = "chart-table"
-    @_chartTable = chartTable
-    $(@_container).append @_chartTable
-
-    $(@_exportBtn).on "click", (event) =>
-      event.preventDefault()
-
-      $(@_chartTable).fadeToggle()
-
   _enableMinimize: ->
     $(@_minBtn).on "click", (event) =>
       event.preventDefault()
@@ -285,8 +284,12 @@ class H5.Charts.Container
 
       $(@_container).toggleClass @defaultClass
       $(@_container).toggleClass "chart-overlay"
+      $(@_chartTable).toggleClass "table-overlay"
+      $("body").toggleClass "body-overlay"
+
 
       $(@_chartContent).toggleClass "chart-content-overlay"
+      $(@_chartTable).toggleClass "table-content-overlay"
       $(@_chartContent).hide()
       $(@_chartContent).fadeToggle 500
 
@@ -332,6 +335,21 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
       @drawChart()
     ),false
 
+
+  _enableTable: ->
+    
+    $(@_tableBtn).on "click", (event) =>
+      event.preventDefault()
+
+      $(@_chartTable).fadeToggle()
+        
+      # Create and draw the visualization.
+      visualization = new google.visualization.Table(
+        @_chartTable
+      )
+
+      visualization.draw @data, null
+
   _enableExport: ->
 
     generateCSV = =>
@@ -339,7 +357,7 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
       str = ""
 
       for row in [0...@data.getNumberOfRows()]
-        line=""
+        line= ""
         for col in [0...@data.getNumberOfColumns()]
           value = String @data.getFormattedValue(row, col)
           line += "\"" + value + "\","
