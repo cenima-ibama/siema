@@ -324,7 +324,7 @@ chart2.drawChart = ->
   @createDataTable()
 
   # init table
-  @data.addColumn "string", "mes"
+  @data.addColumn "string", "Mês"
   for i in [0...@options.period]
     @data.addColumn "number", H5.Data.periods[i]
 
@@ -773,8 +773,8 @@ chart7.drawChart = ->
   @createDataTable()
 
   # init table
-  @data.addColumn "string", "mes"
-  @data.addColumn "number", H5.Data.periods[H5.Data.totalPeriods]
+  @data.addColumn "string", "Mês"
+  @data.addColumn "number", H5.Data.periods[@options.period]
 
   # populate table
   for i in [0...H5.Data.states.length]

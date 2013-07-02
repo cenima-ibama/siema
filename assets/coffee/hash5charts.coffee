@@ -264,8 +264,11 @@ class H5.Charts.Container
         else if @options.buttons.arrows
           $(@_leftBtn).prop "disabled", false
           $(@_rightBtn).prop "disabled", false
-      $(@_chartContent).slideToggle()
-      $(@_chartTable).slideToggle()
+
+      if $(@_chartTable).is(":visible")
+        $(@_chartTable).slideToggle("fast", "linear")
+
+      $(@_chartContent).slideToggle("fast", "linear")
 
   _enableMaximize: ->
     $(@_maxBtn).on "click", (event) =>
@@ -292,14 +295,14 @@ class H5.Charts.Container
       $(@_chartContent).toggleClass "chart-content-overlay"
       $(@_chartTable).toggleClass "table-content-overlay"
       $(@_chartContent).hide()
-      $(@_chartContent).fadeToggle 500
+      $(@_chartContent).fadeToggle(500, "linear")
 
       @drawChart()
 
   _enableClose: ->
     $(@_closeBtn).on "click", (event) =>
       event.preventDefault()
-      $(@_container).hide("slide", {}, 600)
+      $(@_container).hide("slide", "linear", 600)
 
   _enableSelect: (select) ->
     $(select).on "change", (event) =>
@@ -338,31 +341,44 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
 
 
   _enableTable: ->
-    
+
     $(@_tableBtn).on "click", (event) =>
       event.preventDefault()
 
-      $(@_chartTable).fadeToggle()
-        
-      # Create and draw the visualization.
-      visualization = new google.visualization.Table(
-        @_chartTable
-      )
+      if $(@_chartContent).is(":hidden")
+        @_minIcon.className = "icon-chevron-up"
+        $(@_chartContent).fadeToggle('fast', 'linear')
 
-      visualization.draw @data, null
+      $(@_chartTable).fadeToggle('fast', 'linear')
+
+      # only update values when visible
+      if $(@_chartTable).is(":visible")
+
+        # Create and draw the visualization.
+        visualization = new google.visualization.Table(
+          @_chartTable
+        )
+
+        visualization.draw @data, null
 
   _enableExport: ->
 
     generateCSV = =>
 
       str = ""
+      line = ""
+
+      for col in [0...@data.getNumberOfColumns()]
+        title = @data.getColumnLabel(col)
+        line += "\"" + title + "\","
+
+      str += line + "\r\n"
 
       for row in [0...@data.getNumberOfRows()]
-        line= ""
+        line = ""
         for col in [0...@data.getNumberOfColumns()]
-          value = String @data.getFormattedValue(row, col)
+          value = @data.getFormattedValue(row, col)
           line += "\"" + value + "\","
-        line = line.slice(0, -1)
         str += line + "\r\n"
 
       return str
