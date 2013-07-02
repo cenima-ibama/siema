@@ -265,6 +265,7 @@ class H5.Charts.Container
           $(@_leftBtn).prop "disabled", false
           $(@_rightBtn).prop "disabled", false
       $(@_chartContent).slideToggle()
+      $(@_chartTable).slideToggle()
 
   _enableMaximize: ->
     $(@_maxBtn).on "click", (event) =>

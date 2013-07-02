@@ -373,7 +373,8 @@
             $(_this._rightBtn).prop("disabled", false);
           }
         }
-        return $(_this._chartContent).slideToggle();
+        $(_this._chartContent).slideToggle();
+        return $(_this._chartTable).slideToggle();
       });
     };
 
