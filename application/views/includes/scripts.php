@@ -13,7 +13,6 @@
   <script src="<?= base_url()?>assets/js/bootstrapSwitch.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet-bing.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.markercluster.js"></script>
-  <script src="<?= base_url()?>assets/js/lvector.js"></script>
   <script src="<?= base_url()?>assets/js/masonry.min.js"></script>
   <script src="<?= base_url()?>assets/js/knob.js"></script>
   <script src="<?= base_url()?>assets/js/sparkline.min.js"></script>

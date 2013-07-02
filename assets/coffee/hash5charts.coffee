@@ -36,8 +36,15 @@ class H5.Charts.Container
   constructor: (options) ->
     # configure object with the options
     @options = $.extend({}, @options, options)
+    @_createContainer()
 
-  createContainer: ->
+  changeTitle: (title) ->
+    $(@_chartTitle).html(title)
+    if @options.buttons.arrows or @options.buttons.minusplus or @options.selects?
+      pipeline = "<span class=\"break\"></span>"
+      $(@_chartTitle).prepend pipeline
+
+  _createContainer: ->
     @_container = document.getElementById(@options.container)
 
     chartHeader = document.createElement("div")
@@ -139,7 +146,41 @@ class H5.Charts.Container
 
       $.each @options.selects, (name, data) =>
         @["_" + name + "Slct"] = document["form-" + @options.container][name]
-        @enableSelect("#" + name + "Slct")
+        @_enableSelect("#" + name + "Slct")
+
+    if @options.buttons.table
+
+      # add table button
+      tableBtn = document.createElement("button")
+      tableBtn.id = @options.container + "-btn-table"
+      tableBtn.className = "btn"
+      @_tableBtn = tableBtn
+
+      tableIcon = document.createElement("i")
+      tableIcon.className = "icon-list-alt"
+      @_tableIcon = tableIcon
+      $(@_tableBtn).append @_tableIcon
+
+      $(@_rightCtrl).append @_tableBtn
+
+      @_enableTable()
+
+    if @options.buttons.export
+
+      # add export button
+      exportBtn = document.createElement("button")
+      exportBtn.id = @options.container + "-btn-export"
+      exportBtn.className = "btn"
+      @_exportBtn = exportBtn
+
+      exportIcon = document.createElement("i")
+      exportIcon.className = "icon-share-alt"
+      @_exportIcon = exportIcon
+      $(@_exportBtn).append @_exportIcon
+
+      $(@_rightCtrl).append @_exportBtn
+
+      @_enableExport()
 
     if @options.buttons.minimize
 
@@ -173,7 +214,7 @@ class H5.Charts.Container
 
       $(@_rightCtrl).append @_maxBtn
 
-      @enableMaximize()
+      @_enableMaximize()
 
     if @options.buttons.close
 
@@ -190,23 +231,19 @@ class H5.Charts.Container
 
       $(@_rightCtrl).append @_closeBtn
 
-      @enableClose()
+      @_enableClose()
 
-  createMinimalContainer: ->
-    @_container = document.getElementById(@options.container)
+  _enableTable: ->
+    chartTable = document.createElement("div")
+    chartTable.id = "chart-" + @options.container
+    chartTable.className = "chart-table"
+    @_chartTable = chartTable
+    $(@_container).append @_chartTable
 
-    chartContent = document.createElement("div")
-    chartContent.id = "chart-" + @options.container
-    chartContent.className = "chart-content-small"
-    @_chartContent = chartContent
+    $(@_exportBtn).on "click", (event) =>
+      event.preventDefault()
 
-    $(@_container).append @_chartContent
-
-  changeTitle: (title) ->
-    $(@_chartTitle).html(title)
-    if @options.buttons.arrows or @options.buttons.minusplus or @options.selects?
-      pipeline = "<span class=\"break\"></span>"
-      $(@_chartTitle).prepend pipeline
+      $(@_chartTable).fadeToggle()
 
   _enableMinimize: ->
     $(@_minBtn).on "click", (event) =>
@@ -230,7 +267,7 @@ class H5.Charts.Container
           $(@_rightBtn).prop "disabled", false
       $(@_chartContent).slideToggle()
 
-  enableMaximize: ->
+  _enableMaximize: ->
     $(@_maxBtn).on "click", (event) =>
       event.preventDefault()
 
@@ -255,12 +292,12 @@ class H5.Charts.Container
 
       @drawChart()
 
-  enableClose: ->
+  _enableClose: ->
     $(@_closeBtn).on "click", (event) =>
       event.preventDefault()
       $(@_container).hide("slide", {}, 600)
 
-  enableSelect: (select) ->
+  _enableSelect: (select) ->
     $(select).on "change", (event) =>
       @drawChart()
 
@@ -295,6 +332,26 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
       @drawChart()
     ),false
 
+  _enableExport: ->
+
+    generateCSV = =>
+
+      str = ""
+
+      for row in [0...@data.getNumberOfRows()]
+        line=""
+        for col in [0...@data.getNumberOfColumns()]
+          value = String @data.getFormattedValue(row, col)
+          line += "\"" + value + "\","
+        line = line.slice(0, -1)
+        str += line + "\r\n"
+
+      return str
+
+    $(@_exportBtn).click ->
+      csv = generateCSV()
+      window.open "data:text/csv;charset=utf-8," + escape(csv)
+
 class H5.Charts.SmallContainer
 
   options:
@@ -306,8 +363,9 @@ class H5.Charts.SmallContainer
   constructor: (options) ->
     # configure object with the options
     @options = $.extend({}, @options, options)
+    @_createContainer()
 
-  createContainer: ->
+  _createContainer: ->
     @_container = document.getElementById(@options.container)
 
     leftCtrl = document.createElement("div")
@@ -322,9 +380,9 @@ class H5.Charts.SmallContainer
 
     if @options.popover
       $(@_container).addClass("popover-" + @options.container)
-      @createPopover()
+      @_createPopover()
 
-  createPopover: ->
+  _createPopover: ->
     placement = "bottom"
     trigger = "hover"
     html = true
@@ -337,18 +395,21 @@ class H5.Charts.SmallContainer
 
 class H5.Charts.Knobs extends H5.Charts.SmallContainer
 
-  createContainer: ->
+  updateInfo: (value) ->
+    $(@_rightCtrl).html("<strong>" + value + "%</strong><br/> " + @options.title)
+    @_updateChart(parseFloat(value))
+
+  _createContainer: ->
     super
     dial = document.createElement("input")
     dial.type = "text"
     dial .className = "dial"
     @_dial = dial
-
     $(@_leftCtrl).append @_dial
 
-    @createChart()
+    @_createChart()
 
-  createChart: ->
+  _createChart: ->
     $(@_dial).knob(
       min:-100
       max:100
@@ -380,11 +441,7 @@ class H5.Charts.Knobs extends H5.Charts.SmallContainer
     )
     $(@_dial).val(0).trigger "change"
 
-  updateInfo: (value) ->
-    $(@_rightCtrl).html("<strong>" + value + "%</strong><br/> " + @options.title)
-    @updateChart(parseFloat(value))
-
-  updateChart: (total) ->
+  _updateChart: (total) ->
 
     dial = $(@_leftCtrl).find('.dial')
 
@@ -400,7 +457,11 @@ class H5.Charts.Knobs extends H5.Charts.SmallContainer
 
 class H5.Charts.Sparks extends H5.Charts.SmallContainer
 
-  createContainer: ->
+  updateInfo: (data, value) ->
+    $(@_rightCtrl).html("<strong>" + value + "</strong><br /> " + @options.title)
+    @_updateChart(data)
+
+  _createContainer: ->
     super
     spark = document.createElement("div")
     spark.className = "minichart"
@@ -408,11 +469,7 @@ class H5.Charts.Sparks extends H5.Charts.SmallContainer
 
     $(@_leftCtrl).append @_spark
 
-  updateInfo: (data, value) ->
-    $(@_rightCtrl).html("<strong>" + value + "</strong><br /> " + @options.title)
-    @updateChart(data)
-
-  updateChart: (data) ->
+  _updateChart: (data) ->
     $(@_spark).sparkline data,
       width: 58 #Width of the chart
       height: 62 #Height of the chart

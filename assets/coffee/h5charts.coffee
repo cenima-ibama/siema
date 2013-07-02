@@ -166,10 +166,10 @@ chart1 = new H5.Charts.GoogleCharts (
   container: "chart1"
   title: "Alerta DETER: Índice Diário"
   buttons:
+    export: true
     minimize: true
     maximize: true
 )
-chart1.createContainer()
 
 chart1._yearsSlct = document.getElementById('yearsSlct')
 chart1._monthsSlct = document.getElementById('monthsSlct')
@@ -287,7 +287,6 @@ chart2 = new H5.Charts.GoogleCharts(
     minimize: true
     maximize: true
 )
-chart2.createContainer()
 
 chart2._addBtn.onclick = ->
   chart2.options.period++
@@ -373,7 +372,6 @@ chart3 = new H5.Charts.GoogleCharts(
     minimize: true
     maximize: true
 )
-chart3.createContainer()
 
 chart3._addBtn.onclick = ->
   chart3.options.period++
@@ -478,7 +476,6 @@ chart4 = new H5.Charts.GoogleCharts(
     minimize: true
     maximize: true
 )
-chart4.createContainer()
 
 chart4._addBtn.onclick = ->
   chart4.options.period++
@@ -562,7 +559,6 @@ chart5 = new H5.Charts.GoogleCharts(
     minimize: true
     maximize: true
 )
-chart5.createContainer()
 
 chart5.drawChart = ->
   # sum values
@@ -641,7 +637,6 @@ chart6 = new H5.Charts.GoogleCharts(
     maximize: true
     arrows: true
 )
-chart6.createContainer()
 
 chart6.changeTitle H5.Data.periods[chart6.options.period]
 
@@ -736,7 +731,6 @@ chart7 = new H5.Charts.GoogleCharts(
     minimize: true
     maximize: true
 )
-chart7.createContainer()
 
 chart7.changeTitle H5.Data.periods[chart7.options.period]
 
@@ -811,7 +805,6 @@ chart8 = new H5.Charts.GoogleCharts(
     minimize: true
     maximize: true
 )
-chart8.createContainer()
 
 chart8.drawChart = ->
   # sum values
@@ -890,7 +883,6 @@ chart9 = new H5.Charts.GoogleCharts(
     minimize: true
     maximize: true
 )
-chart9.createContainer()
 
 chart9._addBtn.onclick = ->
   chart9.options.period++
@@ -966,8 +958,6 @@ spark1 = new H5.Charts.Sparks(
   title: "Total Mensal"
 )
 
-spark1.createContainer()
-
 spark1.drawChart = ->
   #Create array with values
   createTable = (state) =>
@@ -1003,8 +993,6 @@ spark2 = new H5.Charts.Sparks(
   container: "spark2"
   title: "Total Período"
 )
-
-spark2.createContainer()
 
 spark2.drawChart = ->
   #Create array with values
@@ -1047,8 +1035,6 @@ knob1 = new H5.Charts.Knobs(
   title: "Taxa VAA"
   popover: "Taxa de variação em relação ao mesmo mês do ano anterior"
 )
-
-knob1.createContainer()
 
 knob1.drawChart = ->
   # sum values
@@ -1096,8 +1082,6 @@ knob2 = new H5.Charts.Knobs(
   popover: "Taxa de variação em relação ao mês anterior"
 )
 
-knob2.createContainer()
-
 knob2.drawChart = ->
   # sum values
   periodDeforestationRate = (year, month) ->
@@ -1143,8 +1127,6 @@ knob3 = new H5.Charts.Knobs(
   title: "Taxa VPA"
   popover: "Taxa de variação em relação ao período PRODES anterior"
 )
-
-knob3.createContainer()
 
 knob3.drawChart = ->
   # sum values

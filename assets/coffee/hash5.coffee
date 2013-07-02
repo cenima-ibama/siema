@@ -1,6 +1,6 @@
 @H5 = {
 
-  version: 0.6
+  version: 0.61
 
   company: "Hexgis <www.hexgis.com>"
 
