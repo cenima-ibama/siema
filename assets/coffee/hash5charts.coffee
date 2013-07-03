@@ -4,28 +4,52 @@ google.load "visualization", "1",
 google.load "visualization", "1",
   packages: ["gauge"]
 
-class Hash5Charts
+google.load "visualization", "1",
+  packages: ["table"]
+
+H5.Data = {}
+
+H5.DB =
+  addDB: (opt) ->
+    # configure object with the options
+    this[opt.name] = {}
+    this[opt.name].table = opt.table
+    this[opt.name].data = null
+
+H5.Charts = {}
+
+class H5.Charts.Container
+
+  options:
+    type: null
+    container: null
+    period: 1
+    started: false
+    title: ""
+    defaultClass: ""
+    selects: undefined
+    resizing: 0
+    buttons:
+      minusplus: false
+      arrows: false
+      table: false
+      export: false
+      minimize: false
+      maximize: false
+      close: false
 
   constructor: (options) ->
-    defaultOptions =
-      type: null
-      container: null
-      period: 1
-      started: true
-      title: ""
-      defaultClass: ""
-      selects: undefined
-      resizing: 0
-      buttons:
-        minusplus: false
-        arrows: false
-        minimize: false
-        maximize: false
-        close: false
     # configure object with the options
-    @options = $.extend(defaultOptions, options)
+    @options = $.extend({}, @options, options)
+    @_createContainer()
 
-  createContainer: ->
+  changeTitle: (title) ->
+    $(@_chartTitle).html(title)
+    if @options.buttons.arrows or @options.buttons.minusplus or @options.selects?
+      pipeline = "<span class=\"break\"></span>"
+      $(@_chartTitle).prepend pipeline
+
+  _createContainer: ->
     @_container = document.getElementById(@options.container)
 
     chartHeader = document.createElement("div")
@@ -127,7 +151,47 @@ class Hash5Charts
 
       $.each @options.selects, (name, data) =>
         @["_" + name + "Slct"] = document["form-" + @options.container][name]
-        @enableSelect("#" + name + "Slct")
+        @_enableSelect("#" + name + "Slct")
+
+    if @options.buttons.table
+
+      # add table button
+      tableBtn = document.createElement("button")
+      tableBtn.id = @options.container + "-btn-table"
+      tableBtn.className = "btn"
+      @_tableBtn = tableBtn
+
+      tableIcon = document.createElement("i")
+      tableIcon.className = "icon-table"
+      @_tableIcon = tableIcon
+      $(@_tableBtn).append @_tableIcon
+
+      $(@_rightCtrl).append @_tableBtn
+
+      chartTable = document.createElement("div")
+      chartTable.id = "table-" + @options.container
+      chartTable.className = "chart-table"
+      @_chartTable = chartTable
+      $(@_container).append @_chartTable
+
+      @_enableTable()
+
+    if @options.buttons.export
+
+      # add export button
+      exportBtn = document.createElement("button")
+      exportBtn.id = @options.container + "-btn-export"
+      exportBtn.className = "btn"
+      @_exportBtn = exportBtn
+
+      exportIcon = document.createElement("i")
+      exportIcon.className = "icon-download-alt"
+      @_exportIcon = exportIcon
+      $(@_exportBtn).append @_exportIcon
+
+      $(@_rightCtrl).append @_exportBtn
+
+      @_enableExport()
 
     if @options.buttons.minimize
 
@@ -144,7 +208,7 @@ class Hash5Charts
 
       $(@_rightCtrl).append @_minBtn
 
-      @enableMinimize()
+      @_enableMinimize()
 
     if @options.buttons.maximize
 
@@ -161,7 +225,7 @@ class Hash5Charts
 
       $(@_rightCtrl).append @_maxBtn
 
-      @enableMaximize()
+      @_enableMaximize()
 
     if @options.buttons.close
 
@@ -178,25 +242,9 @@ class Hash5Charts
 
       $(@_rightCtrl).append @_closeBtn
 
-      @enableClose()
+      @_enableClose()
 
-  createMinimalContainer: ->
-    @_container = document.getElementById(@options.container)
-
-    chartContent = document.createElement("div")
-    chartContent.id = "chart-" + @options.container
-    chartContent.className = "chart-content-small"
-    @_chartContent = chartContent
-
-    $(@_container).append @_chartContent
-
-  changeTitle: (title) ->
-    $(@_chartTitle).html(title)
-    if @options.buttons.arrows or @options.buttons.minusplus or @options.selects?
-      pipeline = "<span class=\"break\"></span>"
-      $(@_chartTitle).prepend pipeline
-
-  enableMinimize: ->
+  _enableMinimize: ->
     $(@_minBtn).on "click", (event) =>
       event.preventDefault()
 
@@ -216,9 +264,13 @@ class Hash5Charts
         else if @options.buttons.arrows
           $(@_leftBtn).prop "disabled", false
           $(@_rightBtn).prop "disabled", false
-      $(@_chartContent).slideToggle()
 
-  enableMaximize: ->
+      if $(@_chartTable).is(":visible")
+        $(@_chartTable).slideToggle("fast", "linear")
+
+      $(@_chartContent).slideToggle("fast", "linear")
+
+  _enableMaximize: ->
     $(@_maxBtn).on "click", (event) =>
       event.preventDefault()
 
@@ -234,44 +286,51 @@ class Hash5Charts
         @_maxIcon.className = "icon-resize-full"
         $("#navbar").show()
 
+      # always hide the charttable div
+      $(@_chartTable).hide()
+      $(@_chartTable).toggleClass "table-overlay"
+
       $(@_container).toggleClass @defaultClass
       $(@_container).toggleClass "chart-overlay"
+      $("body").toggleClass "body-overlay"
 
       $(@_chartContent).toggleClass "chart-content-overlay"
+      $(@_chartTable).toggleClass "table-content-overlay"
       $(@_chartContent).hide()
-      $(@_chartContent).fadeToggle 500
+      $(@_chartContent).fadeToggle(500, "linear")
 
       @drawChart()
 
-  enableClose: ->
+  _enableClose: ->
     $(@_closeBtn).on "click", (event) =>
       event.preventDefault()
-      $(@_container).hide("slide", {}, 600)
+      $(@_container).hide("slide", "linear", 600)
 
-  enableSelect: (select) ->
+  _enableSelect: (select) ->
     $(select).on "change", (event) =>
       @drawChart()
 
-class Hash5GoogleCharts extends Hash5Charts
+class H5.Charts.GoogleCharts extends H5.Charts.Container
 
-  dataTable: ->
+  createDataTable: ->
     @data = new google.visualization.DataTable()
 
   createChart: ->
-    # setup new chart
-    if @options.type is "Gauge"
-      @chart = new google.visualization.Gauge(
-        @_chartContent
-      )
-    else
-      @chart = new google.visualization[@options.type + "Chart"](
-        @_chartContent
-      )
-    # only init one time
-    @options.started = false
-    @detectScreenChanges()
+    if not @options.started
+      # setup new chart
+      if @options.type is "Gauge"
+        @chart = new google.visualization.Gauge(
+          @_chartContent
+        )
+      else
+        @chart = new google.visualization[@options.type + "Chart"](
+          @_chartContent
+        )
+      # only init one time
+      @options.started = true
+      @_detectScreenChanges()
 
-  detectScreenChanges: ->
+  _detectScreenChanges: ->
     # Detect whether device supports orientationchange event,
     # otherwise fall back to the resize event.
     supportsOrientationChange = "onorientationchange" of window
@@ -282,18 +341,68 @@ class Hash5GoogleCharts extends Hash5Charts
       @drawChart()
     ),false
 
-class Hash5MiniCharts
+
+  _enableTable: ->
+
+    $(@_tableBtn).on "click", (event) =>
+      event.preventDefault()
+
+      if $(@_chartContent).is(":hidden")
+        @_minIcon.className = "icon-chevron-up"
+        $(@_chartContent).fadeToggle('fast', 'linear')
+
+      $(@_chartTable).fadeToggle('fast', 'linear')
+
+      # only update values when visible
+      if $(@_chartTable).is(":visible")
+
+        # Create and draw the visualization.
+        visualization = new google.visualization.Table(
+          @_chartTable
+        )
+
+        visualization.draw @data, null
+
+  _enableExport: ->
+
+    generateCSV = =>
+
+      str = ""
+      line = ""
+
+      for col in [0...@data.getNumberOfColumns()]
+        title = @data.getColumnLabel(col)
+        line += "\"" + title + "\","
+
+      str += line + "\r\n"
+
+      for row in [0...@data.getNumberOfRows()]
+        line = ""
+        for col in [0...@data.getNumberOfColumns()]
+          value = @data.getFormattedValue(row, col)
+          line += "\"" + value + "\","
+        str += line + "\r\n"
+
+      return str
+
+    $(@_exportBtn).click ->
+      csv = generateCSV()
+      window.open "data:text/csv;charset=utf-8," + escape(csv)
+
+class H5.Charts.SmallContainer
+
+  options:
+    type: null
+    container: null
+    title: ""
+    popover: false
 
   constructor: (options) ->
-    defaultOptions =
-      type: null
-      container: null
-      title: ""
-      popover: false
     # configure object with the options
-    @options = $.extend(defaultOptions, options)
+    @options = $.extend({}, @options, options)
+    @_createContainer()
 
-  createContainer: ->
+  _createContainer: ->
     @_container = document.getElementById(@options.container)
 
     leftCtrl = document.createElement("div")
@@ -308,9 +417,9 @@ class Hash5MiniCharts
 
     if @options.popover
       $(@_container).addClass("popover-" + @options.container)
-      @createPopover()
+      @_createPopover()
 
-  createPopover: ->
+  _createPopover: ->
     placement = "bottom"
     trigger = "hover"
     html = true
@@ -321,20 +430,23 @@ class Hash5MiniCharts
       trigger: trigger
       html: html
 
-class Hash5Knobs extends Hash5MiniCharts
+class H5.Charts.Knobs extends H5.Charts.SmallContainer
 
-  createContainer: ->
+  updateInfo: (value) ->
+    $(@_rightCtrl).html("<strong>" + value + "%</strong><br/> " + @options.title)
+    @_updateChart(parseFloat(value))
+
+  _createContainer: ->
     super
     dial = document.createElement("input")
     dial.type = "text"
     dial .className = "dial"
     @_dial = dial
-
     $(@_leftCtrl).append @_dial
 
-    @createChart()
+    @_createChart()
 
-  createChart: ->
+  _createChart: ->
     $(@_dial).knob(
       min:-100
       max:100
@@ -366,22 +478,27 @@ class Hash5Knobs extends Hash5MiniCharts
     )
     $(@_dial).val(0).trigger "change"
 
-  updateInfo: (value) ->
-    $(@_rightCtrl).html("<strong>" + value + "%</strong><br/> " + @options.title)
-    @updateChart(parseFloat(value))
+  _updateChart: (total) ->
 
-  updateChart: (total) ->
     dial = $(@_leftCtrl).find('.dial')
-    $(value: dial.val()).animate
-      value: total,
-        duration: 2000
-        easing: "easeOutSine"
-        step: ->
-          dial.val(Math.floor @value).trigger "change"
 
-class Hash5Sparks extends Hash5MiniCharts
+    if(!H5.isMobile.any())
+      $(value: dial.val()).animate
+        value: total,
+          duration: 2000
+          easing: "easeOutSine"
+          step: ->
+            dial.val(Math.floor @value).trigger "change"
+    else
+      dial.val(Math.floor total).trigger "change"
 
-  createContainer: ->
+class H5.Charts.Sparks extends H5.Charts.SmallContainer
+
+  updateInfo: (data, value) ->
+    $(@_rightCtrl).html("<strong>" + value + "</strong><br /> " + @options.title)
+    @_updateChart(data)
+
+  _createContainer: ->
     super
     spark = document.createElement("div")
     spark.className = "minichart"
@@ -389,11 +506,7 @@ class Hash5Sparks extends Hash5MiniCharts
 
     $(@_leftCtrl).append @_spark
 
-  updateInfo: (data, value) ->
-    $(@_rightCtrl).html("<strong>" + value + "</strong><br /> " + @options.title)
-    @updateChart(data)
-
-  updateChart: (data) ->
+  _updateChart: (data) ->
     $(@_spark).sparkline data,
       width: 58 #Width of the chart
       height: 62 #Height of the chart

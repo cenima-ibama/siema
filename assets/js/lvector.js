@@ -8,7 +8,7 @@
 
 (function (root) {
   root.lvector = {
-    VERSION: '1.4',
+    VERSION: '1.4.0',
 
     noConflict: function () {
       root.lvector = this._originallvector;
@@ -19,96 +19,11 @@
   };
 }(this));
 
-// lvector.Util is a namespace for various utility functions.
-lvector.Util = {
-  extend: function(/*Object*/ dest) /*-> Object*/ {	// merge src properties into dest
-    var sources = Array.prototype.slice.call(arguments, 1);
-    for (var j = 0, len = sources.length; j < len; j++) {
-      var src = sources[j] || {};
-      for (var i in src) {
-        if (src.hasOwnProperty(i)) {
-          dest[i] = src[i];
-        }
-      }
-    }
-    return dest;
-  },
-
-  setOptions: function(obj, options) {
-    obj.options = lvector.Util.extend({}, obj.options, options);
-  }
-
-};
-
-// Class powers the OOP facilities of the library.
-lvector.Class = function() {};
-lvector.Class.extend = function(/*Object*/ props) /*-> Class*/ {
-
-  // extended class with the new prototype
-  var NewClass = function() {
-    if (this.initialize) {
-      this.initialize.apply(this, arguments);
-    }
-  };
-
-  // instantiate class without calling constructor
-  var F = function() {};
-  F.prototype = this.prototype;
-  var proto = new F();
-
-  proto.constructor = NewClass;
-  NewClass.prototype = proto;
-
-  // add superclass access
-  NewClass.superclass = this.prototype;
-
-  // add class name
-  //proto.className = props;
-
-  //inherit parent's statics
-  for (var i in this) {
-    if (this.hasOwnProperty(i) && i != 'prototype' && i != 'superclass') {
-      NewClass[i] = this[i];
-    }
-  }
-
-  // mix static properties into the class
-  if (props.statics) {
-    lvector.Util.extend(NewClass, props.statics);
-    delete props.statics;
-  }
-
-  // mix includes into the prototype
-  if (props.includes) {
-    lvector.Util.extend.apply(null, [proto].concat(props.includes));
-    delete props.includes;
-  }
-
-  // merge options
-  if (props.options && proto.options) {
-    props.options = lvector.Util.extend({}, proto.options, props.options);
-  }
-
-  // mix given properties into the prototype
-  lvector.Util.extend(proto, props);
-
-  // allow inheriting further
-  NewClass.extend = arguments.callee;
-
-  // method for adding properties to prototype
-  NewClass.include = function(props) {
-    lvector.Util.extend(this.prototype, props);
-  };
-
-  return NewClass;
-};
-
 // lvector.Layer is a base class for rendering vector layers on a Leaflet map. It's inherited by AGS, A2E, CartoDB, GeoIQ, etc.
-lvector.Layer = lvector.Class.extend({
+lvector.Layer = L.Class.extend({
 
   // Default options for all layers
   options: {
-    fields: "",
     scaleRange: null,
     map: null,
     uniqueField: null,
@@ -124,7 +39,7 @@ lvector.Layer = lvector.Class.extend({
   },
 
   initialize: function(options) {
-    lvector.Util.setOptions(this, options);
+    L.Util.setOptions(this, options);
   },
 
   // Show this layer on the map provided
@@ -151,8 +66,8 @@ lvector.Layer = lvector.Class.extend({
     return this.options.map;
   },
 
-  setOptions: function(o) {
-    // TODO - Merge new options (o) with current options (this.options)
+  setOptions: function(options) {
+    L.Util.setOptions(this, options);
   },
 
   _show: function() {
@@ -252,7 +167,7 @@ lvector.Layer = lvector.Class.extend({
     var me = this;
     return function() {
       me._checkLayerVisibility();
-    }
+    };
   },
 
   // This gets fired when the map is panned or zoomed
@@ -272,18 +187,15 @@ lvector.Layer = lvector.Class.extend({
           me._getFeatures();
         }
       }
-    }
+    };
   },
 
   // Add an event hanlder to detect an idle (pan or zoom) on the map
   _addIdleListener: function() {
-    // "this" means something different inside the on method. Assign it to "me".
-    var me = this;
-
-    me._idleListener = me._idleListenerTemplate();
-
+    // "this" means something different inside the on method.
+    this._idleListener = this._idleListenerTemplate();
     // Whenever the map idles (pan or zoom) get the features in the current map extent
-    this.options.map.on("moveend", me._idleListener, me);
+    this.options.map.on("moveend", this._idleListener, this);
   },
 
   // Get the current map zoom and check to see if the layer should still be visible
@@ -398,10 +310,15 @@ lvector.Layer = lvector.Class.extend({
     this.options.map.addLayer(ownsPopup.popup);
   },
 
-  // Get the appropriate Google Maps vector options for this feature
+  // Optional click event
+  _fireClickEvent: function (feature, event) {
+    this.options.clickEvent(feature, event);
+  },
+
+  // Get the appropriate Leaflet vector options for this feature
   _getFeatureVectorOptions: function(feature) {
-    // Create an empty vectorOptions object to add to, or leave as is if no symbology can be found
-    var vectorOptions = {};
+    // Create an empty vectorStyle object to add to, or leave as is if no symbology can be found
+    var vectorStyle = {};
 
     var atts = feature.properties;
 
@@ -409,9 +326,15 @@ lvector.Layer = lvector.Class.extend({
     if (this.options.symbology) {
       switch (this.options.symbology.type) {
         case "single":
-          // It's a single symbology for all features so just set the key/value pairs in vectorOptions
-          for (var key in this.options.symbology.vectorOptions) {
-            vectorOptions[key] = this.options.symbology.vectorOptions[key];
+          // It's a single symbology for all features so just set the key/value pairs in vectorStyle
+          for (var key in this.options.symbology.vectorStyle) {
+            vectorStyle[key] = this.options.symbology.vectorStyle[key];
+            if (vectorStyle.title) {
+              for (var prop in atts) {
+                var re = new RegExp("{" + prop + "}", "g");
+                vectorStyle.title = vectorStyle.title.replace(re, atts[prop]);
+              }
+            }
           }
           break;
         case "unique":
@@ -419,8 +342,14 @@ lvector.Layer = lvector.Class.extend({
           var att = this.options.symbology.property;
           for (var i = 0, len = this.options.symbology.values.length; i < len; i++) {
             if (atts[att] == this.options.symbology.values[i].value) {
-              for (var key in this.options.symbology.values[i].vectorOptions) {
-                vectorOptions[key] = this.options.symbology.values[i].vectorOptions[key];
+              for (var key in this.options.symbology.values[i].vectorStyle) {
+                vectorStyle[key] = this.options.symbology.values[i].vectorStyle[key];
+                if (vectorStyle.title) {
+                  for (var prop in atts) {
+                    var re = new RegExp("{" + prop + "}", "g");
+                    vectorStyle.title = vectorStyle.title.replace(re, atts[prop]);
+                  }
+                }
               }
             }
           }
@@ -430,15 +359,21 @@ lvector.Layer = lvector.Class.extend({
           var att = this.options.symbology.property;
           for (var i = 0, len = this.options.symbology.ranges.length; i < len; i++) {
             if (atts[att] >= this.options.symbology.ranges[i].range[0] && atts[att] <= this.options.symbology.ranges[i].range[1]) {
-              for (var key in this.options.symbology.ranges[i].vectorOptions) {
-                vectorOptions[key] = this.options.symbology.ranges[i].vectorOptions[key];
+              for (var key in this.options.symbology.ranges[i].vectorStyle) {
+                vectorStyle[key] = this.options.symbology.ranges[i].vectorStyle[key];
+                if (vectorStyle.title) {
+                  for (var prop in atts) {
+                    var re = new RegExp("{" + prop + "}", "g");
+                    vectorStyle.title = vectorStyle.title.replace(re, atts[prop]);
+                  }
+                }
               }
             }
           }
           break;
       }
     }
-    return vectorOptions;
+    return vectorStyle;
   },
 
   // Check to see if any attributes have changed
@@ -478,7 +413,33 @@ lvector.Layer = lvector.Class.extend({
     head.appendChild(script);
   },
 
-  _processFeatures: function(json) {
+  _processRequest: function (json) {
+    var data = {};
+    data.features = [];
+    data.total = json.length;
+    data.type = "FeatureCollection"; // Not really necessary, but let's follow the GeoJSON spec for a Feature
+    // convert data to make it look like a GeoJSON FeatureCollection
+    for (i = 0, len = json.length; i < len; i++) {
+      data.features[i] = {};
+      data.features[i].type = "Feature"; // Not really necessary, but let's follow the GeoJSON spec for a Feature
+      data.features[i].properties = {};
+      for (var prop in json[i]) {
+        if (prop == "geojson") {
+          data.features[i].geometry = JSON.parse(json[i].geojson);
+        } else
+        if (prop != "properties") {
+          data.features[i].properties[prop] = json[i][prop];
+        }
+      }
+    }
+
+    // remove json data
+    json=null;
+
+    this._processFeatures(data);
+  },
+
+  _processFeatures: function(data) {
     // Sometimes requests take a while to come back and
     // the user might have turned the layer off
     if (!this.options.map) {
@@ -496,76 +457,120 @@ lvector.Layer = lvector.Class.extend({
     // to query the layer again if someone simply turns a layer on/off
     this._lastQueriedBounds = bounds;
 
-    var data = {};
-    data.features = [];
-    data.total = json.length;
-    data.type = "FeatureCollection"; // Not really necessary, but let's follow the GeoJSON spec for a Feature
-    // convert data to make it look like a GeoJSON FeatureCollection
-    for (i = 0, len = json.length; i < len; i++) {
-      data.features[i] = {};
-      data.features[i].properties = {};
-      for (prop in json[i]) {
-        if (prop == "geojson") {
-          data.features[i].geometry = json[i].geojson;
-        } else
-        if (prop != "properties") {
-          data.features[i].properties[prop] = json[i][prop];
-        }
-      }
-      data.features[i].type = "Feature"; // Not really necessary, but let's follow the GeoJSON spec for a Feature
-    }
-
-    // remove json data
-    delete json;
-
     // If "data.features" exists and there's more than one feature in the array
     if (data && data.features && data.features.length) {
 
       // Loop through the return features
       for (i = 0; i < data.features.length; i++) {
-
         // All objects are assumed to be false until proven true (remember COPS?)
         var onMap = false;
-
-        // Convert GeoJSON to Leaflet vector (Point, Polyline, Polygon)
-        var geometry = $.parseJSON(data.features[i].geometry);
-        var geometryOptions = this._getFeatureVectorOptions(data.features[i]);
-
-        var vector_or_vectors = this._geoJsonGeometryToLeaflet(geometry,geometryOptions);
-        data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
-
-        // Show the vector or vectors on the map
-        if (data.features[i].vector) {
-          this.options.map.addLayer(data.features[i].vector);
-        } else if (data.features[i].vectors && data.features[i].vectors.length) {
-          for (var k = 0; k < data.features[i].vectors.length; k++) {
-            this.options.map.addLayer(data.features[i].vectors[k]);
-          }
-        }
-
-        // Store the vector in an array so we can remove it later
-        this._vectors.push(data.features[i]);
-
-        if (this.options.popupTemplate) {
-
-          var me = this;
-          var feature = data.features[i];
-
-          this._setPopupContent(feature);
-
-          (function(feature){
-            if (feature.vector) {
-              feature.vector.on("click", function(event) {
-                me._showPopup(feature, event);
-              });
-            } else if (feature.vectors) {
-              for (var k = 0, len = feature.vectors.length; k < len; k++) {
-                feature.vectors[k].on("click", function(event) {
-                  me._showPopup(feature, event);
-                });
+        // If we have a "uniqueField" for this layer
+        if (this.options.uniqueField) {
+          // Loop through all of the features currently on the map
+          for (var j = 0; j < this._vectors.length; j++) {
+            // Does the "uniqueField" property for this feature match the feature on the map
+            if (data.features[i].properties[this.options.uniqueField] == this._vectors[j].properties[this.options.uniqueField]) {
+              // The feature is already on the map
+              onMap = true;
+              // We're only concerned about updating layers that are dynamic (options.dynamic = true).
+              if (this.options.dynamic) {
+                // The feature's geometry might have changed, let's check.
+                if (this._getGeometryChanged(this._vectors[j].geometry, data.features[i].geometry)) {
+                  // Check to see if it's a point feature, these are the only ones we're updating for now
+                  if (!isNaN(data.features[i].geometry.coordinates[0]) && !isNaN(data.features[i].geometry.coordinates[1])) {
+                    this._vectors[j].geometry = data.features[i].geometry;
+                    this._vectors[j].vector.setLatLng(new L.LatLng(this._vectors[j].geometry.coordinates[1], this._vectors[j].geometry.coordinates[0]));
+                  }
+                }
+                var propertiesChanged = this._getPropertiesChanged(this._vectors[j].properties, data.features[i].properties);
+                if (propertiesChanged) {
+                  var symbologyPropertyChanged = this._getPropertyChanged(this._vectors[j].properties, data.features[i].properties, this.options.symbology.property);
+                  this._vectors[j].properties = data.features[i].properties;
+                  if (this.options.popupTemplate) {
+                    this._setPopupContent(this._vectors[j]);
+                  }
+                  if (this.options.symbology && this.options.symbology.type != "single" && symbologyPropertyChanged) {
+                    if (this._vectors[j].vectors) {
+                      for (var k = 0, len3 = this._vectors[j].vectors.length; k < len3; k++) {
+                        if (this._vectors[j].vectors[k].setStyle) {
+                          // It's a LineString or Polygon, so use setStyle
+                          this._vectors[j].vectors[k].setStyle(this._getFeatureVectorOptions(this._vectors[j]));
+                        } else if (this._vectors[j].vectors[k].setIcon) {
+                          // It's a Point, so use setIcon
+                          this._vectors[j].vectors[k].setIcon(this._getFeatureVectorOptions(this._vectors[j]).icon);
+                        }
+                      }
+                    } else if (this._vectors[j].vector) {
+                      if (this._vectors[j].vector.setStyle) {
+                        // It's a LineString or Polygon, so use setStyle
+                        this._vectors[j].vector.setStyle(this._getFeatureVectorOptions(this._vectors[j]));
+                      } else if (this._vectors[j].vector.setIcon) {
+                        // It's a Point, so use setIcon
+                        this._vectors[j].vector.setIcon(this._getFeatureVectorOptions(this._vectors[j]).icon);
+                      }
+                    }
+                  }
+                }
               }
             }
-          }(feature));
+          }
+        }
+        if (!onMap || !this.options.uniqueField) {
+          // Convert GeoJSON to Leaflet vector (Point, Polyline, Polygon)
+          var geometry =  data.features[i].geometry;
+          var geometryOptions = this._getFeatureVectorOptions(data.features[i]);
+
+          var vector_or_vectors = this._geoJsonGeometryToLeaflet(geometry,geometryOptions);
+          data.features[i][vector_or_vectors instanceof Array ? "vectors" : "vector"] = vector_or_vectors;
+
+          // Show the vector or vectors on the map
+          if (data.features[i].vector) {
+            this.options.map.addLayer(data.features[i].vector);
+          } else if (data.features[i].vectors && data.features[i].vectors.length) {
+            for (var k = 0; k < data.features[i].vectors.length; k++) {
+              this.options.map.addLayer(data.features[i].vectors[k]);
+            }
+          }
+
+          // Store the vector in an array so we can remove it later
+          this._vectors.push(data.features[i]);
+
+          if (this.options.popupTemplate) {
+            var me = this;
+            var feature = data.features[i];
+            this._setPopupContent(feature);
+            (function(feature){
+              if (feature.vector) {
+                feature.vector.on("click", function(event) {
+                  me._showPopup(feature, event);
+                });
+              } else if (feature.vectors) {
+                for (var k = 0, len = feature.vectors.length; k < len; k++) {
+                  feature.vectors[k].on("click", function(event) {
+                    me._showPopup(feature, event);
+                  });
+                }
+              }
+            }(feature));
+          }
+
+          if (this.options.clickEvent) {
+            var me = this;
+            var feature = data.features[i];
+            (function(feature){
+              if (feature.vector) {
+                feature.vector.on("click", function(event) {
+                  me._fireClickEvent(feature, event);
+                });
+              } else if (feature.vectors) {
+                for (var i3 = 0, len = feature.vectors.length; i3 < len; i3++) {
+                  feature.vectors[i3].on("click", function(event) {
+                    me._fireClickEvent(feature, event);
+                  });
+                }
+              }
+            }(feature));
+          }
         }
       }
     }
@@ -581,7 +586,12 @@ lvector.GeoJSONLayer = lvector.Layer.extend({
 
     switch (geometry.type) {
       case "Point":
-        vector = new L.Marker(new L.LatLng(geometry.coordinates[1], geometry.coordinates[0]), opts);
+        if (opts.circleMarker) {
+          vector = new L.CircleMarker(new L.LatLng(geometry.coordinates[1], geometry.coordinates[0]), opts);
+        }
+        else {
+          vector = new L.Marker(new L.LatLng(geometry.coordinates[1], geometry.coordinates[0]), opts);
+        }
         break;
 
       case "MultiPoint":
@@ -647,7 +657,8 @@ lvector.GeoJSONLayer = lvector.Layer.extend({
     return vector || vectors;
   }
 });
-lvector.PRWSF = lvector.GeoJSONLayer.extend({
+
+lvector.Postgis = lvector.GeoJSONLayer.extend({
   initialize: function(options) {
 
     // Check for required parameters
@@ -673,7 +684,6 @@ lvector.PRWSF = lvector.GeoJSONLayer.extend({
     // Create an array to hold the features
     this._vectors = [];
 
-
     if (this.options.map) {
       if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
         var z = this.options.map.getZoom();
@@ -688,9 +698,9 @@ lvector.PRWSF = lvector.GeoJSONLayer.extend({
     geotable: null,
     srid: null,
     geomFieldName: "the_geom",
-    fields: "",
+    fields: null,
     where: null,
-    limit: 100,
+    limit: 1000,
     uniqueField: null
   },
 
@@ -699,7 +709,7 @@ lvector.PRWSF = lvector.GeoJSONLayer.extend({
   _getFeatures: function() {
 
     // Build Query
-    var where = (this.options.where) ? "&parameters=" + encodeURIComponent(this.options.where) : "";
+    var where = this.options.where ? "&parameters=" + encodeURIComponent(this.options.where) : "";
     if (!this.options.showAll) {
       var bounds = this.options.map.getBounds();
       var sw = bounds.getSouthWest();
@@ -713,7 +723,7 @@ lvector.PRWSF = lvector.GeoJSONLayer.extend({
     }
 
     // Build fields
-    var fields = (this.options.fields.length ? this.options.fields + "," : "") + "st_asgeojson(" + this.options.geomFieldName + ") as geojson";
+    var fields = (this.options.fields ? this.options.fields : "*") + ", st_asgeojson(" + this.options.geomFieldName + "" + (this.options.geomPrecision ? "," + this.options.geomPrecision : "") + ") as geojson";
 
     // Build URL
     var url = this.options.url + "v1/ws_geo_attributequery.php" + // The attribute query service
@@ -721,7 +731,7 @@ lvector.PRWSF = lvector.GeoJSONLayer.extend({
       "&fields=" + encodeURIComponent(fields) + // The table fields
       where +
       "&limit=" + this.options.limit + // The limit value
-      "&callback=" + this._globalPointer + "._processFeatures"; // Need this for JSONP
+      "&callback=" + this._globalPointer + "._processRequest"; // Need this for JSONP
 
     // JSONP request
     this._makeJsonpRequest(url);

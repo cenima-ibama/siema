@@ -2,24 +2,33 @@
 
 class Home extends CI_Controller {
 
-  function __construct() {
-    parent::__construct();
-  }
+    function __construct() {
+        parent::__construct();
 
-  public function index($page = 'home')
-  {
-    if ( ! file_exists('application/views/pages/'.$page.'.php'))
-    {
-      // Whoops, we don't have a page for that!
-      show_404();
+        $this->load->library('AuthLDAP');
+
+        // Enable firebug
+        // $this->load->library('firephp');
+        // $this->firephp->setEnabled(TRUE);
     }
 
-    $data['page_content'] = 'pages/home';
+    public function index()
+    {
+        if (! file_exists('application/views/templates/home.php')) {
+            // Whoops, we don't have a page for that!
+            show_404();
+        }
 
-    //$this->load->library('firephp');
-    //$this->firephp->setEnabled(TRUE);
-    //$this->firephp->log($data);
+        if($this->authldap->is_authenticated()) {
+            $data['name'] = $this->session->userdata('cn');
+            $data['username'] = $this->session->userdata('username');
+            $data['logged_in'] = TRUE;
+        } else {
+            $data['logged_in'] = FALSE;
+        }
 
-    $this->load->view('templates/base_template', $data);
-  }
+        $this->load->view('templates/home', $data);
+
+    }
+
 }

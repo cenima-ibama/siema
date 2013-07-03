@@ -27,19 +27,19 @@
   background-image: -webkit-linear-gradient(top, @color1, @color2); /* Chrome10+,Safari5.1+ */
   background-image: linear-gradient(to bottom, @color1, @color2); /* W3C */
 }
-@media (max-width: 979px) {
-  html, body {
-    overflow: hidden;
-  }
+.body-overlay {
+  position:absolute;
+  width:100%;
+  height:92%;
+  overflow: hidden;
 }
-.content {
-  height: 100%;
+#navbar {
+  z-index: 1030;
+  position: relative;
 }
 .map {
   position: absolute;
   top: 42px;
-  bottom: 44px;
-  right: 0;
   left: 0;
   z-index: 1;
   @media (max-width: 979px) {
@@ -75,7 +75,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 50%;
+    bottom: 45%;
     margin: 0 auto;
     @media (max-width: 979px) {
       bottom: 40%;
@@ -88,10 +88,13 @@
   left: 0;
   right: 0;
   z-index: 10;
-  background-color: #F5F5F5;
+  background-color: #F7F7F7;
   .charts-content {
     text-align: center;
     margin: 2% 2% 4%;
+    @media (max-width: 979px) {
+      margin: 6% 2% 4%;
+    }
     .gauges {
       width: auto;
       margin: 0;
@@ -117,6 +120,15 @@
         margin-top: -1px;
         height: 220px;
       }
+      .chart-table {
+        display: none;
+        background: none repeat scroll 0 0 #FCFCFC;
+        border-radius: 0 0 2px 2px;
+        margin-top: -222px;
+        height: 222px;
+        overflow: auto;
+        position: relative;
+      }
     }
     .chart-small {
       float: left;
@@ -134,6 +146,15 @@
         margin-top: -1px;
         height: 220px;
       }
+      .chart-table {
+        display: none;
+        background: none repeat scroll 0 0 #FCFCFC;
+        border-radius: 0 0 2px 2px;
+        margin-top: -222px;
+        height: 222px;
+        overflow: auto;
+        position: relative;
+      }
     }
     .chart-overlay {
       position: fixed;
@@ -144,8 +165,26 @@
       width: 100%;
       height: 100%;
       z-index: 1031;
-      background: #F5F5F5;
+      background: #F7F7F7;
       .chart-content-overlay {
+        height:85%;
+        @media (max-height: 360px) {
+          height: 70%;
+        }
+      }
+    }
+    .table-overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 44px;
+      top: 40px;
+      width: 100%;
+      height: 95%;
+      z-index: 1032;
+      background: #F7F7F7;
+      overflow: auto;
+      .table-content-overlay {
         height:85%;
         @media (max-height: 360px) {
           height: 70%;
@@ -196,14 +235,8 @@
         font-size: 1.143em;
         font-weight: normal;
         line-height: 16px;
-        margin-top: 2px;
+        margin: 2px -10% 0 0;
         text-shadow: 0 1px 0 #FFFFFF;
-        overflow: hidden;
-        max-width: 70%;
-        white-space:nowrap;
-        @media (max-width: 979px) {
-          max-width: 65%;
-        }
         @media (max-width: 639px) {
           display: none;
         }
@@ -231,7 +264,7 @@
     line-height: 18px;
     margin: 0 10px;
     padding: 0;
-    @media (max-width: 979px) {
+    @media (max-width: 1024px) {
       margin: 0 10px 16px;
     }
   }
@@ -281,25 +314,27 @@
     border-right: 1px solid lightgrey;
     border-bottom: 1px solid lightgrey;
     box-shadow: 1px 1px 0 0 #FFFFFF;
-    font-size: 10px;
     font-weight: bold;
     margin: 0;
-    padding: 10px 14px 6px;
+    padding: 25px 15px 20px;
     float: left;
     @media (max-width: 979px) {
-      width: 15.9%;
+      width: 15.65%;
     }
     @media (max-width: 639px) {
       width: 41%;
     }
     @media (max-height: 360px) {
-      width: 15.1%;
+      width: 14.75%;
     }
     @media (max-width: 479px) {
-      width: 39.7%;
+      width: 40.2%;
+    }
+    @media (max-width: 320px) {
+      width: 39%;
     }
     @media (max-height: 320px) {
-      width: 13.4%;
+      width: 12.85%;
     }
     &:first-child{
       border-radius: 4px 0 0 4px;
@@ -331,18 +366,18 @@
       transition: all 0.2s ease 0s;
     }
     i {
-      background-attachment: scroll;
       background-color: transparent;
-      background-position: center center;
+      background-position: center;
       background-repeat: no-repeat;
-      padding: 16px 24px;
+      padding: 32px;
       vertical-align: middle;
     }
     span {
       display: block;
       font-size: 12px;
       font-weight: bold;
-      margin-bottom: 4px;
+      position: relative;
+      bottom: -12px;
       color: #333333;
     }
     &.active, &:active{
@@ -378,6 +413,25 @@
     }
     i.icon-am {
       background-image: url("../img/icons/AM.png");
+    }
+  }
+}
+.quick-slct{
+  display: inline-block;
+  margin: -10px 10px;
+  padding: 0;
+  label {
+    font-weight: bold;
+    color: #666666;
+    font-size: 14px;
+  }
+  .item {
+    float: left;
+    @media (min-width: 1024px) {
+      margin: 0 10px 20px;
+    }
+    @media (max-width: 1023px) {
+      margin: 25px 10px -20px;
     }
   }
 }
