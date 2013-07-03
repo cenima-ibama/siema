@@ -388,9 +388,12 @@
           _this._maxIcon.className = "icon-resize-full";
           $("#navbar").show();
         }
+        if ($(_this._chartTable).is(":visible")) {
+          $(_this._chartTable).slideToggle("fast", "linear");
+        }
+        $(_this._chartTable).toggleClass("table-overlay");
         $(_this._container).toggleClass(_this.defaultClass);
         $(_this._container).toggleClass("chart-overlay");
-        $(_this._chartTable).toggleClass("table-overlay");
         $("body").toggleClass("body-overlay");
         $(_this._chartContent).toggleClass("chart-content-overlay");
         $(_this._chartTable).toggleClass("table-content-overlay");

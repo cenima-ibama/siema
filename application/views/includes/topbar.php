@@ -30,10 +30,4 @@
       ?>
     </div>
   </div>
-  <!--/
-  <div data-toggle="buttons-radio" class="btn-group">
-    <button value="1" class="btn active" type="button" name="includeicon"><i class="icon-ok"></i></button>
-    <button value="0" class="btn" type="button" name="includeicon"><i class="icon-remove"></i></button>
-  </div>
-  -->
 </header>
