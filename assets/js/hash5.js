@@ -388,9 +388,7 @@
           _this._maxIcon.className = "icon-resize-full";
           $("#navbar").show();
         }
-        if ($(_this._chartTable).is(":visible")) {
-          $(_this._chartTable).slideToggle("fast", "linear");
-        }
+        $(_this._chartTable).hide();
         $(_this._chartTable).toggleClass("table-overlay");
         $(_this._container).toggleClass(_this.defaultClass);
         $(_this._container).toggleClass("chart-overlay");

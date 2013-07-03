@@ -286,8 +286,8 @@ class H5.Charts.Container
         @_maxIcon.className = "icon-resize-full"
         $("#navbar").show()
 
-      if $(@_chartTable).is(":visible")
-        $(@_chartTable).slideToggle("fast", "linear")
+      # always hide the charttable div
+      $(@_chartTable).hide()
       $(@_chartTable).toggleClass "table-overlay"
 
       $(@_container).toggleClass @defaultClass
