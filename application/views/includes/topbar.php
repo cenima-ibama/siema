@@ -9,7 +9,7 @@
     <div class="nav-collapse collapse">
       <ul class="nav">
         <li class=""><a id="btn-map" href="#"><i class="icon-globe icon-white"></i> Mapa</a></li>
-        <li class="active"><a id="btn-charts" href="#"><i class="icon-signal icon-white"></i> Estatística</a></li>
+        <li class="active"><a id="btn-charts" href="#"><i class="icon-bar-chart icon-white"></i> Estatística</a></li>
       </ul>
       <?php
         if($logged_in) {

@@ -27,6 +27,10 @@ cloudmade = new L.TileLayer(cloudmadeUrl,
   attribution: cloudmadeAttribution
 )
 
+# update size of the map container
+$( '#map-container' ).width( $( window ).width() )
+$( '#map-container' ).height( $( window ).height() - $('#navbar').height() - 1)
+
 H5.Map.base = new L.Map("map-container",
   center: new L.LatLng(-10.0, -58.0)
   zoom: 6

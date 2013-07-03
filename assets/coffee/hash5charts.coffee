@@ -162,7 +162,7 @@ class H5.Charts.Container
       @_tableBtn = tableBtn
 
       tableIcon = document.createElement("i")
-      tableIcon.className = "icon-list-alt"
+      tableIcon.className = "icon-table"
       @_tableIcon = tableIcon
       $(@_tableBtn).append @_tableIcon
 
@@ -185,7 +185,7 @@ class H5.Charts.Container
       @_exportBtn = exportBtn
 
       exportIcon = document.createElement("i")
-      exportIcon.className = "icon-file"
+      exportIcon.className = "icon-download-alt"
       @_exportIcon = exportIcon
       $(@_exportBtn).append @_exportIcon
 

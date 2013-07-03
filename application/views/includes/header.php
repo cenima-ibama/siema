@@ -14,21 +14,16 @@
     <link href="<?= base_url()?>assets/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrapSwitch.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/jquery-ui-1.9.2.css" rel="stylesheet">
-    <style type="text/css">
-      body {
-        padding-top: 60px;
-      }
-    </style>
     <link href="<?= base_url()?>assets/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/global.css" rel="stylesheet" media="all">
+    <link href="<?= base_url()?>assets/css/layout.css" rel="stylesheet" media="all">
+    <link href="<?= base_url()?>assets/css/font-awesome.min.css" rel="stylesheet" media="all">
     <!-- <link href="<?= base_url()?>assets/css/hash5charts.css" rel="stylesheet" media="screen"> -->
     <!-- <link href="<?= base_url()?>assets/css/hash5Map.css" rel="stylesheet" media="screen"> -->
+
     <link href="<?= base_url()?>assets/less/hash5Map.less" rel="stylesheet/less" type="text/css" />
     <link href="<?= base_url()?>assets/less/hash5charts.less" rel="stylesheet/less" type="text/css" />
-    <!-- <link href="<?= base_url()?>assets/css/paper.css" rel="stylesheet" media="print"> -->
-    <!-- <link href="<?= base_url()?>assets/css/mobile.css" rel="stylesheet" media="handheld"> -->
 
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext" type="text/css" rel="stylesheet">
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="assets/ico/favicon.ico">
   </head>

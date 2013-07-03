@@ -13,6 +13,26 @@ $(document).ready ->
     size: 'auto'
   })
 
+  #-------------------------------------------------------------------------
+  # MAP
+  #-------------------------------------------------------------------------
+
+  # Detect whether device supports orientationchange event,
+  # otherwise fall back to the resize event.
+  supportsOrientationChange = "onorientationchange" of window
+  orientationEvent = (if supportsOrientationChange then "orientationchange" else "resize")
+
+  # update chart if orientation or the size of the screen changed
+  window.addEventListener orientationEvent, (->
+    $( '#map-container' ).width( $( window ).width() )
+    $( '#map-container' ).height( $( window ).height() - $('#navbar').height() - 1)
+    $('.nav-collapse').collapse('hide')
+    ),false
+
+  #-------------------------------------------------------------------------
+  # CHARTS
+  #-------------------------------------------------------------------------
+
   $(".dropdown-menu input, .dropdown-menu label").click (e) ->
     e.stopPropagation()
 
@@ -34,9 +54,13 @@ $(document).ready ->
 
       if $(@).prop("id") is "btn-map"
         $(".dash").hide()
+        # update size of the map container
+        setTimeout(->
+          $( '#map-container' ).width( $( window ).width() )
+          $( '#map-container' ).height( $( window ).height() - $('#navbar').height() - 1)
+        , 1000)
       else if $(@).prop("id") is "btn-charts"
         $(".dash").show()
-
         # reload charts
         # H5.Charts.reloadCharts()
 
@@ -59,6 +83,10 @@ $(document).ready ->
 
     # reload charts
     H5.Charts.reloadCharts()
+
+  #-------------------------------------------------------------------------
+  # MISC
+  #-------------------------------------------------------------------------
 
   #change the case to Letter case, ex: helmuth saatkamp to Helmuth Saatkamp
   String::toProperCase = ->

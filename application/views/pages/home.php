@@ -1,16 +1,10 @@
-<section class="content">
-  <section id="loading" class="loading">
+<div>
+  <div id="loading" class="loading">
     <img id="loading_logo"src="<?= base_url()?>/assets/img/ibama_logo.png">
-  </section>
-  <section id="map">
-    <div id="sidebar-map">
-      <div id="sidebar-map-btn"><i class="icon-arrow-right"></i></div>
-      <span>Legendas</span>
-    </div>
-    <div id="map-container" class="map"></div>
-  </section>
-  <section class="dash">
-    <section class="charts-content">
+  </div>
+  <div id="map-container" class="map"></div>
+  <div class="dash">
+    <div class="charts-content">
       <div class="row-fluid">
         <?php
             if(!$logged_in) {
@@ -129,12 +123,12 @@
         <div id="chart7" class="chart-small"> </div>
         <div id="chart8" class="chart-small"> </div>
       </div>
-    </section>
+    </div>
     <footer>
       <p>
         <span style="text-align:left;float:left"> &copy; <a href="">Ibama - MMA</a> 2013</span>
         <span style="text-align:right;float:right" class="hidden-phone">Powered by: <a target="_blank" href="http://www.hexgis.com">Hexgis HASH5</a></span>
       </p>
     </footer>
-  </section>
-</section>
+  </div>
+</div>

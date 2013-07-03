@@ -281,7 +281,7 @@
         tableBtn.className = "btn";
         this._tableBtn = tableBtn;
         tableIcon = document.createElement("i");
-        tableIcon.className = "icon-list-alt";
+        tableIcon.className = "icon-table";
         this._tableIcon = tableIcon;
         $(this._tableBtn).append(this._tableIcon);
         $(this._rightCtrl).append(this._tableBtn);
@@ -298,7 +298,7 @@
         exportBtn.className = "btn";
         this._exportBtn = exportBtn;
         exportIcon = document.createElement("i");
-        exportIcon.className = "icon-file";
+        exportIcon.className = "icon-download-alt";
         this._exportIcon = exportIcon;
         $(this._exportBtn).append(this._exportIcon);
         $(this._rightCtrl).append(this._exportBtn);
