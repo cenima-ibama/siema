@@ -308,7 +308,7 @@
       },
       colors: ['#3ABCFC'],
       vAxis: {
-        title: "Área Km2"
+        title: "Área km²"
       },
       hAxis: {
         title: "Dias",
@@ -406,7 +406,7 @@
       },
       colors: ['#3ABCFC', '#FC2121', '#D0FC3F', '#FCAC0A', '#67C2EF', '#FF5454', '#CBE968', '#FABB3D', '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258'],
       vAxis: {
-        title: "Área Km2"
+        title: "Área km²"
       },
       animation: H5.Data.animate
     };
@@ -514,10 +514,10 @@
       },
       colors: ['#3ABCFC', '#FC2121'],
       vAxis: {
-        title: "H5.Data.periods"
+        title: "Período PRODES"
       },
       hAxis: {
-        title: "Área Km2"
+        title: "Área km²"
       },
       bar: {
         groupWidth: "80%"
@@ -613,7 +613,7 @@
         groupWidth: "100%"
       },
       vAxis: {
-        title: "Área Km2"
+        title: "Área km²"
       },
       animation: H5.Data.animate
     };
@@ -707,7 +707,7 @@
       },
       colors: ['#3ABCFC', '#D0FC3F'],
       vAxis: {
-        title: "Área Km2"
+        title: "Área km²"
       },
       hAxis: {
         title: "H5.Data.periods"
@@ -808,7 +808,7 @@
         groupWidth: "100%"
       },
       vAxis: {
-        title: "Área Km2"
+        title: "Área km²"
       },
       animation: H5.Data.animate
     };
@@ -967,7 +967,7 @@
         groupWidth: "100%"
       },
       vAxis: {
-        title: "Área Km2"
+        title: "Área km²"
       },
       animation: H5.Data.animate
     };
@@ -1016,7 +1016,7 @@
     };
     this.createChart();
     this.createDataTable();
-    this.data.addColumn("string", "mes");
+    this.data.addColumn("string", "Mês");
     for (i = _k = 0, _ref2 = this.options.period; 0 <= _ref2 ? _k < _ref2 : _k > _ref2; i = 0 <= _ref2 ? ++_k : --_k) {
       this.data.addColumn("number", H5.Data.periods[i]);
     }

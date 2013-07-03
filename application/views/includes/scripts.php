@@ -23,10 +23,10 @@
   <script>
       <?php
         if($logged_in) {
-            echo "H5.DB.addDB({name:'alert', table:'alerta'});\n";
-            echo "H5.DB.addDB({name:'cloud', table:'nuvem_deter'});\n";
-            echo "H5.DB.addDB({name:'diary', table:'alerta_acumulado_diario'});\n";
-            echo "H5.DB.addDB({name:'prodes', table:'taxa_prodes'});\n";
+            echo "H5.DB.addDB({name:'alert', table:'daily_alert'});\n";
+            echo "H5.DB.addDB({name:'cloud', table:'daily_cloud'});\n";
+            echo "H5.DB.addDB({name:'diary', table:'daily_diary'});\n";
+            echo "H5.DB.addDB({name:'prodes', table:'daily_prodes'});\n";
         }
         else {
             echo "H5.DB.addDB({name:'alert', table:'public_alert'});\n";

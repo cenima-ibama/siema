@@ -267,7 +267,7 @@ chart1.drawChart = ->
       height: "70%"
     colors: ['#3ABCFC']
     vAxis:
-      title: "Área Km2"
+      title: "Área km²"
     hAxis:
       title: "Dias"
       gridlines:
@@ -350,7 +350,7 @@ chart2.drawChart = ->
              '#67C2EF', '#FF5454', '#CBE968', '#FABB3D',
              '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
     vAxis:
-      title: "Área Km2"
+      title: "Área km²"
     animation: H5.Data.animate
 
   # Disabling the buttons while the chart is drawing.
@@ -451,9 +451,9 @@ chart3.drawChart = ->
       height: "76%"
     colors: ['#3ABCFC', '#FC2121']
     vAxis:
-      title: "H5.Data.periods"
+      title: "Período PRODES"
     hAxis:
-      title: "Área Km2"
+      title: "Área km²"
     bar:
       groupWidth: "80%"
     isStacked: true
@@ -543,7 +543,7 @@ chart4.drawChart = ->
     bar:
       groupWidth: "100%"
     vAxis:
-      title: "Área Km2"
+      title: "Área km²"
     animation: H5.Data.animate
 
   # Disabling the buttons while the chart is drawing.
@@ -628,7 +628,7 @@ chart5.drawChart = ->
       height: "80%"
     colors: ['#3ABCFC', '#D0FC3F']
     vAxis:
-      title: "Área Km2"
+      title: "Área km²"
     hAxis:
       title: "H5.Data.periods"
     animation: H5.Data.animate
@@ -716,7 +716,7 @@ chart6.drawChart = ->
     bar:
       groupWidth: "100%"
     vAxis:
-      title: "Área Km2"
+      title: "Área km²"
     animation: H5.Data.animate
 
   @changeTitle "Taxa PRODES|Alerta DETER: UFs [" + H5.Data.periods[@options.period] + "]"
@@ -882,7 +882,7 @@ chart8.drawChart = ->
     bar:
       groupWidth: "100%"
     vAxis:
-      title: "Área Km2"
+      title: "Área km²"
     animation: H5.Data.animate
 
   @chart.draw @data, options
@@ -929,7 +929,7 @@ chart9.drawChart = ->
   @createDataTable()
 
   # init table
-  @data.addColumn "string", "mes"
+  @data.addColumn "string", "Mês"
   for i in [0...@options.period]
     @data.addColumn "number", H5.Data.periods[i]
 
