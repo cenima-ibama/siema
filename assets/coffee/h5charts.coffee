@@ -1017,7 +1017,12 @@ spark2.drawChart = ->
   sumValues = (year, month) ->
     sum = 0
     firstPeriod = new Date(year - 1, 7, 1)
-    secondPeriod = new Date(year , 7, 0)
+    if month > 6
+      secondPeriod = new Date(year-1, month+1, 0)
+    else if month != H5.Data.thisMonth
+      secondPeriod = new Date(year, month+1, 0)
+    else
+      secondPeriod = new Date(year, month, H5.Data.thisDay)
     if H5.Data.state is "Todos"
       $.each H5.DB.diary.data.states, (key, state) ->
         $.each state, (key, reg) ->
@@ -1036,7 +1041,7 @@ spark2.drawChart = ->
   for month of H5.Data.months
 
     month = parseInt month
-    year = chart1._yearsSlct.value
+    year = if chart1._monthsSlct.value < 7 then chart1._yearsSlct.value else parseInt(chart1._yearsSlct.value) + 1
     count = parseInt chart1._monthsSlct.value
 
     if count >= 7 then count-= 7 else count+= 5
