@@ -341,7 +341,6 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
       @drawChart()
     ),false
 
-
   _enableTable: ->
 
     $(@_tableBtn).on "click", (event) =>

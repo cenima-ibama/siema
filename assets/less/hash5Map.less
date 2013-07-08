@@ -1,19 +1,16 @@
 .form-layer-list{
   padding: 0;
+  max-height: 320px;
+  width: 280px;
+  overflow: auto;
   .control-group{
-    &:after{
-      content: "";
-      display: table;
-      line-height: 0;
-    }
+    padding: 15px 5px;
   }
   .control-label{
     float: left;
-    padding-top: 9px;
-    margin: 5px 0;
-    width: 120px;
+    margin-top: 5px;
   }
   .control{
-    margin: 5px;
+    float: right;
   }
 }

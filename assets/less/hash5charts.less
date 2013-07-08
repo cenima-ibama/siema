@@ -36,6 +36,10 @@
 #navbar {
   z-index: 1030;
   position: relative;
+  margin: 0 auto;
+  .brand {
+    padding: 8px 30px;
+  }
 }
 .map {
   position: absolute;
@@ -203,7 +207,7 @@
       }
     }
     .chart-header {
-      .background(#FAFAFA, #EFEFEF);
+      .background(#FCFCFC, #EFEFEF);
       border: 1px solid #DDDDDD;
       border-radius: 2px 2px 0 0;
       .box-shadow-none;
@@ -235,7 +239,7 @@
         font-size: 1.143em;
         font-weight: normal;
         line-height: 16px;
-        margin: 2px -10% 0 0;
+        margin: 2px -100% 0 0;
         text-shadow: 0 1px 0 #FFFFFF;
         @media (max-width: 639px) {
           display: none;
@@ -256,7 +260,7 @@
     .box-shadow-none;
   }
   .box {
-    .background(#F9F9F9 0%; #EDEDED 100%);
+    .background(#FCFCFC 0%; #EFEFEF 100%);
     border: 1px solid #D5D5D5;
     border-radius: 4px 4px 4px 4px;
     box-shadow: 0 1px 0 0 #FFFFFF inset, 0 1px 0 rgba(255, 255, 255, 0.4);
@@ -298,7 +302,7 @@
   }
 }
 .quick-btn{
-  .background(#F9F9F9 0%; #EDEDED 100%);
+  .background(#FCFCFC 0%; #EFEFEF 100%);
   border-top: 1px solid lightgrey;
   border-left: 1px solid lightgrey;
   border-radius: 4px 4px 4px 4px;
@@ -361,7 +365,7 @@
       text-decoration: none;
     }
     &:hover{
-      background: #FAFAFA;
+      background: #FCFCFC;
       text-decoration: none;
       transition: all 0.2s ease 0s;
     }
@@ -381,7 +385,7 @@
       color: #333333;
     }
     &.active, &:active{
-      background: #FAFAFA;
+      background: #FCFCFC;
       .box-shadow-both(0; 2px; 4px; 0; 0; 0; 0.15; 0; 1px; 2px; 0; 0; 0; 0.05);
     }
     i.icon-ac {
@@ -433,53 +437,5 @@
     @media (max-width: 1023px) {
       margin: 25px 10px -20px;
     }
-  }
-}
-.sidebar {
-  background-color: #FFFFFF;
-  border: 1px solid #DDDDDD;
-  border-radius: 0 4px 4px 0;
-  .box-shadow;
-  margin: 12% 0 0 -3px;
-  position: fixed;
-  z-index: 20;
-  display: none;
-  .nav {
-    margin-bottom: 0;
-  }
-}
-.sidebar-btn {
-  background-color: #FFFFFF;
-  border-color: #CCCCCC #CCCCCC #CCCCCC #FFFFFF;
-  border-radius: 0 4px 4px 0;
-  border-style: solid;
-  border-width: 1px;
-  .box-shadow;
-  padding: 6px 10px 6px 8px;
-  position: absolute;
-  top: 65px;
-  right: -34px;
-}
-#sidebar-map {
-  .sidebar;
-  #sidebar-map-btn {
-    .sidebar-btn;
-  }
-  .sidebar-hidden {
-    left: -62px;
-  }
-}
-#sidebar-dash {
-  .sidebar;
-  #sidebar-dash-btn {
-    .sidebar-btn;
-  }
-  .sidebar-hidden {
-    left: -62px;
-  }
-}
-.navbar {
-  .brand {
-    padding: 8px 30px;
   }
 }

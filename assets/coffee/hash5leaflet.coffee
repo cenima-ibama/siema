@@ -4,6 +4,7 @@ H5.Map =
   layerList: null
 
 H5.Leaflet = {}
+
 # H5.Leaflet.VectorLayer {{{
 # this Project is a fork from the LeafletVectorlayers from Json Sanfora
 # H5.Leaflet.Layer is a base class for rendering vector layers on a Leaflet map. It's inherited by AGS, A2E, CartoDB, GeoIQ, etc.
@@ -27,10 +28,11 @@ H5.Leaflet.Layer = L.Class.extend(
 
   initialize: (options) ->
     L.Util.setOptions this, options
+    @layer = L.layerGroup()
 
   # Show this layer on the map provided
   setMap: (map) ->
-    return  if map and @options.map
+    return if map and @options.map
     if map
       @options.map = map
       if @options.scaleRange and @options.scaleRange instanceof Array and @options.scaleRange.length is 2
@@ -50,7 +52,8 @@ H5.Leaflet.Layer = L.Class.extend(
     L.Util.setOptions this, options
 
   redraw: ->
-    @_getFeatures()
+    @_hide()
+    @_show()
 
   _show: ->
     @_addIdleListener()
@@ -117,12 +120,12 @@ H5.Leaflet.Layer = L.Class.extend(
 
   _zoomChangeListenerTemplate: ->
     # Whenever the map's zoom changes, check the layer's visibility (this.options.visibleAtScale)
-    =>
+    return =>
       @_checkLayerVisibility()
 
   # This gets fired when the map is panned or zoomed
   _idleListenerTemplate: ->
-    =>
+    return =>
       if @options.visibleAtScale
         # Do they use the showAll para@er to load all features once?
         if @options.showAll
@@ -165,7 +168,6 @@ H5.Leaflet.Layer = L.Class.extend(
         me._getFeatures()
       , @options.autoUpdateInterval)
 
-
   # Set the Popup content for the feature
   _setPopupContent: (feature) ->
 
@@ -200,7 +202,6 @@ H5.Leaflet.Layer = L.Class.extend(
     else if @popup and @popup.associatedFeature is feature
       if feature.popupContent isnt previousContent
         @popup.setContent feature.popupContent
-
 
   # Show the feature's (or layer's) Popup
   _showPopup: (feature, event) ->
@@ -241,6 +242,13 @@ H5.Leaflet.Layer = L.Class.extend(
   _fireClickEvent: (feature, event) ->
     @options.clickEvent feature, event
 
+  # Optional mouseover event
+  _fireMouseoverEvent: (feature, event) ->
+    @options.mouseoverEvent feature, event
+
+  # Optional mouseout event
+  _fireMouseoutEvent: (feature, event) ->
+    @options.mouseoutEvent feature, event
 
   # Get the appropriate Leaflet vector options for this feature
   _getFeatureVectorOptions: (feature) ->
@@ -327,7 +335,7 @@ H5.Leaflet.Layer = L.Class.extend(
       for prop of json[i]
         if prop is "geojson"
           data.features[i].geometry =  JSON.parse(json[i].geojson)
-        else data.features[i].properties[prop] = json[i][prop]  unless prop is "properties"
+        else data.features[i].properties[prop] = json[i][prop] unless prop is "properties"
 
     # remove json data
     json = null
@@ -337,16 +345,18 @@ H5.Leaflet.Layer = L.Class.extend(
 
     # Sometimes requests take a while to come back and
     # the user might have turned the layer off
-    return  unless @options.map
+    return unless @options.map
     bounds = @options.map.getBounds()
 
     # Check to see if the _lastQueriedBounds is the same as the new bounds
     # If true, don't bother querying again.
-    return  if @_lastQueriedBounds and @_lastQueriedBounds.equals(bounds) and not @options.autoUpdate
+    return if @_lastQueriedBounds and @_lastQueriedBounds.equals(bounds) and not @options.autoUpdate
 
     # Create a cluster layer
     if @options.cluster
-      markers = new L.MarkerClusterGroup()
+      # reload cluster in case of reload of page
+      if @options.markers then @options.markers.clearLayers()
+      @options.markers = new L.MarkerClusterGroup()
 
     # Store the bounds in the _lastQueriedBounds member so we don't have
     # to query the layer again if someone simply turns a layer on/off
@@ -406,21 +416,27 @@ H5.Leaflet.Layer = L.Class.extend(
           data.features[i][(if vector_or_vectors instanceof Array then "vectors" else "vector")] = vector_or_vectors
 
           # Show the vector or vectors on the map
+          # Display clustered info
           if @options.cluster
             if data.features[i].vector
-              markers.addLayer(data.features[i].vector)
+              @options.markers.addLayer(data.features[i].vector)
             else if data.features[i].vectors and data.features[i].vectors.length
               for k in [0 ... data.features[i].vectors.length]
-                markers.addLayer(data.features[i].vectors[k])
+                @options.markers.addLayer data.features[i].vectors[k]
+            @layer.addLayer @options.markers
           else
             if data.features[i].vector
-              @options.map.addLayer data.features[i].vector
+              @layer.addLayer(data.features[i].vector)
             else if data.features[i].vectors and data.features[i].vectors.length
               for k in [0 ... data.features[i].vectors.length]
-                @options.map.addLayer data.features[i].vectors[k]
+                @layer.addLayer data.features[i].vectors[k]
+
+          # add to map
+          @layer.addTo(@options.map)
 
           # Store the vector in an array so we can remove it later
           @_vectors.push data.features[i]
+
           if @options.popupTemplate
             me = this
             feature = data.features[i]
@@ -448,9 +464,35 @@ H5.Leaflet.Layer = L.Class.extend(
                     me._fireClickEvent feature, event
             ) feature
 
-        # Add cluster to the map
-        if @options.cluster
-          @options.map.addLayer markers
+          if @options.mouseoverEvent
+            me = this
+            feature = data.features[i]
+            ((feature) ->
+              if feature.vector
+                feature.vector.on "mouseover", (event) ->
+                  me._fireMouseoverEvent feature, event
+              else if feature.vectors
+                for k in [0 ... feature.vectors.length]
+                  feature.vectors[k].on "mouseover", (event) ->
+                    me._fireMouseoverEvent feature, event
+            ) feature
+
+          if @options.mouseoutEvent
+            me = this
+            feature = data.features[i]
+            ((feature) ->
+              if feature.vector
+                feature.vector.on "mouseout", (event) ->
+                  me._fireMouseoutEvent feature, event
+              else if feature.vectors
+                for k in [0 ... feature.vectors.length]
+                  feature.vectors[k].on "mouseout", (event) ->
+                    me._fireMouseoutEvent feature, event
+            ) feature
+
+    # Add cluster to the map
+    if @options.cluster
+      @options.map.addLayer @options.markers
 )
 # Extend Layer to support GeoJSON geometry parsing
 # Convert GeoJSON to Leaflet vectors
@@ -707,14 +749,14 @@ H5.Leaflet.LayerControl = L.Control.extend (
   addLayer: (layer, name) ->
     @_addLayer layer, name
     @_update()
-    this
+    return this
 
   removeLayer: (layer) ->
     id = L.stamp(layer)
     delete @_layers[id]
 
     @_update()
-    this
+    return this
 
   _initLayout: ->
     className = "leaflet-control-layers"
@@ -768,18 +810,19 @@ H5.Leaflet.LayerControl = L.Control.extend (
     container = @_baseLayersList
     controlgroup = L.DomUtil.create("div", "control-group", container)
     checked = @_map.hasLayer(obj.layer)
-    label = L.DomUtil.create("label", "control-label pull-left", controlgroup)
+    label = L.DomUtil.create("label", "control-label", controlgroup)
     label.innerHTML = " " + obj.name
-    control = L.DomUtil.create("div", "control pull-right", controlgroup)
+    control = L.DomUtil.create("div", "control", controlgroup)
     toggle = L.DomUtil.create("div", "switch switch-small", control)
     input = L.DomUtil.create("input", "leaflet-control-layers-selector", toggle)
     input.type = "checkbox"
     input.defaultChecked = checked
     input.layerId = L.stamp(obj.layer)
+    $(toggle).bootstrapSwitch()
     $(toggle).on "switch-change", (e, data) ->
       _this._onInputClick input, obj
 
-    controlgroup
+    return controlgroup
 
   _onInputClick: (input, obj) ->
     @_handlingClick = true

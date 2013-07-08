@@ -3,7 +3,7 @@ H5.Data.state = "Todos"
 H5.Data.states = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"]
 
 H5.Data.thisDate = new Date()
-H5.Data.thisYear = if H5.Data.thisDate.getMonth() < 6 then H5.Data.thisDate.getFullYear() else H5.Data.thisDate.getFullYear() + 1
+H5.Data.thisYear = if H5.Data.thisDate.getMonth() < 7 then H5.Data.thisDate.getFullYear() else H5.Data.thisDate.getFullYear() + 1
 H5.Data.thisMonth = new Date().getMonth()
 H5.Data.thisDay = new Date().getDate()
 
@@ -144,7 +144,7 @@ $.each rest.request(), (i, properties) ->
 # RELOAD DATE {{{
 # reload date based on database
 H5.Data.thisDate = H5.DB.diary.data.lastValue.date
-H5.Data.thisYear = if H5.DB.diary.data.lastValue.month < 6 then H5.DB.diary.data.lastValue.year else H5.DB.diary.data.lastValue.year + 1
+H5.Data.thisYear = if H5.DB.diary.data.lastValue.month < 7 then H5.DB.diary.data.lastValue.year else H5.DB.diary.data.lastValue.year + 1
 H5.Data.thisMonth = H5.DB.diary.data.lastValue.month
 H5.Data.thisDay = H5.DB.diary.data.lastValue.day
 
@@ -180,7 +180,7 @@ chart1._yearsSlct.options[H5.Data.totalPeriods+1].selected = true
 chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
 
 $(chart1._monthsSlct).on "change", (event) ->
-  H5.Data.selectedYear = chart1._yearsSlct.value
+  H5.Data.selectedMonth = chart1._monthsSlct.value
   chart1.drawChart()
   chart3.drawChart()
   chart8.drawChart()
@@ -191,7 +191,7 @@ $(chart1._monthsSlct).on "change", (event) ->
   spark2.drawChart()
 
 $(chart1._yearsSlct).on "change", (event) ->
-  H5.Data.selectedMonth = chart1._monthsSlct.value
+  H5.Data.selectedYear = chart1._yearsSlct.value
   chart1.drawChart()
   chart3.drawChart()
   chart8.drawChart()
@@ -1021,24 +1021,31 @@ spark2.drawChart = ->
     if H5.Data.state is "Todos"
       $.each H5.DB.diary.data.states, (key, state) ->
         $.each state, (key, reg) ->
-          if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
+          if firstPeriod <= reg.date <= secondPeriod and reg.month == month
             sum += reg.area
     else
       $.each H5.DB.diary.data.states[H5.Data.state], (key, reg) ->
-        if reg.date >= firstPeriod and reg.date <= secondPeriod and reg.month is month
+        if firstPeriod <= reg.date <= secondPeriod and reg.month == month
           sum += reg.area
+
     return Math.round(sum * 100) / 100
 
   # init table
   data = []
 
-  # populate table
-  # list months
-  $.each H5.Data.months, (number, month) =>
-    i = number
-    number = parseInt number
-    if 7 <= (number + 7) <= 11 then number+= 7 else number-= 5
-    data[i] = sumValues(chart1._yearsSlct.value, number)
+  for month of H5.Data.months
+
+    month = parseInt month
+    year = chart1._yearsSlct.value
+    count = parseInt chart1._monthsSlct.value
+
+    if count >= 7 then count-= 7 else count+= 5
+
+    if month <= count
+      if 7 <= (month + 7) <= 11 then month+= 7 else month-= 5
+      data.push sumValues(year, month)
+    else
+      data.push 0
 
   value = 0
   $.each data, ->
@@ -1208,5 +1215,8 @@ H5.Charts.updateMap = ->
   H5.Map.layer.alerta.setOptions(
     where: where
   )
-  H5.Map.layer.alerta.setMap(null)
-  H5.Map.layer.alerta.setMap(H5.Map.base)
+  H5.Map.layer.clusters.setOptions(
+    where: where
+  )
+  H5.Map.layer.alerta.redraw()
+  H5.Map.layer.clusters.redraw()
