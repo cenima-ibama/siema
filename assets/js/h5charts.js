@@ -1299,7 +1299,13 @@
       sumPeriods = function(year, month) {
         var firstPeriod, secondPeriod;
         firstPeriod = new Date(year - 1, 7, 1);
-        secondPeriod = new Date(year, month + 1, 0);
+        if (month > 6) {
+          secondPeriod = new Date(year - 1, month + 1, 0);
+        } else if (month !== H5.Data.thisMonth) {
+          secondPeriod = new Date(year, month + 1, 0);
+        } else {
+          secondPeriod = new Date(year, month, H5.Data.thisDay);
+        }
         return sumValues(firstPeriod, secondPeriod);
       };
       curValue = sumPeriods(year, month);
