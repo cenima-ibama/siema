@@ -57,7 +57,7 @@ H5.Leaflet.Layer = L.Class.extend(
 
   _show: ->
     @_addIdleListener()
-    @_addZoomChangeListener()  if @options.scaleRange and @options.scaleRange instanceof Array and @options.scaleRange.length is 2
+    @_addZoomChangeListener() if @options.scaleRange and @options.scaleRange instanceof Array and @options.scaleRange.length is 2
     if @options.visibleAtScale
       if @options.autoUpdate and @options.autoUpdateInterval
         @_autoUpdateInterval = setInterval(=>
@@ -79,44 +79,23 @@ H5.Leaflet.Layer = L.Class.extend(
 
   # Hide the vectors in the layer. This might get called if the layer is still on but out of scaleRange.
   _hideVectors: ->
-    # TODO: There's probably an easier way to first check for "singlePopup" option then just remove the one
-    #       instead of checking for "assocatedFeatures"
-    for i in [0 ... @_vectors.length]
-      if @_vectors[i].vector
-        @options.map.removeLayer @_vectors[i].vector
-        if @_vectors[i].popup
-          @options.map.removeLayer @_vectors[i].popup
-        else if @popup and @popup.associatedFeature and @popup.associatedFeature is @_vectors[i]
-          @options.map.removeLayer @popup
-          @popup = null
-      if @_vectors[i].vectors and @_vectors[i].vectors.length
-        for j in [0 ... @_vectors[i].vectors.length]
-          @options.map.removeLayer @_vectors[i].vectors[j]
-          if @_vectors[i].vectors[j].popup
-            @options.map.removeLayer @_vectors[i].vectors[j].popup
-          else if @popup and @popup.associatedFeature and @popup.associatedFeature is @_vectors[i]
-            @options.map.removeLayer @popup
-            @popup = null
+    @options.map.removeLayer(@layer)
 
   # Show the vectors in the layer. This might get called if the layer is on and came back into scaleRange.
   _showVectors: ->
-    for i in [0 ... @_vectors.length]
-      @options.map.addLayer @_vectors[i].vector  if @_vectors[i].vector
-      if @_vectors[i].vectors and @_vectors[i].vectors.length
-        for j in [0 ... @_vectors[i].vectors.length]
-          @options.map.addLayer @_vectors[i].vectors[j]
+    # add to map
+    @layer.addTo(@options.map)
 
   # Hide the vectors, then empty the vectory holding array
   _clearFeatures: ->
-    # TODO - Check to see if we even need to hide these before we remove them from the DOM
-    @_hideVectors()
+    @layer.clearLayers()
     @_vectors = []
 
   # Add an event hanlder to detect a zoom change on the map
   _addZoomChangeListener: ->
     # "this" means something different inside the on method. Assign it to "me".
     @_zoomChangeListener = @_zoomChangeListenerTemplate()
-    @options.map.on "zoo@d", @_zoomChangeListener, this
+    @options.map.on "zoomend", @_zoomChangeListener, this
 
   _zoomChangeListenerTemplate: ->
     # Whenever the map's zoom changes, check the layer's visibility (this.options.visibleAtScale)
@@ -163,9 +142,8 @@ H5.Leaflet.Layer = L.Class.extend(
     if visibilityBefore and not @options.visibleAtScale and @_autoUpdateInterval
       clearInterval @_autoUpdateInterval
     else if not visibilityBefore and @options.autoUpdate and @options.autoUpdateInterval
-      me = this
       @_autoUpdateInterval = setInterval(->
-        me._getFeatures()
+        @_getFeatures()
       , @options.autoUpdateInterval)
 
   # Set the Popup content for the feature
@@ -291,7 +269,6 @@ H5.Leaflet.Layer = L.Class.extend(
                     re = new RegExp("{" + prop + "}", "g")
                     vectorStyle.title = vectorStyle.title.replace(re, atts[prop])
     return vectorStyle
-
 
   # Check to see if any attributes have changed
   _getPropertiesChanged: (oldAtts, newAtts) ->

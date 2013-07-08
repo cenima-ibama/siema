@@ -776,70 +776,18 @@
       }
     },
     _hideVectors: function() {
-      var i, j, _i, _ref3, _results;
-      _results = [];
-      for (i = _i = 0, _ref3 = this._vectors.length; 0 <= _ref3 ? _i < _ref3 : _i > _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
-        if (this._vectors[i].vector) {
-          this.options.map.removeLayer(this._vectors[i].vector);
-          if (this._vectors[i].popup) {
-            this.options.map.removeLayer(this._vectors[i].popup);
-          } else if (this.popup && this.popup.associatedFeature && this.popup.associatedFeature === this._vectors[i]) {
-            this.options.map.removeLayer(this.popup);
-            this.popup = null;
-          }
-        }
-        if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
-          _results.push((function() {
-            var _j, _ref4, _results1;
-            _results1 = [];
-            for (j = _j = 0, _ref4 = this._vectors[i].vectors.length; 0 <= _ref4 ? _j < _ref4 : _j > _ref4; j = 0 <= _ref4 ? ++_j : --_j) {
-              this.options.map.removeLayer(this._vectors[i].vectors[j]);
-              if (this._vectors[i].vectors[j].popup) {
-                _results1.push(this.options.map.removeLayer(this._vectors[i].vectors[j].popup));
-              } else if (this.popup && this.popup.associatedFeature && this.popup.associatedFeature === this._vectors[i]) {
-                this.options.map.removeLayer(this.popup);
-                _results1.push(this.popup = null);
-              } else {
-                _results1.push(void 0);
-              }
-            }
-            return _results1;
-          }).call(this));
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
+      return this.options.map.removeLayer(this.layer);
     },
     _showVectors: function() {
-      var i, j, _i, _ref3, _results;
-      _results = [];
-      for (i = _i = 0, _ref3 = this._vectors.length; 0 <= _ref3 ? _i < _ref3 : _i > _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
-        if (this._vectors[i].vector) {
-          this.options.map.addLayer(this._vectors[i].vector);
-        }
-        if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
-          _results.push((function() {
-            var _j, _ref4, _results1;
-            _results1 = [];
-            for (j = _j = 0, _ref4 = this._vectors[i].vectors.length; 0 <= _ref4 ? _j < _ref4 : _j > _ref4; j = 0 <= _ref4 ? ++_j : --_j) {
-              _results1.push(this.options.map.addLayer(this._vectors[i].vectors[j]));
-            }
-            return _results1;
-          }).call(this));
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
+      return this.layer.addTo(this.options.map);
     },
     _clearFeatures: function() {
-      this._hideVectors();
+      this.layer.clearLayers();
       return this._vectors = [];
     },
     _addZoomChangeListener: function() {
       this._zoomChangeListener = this._zoomChangeListenerTemplate();
-      return this.options.map.on("zoo@d", this._zoomChangeListener, this);
+      return this.options.map.on("zoomend", this._zoomChangeListener, this);
     },
     _zoomChangeListenerTemplate: function() {
       var _this = this;
@@ -867,7 +815,7 @@
       return this.options.map.on("moveend", this._idleListener, this);
     },
     _checkLayerVisibility: function() {
-      var me, sr, visibilityBefore, z;
+      var sr, visibilityBefore, z;
       visibilityBefore = this.options.visibleAtScale;
       z = this.options.map.getZoom();
       sr = this.options.scaleRange;
@@ -878,9 +826,8 @@
       if (visibilityBefore && !this.options.visibleAtScale && this._autoUpdateInterval) {
         return clearInterval(this._autoUpdateInterval);
       } else if (!visibilityBefore && this.options.autoUpdate && this.options.autoUpdateInterval) {
-        me = this;
         return this._autoUpdateInterval = setInterval(function() {
-          return me._getFeatures();
+          return this._getFeatures();
         }, this.options.autoUpdateInterval);
       }
     },

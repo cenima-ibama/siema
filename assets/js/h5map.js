@@ -91,6 +91,7 @@
     singlePopup: true,
     where: "ano = '2013'",
     limit: deviceLimit,
+    scaleRange: [8, 20],
     symbology: {
       type: "single",
       vectorStyle: {
