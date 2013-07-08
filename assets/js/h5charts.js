@@ -216,7 +216,7 @@
   chart1._monthsSlct.options[H5.Data.thisMonth].selected = true;
 
   $(chart1._monthsSlct).on("change", function(event) {
-    H5.Data.selectedMonth = chart1._monthsSlct.value;
+    H5.Data.selectedMonth = parseInt(chart1._monthsSlct.value);
     chart1.drawChart();
     chart3.drawChart();
     chart8.drawChart();
@@ -228,7 +228,7 @@
   });
 
   $(chart1._yearsSlct).on("change", function(event) {
-    H5.Data.selectedYear = chart1._yearsSlct.value;
+    H5.Data.selectedYear = parseInt(chart1._yearsSlct.value);
     chart1.drawChart();
     chart3.drawChart();
     chart8.drawChart();
@@ -263,9 +263,9 @@
     this.createDataTable();
     this.data.addColumn("number", "Dia");
     this.data.addColumn("number", "Área");
-    daysInMonth = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value + 1, 0).getDate();
-    firstPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, 1);
-    secondPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, daysInMonth);
+    daysInMonth = new Date(H5.Data.selectedYear, H5.Data.selectedMonth + 1, 0).getDate();
+    firstPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, 1);
+    secondPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, daysInMonth);
     data = [];
     for (day = _k = 1; 1 <= daysInMonth ? _k <= daysInMonth : _k >= daysInMonth; day = 1 <= daysInMonth ? ++_k : --_k) {
       data[0] = day;
@@ -293,7 +293,7 @@
       10: "Novembro",
       11: "Dezembro"
     };
-    this.changeTitle("Alerta DETER: Índice Diário [" + months[chart1._monthsSlct.value] + "]");
+    this.changeTitle("Alerta DETER: Índice Diário [" + months[H5.Data.selectedMonth] + "]");
     options = {
       title: "",
       titleTextStyle: {
@@ -476,7 +476,7 @@
     };
     sumAvgValues = function(year) {
       var firstPeriod, month, secondPeriod;
-      month = parseInt(chart1._monthsSlct.value);
+      month = H5.Data.selectedMonth;
       firstPeriod = new Date(year - 1, 7, 1);
       if (month > 6) {
         secondPeriod = new Date(year - 1, month + 1, 0);
@@ -929,9 +929,9 @@
     this.createDataTable();
     this.data.addColumn("string", "Estado");
     this.data.addColumn("number", "Área Total");
-    daysInMonth = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value + 1, 0).getDate();
-    firstPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, 1);
-    secondPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, daysInMonth);
+    daysInMonth = new Date(H5.Data.selectedYear, H5.Data.selectedMonth + 1, 0).getDate();
+    firstPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, 1);
+    secondPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, daysInMonth);
     if (firstPeriod > H5.Data.thisDate) {
       pieText = "none";
       pieTooltip = "none";
@@ -945,7 +945,7 @@
       data[1] = sumValues(H5.Data.states[i]);
       this.data.addRow(data);
     }
-    this.changeTitle(chart1._monthsSlct.options[chart1._monthsSlct.value].label + ", " + chart1._yearsSlct.value);
+    this.changeTitle(chart1._monthsSlct.options[H5.Data.selectedMonth].label + ", " + H5.Data.selectedYear);
     options = {
       title: "",
       titleTextStyle: {
@@ -1084,9 +1084,9 @@
       }
       return _results;
     };
-    daysInMonth = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value + 1, 0).getDate();
-    firstPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, 1);
-    secondPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, daysInMonth);
+    daysInMonth = new Date(H5.Data.selectedYear, H5.Data.selectedMonth + 1, 0).getDate();
+    firstPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, 1);
+    secondPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, daysInMonth);
     data = [];
     for (day = _k = 1; 1 <= daysInMonth ? _k <= daysInMonth : _k >= daysInMonth; day = 1 <= daysInMonth ? ++_k : --_k) {
       data[day - 1] = 0;
@@ -1142,8 +1142,8 @@
     data = [];
     for (month in H5.Data.months) {
       month = parseInt(month);
-      year = chart1._monthsSlct.value < 7 ? chart1._yearsSlct.value : parseInt(chart1._yearsSlct.value) + 1;
-      count = parseInt(chart1._monthsSlct.value);
+      year = H5.Data.selectedMonth < 7 ? H5.Data.selectedYear : H5.Data.selectedYear + 1;
+      count = parseInt(H5.Data.selectedMonth);
       if (count >= 7) {
         count -= 7;
       } else {
@@ -1209,7 +1209,7 @@
         return Math.round((curValue - preValue) / preValue * 100);
       }
     };
-    value = periodDeforestationRate(parseInt(chart1._yearsSlct.value), parseInt(chart1._monthsSlct.value));
+    value = periodDeforestationRate(H5.Data.selectedYear, H5.Data.selectedMonth);
     return this.updateInfo(value);
   };
 
@@ -1255,7 +1255,7 @@
         return Math.round((curValue - preValue) / preValue * 100);
       }
     };
-    value = periodDeforestationRate(parseInt(chart1._yearsSlct.value), parseInt(chart1._monthsSlct.value));
+    value = periodDeforestationRate(H5.Data.selectedYear, H5.Data.selectedMonth);
     return this.updateInfo(value);
   };
 
@@ -1310,7 +1310,7 @@
         return Math.round((curValue - preValue) / preValue * 100);
       }
     };
-    value = periodDeforestationAvgRate(parseInt(chart1._yearsSlct.value), parseInt(chart1._monthsSlct.value));
+    value = periodDeforestationAvgRate(H5.Data.selectedYear, H5.Data.selectedMonth);
     return this.updateInfo(value);
   };
 

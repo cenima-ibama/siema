@@ -180,7 +180,7 @@ chart1._yearsSlct.options[H5.Data.totalPeriods+1].selected = true
 chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
 
 $(chart1._monthsSlct).on "change", (event) ->
-  H5.Data.selectedMonth = chart1._monthsSlct.value
+  H5.Data.selectedMonth = parseInt chart1._monthsSlct.value
   chart1.drawChart()
   chart3.drawChart()
   chart8.drawChart()
@@ -191,7 +191,7 @@ $(chart1._monthsSlct).on "change", (event) ->
   spark2.drawChart()
 
 $(chart1._yearsSlct).on "change", (event) ->
-  H5.Data.selectedYear = chart1._yearsSlct.value
+  H5.Data.selectedYear = parseInt chart1._yearsSlct.value
   chart1.drawChart()
   chart3.drawChart()
   chart8.drawChart()
@@ -221,9 +221,9 @@ chart1.drawChart = ->
   @data.addColumn "number", "Dia"
   @data.addColumn "number", "Área"
 
-  daysInMonth = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value + 1, 0).getDate()
-  firstPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, 1)
-  secondPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, daysInMonth)
+  daysInMonth = new Date(H5.Data.selectedYear, H5.Data.selectedMonth + 1, 0).getDate()
+  firstPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, 1)
+  secondPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, daysInMonth)
   data = []
 
   # populate table with 0
@@ -253,7 +253,7 @@ chart1.drawChart = ->
     10: "Novembro"
     11: "Dezembro"
 
-  @changeTitle "Alerta DETER: Índice Diário [" + months[chart1._monthsSlct.value] + "]"
+  @changeTitle "Alerta DETER: Índice Diário [" + months[H5.Data.selectedMonth] + "]"
 
   options =
     title: ""
@@ -409,7 +409,7 @@ chart3.drawChart = ->
 
   # sum average values
   sumAvgValues = (year) ->
-    month = parseInt(chart1._monthsSlct.value)
+    month = H5.Data.selectedMonth
     firstPeriod = new Date(year - 1, 7, 1)
     if month > 6
       secondPeriod = new Date(year-1, month+1, 0)
@@ -843,9 +843,9 @@ chart8.drawChart = ->
   @data.addColumn "string", "Estado"
   @data.addColumn "number", "Área Total"
 
-  daysInMonth = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value + 1, 0).getDate()
-  firstPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, 1)
-  secondPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, daysInMonth)
+  daysInMonth = new Date(H5.Data.selectedYear, H5.Data.selectedMonth + 1, 0).getDate()
+  firstPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, 1)
+  secondPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, daysInMonth)
 
   if firstPeriod > H5.Data.thisDate
     pieText = "none"
@@ -861,7 +861,7 @@ chart8.drawChart = ->
     data[1] = sumValues(H5.Data.states[i])
     @data.addRow data
 
-  @changeTitle chart1._monthsSlct.options[chart1._monthsSlct.value].label + ", " + chart1._yearsSlct.value
+  @changeTitle chart1._monthsSlct.options[H5.Data.selectedMonth].label + ", " + H5.Data.selectedYear
 
   options =
     title: ""
@@ -986,9 +986,9 @@ spark1.drawChart = ->
           return false
       data[(day-1)] = Math.round((data[(day-1)] + dayValue) * 100)/100
 
-  daysInMonth = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value + 1, 0).getDate()
-  firstPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, 1)
-  secondPeriod = new Date(chart1._yearsSlct.value, chart1._monthsSlct.value, daysInMonth)
+  daysInMonth = new Date(H5.Data.selectedYear, H5.Data.selectedMonth + 1, 0).getDate()
+  firstPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, 1)
+  secondPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, daysInMonth)
   data = []
 
   # populate table with 0
@@ -1041,8 +1041,8 @@ spark2.drawChart = ->
   for month of H5.Data.months
 
     month = parseInt month
-    year = if chart1._monthsSlct.value < 7 then chart1._yearsSlct.value else parseInt(chart1._yearsSlct.value) + 1
-    count = parseInt chart1._monthsSlct.value
+    year = if H5.Data.selectedMonth < 7 then H5.Data.selectedYear else H5.Data.selectedYear + 1
+    count = parseInt H5.Data.selectedMonth
 
     if count >= 7 then count-= 7 else count+= 5
 
@@ -1100,7 +1100,7 @@ knob1.drawChart = ->
       return Math.round (curValue - preValue) / preValue * 100
 
   value = periodDeforestationRate(
-    parseInt(chart1._yearsSlct.value), parseInt(chart1._monthsSlct.value)
+    H5.Data.selectedYear, H5.Data.selectedMonth
   )
   @updateInfo value
 #}}}
@@ -1146,7 +1146,7 @@ knob2.drawChart = ->
       return Math.round (curValue - preValue) / preValue * 100
 
   value = periodDeforestationRate(
-    parseInt(chart1._yearsSlct.value), parseInt(chart1._monthsSlct.value)
+    H5.Data.selectedYear, H5.Data.selectedMonth
   )
   @updateInfo value
 #}}}
@@ -1191,7 +1191,7 @@ knob3.drawChart = ->
       return Math.round (curValue - preValue) / preValue * 100
 
   value = periodDeforestationAvgRate(
-    parseInt(chart1._yearsSlct.value), parseInt(chart1._monthsSlct.value)
+    H5.Data.selectedYear, H5.Data.selectedMonth
   )
   @updateInfo value
 #}}}
