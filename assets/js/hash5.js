@@ -805,6 +805,7 @@
               return _this._gotAll = true;
             }
           } else {
+            _this._hide();
             return _this._getFeatures();
           }
         }
@@ -1288,13 +1289,53 @@
         ne = bounds.getNorthEast();
         where += (where.length ? " AND " : "");
         if (this.options.srid) {
-          where += this.options.geomFieldName + " && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))," + this.options.srid + ")";
+          where += encodeURIComponent("st_setsrid(" + this.options.geomFieldName + "," + this.options.srid + ") && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))," + this.options.srid + ")");
         } else {
-          where += "" + this.options.geomFieldName + ",4326) && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))";
+          where += encodeURIComponent("" + this.options.geomFieldName + " && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))");
         }
       }
       fields = (this.options.fields ? this.options.fields : "*") + ", st_asgeojson(" + this.options.geomFieldName + "" + (this.options.geomPrecision ? "," + this.options.geomPrecision : "") + ") as geojson";
       url = this.options.url + "v1/ws_geo_attributequery.php" + "?table=" + this.options.geotable + "&fields=" + encodeURIComponent(fields) + where + "&limit=" + this.options.limit + "&callback=" + this._globalPointer + "._processRequest";
+      return this._makeJsonpRequest(url);
+    }
+  });
+
+  H5.Leaflet.Geoserver = H5.Leaflet.GeoJSONLayer.extend({
+    initialize: function(options) {
+      var i, len, sr, z;
+      i = 0;
+      len = this._requiredParams.length;
+      while (i < len) {
+        if (!options[this._requiredParams[i]]) {
+          throw new Error("No \"" + this._requiredParams[i] + "\" parameter found.");
+        }
+        i++;
+      }
+      lvector.Layer.prototype.initialize.call(this, options);
+      this._globalPointer = "Geoserver_" + Math.floor(Math.random() * 100000);
+      window[this._globalPointer] = this;
+      this._vectors = [];
+      if (this.options.map) {
+        if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
+          z = this.options.map.getZoom();
+          sr = this.options.scaleRange();
+          this.options.visibleAtScale = z >= sr[0] && z <= sr[1];
+        }
+        return this._show();
+      }
+    },
+    options: {
+      baseUrl: null,
+      typeName: null,
+      uniqueField: null
+    },
+    _requiredParams: ["baseUrl", "typeName", "uniqueField"],
+    _getFeatures: function() {
+      var url;
+      url = this.options.baseUrl.replace(/\?$/, "") + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + this.options.typeName + "&outputFormat=json&format_options=callback:" + this._globalPointer + "._processRequest";
+      if (!this.options.showAll) {
+        url += "&bbox=" + this.options.map.getBounds().toBBoxString();
+      }
       return this._makeJsonpRequest(url);
     }
   });

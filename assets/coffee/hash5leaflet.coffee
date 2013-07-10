@@ -114,6 +114,7 @@ H5.Leaflet.Layer = L.Class.extend(
             @_getFeatures()
             @_gotAll = true
         else
+          @_hide()
           @_getFeatures()
 
   # Add an event hanlder to detect an idle (pan or zoom) on the map
@@ -569,27 +570,57 @@ H5.Leaflet.Postgis = H5.Leaflet.GeoJSONLayer.extend(
 
     # Build Query
     where = (if (@options.where) then "&parameters=" + encodeURIComponent(@options.where) else null)
-    unless @options.showAll
+    if not @options.showAll
       bounds = @options.map.getBounds()
       sw = bounds.getSouthWest()
       ne = bounds.getNorthEast()
       where += (if where.length then " AND " else "")
       if @options.srid
-        where += @options.geomFieldName + " && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))," + @options.srid + ")"
+        where += encodeURIComponent("st_setsrid(" + @options.geomFieldName + "," + @options.srid + ") && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))," + @options.srid + ")")
       else
-        where += "" + @options.geomFieldName + ",4326) && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))"
+        where += encodeURIComponent("" + @options.geomFieldName + " && st_setsrid(st_makebox2d(st_point(" + sw.lng + "," + sw.lat + "),st_point(" + ne.lng + "," + ne.lat + "))")
 
     # Build fields
     fields = ((if @options.fields then @options.fields else "*")) + ", st_asgeojson(" + @options.geomFieldName + "" + ((if @options.geomPrecision then "," + @options.geomPrecision else "")) + ") as geojson"
 
     # Build URL
-    # The attribute query service
-    # The table name
-    # The table fields
-    # The limit value
     url = @options.url + "v1/ws_geo_attributequery.php" + "?table=" + @options.geotable + "&fields=" + encodeURIComponent(fields) + where + "&limit=" + @options.limit + "&callback=" + @_globalPointer + "._processRequest" # Need this for JSONP
 
     # JSONP request
+    @_makeJsonpRequest url
+)
+H5.Leaflet.Geoserver = H5.Leaflet.GeoJSONLayer.extend(
+  initialize: (options) ->
+    i = 0
+    len = @_requiredParams.length
+
+    while i < len
+      throw new Error("No \"" + @_requiredParams[i] + "\" parameter found.")  unless options[@_requiredParams[i]]
+      i++
+    lvector.Layer::initialize.call this, options
+    @_globalPointer = "Geoserver_" + Math.floor(Math.random() * 100000)
+    window[@_globalPointer] = this
+    @_vectors = []
+    if @options.map
+      if @options.scaleRange and @options.scaleRange instanceof Array and @options.scaleRange.length is 2
+        z = @options.map.getZoom()
+        sr = @options.scaleRange()
+        @options.visibleAtScale = (z >= sr[0] and z <= sr[1])
+      @_show()
+
+  options:
+    baseUrl: null
+    typeName: null
+    uniqueField: null
+
+  _requiredParams: ["baseUrl", "typeName", "uniqueField"]
+  _getFeatures: ->
+
+    #		if (!this.options.uniqueField) {
+    #			this._clearFeatures();
+    #		}
+    url = @options.baseUrl.replace(/\?$/, "") + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + @options.typeName + "&outputFormat=json&format_options=callback:" + @_globalPointer + "._processRequest"
+    url += "&bbox=" + @options.map.getBounds().toBBoxString() unless @options.showAll
     @_makeJsonpRequest url
 )
 # }}}

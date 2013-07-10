@@ -67,9 +67,8 @@ H5.Map.layer.alerta = new H5.Leaflet.Postgis(
   url: "../painel/rest/"
   geotable: H5.DB.alert.table
   fields: "id_des, tipo, data_imagem, area_km2, dominio"
-  srid: 4618
+  srid: 4326
   geomFieldName: "shape"
-  showAll: true
   popupTemplate: (properties) ->
     html = '<div class="iw-content"><h4>' + properties.id_des + '</h4>'
     html += '<h5>' + properties.tipo + '</h5>'
@@ -82,8 +81,9 @@ H5.Map.layer.alerta = new H5.Leaflet.Postgis(
     return html
   singlePopup: true
   where: "ano = '2013'"
+  showAll: false
   limit: deviceLimit
-  scaleRange: [8, 20]
+  scaleRange: [9, 20]
   symbology:
     type: "single"
     vectorStyle:
@@ -110,11 +110,11 @@ H5.Map.layer.clusters = new H5.Leaflet.Postgis(
   url: "../painel/rest/"
   geotable: H5.DB.alert.table
   fields: "id_des"
-  srid: 4618
+  srid: 4326
   geomFieldName: "centroide"
   showAll: true
   cluster: true
-  popupTemplate: '<div class="iw-content"><h3>{id_des}</h3></div>',
+  popupTemplate: null
   where: "ano = '2013'"
   limit: deviceLimit
   symbology:
@@ -123,7 +123,6 @@ H5.Map.layer.clusters = new H5.Leaflet.Postgis(
       icon: new customMarker()
 )
 H5.Map.layer.clusters.setMap H5.Map.base
-
 
 H5.Map.layerList = new H5.Leaflet.LayerControl(
   "OSM": openstreet

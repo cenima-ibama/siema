@@ -72,9 +72,8 @@
     url: "../painel/rest/",
     geotable: H5.DB.alert.table,
     fields: "id_des, tipo, data_imagem, area_km2, dominio",
-    srid: 4618,
+    srid: 4326,
     geomFieldName: "shape",
-    showAll: true,
     popupTemplate: function(properties) {
       var html;
       html = '<div class="iw-content"><h4>' + properties.id_des + '</h4>';
@@ -90,8 +89,9 @@
     },
     singlePopup: true,
     where: "ano = '2013'",
+    showAll: false,
     limit: deviceLimit,
-    scaleRange: [8, 20],
+    scaleRange: [9, 20],
     symbology: {
       type: "single",
       vectorStyle: {
@@ -121,11 +121,11 @@
     url: "../painel/rest/",
     geotable: H5.DB.alert.table,
     fields: "id_des",
-    srid: 4618,
+    srid: 4326,
     geomFieldName: "centroide",
     showAll: true,
     cluster: true,
-    popupTemplate: '<div class="iw-content"><h3>{id_des}</h3></div>',
+    popupTemplate: null,
     where: "ano = '2013'",
     limit: deviceLimit,
     symbology: {
