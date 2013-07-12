@@ -28,7 +28,6 @@ H5.Leaflet.Layer = L.Class.extend(
 
   initialize: (options) ->
     L.Util.setOptions this, options
-    @layer = L.layerGroup()
 
   # Show this layer on the map provided
   setMap: (map) ->
@@ -549,6 +548,10 @@ H5.Leaflet.Postgis = H5.Leaflet.GeoJSONLayer.extend(
 
     # Create an array to hold the features
     @_vectors = []
+
+    # create layer to group all vectors
+    @layer = L.layerGroup()
+
     if @options.map
       if @options.scaleRange and @options.scaleRange instanceof Array and @options.scaleRange.length is 2
         z = @options.map.getZoom()
@@ -562,7 +565,7 @@ H5.Leaflet.Postgis = H5.Leaflet.GeoJSONLayer.extend(
     geomFieldName: "the_geom"
     fields: null
     where: null
-    limit: 1000
+    limit: 5000
     uniqueField: null
 
   _requiredParams: ["url", "geotable"]
@@ -614,11 +617,9 @@ H5.Leaflet.Geoserver = H5.Leaflet.GeoJSONLayer.extend(
     uniqueField: null
 
   _requiredParams: ["baseUrl", "typeName", "uniqueField"]
+
   _getFeatures: ->
 
-    #		if (!this.options.uniqueField) {
-    #			this._clearFeatures();
-    #		}
     url = @options.baseUrl.replace(/\?$/, "") + "?service=WFS&version=1.1.0&request=GetFeature&typeName=" + @options.typeName + "&outputFormat=json&format_options=callback:" + @_globalPointer + "._processRequest"
     url += "&bbox=" + @options.map.getBounds().toBBoxString() unless @options.showAll
     @_makeJsonpRequest url

@@ -1,30 +1,30 @@
-bingaerial = new L.BingLayer("AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h",
+bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h"
+bingaerial = new L.BingLayer(bingKey,
   type: "Aerial"
   attribution: ""
 )
 
-bingroad = new L.BingLayer("AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h",
+bingroad = new L.BingLayer(bingKey,
   type: "Road"
   attribution: ""
 )
 
-binghybrid = new L.BingLayer("AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h",
+binghybrid = new L.BingLayer(bingKey,
   type: "AerialWithLabels"
   attribution: ""
 )
 
-openstreetUrl = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-openstreetAttribution = ""
+openstreetUrl = "http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png"
+openstreetSub = ['otile1','otile2','otile3','otile4']
 openstreet = new L.TileLayer(openstreetUrl,
   maxZoom: 18
-  attribution: openstreetAttribution
+  subdomains: openstreetSub
 )
 
-cloudmadeUrl = "http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png"
-cloudmadeAttribution = ""
-cloudmade = new L.TileLayer(cloudmadeUrl,
-  maxZoom: 18
-  attribution: cloudmadeAttribution
+openstreetMini = new L.TileLayer(openstreetUrl,
+  minZoom: 0
+  maxZoom: 11
+  subdomains: openstreetSub
 )
 
 terrasIndigenas = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geo-srv/cemam/wms",
@@ -46,21 +46,17 @@ $( '#map-container' ).height( $( window ).height() - $('#navbar').height() - 1)
 H5.Map.base = new L.Map("map-container",
   center: new L.LatLng(-10.0, -58.0)
   zoom: 6
-  layers: [bingroad]
+  layers: [binghybrid]
   zoomControl: true
 )
+
+H5.Map.minimap = new L.Control.MiniMap(openstreetMini, { toggleDisplay: true, zoomLevelOffset: -4 }).addTo(H5.Map.base)
 
 # add custom attribution
 H5.Map.base.attributionControl.setPrefix "Hexgis Hash5"
 
 # add scale
 L.control.scale().addTo H5.Map.base
-
-# render less points under mobile device
-if(!H5.isMobile.any())
-  deviceLimit = 5000
-else
-  deviceLimit = 500
 
 # display stations
 H5.Map.layer.alerta = new H5.Leaflet.Postgis(
@@ -82,7 +78,7 @@ H5.Map.layer.alerta = new H5.Leaflet.Postgis(
   singlePopup: true
   where: "ano = '2013'"
   showAll: false
-  limit: deviceLimit
+  limit: 200
   scaleRange: [9, 20]
   symbology:
     type: "single"
@@ -116,7 +112,6 @@ H5.Map.layer.clusters = new H5.Leaflet.Postgis(
   cluster: true
   popupTemplate: null
   where: "ano = '2013'"
-  limit: deviceLimit
   symbology:
     type: "single"
     vectorStyle:
@@ -129,8 +124,6 @@ H5.Map.layerList = new H5.Leaflet.LayerControl(
   "Bing Aerial": bingaerial
   "Bing Road": bingroad
   "Bing Hybrid": binghybrid
-  "Terras Indígenas": terrasIndigenas
-  "UC's Federais": ucFederais
   "Alerta [Indicadores]": H5.Map.layer.clusters.layer
   "Alerta [Polígonos]": H5.Map.layer.alerta.layer
 )

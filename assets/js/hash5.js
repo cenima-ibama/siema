@@ -33,12 +33,13 @@
   H5.Rest = (function() {
     Rest.prototype.options = {
       url: null,
-      restService: null,
+      restService: "ws_geo_attributequery.php",
       table: null,
       fields: null,
       parameters: null,
       order: null,
-      limit: null
+      limit: null,
+      lines: {}
     };
 
     Rest.prototype.data = null;
@@ -48,85 +49,45 @@
         options.url += "/";
       }
       this.options = $.extend({}, this.options, options);
+      this._request();
     }
 
-    Rest.prototype.request = function(service) {
+    Rest.prototype._request = function(service) {
       var query, url;
-      if (service) {
-        this.options.restService = "ws_geo_" + service + ".php";
-      } else {
-        this.options.restService = "ws_geo_attributequery.php";
-      }
       url = this.options.url + "v1/" + this.options.restService;
-      query = {};
       if (this.options.table) {
-        query.table = this.options.table;
+        query = "&table=" + this.options.table;
       }
       if (this.options.parameters) {
-        query.parameters = this.options.parameters;
+        query += "&parameters=" + this.options.parameters;
       }
       if (this.options.fields) {
-        query.fields = this.options.fields;
+        query += "&fields=" + this.options.fields;
       }
       if (this.options.order) {
-        query.order = this.options.order;
+        query += "&order=" + this.options.order;
       }
       if (this.options.limit) {
-        query.limit = this.options.limit;
+        query += "&limit=" + this.options.limit;
       }
-      this._get(url, query);
-      return this.data;
+      url = url + "?" + query;
+      return this.data = JSON.parse(this._getfile(url));
     };
 
-    Rest.prototype.getURLParam = function(param) {
-      var compareKeyValuePair, comparisonResult, i, params, search;
-      search = window.location.search.substring(1);
-      compareKeyValuePair = function(pair) {
-        var decodedKey, decodedValue, key_value;
-        key_value = pair.split("=");
-        decodedKey = decodeURIComponent(key_value[0]);
-        decodedValue = decodeURIComponent(key_value[1]);
-        if (decodedKey === param) {
-          return decodedValue;
-        }
-        return null;
-      };
-      comparisonResult = null;
-      if (search.indexOf("&") > -1) {
-        params = search.split("&");
-        i = 0;
-        while (i < params.length) {
-          comparisonResult = compareKeyValuePair(params[i]);
-          if (comparisonResult !== null) {
-            break;
-          }
-          i++;
-        }
+    Rest.prototype._getfile = function(url) {
+      var AJAX;
+      if (window.XMLHttpRequest) {
+        AJAX = new XMLHttpRequest();
       } else {
-        comparisonResult = compareKeyValuePair(search);
+        AJAX = new ActiveXObject("Microsoft.XMLHTTP");
       }
-      return comparisonResult;
-    };
-
-    Rest.prototype._get = function(url, query) {
-      var _this = this;
-      return $.ajax({
-        type: "GET",
-        async: false,
-        url: url,
-        data: query,
-        dataType: "jsonp",
-        success: function(data) {
-          return _this._done(data);
-        },
-        error: function(error, status, desc) {
-          return console.log(status, desc);
-        }
-      });
-    };
-
-    Rest.prototype._done = function(data) {
-      return this.data = data;
+      if (AJAX) {
+        AJAX.open("GET", url, false);
+        AJAX.send(null);
+        return AJAX.responseText;
+      } else {
+        return false;
+      }
     };
 
     return Rest;
@@ -713,8 +674,7 @@
       showAll: false
     },
     initialize: function(options) {
-      L.Util.setOptions(this, options);
-      return this.layer = L.layerGroup();
+      return L.Util.setOptions(this, options);
     },
     setMap: function(map) {
       var sr, z;
@@ -1261,6 +1221,7 @@
       this._globalPointer = "PRWSF_" + Math.floor(Math.random() * 100000);
       window[this._globalPointer] = this;
       this._vectors = [];
+      this.layer = L.layerGroup();
       if (this.options.map) {
         if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
           z = this.options.map.getZoom();
@@ -1276,7 +1237,7 @@
       geomFieldName: "the_geom",
       fields: null,
       where: null,
-      limit: 1000,
+      limit: 5000,
       uniqueField: null
     },
     _requiredParams: ["url", "geotable"],
