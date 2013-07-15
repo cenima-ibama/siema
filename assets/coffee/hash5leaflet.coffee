@@ -25,6 +25,8 @@ H5.Leaflet.Layer = L.Class.extend(
     singlePopup: false
     symbology: null
     showAll: false
+    focus: false
+    above: false
 
   initialize: (options) ->
     L.Util.setOptions this, options
@@ -293,11 +295,15 @@ H5.Leaflet.Layer = L.Class.extend(
     changed
 
   _makeJsonpRequest: (url) ->
-    head = document.getElementsByTagName("head")[0]
-    script = document.createElement("script")
-    script.type = "text/javascript"
-    script.src = url
-    head.appendChild script
+    $.ajax
+      url: url
+      type: "GET"
+      dataType: "jsonp"
+      crossDomain: true
+      success: (data) =>
+        @_processRequest(data)
+      error: (xhr, status, error) ->
+        console.log "Failed URL request: " + error
 
   _processRequest: (json) ->
     data = {}
@@ -334,10 +340,18 @@ H5.Leaflet.Layer = L.Class.extend(
       # reload cluster in case of reload of page
       if @options.markers then @options.markers.clearLayers()
       @options.markers = new L.MarkerClusterGroup()
+      @options.map.addLayer @options.markers
 
     # Store the bounds in the _lastQueriedBounds member so we don't have
     # to query the layer again if someone simply turns a layer on/off
     @_lastQueriedBounds = bounds
+
+    # clean the layers to reflesh
+    # if @layer and @options.dynamic
+      # @layer.clearLayers()
+
+    # add to map
+    @layer.addTo(@options.map)
 
     # If "data.features" exists and there's more than one feature in the array
     if data and data.features and data.features.length
@@ -392,27 +406,24 @@ H5.Leaflet.Layer = L.Class.extend(
           vector_or_vectors = @_geoJsonGeometryToLeaflet(geometry, geometryOptions)
           data.features[i][(if vector_or_vectors instanceof Array then "vectors" else "vector")] = vector_or_vectors
 
-          # Show the vector or vectors on the map
-          # Display clustered info
-          if @options.cluster
-            if data.features[i].vector
-              @options.markers.addLayer(data.features[i].vector)
-            else if data.features[i].vectors and data.features[i].vectors.length
-              for k in [0 ... data.features[i].vectors.length]
-                @options.markers.addLayer data.features[i].vectors[k]
-            @layer.addLayer @options.markers
-          else
-            if data.features[i].vector
-              @layer.addLayer(data.features[i].vector)
-            else if data.features[i].vectors and data.features[i].vectors.length
-              for k in [0 ... data.features[i].vectors.length]
-                @layer.addLayer data.features[i].vectors[k]
-
-          # add to map
-          @layer.addTo(@options.map)
-
-          # Store the vector in an array so we can remove it later
+          # Store the vector in an array
           @_vectors.push data.features[i]
+
+          # Add vector or vectors on the map
+          # it's a cluster layer
+          if @options.cluster
+            if @_vectors[i].vector
+              @options.markers.addLayer @_vectors[i].vector
+            else if @_vectors[i].vectors and @_vectors[i].vectors.length
+              for k in [0 ... @_vectors[i].vectors.length]
+                @options.markers.addLayer @_vectors[i].vectors[k]
+          # it's a normal layer
+          else
+            if @_vectors[i].vector
+              @layer.addLayer @_vectors[i].vector
+            else if @_vectors[i].vectors and @_vectors[i].vectors.length
+              for k in [0 ... @_vectors[i].vectors.length]
+                @layer.addLayer @_vectors[i].vectors[k]
 
           if @options.popupTemplate
             me = this
@@ -467,9 +478,14 @@ H5.Leaflet.Layer = L.Class.extend(
                     me._fireMouseoutEvent feature, event
             ) feature
 
-    # Add cluster to the map
-    if @options.cluster
-      @options.map.addLayer @options.markers
+    if @options.above
+      @layer.eachLayer((layer) ->
+        if layer.setZIndexOffset
+          layer.setZIndexOffset(1000)
+      )
+
+    if @options.focus
+      @options.map.fitBounds(@layer.getBounds())
 )
 # Extend Layer to support GeoJSON geometry parsing
 # Convert GeoJSON to Leaflet vectors
@@ -550,7 +566,7 @@ H5.Leaflet.Postgis = H5.Leaflet.GeoJSONLayer.extend(
     @_vectors = []
 
     # create layer to group all vectors
-    @layer = L.layerGroup()
+    @layer = L.featureGroup()
 
     if @options.map
       if @options.scaleRange and @options.scaleRange instanceof Array and @options.scaleRange.length is 2
@@ -587,11 +603,12 @@ H5.Leaflet.Postgis = H5.Leaflet.GeoJSONLayer.extend(
     fields = ((if @options.fields then @options.fields else "*")) + ", st_asgeojson(" + @options.geomFieldName + "" + ((if @options.geomPrecision then "," + @options.geomPrecision else "")) + ") as geojson"
 
     # Build URL
-    url = @options.url + "v1/ws_geo_attributequery.php" + "?table=" + @options.geotable + "&fields=" + encodeURIComponent(fields) + where + "&limit=" + @options.limit + "&callback=" + @_globalPointer + "._processRequest" # Need this for JSONP
+    url = @options.url + "v1/ws_geo_attributequery.php" + "?table=" + @options.geotable + "&fields=" + encodeURIComponent(fields) + where + "&limit=" + @options.limit
 
     # JSONP request
     @_makeJsonpRequest url
 )
+
 H5.Leaflet.Geoserver = H5.Leaflet.GeoJSONLayer.extend(
   initialize: (options) ->
     i = 0

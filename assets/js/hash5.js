@@ -673,7 +673,9 @@
       popupOptions: {},
       singlePopup: false,
       symbology: null,
-      showAll: false
+      showAll: false,
+      focus: false,
+      above: false
     },
     initialize: function(options) {
       return L.Util.setOptions(this, options);
@@ -929,12 +931,19 @@
       return changed;
     },
     _makeJsonpRequest: function(url) {
-      var head, script;
-      head = document.getElementsByTagName("head")[0];
-      script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = url;
-      return head.appendChild(script);
+      var _this = this;
+      return $.ajax({
+        url: url,
+        type: "GET",
+        dataType: "jsonp",
+        crossDomain: true,
+        success: function(data) {
+          return _this._processRequest(data);
+        },
+        error: function(xhr, status, error) {
+          return console.log("Failed URL request: " + error);
+        }
+      });
     },
     _processRequest: function(json) {
       var data, i, prop, _i, _ref3;
@@ -973,8 +982,10 @@
           this.options.markers.clearLayers();
         }
         this.options.markers = new L.MarkerClusterGroup();
+        this.options.map.addLayer(this.options.markers);
       }
       this._lastQueriedBounds = bounds;
+      this.layer.addTo(this.options.map);
       if (data && data.features && data.features.length) {
         for (i = _i = 0, _ref3 = data.features.length; 0 <= _ref3 ? _i < _ref3 : _i > _ref3; i = 0 <= _ref3 ? ++_i : --_i) {
           onMap = false;
@@ -1027,26 +1038,24 @@
             geometryOptions = this._getFeatureVectorOptions(data.features[i]);
             vector_or_vectors = this._geoJsonGeometryToLeaflet(geometry, geometryOptions);
             data.features[i][(vector_or_vectors instanceof Array ? "vectors" : "vector")] = vector_or_vectors;
+            this._vectors.push(data.features[i]);
             if (this.options.cluster) {
-              if (data.features[i].vector) {
-                this.options.markers.addLayer(data.features[i].vector);
-              } else if (data.features[i].vectors && data.features[i].vectors.length) {
-                for (k = _l = 0, _ref6 = data.features[i].vectors.length; 0 <= _ref6 ? _l < _ref6 : _l > _ref6; k = 0 <= _ref6 ? ++_l : --_l) {
-                  this.options.markers.addLayer(data.features[i].vectors[k]);
+              if (this._vectors[i].vector) {
+                this.options.markers.addLayer(this._vectors[i].vector);
+              } else if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
+                for (k = _l = 0, _ref6 = this._vectors[i].vectors.length; 0 <= _ref6 ? _l < _ref6 : _l > _ref6; k = 0 <= _ref6 ? ++_l : --_l) {
+                  this.options.markers.addLayer(this._vectors[i].vectors[k]);
                 }
               }
-              this.layer.addLayer(this.options.markers);
             } else {
-              if (data.features[i].vector) {
-                this.layer.addLayer(data.features[i].vector);
-              } else if (data.features[i].vectors && data.features[i].vectors.length) {
-                for (k = _m = 0, _ref7 = data.features[i].vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
-                  this.layer.addLayer(data.features[i].vectors[k]);
+              if (this._vectors[i].vector) {
+                this.layer.addLayer(this._vectors[i].vector);
+              } else if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
+                for (k = _m = 0, _ref7 = this._vectors[i].vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
+                  this.layer.addLayer(this._vectors[i].vectors[k]);
                 }
               }
             }
-            this.layer.addTo(this.options.map);
-            this._vectors.push(data.features[i]);
             if (this.options.popupTemplate) {
               me = this;
               feature = data.features[i];
@@ -1131,8 +1140,15 @@
           }
         }
       }
-      if (this.options.cluster) {
-        return this.options.map.addLayer(this.options.markers);
+      if (this.options.above) {
+        this.layer.eachLayer(function(layer) {
+          if (layer.setZIndexOffset) {
+            return layer.setZIndexOffset(1000);
+          }
+        });
+      }
+      if (this.options.focus) {
+        return this.options.map.fitBounds(this.layer.getBounds());
       }
     }
   });
@@ -1223,7 +1239,7 @@
       this._globalPointer = "PRWSF_" + Math.floor(Math.random() * 100000);
       window[this._globalPointer] = this;
       this._vectors = [];
-      this.layer = L.layerGroup();
+      this.layer = L.featureGroup();
       if (this.options.map) {
         if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
           z = this.options.map.getZoom();
@@ -1258,7 +1274,7 @@
         }
       }
       fields = (this.options.fields ? this.options.fields : "*") + ", st_asgeojson(" + this.options.geomFieldName + "" + (this.options.geomPrecision ? "," + this.options.geomPrecision : "") + ") as geojson";
-      url = this.options.url + "v1/ws_geo_attributequery.php" + "?table=" + this.options.geotable + "&fields=" + encodeURIComponent(fields) + where + "&limit=" + this.options.limit + "&callback=" + this._globalPointer + "._processRequest";
+      url = this.options.url + "v1/ws_geo_attributequery.php" + "?table=" + this.options.geotable + "&fields=" + encodeURIComponent(fields) + where + "&limit=" + this.options.limit;
       return this._makeJsonpRequest(url);
     }
   });
