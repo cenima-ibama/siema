@@ -338,7 +338,8 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
 
     # update chart if orientation or the size of the screen changed
     window.addEventListener orientationEvent, (=>
-      @drawChart()
+      if $(@_chartContent).is(":visible")
+        @drawChart()
     ),false
 
   _enableTable: ->

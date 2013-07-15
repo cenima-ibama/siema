@@ -26,8 +26,7 @@ $(document).ready ->
   window.addEventListener orientationEvent, (->
     $( '#map-container' ).width( $( window ).width() )
     $( '#map-container' ).height( $( window ).height() - $('#navbar').height() - 1)
-    $('.nav-collapse').collapse('hide')
-    ),false
+  ), false
 
   #-------------------------------------------------------------------------
   # CHARTS

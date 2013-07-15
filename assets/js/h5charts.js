@@ -90,7 +90,7 @@
 
   H5.DB.diary.data.init();
 
-  $.each(rest.request(), function(i, properties) {
+  $.each(rest.data, function(i, properties) {
     return H5.DB.diary.data.populate(properties.estado, properties.data, parseFloat(properties.total));
   });
 
@@ -138,7 +138,7 @@
 
   H5.DB.prodes.data.init();
 
-  $.each(rest.request(), function(i, properties) {
+  $.each(rest.data, function(i, properties) {
     return H5.DB.prodes.data.populate(properties.ano_prodes.replace('/', '-'), parseFloat(properties.ac), parseFloat(properties.am), parseFloat(properties.ap), parseFloat(properties.ma), parseFloat(properties.mt), parseFloat(properties.pa), parseFloat(properties.ro), parseFloat(properties.rr), parseFloat(properties.to));
   });
 
@@ -171,7 +171,7 @@
 
   H5.DB.cloud.data.init();
 
-  $.each(rest.request(), function(i, properties) {
+  $.each(rest.data, function(i, properties) {
     return H5.DB.cloud.data.populate(properties.data, properties.percent);
   });
 

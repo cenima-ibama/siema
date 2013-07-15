@@ -411,7 +411,9 @@
       supportsOrientationChange = "onorientationchange" in window;
       orientationEvent = (supportsOrientationChange ? "orientationchange" : "resize");
       return window.addEventListener(orientationEvent, (function() {
-        return _this.drawChart();
+        if ($(_this._chartContent).is(":visible")) {
+          return _this.drawChart();
+        }
       }), false);
     };
 

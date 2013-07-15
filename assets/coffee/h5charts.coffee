@@ -72,7 +72,7 @@ rest = new H5.Rest (
 )
 
 H5.DB.diary.data.init()
-$.each rest.request(), (i, properties) ->
+$.each rest.data, (i, properties) ->
   H5.DB.diary.data.populate(
     properties.estado, properties.data, parseFloat(properties.total)
   )
@@ -103,7 +103,7 @@ rest = new H5.Rest (
 )
 
 H5.DB.prodes.data.init()
-$.each rest.request(), (i, properties) ->
+$.each rest.data, (i, properties) ->
   H5.DB.prodes.data.populate(
     properties.ano_prodes.replace('/','-'),
     parseFloat(properties.ac), parseFloat(properties.am),
@@ -136,7 +136,7 @@ rest = new H5.Rest (
 )
 
 H5.DB.cloud.data.init()
-$.each rest.request(), (i, properties) ->
+$.each rest.data, (i, properties) ->
   H5.DB.cloud.data.populate(
     properties.data, properties.percent,
   )

@@ -14,8 +14,7 @@
     orientationEvent = (supportsOrientationChange ? "orientationchange" : "resize");
     window.addEventListener(orientationEvent, (function() {
       $('#map-container').width($(window).width());
-      $('#map-container').height($(window).height() - $('#navbar').height() - 1);
-      return $('.nav-collapse').collapse('hide');
+      return $('#map-container').height($(window).height() - $('#navbar').height() - 1);
     }), false);
     $(".dropdown-menu input, .dropdown-menu label").click(function(e) {
       return e.stopPropagation();
