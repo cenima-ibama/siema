@@ -20,8 +20,8 @@ if [[ -z $ORIGIN ]]; then
   read -p "Repository [ex: xoox/nipples]: " REPOSITORY
   git remote add origin git@github.com:${REPOSITORY}.git
   git pull origin master
-  git remote set-url --push origin https://github.com/${REPOSITORY}.git
+  git remote set-url --push origin https://github.com/${REPOSITORY}
 else
   read -p "Repository [ex: xoox/nipples]: " REPOSITORY
-  git remote set-url --push origin https://github.com/${REPOSITORY}.git
+  git remote set-url --push origin https://github.com/${REPOSITORY}
 fi
