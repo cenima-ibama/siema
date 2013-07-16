@@ -7,9 +7,7 @@ H5.Leaflet = {}
 
 # H5.Leaflet.VectorLayer {{{
 # this Project is a fork from the LeafletVectorlayers from Json Sanfora
-# H5.Leaflet.Layer is a base class for rendering vector layers on a Leaflet map. It's inherited by AGS, A2E, CartoDB, GeoIQ, etc.
 H5.Leaflet.Layer = L.Class.extend(
-
   # Default options for all layers
   options:
     scaleRange: null
@@ -73,10 +71,10 @@ H5.Leaflet.Layer = L.Class.extend(
       @options.map.off "zoomend", @_zoomChangeListener
     if @_autoUpdateInterval
       clearInterval @_autoUpdateInterval
-    @_clearFeatures()
     @_lastQueriedBounds = null
     if @_gotAll
       @_gotAll = false
+    @_clearFeatures()
 
   # Hide the vectors in the layer. This might get called if the layer is still on but out of scaleRange.
   _hideVectors: ->
@@ -89,8 +87,8 @@ H5.Leaflet.Layer = L.Class.extend(
 
   # Hide the vectors, then empty the vectory holding array
   _clearFeatures: ->
-    @layer.clearLayers()
     @_vectors = []
+    @layer.clearLayers()
 
   # Add an event hanlder to detect a zoom change on the map
   _addZoomChangeListener: ->
@@ -177,7 +175,7 @@ H5.Leaflet.Layer = L.Class.extend(
     # Check to see if popupContent has changed and if so setContent
     if feature.popup
       # The Popup is associated with a feature
-      feature.popup.setContent feature.popupContent  if feature.popupContent isnt previousContent
+      feature.popup.setContent feature.popupContent if feature.popupContent isnt previousContent
     # The Popup is associated with the layer (singlePopup: true)
     else if @popup and @popup.associatedFeature is feature
       if feature.popupContent isnt previousContent
@@ -276,7 +274,7 @@ H5.Leaflet.Layer = L.Class.extend(
   _getPropertiesChanged: (oldAtts, newAtts) ->
     changed = false
     for key of oldAtts
-      changed = true  unless oldAtts[key] is newAtts[key]
+      changed = true unless oldAtts[key] is newAtts[key]
     changed
 
   # Check to see if a particular property changed
@@ -290,9 +288,10 @@ H5.Leaflet.Layer = L.Class.extend(
     changed = false
 
     # For now only checking for point changes
-    if not oldGeom.coordinates[0] is newGeom.coordinates[0] and oldGeom.coordinates[1] is newGeom.coordinates[1]
+    if oldGeom.coordinates[0] isnt newGeom.coordinates[0] or oldGeom.coordinates[1] isnt newGeom.coordinates[1]
       changed = true
-    changed
+
+    return changed
 
   _makeJsonpRequest: (url) ->
     $.ajax
@@ -317,7 +316,7 @@ H5.Leaflet.Layer = L.Class.extend(
       data.features[i].properties = {}
       for prop of json[i]
         if prop is "geojson"
-          data.features[i].geometry =  JSON.parse(json[i].geojson)
+          data.features[i].geometry = JSON.parse(json[i].geojson)
         else data.features[i].properties[prop] = json[i][prop] unless prop is "properties"
 
     # remove json data
@@ -340,15 +339,11 @@ H5.Leaflet.Layer = L.Class.extend(
       # reload cluster in case of reload of page
       if @options.markers then @options.markers.clearLayers()
       @options.markers = new L.MarkerClusterGroup()
-      @options.map.addLayer @options.markers
+      @layer.addLayer @options.markers
 
     # Store the bounds in the _lastQueriedBounds member so we don't have
     # to query the layer again if someone simply turns a layer on/off
     @_lastQueriedBounds = bounds
-
-    # clean the layers to reflesh
-    # if @layer and @options.dynamic
-      # @layer.clearLayers()
 
     # add to map
     @layer.addTo(@options.map)
@@ -363,7 +358,7 @@ H5.Leaflet.Layer = L.Class.extend(
         # If we have a "uniqueField" for this layer
         if @options.uniqueField
           # Loop through all of the features currently on the map
-          for j in [0 ...  @_vectors.length]
+          for j in [0 ... @_vectors.length]
             # Does the "uniqueField" property for this feature match the feature on the map
             if data.features[i].properties[@options.uniqueField] is @_vectors[j].properties[@options.uniqueField]
               # The feature is already on the map
@@ -391,13 +386,13 @@ H5.Leaflet.Layer = L.Class.extend(
                           # It's a LineString or Polygon, so use setStyle
                           @_vectors[j].vectors[k].setStyle @_getFeatureVectorOptions(@_vectors[j])
                         # It's a Point, so use setIcon
-                        else @_vectors[j].vectors[k].setIcon @_getFeatureVectorOptions(@_vectors[j]).icon  if @_vectors[j].vectors[k].setIcon
+                        else @_vectors[j].vectors[k].setIcon @_getFeatureVectorOptions(@_vectors[j]).icon if @_vectors[j].vectors[k].setIcon
                     else if @_vectors[j].vector
                       if @_vectors[j].vector.setStyle
                         # It's a LineString or Polygon, so use setStyle
                         @_vectors[j].vector.setStyle @_getFeatureVectorOptions(@_vectors[j])
                       # It's a Point, so use setIcon
-                      else @_vectors[j].vector.setIcon @_getFeatureVectorOptions(@_vectors[j]).icon  if @_vectors[j].vector.setIcon
+                      else @_vectors[j].vector.setIcon @_getFeatureVectorOptions(@_vectors[j]).icon if @_vectors[j].vector.setIcon
 
         if not onMap or not @options.uniqueField
           geometry = data.features[i].geometry
@@ -486,7 +481,11 @@ H5.Leaflet.Layer = L.Class.extend(
 
     if @options.focus
       @options.map.fitBounds(@layer.getBounds())
+
+    # clean unused data
+    data = null
 )
+
 # Extend Layer to support GeoJSON geometry parsing
 # Convert GeoJSON to Leaflet vectors
 H5.Leaflet.GeoJSONLayer = H5.Leaflet.Layer.extend(
@@ -552,7 +551,7 @@ H5.Leaflet.Postgis = H5.Leaflet.GeoJSONLayer.extend(
         throw new Error("No \"" + @_requiredParams[i] + "\" parameter found.")
 
     # If the url wasn't passed with a trailing /, add it.
-    options.url += "/"  if options.url.substr(options.url.length - 1, 1) isnt "/"
+    options.url += "/" if options.url.substr(options.url.length - 1, 1) isnt "/"
 
     # Extend Layer to create PRWSF
     H5.Leaflet.Layer::initialize.call this, options
@@ -608,7 +607,6 @@ H5.Leaflet.Postgis = H5.Leaflet.GeoJSONLayer.extend(
     # JSONP request
     @_makeJsonpRequest url
 )
-
 H5.Leaflet.Geoserver = H5.Leaflet.GeoJSONLayer.extend(
   initialize: (options) ->
     i = 0

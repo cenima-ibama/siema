@@ -733,11 +733,11 @@
       if (this._autoUpdateInterval) {
         clearInterval(this._autoUpdateInterval);
       }
-      this._clearFeatures();
       this._lastQueriedBounds = null;
       if (this._gotAll) {
-        return this._gotAll = false;
+        this._gotAll = false;
       }
+      return this._clearFeatures();
     },
     _hideVectors: function() {
       return this.options.map.removeLayer(this.layer);
@@ -746,8 +746,8 @@
       return this.layer.addTo(this.options.map);
     },
     _clearFeatures: function() {
-      this.layer.clearLayers();
-      return this._vectors = [];
+      this._vectors = [];
+      return this.layer.clearLayers();
     },
     _addZoomChangeListener: function() {
       this._zoomChangeListener = this._zoomChangeListenerTemplate();
@@ -925,7 +925,7 @@
     _getGeometryChanged: function(oldGeom, newGeom) {
       var changed;
       changed = false;
-      if (!oldGeom.coordinates[0] === newGeom.coordinates[0] && oldGeom.coordinates[1] === newGeom.coordinates[1]) {
+      if (oldGeom.coordinates[0] !== newGeom.coordinates[0] || oldGeom.coordinates[1] !== newGeom.coordinates[1]) {
         changed = true;
       }
       return changed;
@@ -982,7 +982,7 @@
           this.options.markers.clearLayers();
         }
         this.options.markers = new L.MarkerClusterGroup();
-        this.options.map.addLayer(this.options.markers);
+        this.layer.addLayer(this.options.markers);
       }
       this._lastQueriedBounds = bounds;
       this.layer.addTo(this.options.map);
@@ -1148,8 +1148,9 @@
         });
       }
       if (this.options.focus) {
-        return this.options.map.fitBounds(this.layer.getBounds());
+        this.options.map.fitBounds(this.layer.getBounds());
       }
+      return data = null;
     }
   });
 

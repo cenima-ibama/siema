@@ -112,6 +112,7 @@ H5.Map.layer.clusters = new H5.Leaflet.Postgis(
   cluster: true
   popupTemplate: null
   where: "ano = '2013'"
+  focus: true
   symbology:
     type: "single"
     vectorStyle:
