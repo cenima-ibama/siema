@@ -18,7 +18,7 @@ git config --global --list
 ORIGIN=`git remote`
 if [[ -z $ORIGIN ]]; then
   read -p "Repository [ex: xoox/nipples]: " REPOSITORY
-  git remote add origin git@github.com:${REPOSITORY}.git
+  git remote add origin https://github.com/${REPOSITORY}
   git pull origin master
   git remote set-url --push origin https://github.com/${REPOSITORY}
 else
