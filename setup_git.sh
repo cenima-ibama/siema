@@ -22,5 +22,6 @@ if [[ -z $ORIGIN ]]; then
   git pull origin master
   git remote set-url --push origin git@github.com:${REPOSITORY}.git
 else
-  git remote set-url --push origin git@github.com:${USER}/${PWD##*/}.git
+  read -p "Repository [ex: xoox/nipples]: " REPOSITORY
+  git remote set-url --push origin git@github.com:${REPOSITORY}.git
 fi
