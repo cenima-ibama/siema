@@ -103,25 +103,25 @@
       </div>
       <hr>
       <div class="row-fluid">
-        <div class="boxes">
-          <div id="knob1" class="box"> </div>
-          <div id="knob2" class="box"> </div>
-          <div id="knob3" class="box"> </div>
-          <div id="spark1" class="box"> </div>
-          <div id="spark2" class="box"> </div>
+        <div id="sparks" class="sparks">
+          <div id="knob1" class="spark"> </div>
+          <div id="knob2" class="spark"> </div>
+          <div id="knob3" class="spark"> </div>
+          <div id="spark1" class="spark"> </div>
+          <div id="spark2" class="spark"> </div>
         </div>
       </div>
       <hr>
       <div id="charts" class="row-fluid">
-        <div id="chart1" class="chart"> </div>
-        <div id="chart2" class="chart"> </div>
-        <div id="chart3" class="chart"> </div>
-        <div id="chart4" class="chart"> </div>
-        <div id="chart5" class="chart"> </div>
-        <div id="chart6" class="chart"> </div>
-        <div id="chart9" class="chart"> </div>
-        <div id="chart7" class="chart-small"> </div>
-        <div id="chart8" class="chart-small"> </div>
+        <div id="chart1" class="box"> </div>
+        <div id="chart2" class="box"> </div>
+        <div id="chart3" class="box"> </div>
+        <div id="chart4" class="box"> </div>
+        <div id="chart5" class="box"> </div>
+        <div id="chart6" class="box"> </div>
+        <div id="chart9" class="box"> </div>
+        <div id="chart7" class="box-small"> </div>
+        <div id="chart8" class="box-small"> </div>
       </div>
     </div>
     <footer>

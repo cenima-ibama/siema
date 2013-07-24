@@ -44,21 +44,21 @@ class H5.Charts.Container
     @_createContainer()
 
   changeTitle: (title) ->
-    $(@_chartTitle).html(title)
+    $(@_boxTitle).html(title)
     if @options.buttons.arrows or @options.buttons.minusplus or @options.selects?
       pipeline = "<span class=\"break\"></span>"
-      $(@_chartTitle).prepend pipeline
+      $(@_boxTitle).prepend pipeline
 
   _createContainer: ->
     @_container = document.getElementById(@options.container)
 
-    chartHeader = document.createElement("div")
-    chartHeader.className = "chart-header"
-    @_chartHeader = chartHeader
+    boxHeader = document.createElement("div")
+    boxHeader.className = "box-header"
+    @_boxHeader = boxHeader
 
-    chartTitle = document.createElement("h2")
-    chartTitle.innerHTML = @options.title
-    @_chartTitle = chartTitle
+    boxTitle = document.createElement("h2")
+    boxTitle.innerHTML = @options.title
+    @_boxTitle = boxTitle
 
     leftCtrl = document.createElement("div")
     leftCtrl.className = "btn-group chart-icon btn-left"
@@ -68,19 +68,19 @@ class H5.Charts.Container
     rightCtrl.className = "btn-group chart-icon btn-right"
     @_rightCtrl = rightCtrl
 
-    chartContent = document.createElement("div")
-    chartContent.id = "chart-" + @options.container
-    chartContent.className = "chart-content"
-    @_chartContent = chartContent
+    boxContent = document.createElement("div")
+    boxContent.id = "box-" + @options.container
+    boxContent.className = "box-content"
+    @_boxContent = boxContent
 
-    $(@_chartHeader).append @_leftCtrl, @_chartTitle, @_rightCtrl
-    $(@_container).append @_chartHeader, @_chartContent
+    $(@_boxHeader).append @_leftCtrl, @_boxTitle, @_rightCtrl
+    $(@_container).append @_boxHeader, @_boxContent
 
     pipeline = "<span class=\"break\"></span>"
     # add minus and plus controllers
     if @options.buttons.minusplus
       # add break
-      $(@_chartTitle).prepend pipeline
+      $(@_boxTitle).prepend pipeline
       # add buttons
       delBtn = document.createElement("button")
       delBtn.id = @options.container + "-btn-minus"
@@ -106,7 +106,7 @@ class H5.Charts.Container
 
     else if @options.buttons.arrows
       # add break
-      $(@_chartTitle).prepend pipeline
+      $(@_boxTitle).prepend pipeline
       # right buttons
       leftBtn = document.createElement("button")
       leftBtn.id = @options.container + "-btn-left"
@@ -132,7 +132,7 @@ class H5.Charts.Container
 
     else if @options.selects?
       # add break
-      $(@_chartTitle).prepend pipeline
+      $(@_boxTitle).prepend pipeline
       # create form
       formBtn = document.createElement("form")
       formBtn.name = "form-" + @options.container
@@ -168,11 +168,11 @@ class H5.Charts.Container
 
       $(@_rightCtrl).append @_tableBtn
 
-      chartTable = document.createElement("div")
-      chartTable.id = "table-" + @options.container
-      chartTable.className = "chart-table"
-      @_chartTable = chartTable
-      $(@_container).append @_chartTable
+      boxTable = document.createElement("div")
+      boxTable.id = "table-" + @options.container
+      boxTable.className = "box-content-table"
+      @_boxTable = boxTable
+      $(@_container).append @_boxTable
 
       @_enableTable()
 
@@ -248,7 +248,7 @@ class H5.Charts.Container
     $(@_minBtn).on "click", (event) =>
       event.preventDefault()
 
-      if $(@_chartContent).is(":visible")
+      if $(@_boxContent).is(":visible")
         @_minIcon.className = "icon-chevron-down"
         if @options.buttons.minusplus
           $(@_addBtn).prop "disabled", true
@@ -265,10 +265,10 @@ class H5.Charts.Container
           $(@_leftBtn).prop "disabled", false
           $(@_rightBtn).prop "disabled", false
 
-      if $(@_chartTable).is(":visible")
-        $(@_chartTable).slideToggle("fast", "linear")
+      if $(@_boxTable).is(":visible")
+        $(@_boxTable).slideToggle("fast", "linear")
 
-      $(@_chartContent).slideToggle("fast", "linear")
+      $(@_boxContent).slideToggle("fast", "linear")
 
   _enableMaximize: ->
     $(@_maxBtn).on "click", (event) =>
@@ -287,17 +287,17 @@ class H5.Charts.Container
         $("#navbar").show()
 
       # always hide the charttable div
-      $(@_chartTable).hide()
-      $(@_chartTable).toggleClass "table-overlay"
+      $(@_boxTable).hide()
+      $(@_boxTable).toggleClass "box-table-overlay"
 
       $(@_container).toggleClass @defaultClass
-      $(@_container).toggleClass "chart-overlay"
+      $(@_container).toggleClass "box-overlay"
       $("body").toggleClass "body-overlay"
 
-      $(@_chartContent).toggleClass "chart-content-overlay"
-      $(@_chartTable).toggleClass "table-content-overlay"
-      $(@_chartContent).hide()
-      $(@_chartContent).fadeToggle(500, "linear")
+      $(@_boxContent).toggleClass "content-overlay"
+      $(@_boxTable).toggleClass "content-overlay"
+      $(@_boxContent).hide()
+      $(@_boxContent).fadeToggle(500, "linear")
 
       @drawChart()
 
@@ -320,11 +320,11 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
       # setup new chart
       if @options.type is "Gauge"
         @chart = new google.visualization.Gauge(
-          @_chartContent
+          @_boxContent
         )
       else
         @chart = new google.visualization[@options.type + "Chart"](
-          @_chartContent
+          @_boxContent
         )
       # only init one time
       @options.started = true
@@ -338,7 +338,7 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
 
     # update chart if orientation or the size of the screen changed
     window.addEventListener orientationEvent, (=>
-      if $(@_chartContent).is(":visible")
+      if $(@_boxContent).is(":visible")
         @drawChart()
     ),false
 
@@ -347,18 +347,18 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
     $(@_tableBtn).on "click", (event) =>
       event.preventDefault()
 
-      if $(@_chartContent).is(":hidden")
+      if $(@_boxContent).is(":hidden")
         @_minIcon.className = "icon-chevron-up"
-        $(@_chartContent).fadeToggle('fast', 'linear')
+        $(@_boxContent).fadeToggle('fast', 'linear')
 
-      $(@_chartTable).fadeToggle('fast', 'linear')
+      $(@_boxTable).fadeToggle('fast', 'linear')
 
       # only update values when visible
-      if $(@_chartTable).is(":visible")
+      if $(@_boxTable).is(":visible")
 
         # Create and draw the visualization.
         visualization = new google.visualization.Table(
-          @_chartTable
+          @_boxTable
         )
 
         visualization.draw @data, null

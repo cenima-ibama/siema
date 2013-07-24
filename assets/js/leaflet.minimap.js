@@ -9,17 +9,17 @@ L.Control.MiniMap = L.Control.extend({
 		width: 150,
 		height: 150
 	},
-	
+
 	hideText: 'Hide MiniMap',
-	
+
 	showText: 'Show MiniMap',
-	
+
 	//layer is the map layer to be shown in the minimap
 	initialize: function (layer, options) {
 		L.Util.setOptions(this, options);
 		this._layer = layer;
 	},
-	
+
 	onAdd: function (map) {
 
 		this._mainMap = map;
@@ -136,8 +136,8 @@ L.Control.MiniMap = L.Control.extend({
 	_minimize: function () {
 		// hide the minimap
 		if (this.options.toggleDisplay) {
-			this._container.style.width = '19px';
-			this._container.style.height = '19px';
+			this._container.style.width = '26px';
+			this._container.style.height = '26px';
 			this._toggleDisplayButton.className += ' minimized';
 		}
 		else {

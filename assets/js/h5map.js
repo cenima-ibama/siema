@@ -59,7 +59,8 @@
 
   H5.Map.minimap = new L.Control.MiniMap(openstreetMini, {
     toggleDisplay: true,
-    zoomLevelOffset: -4
+    zoomLevelOffset: -4,
+    autoToggleDisplay: false
   }).addTo(H5.Map.base);
 
   H5.Map.base.attributionControl.setPrefix("Hexgis Hash5");
@@ -140,9 +141,9 @@
     "OSM": openstreet,
     "Bing Aerial": bingaerial,
     "Bing Road": bingroad,
-    "Bing Hybrid": binghybrid,
-    "Alerta [Indicadores]": H5.Map.layer.clusters.layer,
-    "Alerta [Polígonos]": H5.Map.layer.alerta.layer
+    "Bing Hybrid": binghybrid
+  }, {
+    "Alerta DETER": H5.Map.layer.alerta.layer
   });
 
   H5.Map.base.addControl(H5.Map.layerList);

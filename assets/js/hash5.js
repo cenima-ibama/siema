@@ -146,38 +146,38 @@
 
     Container.prototype.changeTitle = function(title) {
       var pipeline;
-      $(this._chartTitle).html(title);
+      $(this._boxTitle).html(title);
       if (this.options.buttons.arrows || this.options.buttons.minusplus || (this.options.selects != null)) {
         pipeline = "<span class=\"break\"></span>";
-        return $(this._chartTitle).prepend(pipeline);
+        return $(this._boxTitle).prepend(pipeline);
       }
     };
 
     Container.prototype._createContainer = function() {
-      var addBtn, addIcon, chartContent, chartHeader, chartTable, chartTitle, closeBtn, closeIcon, delBtn, delIcon, exportBtn, exportIcon, formBtn, leftBtn, leftCtrl, leftIcon, maxBtn, maxIcon, minBtn, minIcon, pipeline, rightBtn, rightCtrl, rightIcon, tableBtn, tableIcon,
+      var addBtn, addIcon, boxContent, boxHeader, boxTable, boxTitle, closeBtn, closeIcon, delBtn, delIcon, exportBtn, exportIcon, formBtn, leftBtn, leftCtrl, leftIcon, maxBtn, maxIcon, minBtn, minIcon, pipeline, rightBtn, rightCtrl, rightIcon, tableBtn, tableIcon,
         _this = this;
       this._container = document.getElementById(this.options.container);
-      chartHeader = document.createElement("div");
-      chartHeader.className = "chart-header";
-      this._chartHeader = chartHeader;
-      chartTitle = document.createElement("h2");
-      chartTitle.innerHTML = this.options.title;
-      this._chartTitle = chartTitle;
+      boxHeader = document.createElement("div");
+      boxHeader.className = "box-header";
+      this._boxHeader = boxHeader;
+      boxTitle = document.createElement("h2");
+      boxTitle.innerHTML = this.options.title;
+      this._boxTitle = boxTitle;
       leftCtrl = document.createElement("div");
       leftCtrl.className = "btn-group chart-icon btn-left";
       this._leftCtrl = leftCtrl;
       rightCtrl = document.createElement("div");
       rightCtrl.className = "btn-group chart-icon btn-right";
       this._rightCtrl = rightCtrl;
-      chartContent = document.createElement("div");
-      chartContent.id = "chart-" + this.options.container;
-      chartContent.className = "chart-content";
-      this._chartContent = chartContent;
-      $(this._chartHeader).append(this._leftCtrl, this._chartTitle, this._rightCtrl);
-      $(this._container).append(this._chartHeader, this._chartContent);
+      boxContent = document.createElement("div");
+      boxContent.id = "box-" + this.options.container;
+      boxContent.className = "box-content";
+      this._boxContent = boxContent;
+      $(this._boxHeader).append(this._leftCtrl, this._boxTitle, this._rightCtrl);
+      $(this._container).append(this._boxHeader, this._boxContent);
       pipeline = "<span class=\"break\"></span>";
       if (this.options.buttons.minusplus) {
-        $(this._chartTitle).prepend(pipeline);
+        $(this._boxTitle).prepend(pipeline);
         delBtn = document.createElement("button");
         delBtn.id = this.options.container + "-btn-minus";
         delBtn.className = "btn";
@@ -196,7 +196,7 @@
         $(this._addBtn).append(this._addIcon);
         $(this._leftCtrl).append(this._delBtn, this._addBtn);
       } else if (this.options.buttons.arrows) {
-        $(this._chartTitle).prepend(pipeline);
+        $(this._boxTitle).prepend(pipeline);
         leftBtn = document.createElement("button");
         leftBtn.id = this.options.container + "-btn-left";
         leftBtn.className = "btn";
@@ -215,7 +215,7 @@
         $(this._rightBtn).append(this._rightIcon);
         $(this._leftCtrl).append(this._leftBtn, this._rightBtn);
       } else if (this.options.selects != null) {
-        $(this._chartTitle).prepend(pipeline);
+        $(this._boxTitle).prepend(pipeline);
         formBtn = document.createElement("form");
         formBtn.name = "form-" + this.options.container;
         formBtn.className = "form-inline";
@@ -246,11 +246,11 @@
         this._tableIcon = tableIcon;
         $(this._tableBtn).append(this._tableIcon);
         $(this._rightCtrl).append(this._tableBtn);
-        chartTable = document.createElement("div");
-        chartTable.id = "table-" + this.options.container;
-        chartTable.className = "chart-table";
-        this._chartTable = chartTable;
-        $(this._container).append(this._chartTable);
+        boxTable = document.createElement("div");
+        boxTable.id = "table-" + this.options.container;
+        boxTable.className = "box-content-table";
+        this._boxTable = boxTable;
+        $(this._container).append(this._boxTable);
         this._enableTable();
       }
       if (this.options.buttons["export"]) {
@@ -307,7 +307,7 @@
       var _this = this;
       return $(this._minBtn).on("click", function(event) {
         event.preventDefault();
-        if ($(_this._chartContent).is(":visible")) {
+        if ($(_this._boxContent).is(":visible")) {
           _this._minIcon.className = "icon-chevron-down";
           if (_this.options.buttons.minusplus) {
             $(_this._addBtn).prop("disabled", true);
@@ -326,10 +326,10 @@
             $(_this._rightBtn).prop("disabled", false);
           }
         }
-        if ($(_this._chartTable).is(":visible")) {
-          $(_this._chartTable).slideToggle("fast", "linear");
+        if ($(_this._boxTable).is(":visible")) {
+          $(_this._boxTable).slideToggle("fast", "linear");
         }
-        return $(_this._chartContent).slideToggle("fast", "linear");
+        return $(_this._boxContent).slideToggle("fast", "linear");
       });
     };
 
@@ -349,15 +349,15 @@
           _this._maxIcon.className = "icon-resize-full";
           $("#navbar").show();
         }
-        $(_this._chartTable).hide();
-        $(_this._chartTable).toggleClass("table-overlay");
+        $(_this._boxTable).hide();
+        $(_this._boxTable).toggleClass("box-table-overlay");
         $(_this._container).toggleClass(_this.defaultClass);
-        $(_this._container).toggleClass("chart-overlay");
+        $(_this._container).toggleClass("box-overlay");
         $("body").toggleClass("body-overlay");
-        $(_this._chartContent).toggleClass("chart-content-overlay");
-        $(_this._chartTable).toggleClass("table-content-overlay");
-        $(_this._chartContent).hide();
-        $(_this._chartContent).fadeToggle(500, "linear");
+        $(_this._boxContent).toggleClass("content-overlay");
+        $(_this._boxTable).toggleClass("content-overlay");
+        $(_this._boxContent).hide();
+        $(_this._boxContent).fadeToggle(500, "linear");
         return _this.drawChart();
       });
     };
@@ -396,9 +396,9 @@
     GoogleCharts.prototype.createChart = function() {
       if (!this.options.started) {
         if (this.options.type === "Gauge") {
-          this.chart = new google.visualization.Gauge(this._chartContent);
+          this.chart = new google.visualization.Gauge(this._boxContent);
         } else {
-          this.chart = new google.visualization[this.options.type + "Chart"](this._chartContent);
+          this.chart = new google.visualization[this.options.type + "Chart"](this._boxContent);
         }
         this.options.started = true;
         return this._detectScreenChanges();
@@ -411,7 +411,7 @@
       supportsOrientationChange = "onorientationchange" in window;
       orientationEvent = (supportsOrientationChange ? "orientationchange" : "resize");
       return window.addEventListener(orientationEvent, (function() {
-        if ($(_this._chartContent).is(":visible")) {
+        if ($(_this._boxContent).is(":visible")) {
           return _this.drawChart();
         }
       }), false);
@@ -422,13 +422,13 @@
       return $(this._tableBtn).on("click", function(event) {
         var visualization;
         event.preventDefault();
-        if ($(_this._chartContent).is(":hidden")) {
+        if ($(_this._boxContent).is(":hidden")) {
           _this._minIcon.className = "icon-chevron-up";
-          $(_this._chartContent).fadeToggle('fast', 'linear');
+          $(_this._boxContent).fadeToggle('fast', 'linear');
         }
-        $(_this._chartTable).fadeToggle('fast', 'linear');
-        if ($(_this._chartTable).is(":visible")) {
-          visualization = new google.visualization.Table(_this._chartTable);
+        $(_this._boxTable).fadeToggle('fast', 'linear');
+        if ($(_this._boxTable).is(":visible")) {
+          visualization = new google.visualization.Table(_this._boxTable);
           return visualization.draw(_this.data, null);
         }
       });
@@ -1433,15 +1433,18 @@
       position: "topright",
       autoZIndex: true
     },
-    initialize: function(baseLayers, options) {
+    initialize: function(baseLayers, overlayers, options) {
       var i, _results;
       L.setOptions(this, options);
       this._layers = {};
       this._lastZIndex = 0;
       this._handlingClick = false;
-      _results = [];
       for (i in baseLayers) {
-        _results.push(this._addLayer(baseLayers[i], i));
+        this._addLayer(baseLayers[i], i, false);
+      }
+      _results = [];
+      for (i in overlayers) {
+        _results.push(this._addLayer(overlayers[i], i, true));
       }
       return _results;
     },
@@ -1454,8 +1457,13 @@
     onRemove: function(map) {
       return map.off("layeradd", this._onLayerChange).off("layerremove", this._onLayerChange);
     },
-    addLayer: function(layer, name) {
+    addBaseLayer: function(layer, name) {
       this._addLayer(layer, name);
+      this._update();
+      return this;
+    },
+    addoverlayer: function(layer, name) {
+      this._addLayer(layer, name, true);
       this._update();
       return this;
     },
@@ -1470,6 +1478,7 @@
       var className, container, form, link;
       className = "leaflet-control-layers";
       container = this._container = L.DomUtil.create("div", className);
+      container.setAttribute('aria-haspopup', true);
       if (!L.Browser.touch) {
         L.DomEvent.disableClickPropagation(container);
         L.DomEvent.on(container, "mousewheel", L.DomEvent.stopPropagation);
@@ -1483,23 +1492,26 @@
         link.href = "#";
         link.title = "Layers";
         if (L.Browser.touch) {
-          L.DomEvent.on(link, "click", L.DomEvent.stopPropagation).on(link, "click", L.DomEvent.preventDefault).on(link, "click", this._expand, this);
+          L.DomEvent.on(link, "click", L.DomEvent.stop).on(link, "click", this._expand, this);
         } else {
           L.DomEvent.on(link, "focus", this._expand, this);
         }
-        this._map.on("movestart", this._collapse, this);
+        this._map.on("click", this._collapse, this);
       } else {
         this._expand();
       }
-      this._baseLayersList = L.DomUtil.create("div", className + "-base", form);
-      return container.appendChild(form);
+      this._baseLayersList = L.DomUtil.create('div', className + '-base', form);
+      this._separator = L.DomUtil.create('div', className + '-separator', form);
+      this._overlayersList = L.DomUtil.create('div', className + '-overlayers', form);
+      return $(container).append(form);
     },
-    _addLayer: function(layer, name) {
+    _addLayer: function(layer, name, overlayer) {
       var id;
       id = L.stamp(layer);
       this._layers[id] = {
         layer: layer,
-        name: name
+        name: name,
+        overlayer: overlayer
       };
       if (this.options.autoZIndex && layer.setZIndex) {
         this._lastZIndex++;
@@ -1507,59 +1519,100 @@
       }
     },
     _update: function() {
-      var i, obj, _results;
+      var baseLayersPresent, i, obj, overlayersPresent, _results;
       if (!this._container) {
         return;
       }
       this._baseLayersList.innerHTML = "";
-      i = void 0;
-      obj = void 0;
+      this._overlayersList.innerHTML = "";
+      baseLayersPresent = false;
+      overlayersPresent = false;
       _results = [];
       for (i in this._layers) {
         obj = this._layers[i];
-        _results.push(this._addItem(obj));
+        this._addItem(obj);
+        overlayersPresent = overlayersPresent || obj.overlayer;
+        baseLayersPresent = baseLayersPresent || !obj.overlayer;
+        _results.push(this._separator.style.display = (overlayersPresent && baseLayersPresent ? "" : "none"));
       }
       return _results;
     },
     _onLayerChange: function(e) {
-      var id;
-      id = L.stamp(e.layer);
-      if (this._layers[id] && !this._handlingClick) {
-        return this._update();
+      var obj, type;
+      obj = this._layers[L.stamp(e.layer)];
+      if (!obj) {
+        return;
+      }
+      if (!this._handlingClick) {
+        this._update();
+      }
+      type = (obj.overlayer ? (e.type === "layeradd" ? "overlayeradd" : "overlayerremove") : (e.type === "layeradd" ? "baselayerchange" : null));
+      if (type) {
+        return this._map.fire(type, obj);
       }
     },
     _addItem: function(obj) {
-      var checked, container, control, controlgroup, input, label, toggle, _this;
-      _this = this;
-      container = this._baseLayersList;
+      var checked, container, control, controlgroup, input, label, slider, toggle,
+        _this = this;
+      container = (obj.overlayer ? this._overlayersList : this._baseLayersList);
       controlgroup = L.DomUtil.create("div", "control-group", container);
       checked = this._map.hasLayer(obj.layer);
       label = L.DomUtil.create("label", "control-label", controlgroup);
       label.innerHTML = " " + obj.name;
       control = L.DomUtil.create("div", "control", controlgroup);
       toggle = L.DomUtil.create("div", "switch switch-small", control);
-      input = L.DomUtil.create("input", "leaflet-control-layers-selector", toggle);
-      input.type = "checkbox";
+      if (!obj.overlayer) {
+        $(toggle).addClass("baseLayers");
+      }
+      input = L.DomUtil.create("input", "", toggle);
+      if (obj.overlayer) {
+        input.type = "checkbox";
+        $(input).addClass("leaflet-control-layers-selector");
+        if (!H5.isMobile.any()) {
+          slider = L.DomUtil.create("div", "", controlgroup);
+          $(slider).addClass("leaflet-control-layers-slider");
+          $(slider).slider({
+            min: 0,
+            max: 100,
+            value: 100,
+            range: "min",
+            slide: function(event, ui) {
+              var _this = this;
+              return obj.layer.eachLayer(function(layer) {
+                if (layer.setOpacity) {
+                  return layer.Opacity(ui.value / 100);
+                } else {
+                  return layer.setStyle({
+                    fillOpacity: ui.value / 100,
+                    opacity: ui.value / 100
+                  });
+                }
+              });
+            }
+          });
+        }
+      } else {
+        input.type = "radio";
+        $(input).attr("name", "leaflet-base-layers");
+      }
       input.defaultChecked = checked;
       input.layerId = L.stamp(obj.layer);
       $(toggle).bootstrapSwitch();
       $(toggle).on("switch-change", function(e, data) {
+        if (!obj.overlayer) {
+          $('.baseLayers').bootstrapSwitch('toggleRadioState');
+        }
         return _this._onInputClick(input, obj);
       });
       return controlgroup;
     },
     _onInputClick: function(input, obj) {
-      this._handlingClick = true;
-      if (input.checked) {
+      if (input.checked && !this._map.hasLayer(obj.layer)) {
         this._map.addLayer(obj.layer);
-        this._map.fire("layeradd", {
-          layer: obj
-        });
       } else {
-        this._map.removeLayer(obj.layer);
-        this._map.fire("layerremove", {
-          layer: obj
-        });
+        if (!(input.checked && this._map.hasLayer(obj.layer))) {
+          this._map.removeLayer(obj.layer);
+        }
       }
       return this._handlingClick = false;
     },

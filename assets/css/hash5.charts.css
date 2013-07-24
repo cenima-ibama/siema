@@ -76,36 +76,36 @@
   z-index: 10;
   background-color: #F7F7F7;
 }
-.dash .charts-content {
+.charts-content {
   text-align: center;
   margin: 2% 2% 4%;
 }
 @media (max-width: 979px) {
-  .dash .charts-content {
+  .charts-content {
     margin: 6% 2% 4%;
   }
 }
-.dash .charts-content .gauges {
+.gauges {
   width: auto;
   margin: 0;
 }
-.dash .charts-content .gauges .gauge {
+.gauges .gauge {
   height: 150px;
   width: 150px;
   float: left;
 }
-.dash .charts-content .chart {
+.chart {
   float: left;
   width: 47.8%;
   margin: 10px;
 }
 @media (max-width: 979px) {
-  .dash .charts-content .chart {
+  .chart {
     width: 100%;
     margin: 0 0 15px;
   }
 }
-.dash .charts-content .chart .chart-content {
+.chart .chart-content {
   background: none repeat scroll 0 0 #FCFCFC;
   border: 1px solid #DDDDDD;
   border-radius: 0 0 2px 2px;
@@ -115,7 +115,7 @@
   margin-top: -1px;
   height: 220px;
 }
-.dash .charts-content .chart .chart-table {
+.chart .table-content {
   display: none;
   background: none repeat scroll 0 0 #FCFCFC;
   border-radius: 0 0 2px 2px;
@@ -124,18 +124,38 @@
   overflow: auto;
   position: relative;
 }
-.dash .charts-content .chart-small {
+.tables {
+  float: left;
+  width: 47.8%;
+  margin: 10px;
+}
+@media (max-width: 979px) {
+  .tables {
+    width: 100%;
+    margin: 0 0 15px;
+  }
+}
+.tables .table-content {
+  background: none repeat scroll 0 0 #FCFCFC;
+  border: none;
+  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  margin-top: -1px;
+  height: 220px;
+}
+.chart-small {
   float: left;
   width: 23.1%;
   margin: 10px;
 }
 @media (max-width: 979px) {
-  .dash .charts-content .chart-small {
+  .chart-small {
     width: 100%;
     margin: 0 0 15px;
   }
 }
-.dash .charts-content .chart-small .chart-content {
+.chart-small .chart-content {
   background: none repeat scroll 0 0 #FCFCFC;
   border: 1px solid #DDDDDD;
   border-radius: 0 0 2px 2px;
@@ -145,7 +165,7 @@
   margin-top: -1px;
   height: 220px;
 }
-.dash .charts-content .chart-small .chart-table {
+.chart-small .chart-table {
   display: none;
   background: none repeat scroll 0 0 #FCFCFC;
   border-radius: 0 0 2px 2px;
@@ -154,7 +174,7 @@
   overflow: auto;
   position: relative;
 }
-.dash .charts-content .chart-overlay {
+.chart-overlay {
   position: fixed;
   left: 0;
   right: 0;
@@ -165,15 +185,15 @@
   z-index: 1031;
   background: #F7F7F7;
 }
-.dash .charts-content .chart-overlay .chart-content-overlay {
+.chart-overlay .chart-content-overlay {
   height: 85%;
 }
 @media (max-height: 360px) {
-  .dash .charts-content .chart-overlay .chart-content-overlay {
+  .chart-overlay .chart-content-overlay {
     height: 70%;
   }
 }
-.dash .charts-content .table-overlay {
+.table-overlay {
   position: absolute;
   left: 0;
   right: 0;
@@ -185,30 +205,30 @@
   background: #F7F7F7;
   overflow: auto;
 }
-.dash .charts-content .table-overlay .table-content-overlay {
+.table-overlay .table-content-overlay {
   height: 85%;
 }
 @media (max-height: 360px) {
-  .dash .charts-content .table-overlay .table-content-overlay {
+  .table-overlay .table-content-overlay {
     height: 70%;
   }
 }
-.dash .charts-content .chart-minimal {
+.chart-minimal {
   margin: 0;
   width: auto;
   float: left;
 }
 @media (max-width: 979px) {
-  .dash .charts-content .chart-minimal {
+  .chart-minimal {
     width: 33.2%;
   }
 }
 @media (max-width: 767px) {
-  .dash .charts-content .chart-minimal {
+  .chart-minimal {
     width: 25.5%;
   }
 }
-.dash .charts-content .chart-header {
+.chart-header {
   background-color: #fcfcfc;
   /* Old browsers */
 
@@ -232,26 +252,26 @@
   padding: 10px;
 }
 @media (max-width: 979px) {
-  .dash .charts-content .chart-header {
+  .chart-header {
     margin-right: 0;
   }
 }
-.dash .charts-content .chart-header .chart-icon {
+.chart-header .chart-icon {
   margin: -6px;
 }
-.dash .charts-content .chart-header .btn-right {
+.chart-header .btn-right {
   float: right;
 }
-.dash .charts-content .chart-header .btn-left {
+.chart-header .btn-left {
   float: left;
 }
-.dash .charts-content .chart-header .break {
+.chart-header .break {
   border-left: 1px solid #FCFCFC;
   border-right: 1px solid #DDDDDD;
   margin: -12px 10px -10px;
   padding: 12px 0 10px;
 }
-.dash .charts-content .chart-header h2 {
+.chart-header h2 {
   color: #646464;
   float: left;
   font-size: 1.143em;
@@ -261,7 +281,7 @@
   text-shadow: 0 1px 0 #FFFFFF;
 }
 @media (max-width: 639px) {
-  .dash .charts-content .chart-header h2 {
+  .chart-header h2 {
     display: none;
   }
 }

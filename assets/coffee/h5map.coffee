@@ -50,7 +50,11 @@ H5.Map.base = new L.Map("map-container",
   zoomControl: true
 )
 
-H5.Map.minimap = new L.Control.MiniMap(openstreetMini, { toggleDisplay: true, zoomLevelOffset: -4 }).addTo(H5.Map.base)
+H5.Map.minimap = new L.Control.MiniMap(openstreetMini,
+  toggleDisplay: true
+  zoomLevelOffset: -4
+  autoToggleDisplay: false
+).addTo(H5.Map.base)
 
 # add custom attribution
 H5.Map.base.attributionControl.setPrefix "Hexgis Hash5"
@@ -125,8 +129,8 @@ H5.Map.layerList = new H5.Leaflet.LayerControl(
   "Bing Aerial": bingaerial
   "Bing Road": bingroad
   "Bing Hybrid": binghybrid
-  "Alerta [Indicadores]": H5.Map.layer.clusters.layer
-  "Alerta [Polígonos]": H5.Map.layer.alerta.layer
+,
+  "Alerta DETER": H5.Map.layer.alerta.layer
 )
 
 # add layer menu
