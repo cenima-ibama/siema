@@ -14,16 +14,17 @@ binghybrid = new L.BingLayer(bingKey,
   attribution: ""
 )
 
+bingMini = new L.BingLayer(bingKey,
+  type: "AerialWithLabels"
+  attribution: ""
+  minZoom: 1
+  maxZoom: 11
+)
+
 openstreetUrl = "http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png"
 openstreetSub = ['otile1','otile2','otile3','otile4']
 openstreet = new L.TileLayer(openstreetUrl,
   maxZoom: 18
-  subdomains: openstreetSub
-)
-
-openstreetMini = new L.TileLayer(openstreetUrl,
-  minZoom: 0
-  maxZoom: 11
   subdomains: openstreetSub
 )
 
@@ -50,7 +51,7 @@ H5.Map.base = new L.Map("map-container",
   zoomControl: true
 )
 
-H5.Map.minimap = new L.Control.MiniMap(openstreetMini,
+H5.Map.minimap = new L.Control.MiniMap(bingMini,
   toggleDisplay: true
   zoomLevelOffset: -4
   autoToggleDisplay: false
@@ -62,9 +63,15 @@ H5.Map.base.attributionControl.setPrefix "Hexgis Hash5"
 # add scale
 L.control.scale().addTo H5.Map.base
 
+# add fullscreen control
+L.control.fullscreen(
+  position: 'topleft'
+  title: 'Fullscreen'
+).addTo(H5.Map.base)
+
 # display stations
 H5.Map.layer.alerta = new H5.Leaflet.Postgis(
-  url: "../painel/rest/"
+  url: H5.Data.restURL
   geotable: H5.DB.alert.table
   fields: "id_des, tipo, data_imagem, area_km2, dominio"
   srid: 4326
@@ -107,7 +114,7 @@ customMarker = L.Icon.extend(
 
 # display stations
 H5.Map.layer.clusters = new H5.Leaflet.Postgis(
-  url: "../painel/rest/"
+  url: H5.Data.restURL
   geotable: H5.DB.alert.table
   fields: "id_des"
   srid: 4326

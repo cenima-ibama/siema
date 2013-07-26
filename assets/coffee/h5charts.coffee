@@ -1,4 +1,6 @@
 # DATA {{{
+H5.Data.restURL = "http://" + document.domain + "/painel/rest"
+
 H5.Data.state = "Todos"
 H5.Data.states = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"]
 
@@ -67,7 +69,7 @@ H5.DB.diary.data =
     return
 
 rest = new H5.Rest (
-  url: "../painel/rest"
+  url: H5.Data.restURL
   table: H5.DB.diary.table
 )
 
@@ -98,7 +100,7 @@ H5.DB.prodes.data =
     self.TO[period].area = to
 
 rest = new H5.Rest (
-  url: "../painel/rest"
+  url: H5.Data.restURL
   table: H5.DB.prodes.table
 )
 
@@ -131,7 +133,7 @@ H5.DB.cloud.data =
     self[date].day = convertDate(date).getDate()
 
 rest = new H5.Rest (
-  url: "../painel/rest"
+  url: H5.Data.restURL
   table: H5.DB.cloud.table
 )
 

@@ -2,6 +2,8 @@
 (function() {
   var chart1, chart2, chart3, chart4, chart5, chart6, chart7, chart8, chart9, i, knob1, knob2, knob3, rest, spark1, spark2, _i, _j, _ref, _ref1;
 
+  H5.Data.restURL = "http://" + document.domain + "/painel/rest";
+
   H5.Data.state = "Todos";
 
   H5.Data.states = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"];
@@ -84,7 +86,7 @@
   };
 
   rest = new H5.Rest({
-    url: "../painel/rest",
+    url: H5.Data.restURL,
     table: H5.DB.diary.table
   });
 
@@ -132,7 +134,7 @@
   };
 
   rest = new H5.Rest({
-    url: "../painel/rest",
+    url: H5.Data.restURL,
     table: H5.DB.prodes.table
   });
 
@@ -165,7 +167,7 @@
   };
 
   rest = new H5.Rest({
-    url: "../painel/rest",
+    url: H5.Data.restURL,
     table: H5.DB.cloud.table
   });
 

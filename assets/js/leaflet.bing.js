@@ -88,19 +88,20 @@ L.BingLayer = L.TileLayer.extend({
 	_update_attribution: function() {
 		var bounds = this._map.getBounds();
 		var zoom = this._map.getZoom();
-		for (var i = 0; i < this._providers.length; i++) {
-			var p = this._providers[i];
-			if ((zoom <= p.zoomMax && zoom >= p.zoomMin) &&
-					bounds.intersects(p.bounds)) {
-				if (!p.active)
-					this._map.attributionControl.addAttribution(p.attrib);
-				p.active = true;
-			} else {
-				if (p.active)
-					this._map.attributionControl.removeAttribution(p.attrib);
-				p.active = false;
-			}
-		}
+    for (var i = 0; i < this._providers.length; i++) {
+      var p = this._providers[i];
+      if ((zoom <= p.zoomMax && zoom >= p.zoomMin) && bounds.intersects(p.bounds)) {
+        if (!p.active)
+          if (this._map.attributionControl)
+            this._map.attributionControl.addAttribution(p.attrib);
+        p.active = true;
+      } else {
+        if (p.active)
+          if (this._map.attributionControl)
+            this._map.attributionControl.removeAttribution(p.attrib);
+        p.active = false;
+      }
+    }
 	},
 
 	onRemove: function(map) {

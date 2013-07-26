@@ -8,10 +8,11 @@
     <meta name="author" content="Helmuth Saatkamp <helmuthdu@gmail.com>">
 
     <!-- Le styles -->
-    <link href="//cdn.leafletjs.com/leaflet-0.6.3/leaflet.css" rel="stylesheet" />
-    <link href="<?= base_url()?>assets/css/leaflet.markercluster.css" rel="stylesheet">
-    <link href="<?= base_url()?>assets/css/leaflet.minimap.css" rel="stylesheet">
-    <!-- <link href="<?= base_url()?>assets/css/leaflet.draw.css" rel="stylesheet"> -->
+    <link href="//cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" rel="stylesheet" />
+    <link href="<?= base_url()?>assets/css/leaflet-markercluster.css" rel="stylesheet">
+    <link href="<?= base_url()?>assets/css/leaflet-minimap.css" rel="stylesheet">
+    <link href="<?= base_url()?>assets/css/leaflet-fullscreen.css" rel="stylesheet">
+    <!-- <link href="<?= base_url()?>assets/css/leaflet-draw.css" rel="stylesheet"> -->
     <link href="<?= base_url()?>assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrap-switch.css" rel="stylesheet">
