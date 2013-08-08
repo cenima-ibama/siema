@@ -47,15 +47,10 @@
     transparent: true
   });
 
-  $('#map-container').width($(window).width());
-
-  $('#map-container').height($(window).height() - $('#navbar').height() - 1);
-
-  H5.Map.base = new L.Map("map-container", {
+  H5.Map.base = new L.Map("map", {
     center: new L.LatLng(-10.0, -58.0),
     zoom: 6,
-    layers: [binghybrid],
-    zoomControl: true
+    layers: [binghybrid]
   });
 
   H5.Map.minimap = new L.Control.MiniMap(bingMini, {
@@ -66,12 +61,21 @@
 
   H5.Map.base.attributionControl.setPrefix("Hexgis Hash5");
 
-  L.control.scale().addTo(H5.Map.base);
+  new L.control.scale().addTo(H5.Map.base);
 
-  L.control.fullscreen({
+  new L.control.fullscreen({
     position: 'topleft',
     title: 'Fullscreen'
   }).addTo(H5.Map.base);
+
+  new L.Control.GeoSearch({
+    provider: new L.GeoSearch.Provider.Google,
+    searchLabel: "Endereço, Estado - UF",
+    notFoundMessage: "Endereço não encontrado.",
+    showMarker: false
+  }).addTo(H5.Map.base);
+
+  H5.Data.restURL = "http://" + document.domain + "/painel/rest";
 
   H5.Map.layer.alerta = new H5.Leaflet.Postgis({
     url: H5.Data.restURL,
@@ -113,7 +117,7 @@
 
   customMarker = L.Icon.extend({
     options: {
-      iconUrl: "../painel/assets/img/ibama_marker.png",
+      iconUrl: "http://" + document.domain + "/painel/assets/img/ibama_marker.png",
       shadowUrl: null,
       iconSize: new L.Point(0, 0),
       iconAnchor: new L.Point(0, 0),
@@ -143,15 +147,27 @@
 
   H5.Map.layer.clusters.setMap(H5.Map.base);
 
-  H5.Map.layerList = new H5.Leaflet.LayerControl({
-    "OSM": openstreet,
-    "Bing Aerial": bingaerial,
-    "Bing Road": bingroad,
-    "Bing Hybrid": binghybrid
+  new H5.Leaflet.LayerControl({
+    "OSM": {
+      layer: openstreet
+    },
+    "Bing Aerial": {
+      layer: bingaerial
+    },
+    "Bing Road": {
+      layer: bingroad
+    },
+    "Bing Hybrid": {
+      layer: binghybrid
+    }
   }, {
-    "Alerta DETER": H5.Map.layer.alerta.layer
-  });
-
-  H5.Map.base.addControl(H5.Map.layerList);
+    "DETER Indicadores": {
+      layer: H5.Map.layer.clusters.layer,
+      overlayControl: false
+    },
+    "DETER Polígonos": {
+      layer: H5.Map.layer.alerta.layer
+    }
+  }).addTo(H5.Map.base);
 
 }).call(this);

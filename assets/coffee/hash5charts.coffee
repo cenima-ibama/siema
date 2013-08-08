@@ -7,15 +7,6 @@ google.load "visualization", "1",
 google.load "visualization", "1",
   packages: ["table"]
 
-H5.Data = {}
-
-H5.DB =
-  addDB: (opt) ->
-    # configure object with the options
-    this[opt.name] = {}
-    this[opt.name].table = opt.table
-    this[opt.name].data = null
-
 H5.Charts = {}
 
 class H5.Charts.Container

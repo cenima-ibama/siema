@@ -5,7 +5,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   this.H5 = {
-    version: 0.61,
+    version: 0.7,
     company: "Hexgis <www.hexgis.com>",
     author: "Helmuth Saatkamp <helmuthdu@gmail.com>",
     isMobile: {
@@ -26,6 +26,14 @@
       },
       any: function() {
         return this.Android() || this.BlackBerry() || this.iOS() || this.Opera() || this.Windows();
+      }
+    },
+    Data: {},
+    DB: {
+      addDB: function(opt) {
+        this[opt.name] = {};
+        this[opt.name].table = opt.table;
+        return this[opt.name].data = null;
       }
     }
   };
@@ -105,16 +113,6 @@
   google.load("visualization", "1", {
     packages: ["table"]
   });
-
-  H5.Data = {};
-
-  H5.DB = {
-    addDB: function(opt) {
-      this[opt.name] = {};
-      this[opt.name].table = opt.table;
-      return this[opt.name].data = null;
-    }
-  };
 
   H5.Charts = {};
 
@@ -1148,7 +1146,7 @@
         });
       }
       if (this.options.focus) {
-        this.options.map.fitBounds(this.layer.getBounds());
+        this.options.map.panInsideBounds(this.layer.getBounds());
       }
       return data = null;
     }
@@ -1237,7 +1235,7 @@
         options.url += "/";
       }
       H5.Leaflet.Layer.prototype.initialize.call(this, options);
-      this._globalPointer = "PRWSF_" + Math.floor(Math.random() * 100000);
+      this._globalPointer = "Postgis_" + this.options.geotable + "_" + this.options.geomFieldName;
       window[this._globalPointer] = this;
       this._vectors = [];
       this.layer = L.featureGroup();
@@ -1434,19 +1432,19 @@
       autoZIndex: true
     },
     initialize: function(baseLayers, overlayers, options) {
-      var i, _results;
+      var _this = this;
       L.setOptions(this, options);
       this._layers = {};
       this._lastZIndex = 0;
       this._handlingClick = false;
-      for (i in baseLayers) {
-        this._addLayer(baseLayers[i], i, false);
-      }
-      _results = [];
-      for (i in overlayers) {
-        _results.push(this._addLayer(overlayers[i], i, true));
-      }
-      return _results;
+      $.each(baseLayers, function(name, obj) {
+        return _this._addLayer(obj.layer, name, false, false);
+      });
+      return $.each(overlayers, function(name, obj) {
+        var control;
+        control = typeof obj.overlayControl === "boolean" ? obj.overlayControl : true;
+        return _this._addLayer(obj.layer, name, true, control);
+      });
     },
     onAdd: function(map) {
       this._initLayout();
@@ -1462,8 +1460,8 @@
       this._update();
       return this;
     },
-    addoverlayer: function(layer, name) {
-      this._addLayer(layer, name, true);
+    addOverLayer: function(layer, name, overlayControl) {
+      this._addLayer(layer, name, true, overlayControl);
       this._update();
       return this;
     },
@@ -1476,8 +1474,8 @@
     },
     _initLayout: function() {
       var className, container, form, link;
-      className = "leaflet-control-layers";
-      container = this._container = L.DomUtil.create("div", className);
+      className = "switch-control-layers";
+      container = this._container = L.DomUtil.create("div", "leaflet-bar " + className);
       container.setAttribute('aria-haspopup', true);
       if (!L.Browser.touch) {
         L.DomEvent.disableClickPropagation(container);
@@ -1505,13 +1503,14 @@
       this._overlayersList = L.DomUtil.create('div', className + '-overlayers', form);
       return $(container).append(form);
     },
-    _addLayer: function(layer, name, overlayer) {
+    _addLayer: function(layer, name, overlayer, overlayControl) {
       var id;
       id = L.stamp(layer);
       this._layers[id] = {
         layer: layer,
         name: name,
-        overlayer: overlayer
+        overlayer: overlayer,
+        overlayControl: overlayControl
       };
       if (this.options.autoZIndex && layer.setZIndex) {
         this._lastZIndex++;
@@ -1552,25 +1551,30 @@
       }
     },
     _addItem: function(obj) {
-      var checked, container, control, controlgroup, input, label, slider, toggle,
+      var checked, container, control, controlgroup, input, label, name, slider, toggle,
         _this = this;
       container = (obj.overlayer ? this._overlayersList : this._baseLayersList);
       controlgroup = L.DomUtil.create("div", "control-group", container);
       checked = this._map.hasLayer(obj.layer);
       label = L.DomUtil.create("label", "control-label", controlgroup);
-      label.innerHTML = " " + obj.name;
+      if (H5.isMobile.any() || obj.name.length < 12) {
+        label.innerHTML = obj.name;
+      } else {
+        name = obj.name.substr(0, 12) + "…";
+        label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>";
+      }
       control = L.DomUtil.create("div", "control", controlgroup);
-      toggle = L.DomUtil.create("div", "switch switch-small", control);
+      toggle = L.DomUtil.create("div", "switch-small", control);
       if (!obj.overlayer) {
         $(toggle).addClass("baseLayers");
       }
       input = L.DomUtil.create("input", "", toggle);
-      if (obj.overlayer) {
+      if (!H5.isMobile.any() && obj.overlayer) {
         input.type = "checkbox";
-        $(input).addClass("leaflet-control-layers-selector");
-        if (!H5.isMobile.any()) {
+        $(input).addClass("switch-control-layers-selector");
+        if (obj.overlayControl) {
           slider = L.DomUtil.create("div", "", controlgroup);
-          $(slider).addClass("leaflet-control-layers-slider");
+          $(slider).addClass("switch-control-layers-slider");
           $(slider).slider({
             min: 0,
             max: 100,
@@ -1607,6 +1611,7 @@
       return controlgroup;
     },
     _onInputClick: function(input, obj) {
+      this._handlingClick = true;
       if (input.checked && !this._map.hasLayer(obj.layer)) {
         this._map.addLayer(obj.layer);
       } else {
@@ -1617,10 +1622,10 @@
       return this._handlingClick = false;
     },
     _expand: function() {
-      return L.DomUtil.addClass(this._container, "leaflet-control-layers-expanded");
+      return L.DomUtil.addClass(this._form, "switch-control-layers-expanded");
     },
     _collapse: function() {
-      return this._container.className = this._container.className.replace(" leaflet-control-layers-expanded", "");
+      return this._form.className = this._form.className.replace(" switch-control-layers-expanded", "");
     }
   });
 

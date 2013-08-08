@@ -1,6 +1,6 @@
-@H5 = {
+@H5 =
 
-  version: 0.61
+  version: 0.7
 
   company: "Hexgis <www.hexgis.com>"
 
@@ -19,4 +19,13 @@
       return navigator.userAgent.match(/IEMobile/i)
     any: ->
       return (@Android() || @BlackBerry() || @iOS() || @Opera() || @Windows())
-}
+
+  Data: {}
+
+  DB:
+    addDB: (opt) ->
+      # configure object with the options
+      this[opt.name] = {}
+      this[opt.name].table = opt.table
+      this[opt.name].data = null
+

@@ -112,7 +112,7 @@
 
 
 /*
- * jQuery UI Resizable 1.10.0
+ * jQuery UI Resizable 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -203,7 +203,7 @@
 
 
 /*
- * jQuery UI Selectable 1.10.0
+ * jQuery UI Selectable 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -220,7 +220,7 @@
 
 
 /*
- * jQuery UI CSS Framework 1.10.0
+ * jQuery UI CSS Framework 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -749,7 +749,7 @@
 
 
 /*
- * jQuery UI Accordion 1.10.0
+ * jQuery UI Accordion 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -759,15 +759,8 @@
  */
 
 /* IE/Win - Fix animation bug - #4615 */
-
 .ui-accordion {
 	width: 100%;
-}
-.ui-accordion .ui-accordion-header {
-	cursor: pointer;
-	position: relative;
-	margin-top: 1px;
-	font-weight:bold;
 }
 
 .ui-accordion .ui-accordion-li-fix {
@@ -778,16 +771,25 @@
 	border-bottom: 0 !important;
 }
 
-.ui-accordion .ui-accordion-header a {
+.ui-accordion .ui-accordion-header {
 	display: block;
-	font-size: 1em;
-	padding: .5em .5em .5em 1.7em;
-}
-.ui-accordion-icons .ui-accordion-header a {
-	padding-left: 2.2em;
+	cursor: pointer;
+	position: relative;
+	margin-top: 2px;
+	padding: .5em .5em .5em .7em;
+	min-height: 0; /* support: IE7 */
 }
 
-.ui-accordion .ui-accordion-header .ui-icon {
+.ui-accordion .ui-accordion-icons {
+	padding-left: 2.2em;
+}
+.ui-accordion .ui-accordion-noicons {
+	padding-left: .7em;
+}
+.ui-accordion .ui-accordion-icons .ui-accordion-icons {
+	padding-left: 2.2em;
+}
+.ui-accordion .ui-accordion-header .ui-accordion-header-icon {
 	position: absolute;
 	left: .5em;
 	top: 50%;
@@ -811,7 +813,7 @@
 
 
 /*
- * jQuery UI Autocomplete 1.10.0
+ * jQuery UI Autocomplete 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -829,7 +831,7 @@
 
 
 /*
- * jQuery UI Button 1.10.0
+ * jQuery UI Button 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1215,13 +1217,13 @@ button.ui-button::-moz-focus-inner {
 	}
 }
 
-/*******/
-
 .ui-menu .ui-menu-item {
 	margin: 0;
 	padding: 0;
 	width: 100%;
 	list-style:none;
+	/* support: IE10, see #8844 */
+	list-style-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
 }
 
 .ui-menu .ui-menu-divider {
@@ -1312,7 +1314,7 @@ button.ui-button::-moz-focus-inner {
 
 
 /*
- * jQuery UI spinner 1.10.0
+ * jQuery UI spinner 1.10.3
  *
 * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1383,7 +1385,7 @@ button.ui-button::-moz-focus-inner {
 
 
 /*
- * jQuery UI Dialog 1.10.0
+ * jQuery UI Dialog 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1542,7 +1544,7 @@ button.ui-button::-moz-focus-inner {
 
 
 /*
- * jQuery UI Slider 1.10.0
+ * jQuery UI Slider 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1646,7 +1648,7 @@ button.ui-button::-moz-focus-inner {
 
 
 /*
- * jQuery UI Tabs 1.10.0
+ * jQuery UI Tabs 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1754,7 +1756,7 @@ button.ui-button::-moz-focus-inner {
 
 
 /*
- * jQuery UI Tooltip 1.10.0
+ * jQuery UI Tooltip 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -1870,7 +1872,7 @@ body .ui-tooltip {
 }
 
 /*
- * jQuery UI Datepicker 1.10.0
+ * jQuery UI Datepicker 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -2199,7 +2201,7 @@ body .ui-tooltip {
 
 
 /*
- * jQuery UI Progressbar 1.10.0
+ * jQuery UI Progressbar 1.10.3
  *
  * Copyright 2013, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.

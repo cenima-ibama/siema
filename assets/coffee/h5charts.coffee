@@ -1,18 +1,24 @@
 # DATA {{{
 H5.Data.restURL = "http://" + document.domain + "/painel/rest"
 
+H5.Data.changed = false
+
 H5.Data.state = "Todos"
 H5.Data.states = ["AC", "AM", "AP", "MA", "MT", "PA", "RO", "RR", "TO"]
 
 H5.Data.thisDate = new Date()
-H5.Data.thisYear = if H5.Data.thisDate.getMonth() < 7 then H5.Data.thisDate.getFullYear() else H5.Data.thisDate.getFullYear() + 1
-H5.Data.thisMonth = new Date().getMonth()
-H5.Data.thisDay = new Date().getDate()
+H5.Data.thisYear = H5.Data.thisDate.getFullYear()
+H5.Data.thisProdesYear = if H5.Data.thisMonth < 7 then H5.Data.thisYear else H5.Data.thisYear + 1
+H5.Data.thisMonth = H5.Data.thisDate.getMonth()
+H5.Data.thisDay = H5.Data.thisDate.getDate()
 
-H5.Data.totalPeriods = H5.Data.thisDate.getFullYear() - 2005
+H5.Data.totalPeriods = if H5.Data.thisMonth < 7 then (H5.Data.thisDate.getFullYear() - 2005) else (H5.Data.thisDate.getFullYear() - 2004)
 H5.Data.periods = new Array(H5.Data.totalPeriods)
 for i in [0..H5.Data.totalPeriods]
-  H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i - 1) + "-" + (H5.Data.thisDate.getFullYear() - i)
+  if H5.Data.thisMonth < 7
+    H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i - 1) + "-" + (H5.Data.thisDate.getFullYear() - i)
+  else
+    H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i) + "-" + (H5.Data.thisDate.getFullYear() - i + 1)
 
 H5.Data.months =
   0: "Ago"
@@ -29,7 +35,7 @@ H5.Data.months =
   11: "Jul"
 
 # disable animation on mobile devices
-if (!H5.isMobile.any())
+unless H5.isMobile.any()
   H5.Data.animate = {
     duration: 500
     easing: "inAndOut"
@@ -146,21 +152,21 @@ $.each rest.data, (i, properties) ->
 # RELOAD DATE {{{
 # reload date based on database
 H5.Data.thisDate = H5.DB.diary.data.lastValue.date
-H5.Data.thisYear = if H5.DB.diary.data.lastValue.month < 7 then H5.DB.diary.data.lastValue.year else H5.DB.diary.data.lastValue.year + 1
-H5.Data.thisMonth = H5.DB.diary.data.lastValue.month
 H5.Data.thisDay = H5.DB.diary.data.lastValue.day
+H5.Data.thisMonth = H5.DB.diary.data.lastValue.month
+H5.Data.thisYear = H5.DB.diary.data.lastValue.year
+H5.Data.thisProdesYear = if H5.Data.thisMonth < 7 then H5.Data.thisYear else H5.Data.thisYear + 1
 
 H5.Data.selectedYear = H5.Data.thisYear
 H5.Data.selectedMonth = H5.Data.thisMonth
 
-H5.Data.totalPeriods = H5.Data.thisDate.getFullYear() - 2005
+H5.Data.totalPeriods = if H5.Data.thisMonth < 7 then (H5.Data.thisDate.getFullYear() - 2005) else (H5.Data.thisDate.getFullYear() - 2004)
 H5.Data.periods = new Array(H5.Data.totalPeriods)
 for i in [0..H5.Data.totalPeriods]
-  H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i - 1) + "-" + (H5.Data.thisDate.getFullYear() - i)
-#}}}
-# DATE PICKER {{{
-# reload date based on database
-
+  if H5.Data.thisMonth < 7
+    H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i - 1) + "-" + (H5.Data.thisDate.getFullYear() - i)
+  else
+    H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i) + "-" + (H5.Data.thisDate.getFullYear() - i + 1)
 #}}}
 # CHART1 {{{
 chart1 = new H5.Charts.GoogleCharts (
@@ -178,7 +184,8 @@ chart1._yearsSlct = document.getElementById('yearsSlct')
 chart1._monthsSlct = document.getElementById('monthsSlct')
 
 # make those options selected
-chart1._yearsSlct.options[H5.Data.totalPeriods+1].selected = true
+selectedYear = if H5.Data.thisMonth < 7 then H5.Data.totalPeriods + 1 else H5.Data.totalPeriods
+chart1._yearsSlct.options[selectedYear].selected = true
 chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
 
 $(chart1._monthsSlct).on "change", (event) ->
@@ -202,7 +209,7 @@ $(chart1._yearsSlct).on "change", (event) ->
   knob3.drawChart()
   spark1.drawChart()
   spark2.drawChart()
-  H5.Charts.updateMap()
+  H5.Data.changed = true
 
 chart1.drawChart = ->
   createTable = (state) =>
@@ -335,7 +342,7 @@ chart2.drawChart = ->
     month = parseInt month
     if 7 <= (month + 7) <= 11 then month+= 7 else month-= 5
     for i in [1..@options.period]
-      data[i] = sumValues(H5.Data.thisYear - i + 1, month)
+      data[i] = sumValues(H5.Data.thisProdesYear - i + 1, month)
     @data.addRow data
 
   options =
@@ -414,11 +421,15 @@ chart3.drawChart = ->
     month = H5.Data.selectedMonth
     firstPeriod = new Date(year - 1, 7, 1)
     if month > 6
-      secondPeriod = new Date(year-1, month+1, 0)
-    else if month != H5.Data.thisMonth
-      secondPeriod = new Date(year, month+1, 0)
+      if month is H5.Data.thisMonth
+        secondPeriod = new Date(year-1, month, H5.Data.thisDay)
+      else
+        secondPeriod = new Date(year-1, month+1, 0)
     else
-      secondPeriod = new Date(year, month, H5.Data.thisDay)
+      if month is H5.Data.thisMonth
+        secondPeriod = new Date(year, month, H5.Data.thisDay)
+      else
+        secondPeriod = new Date(year, month+1, 0)
     sumValues firstPeriod, secondPeriod
 
   # create new chart
@@ -435,8 +446,8 @@ chart3.drawChart = ->
   # populate table
   for i in [0..@options.period]
     data = [H5.Data.periods[i]]
-    sumTotal = sumTotalValues(H5.Data.thisYear - i)
-    sumAvg = sumAvgValues(H5.Data.thisYear - i)
+    sumTotal = sumTotalValues(H5.Data.thisProdesYear - i)
+    sumAvg = sumAvgValues(H5.Data.thisProdesYear - i)
     data[1] = sumAvg
     data[2] = Math.round((sumTotal - sumAvg) * 100) / 100
     @data.addRow data
@@ -521,12 +532,12 @@ chart4.drawChart = ->
     $.each H5.DB.diary.data.states, (state, reg) =>
       data = [state]
       for j in [1..@options.period]
-        data[j] = sumValues(state, H5.Data.thisYear - j + 1)
+        data[j] = sumValues(state, H5.Data.thisProdesYear - j + 1)
       @data.addRow data
   else
     data = [H5.Data.state]
     for j in [1..@options.period]
-      data[j] = sumValues(H5.Data.state, H5.Data.thisYear - j + 1)
+      data[j] = sumValues(H5.Data.state, H5.Data.thisProdesYear - j + 1)
     @data.addRow data
 
   options =
@@ -613,7 +624,7 @@ chart5.drawChart = ->
   i = H5.Data.totalPeriods
   while i >= 0
     data = [H5.Data.periods[i]]
-    data[1] = sumDeter(H5.Data.thisYear - i)
+    data[1] = sumDeter(H5.Data.thisProdesYear - i)
     data[2] = sumProdes(H5.Data.periods[i])
     @data.addRow data
     i--
@@ -632,7 +643,7 @@ chart5.drawChart = ->
     vAxis:
       title: "Área km²"
     hAxis:
-      title: "H5.Data.periods"
+      title: "Período PRODES"
     animation: H5.Data.animate
 
   @chart.draw @data, options
@@ -695,13 +706,13 @@ chart6.drawChart = ->
   if H5.Data.state is "Todos"
     $.each H5.DB.diary.data.states, (state, reg) =>
       data = [state]
-      data[1] = sumDeter(state, H5.Data.thisYear - @options.period)
-      data[2] = sumProdes(state, H5.Data.thisYear - @options.period)
+      data[1] = sumDeter(state, H5.Data.thisProdesYear - @options.period)
+      data[2] = sumProdes(state, H5.Data.thisProdesYear - @options.period)
       @data.addRow data
   else
     data = [H5.Data.state]
-    data[1] = sumDeter(H5.Data.state, H5.Data.thisYear - @options.period)
-    data[2] = sumProdes(H5.Data.state, H5.Data.thisYear - @options.period)
+    data[1] = sumDeter(H5.Data.state, H5.Data.thisProdesYear - @options.period)
+    data[2] = sumProdes(H5.Data.state, H5.Data.thisProdesYear - @options.period)
     @data.addRow data
 
   options =
@@ -782,7 +793,7 @@ chart7.drawChart = ->
   for i in [0...H5.Data.states.length]
     estado = H5.Data.states[i]
     data = [estado]
-    data[1] = sumValues(H5.Data.states[i], H5.Data.thisYear - @options.period)
+    data[1] = sumValues(H5.Data.states[i], H5.Data.thisProdesYear - @options.period)
     @data.addRow data
 
   options =
@@ -940,7 +951,7 @@ chart9.drawChart = ->
     month = parseInt month
     if 7 <= (month + 7) <= 11 then month+= 7 else month-= 5
     for i in [1..@options.period]
-      data[i] = sumValues(H5.Data.thisYear - i + 1, month)
+      data[i] = sumValues(H5.Data.thisProdesYear - i + 1, month)
     @data.addRow data
 
   options =
@@ -1180,11 +1191,15 @@ knob3.drawChart = ->
     sumPeriods = (year, month) ->
       firstPeriod = new Date(year-1, 7, 1)
       if month > 6
-        secondPeriod = new Date(year-1, month+1, 0)
-      else if month != H5.Data.thisMonth
-        secondPeriod = new Date(year, month+1, 0)
+        if month is H5.Data.thisMonth
+          secondPeriod = new Date(year-1, month, H5.Data.thisDay)
+        else
+          secondPeriod = new Date(year-1, month+1, 0)
       else
-        secondPeriod = new Date(year, month, H5.Data.thisDay)
+        if month is H5.Data.thisMonth
+          secondPeriod = new Date(year, month, H5.Data.thisDay)
+        else
+          secondPeriod = new Date(year, month+1, 0)
       sumValues firstPeriod, secondPeriod
 
     curValue = sumPeriods(year, month)
@@ -1218,17 +1233,44 @@ H5.Charts.reloadCharts = ->
   knob3.drawChart()
   spark1.drawChart()
   spark2.drawChart()
+#}}}
+# MENUS {{{
+$(document).ready ->
+  # BOOTSTRAP
+  $("[rel=tooltip]").tooltip placement: "bottom"
 
-H5.Charts.updateMap = ->
-  if H5.Data.state is "Todos"
-    where = "ano='" + H5.Data.selectedYear + "'"
-  else
-    where = "estado='" + H5.Data.state + "' AND ano='" + H5.Data.selectedYear + "'"
-  H5.Map.layer.alerta.setOptions(
-    where: where
+  $(".alert").alert()
+
+  $("select").selectpicker(
+    width: '80px'
+    size: 'auto'
   )
-  H5.Map.layer.clusters.setOptions(
-    where: where
-  )
-  H5.Map.layer.alerta.redraw()
-  H5.Map.layer.clusters.redraw()
+
+  # QUICK BTNS
+  $(".quick-btn a").on "click", (event) ->
+    event.preventDefault()
+
+    # clean all selection
+    $(@).each ->
+      $("a").removeClass "active"
+    # mark selected option
+    $(@).addClass "active"
+
+    # save the selected option
+    H5.Data.state = $(@).prop("id")
+
+    # reload charts
+    H5.Charts.reloadCharts()
+
+    H5.Data.changed = true
+
+  # MISC
+  # enable masonry plugin
+  $("#charts-content").masonry
+    # options
+    itemSelector: ".chart"
+    animationOptions:
+      duration: 1000
+
+  H5.Charts.reloadCharts()
+# }}}

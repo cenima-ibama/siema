@@ -480,7 +480,7 @@ H5.Leaflet.Layer = L.Class.extend(
       )
 
     if @options.focus
-      @options.map.fitBounds(@layer.getBounds())
+      @options.map.panInsideBounds(@layer.getBounds())
 
     # clean unused data
     data = null
@@ -553,12 +553,12 @@ H5.Leaflet.Postgis = H5.Leaflet.GeoJSONLayer.extend(
     # If the url wasn't passed with a trailing /, add it.
     options.url += "/" if options.url.substr(options.url.length - 1, 1) isnt "/"
 
-    # Extend Layer to create PRWSF
+    # Extend Layer to create Postgis
     H5.Leaflet.Layer::initialize.call this, options
 
     # _globalPointer is a string that points to a global function variable
     # Features returned from a JSONP request are passed to this function
-    @_globalPointer = "PRWSF_" + Math.floor(Math.random() * 100000)
+    @_globalPointer = "Postgis_" + @options.geotable + "_" + @options.geomFieldName
     window[@_globalPointer] = this
 
     # Create an array to hold the features
@@ -758,11 +758,12 @@ H5.Leaflet.LayerControl = L.Control.extend (
     @_layers = {}
     @_lastZIndex = 0
     @_handlingClick = false
-    for i of baseLayers
-      @_addLayer(baseLayers[i], i, false)
+    $.each baseLayers, (name, obj) =>
+      @_addLayer(obj.layer, name, false, false)
 
-    for i of overlayers
-      @_addLayer(overlayers[i], i, true)
+    $.each overlayers, (name, obj) =>
+      control = if (typeof obj.overlayControl is "boolean") then obj.overlayControl else true
+      @_addLayer(obj.layer, name, true, control)
 
   onAdd: (map) ->
     @_initLayout()
@@ -782,8 +783,8 @@ H5.Leaflet.LayerControl = L.Control.extend (
     @_update()
     return this
 
-  addoverlayer: (layer, name) ->
-    @_addLayer layer, name, true
+  addOverLayer: (layer, name, overlayControl) ->
+    @_addLayer layer, name, true, overlayControl
     @_update()
     return this
 
@@ -795,8 +796,8 @@ H5.Leaflet.LayerControl = L.Control.extend (
     return this
 
   _initLayout: ->
-    className = "leaflet-control-layers"
-    container = @_container = L.DomUtil.create("div", className)
+    className = "switch-control-layers"
+    container = @_container = L.DomUtil.create("div", "leaflet-bar " + className)
 
 		# Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
     container.setAttribute('aria-haspopup', true)
@@ -834,13 +835,14 @@ H5.Leaflet.LayerControl = L.Control.extend (
     @_overlayersList = L.DomUtil.create('div', className + '-overlayers', form)
     $(container).append form
 
-  _addLayer: (layer, name, overlayer) ->
+  _addLayer: (layer, name, overlayer, overlayControl) ->
     id = L.stamp(layer)
 
     @_layers[id] =
       layer: layer
       name: name
       overlayer: overlayer
+      overlayControl: overlayControl
 
     if @options.autoZIndex and layer.setZIndex
       @_lastZIndex++
@@ -878,20 +880,27 @@ H5.Leaflet.LayerControl = L.Control.extend (
     container = (if obj.overlayer then @_overlayersList else @_baseLayersList)
     controlgroup = L.DomUtil.create("div", "control-group", container)
     checked = @_map.hasLayer(obj.layer)
+
+    # layer name
     label = L.DomUtil.create("label", "control-label", controlgroup)
-    label.innerHTML = " " + obj.name
+    if H5.isMobile.any() or obj.name.length < 12
+      label.innerHTML = obj.name
+    else
+      name =  obj.name.substr(0,12) + "…"
+      label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>"
+
     control = L.DomUtil.create("div", "control", controlgroup)
-    toggle = L.DomUtil.create("div", "switch switch-small", control)
+    toggle = L.DomUtil.create("div", "switch-small", control)
     $(toggle).addClass("baseLayers") unless obj.overlayer
     input = L.DomUtil.create("input", "", toggle)
-    if obj.overlayer
+    if not H5.isMobile.any() and obj.overlayer
       input.type = "checkbox"
-      $(input).addClass("leaflet-control-layers-selector")
+      $(input).addClass("switch-control-layers-selector")
 
       # insert slider, but exclude from touch devices
-      unless H5.isMobile.any()
+      if obj.overlayControl
         slider = L.DomUtil.create("div", "", controlgroup)
-        $(slider).addClass("leaflet-control-layers-slider")
+        $(slider).addClass("switch-control-layers-slider")
         $(slider).slider
           min: 0
           max: 100
@@ -912,8 +921,10 @@ H5.Leaflet.LayerControl = L.Control.extend (
       $(input).attr("name", "leaflet-base-layers")
     input.defaultChecked = checked
     input.layerId = L.stamp(obj.layer)
-    # transform input into switch
+
+    # create switch
     $(toggle).bootstrapSwitch()
+
     $(toggle).on "switch-change", (e, data) =>
       unless obj.overlayer
         $('.baseLayers').bootstrapSwitch('toggleRadioState')
@@ -922,6 +933,8 @@ H5.Leaflet.LayerControl = L.Control.extend (
     return controlgroup
 
   _onInputClick: (input, obj) ->
+    @_handlingClick = true
+
     if input.checked and not @_map.hasLayer(obj.layer)
       @_map.addLayer obj.layer
     else
@@ -931,9 +944,9 @@ H5.Leaflet.LayerControl = L.Control.extend (
     @_handlingClick = false
 
   _expand: ->
-    L.DomUtil.addClass @_container, "leaflet-control-layers-expanded"
+    L.DomUtil.addClass @_form, "switch-control-layers-expanded"
 
   _collapse: ->
-    @_container.className = @_container.className.replace(" leaflet-control-layers-expanded", "")
+    @_form.className = @_form.className.replace(" switch-control-layers-expanded", "")
 )
 # }}}

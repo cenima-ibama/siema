@@ -13,7 +13,7 @@ class Login extends CI_Controller {
 
     public function index()
     {
-        if (! file_exists('application/views/templates/login.php')) {
+        if (! file_exists('application/views/pages/login.php')) {
             // Whoops, we don't have a page for that!
             show_404();
         }
@@ -22,7 +22,7 @@ class Login extends CI_Controller {
             redirect(base_url());
         }
         else {
-            $this->load->view('templates/login');
+            $this->load->view('pages/login');
         }
     }
 }
