@@ -2,6 +2,11 @@
 (function() {
   $(document).ready(function() {
     var roundNumber;
+    $('#addMeModal').modal({
+      keyboard: false,
+      backdrop: false,
+      show: false
+    });
     $(".dropdown-menu input, .dropdown-menu label").click(function(e) {
       return e.stopPropagation();
     });

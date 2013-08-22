@@ -967,20 +967,13 @@
       return this._processFeatures(data);
     },
     _processFeatures: function(data) {
-      var bounds, feature, geometry, geometryOptions, i, j, k, me, onMap, propertiesChanged, symbologyPropertyChanged, vector_or_vectors, _i, _j, _k, _l, _m, _ref3, _ref4, _ref5, _ref6, _ref7;
+      var bounds, feature, geometry, geometryOptions, i, j, k, me, onMap, propertiesChanged, symbologyPropertyChanged, vector_or_vectors, _i, _j, _k, _l, _ref3, _ref4, _ref5, _ref6;
       if (!this.options.map) {
         return;
       }
       bounds = this.options.map.getBounds();
       if (this._lastQueriedBounds && this._lastQueriedBounds.equals(bounds) && !this.options.autoUpdate) {
         return;
-      }
-      if (this.options.cluster) {
-        if (this.options.markers) {
-          this.options.markers.clearLayers();
-        }
-        this.options.markers = new L.MarkerClusterGroup();
-        this.layer.addLayer(this.options.markers);
       }
       this._lastQueriedBounds = bounds;
       this.layer.addTo(this.options.map);
@@ -1037,21 +1030,11 @@
             vector_or_vectors = this._geoJsonGeometryToLeaflet(geometry, geometryOptions);
             data.features[i][(vector_or_vectors instanceof Array ? "vectors" : "vector")] = vector_or_vectors;
             this._vectors.push(data.features[i]);
-            if (this.options.cluster) {
-              if (this._vectors[i].vector) {
-                this.options.markers.addLayer(this._vectors[i].vector);
-              } else if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
-                for (k = _l = 0, _ref6 = this._vectors[i].vectors.length; 0 <= _ref6 ? _l < _ref6 : _l > _ref6; k = 0 <= _ref6 ? ++_l : --_l) {
-                  this.options.markers.addLayer(this._vectors[i].vectors[k]);
-                }
-              }
-            } else {
-              if (this._vectors[i].vector) {
-                this.layer.addLayer(this._vectors[i].vector);
-              } else if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
-                for (k = _m = 0, _ref7 = this._vectors[i].vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
-                  this.layer.addLayer(this._vectors[i].vectors[k]);
-                }
+            if (this._vectors[i].vector) {
+              this.layer.addLayer(this._vectors[i].vector);
+            } else if (this._vectors[i].vectors && this._vectors[i].vectors.length) {
+              for (k = _l = 0, _ref6 = this._vectors[i].vectors.length; 0 <= _ref6 ? _l < _ref6 : _l > _ref6; k = 0 <= _ref6 ? ++_l : --_l) {
+                this.layer.addLayer(this._vectors[i].vectors[k]);
               }
             }
             if (this.options.popupTemplate) {
@@ -1059,14 +1042,14 @@
               feature = data.features[i];
               this._setPopupContent(feature);
               (function(feature) {
-                var _n, _ref8, _results;
+                var _m, _ref7, _results;
                 if (feature.vector) {
                   return feature.vector.on("click", function(event) {
                     return me._showPopup(feature, event);
                   });
                 } else if (feature.vectors) {
                   _results = [];
-                  for (k = _n = 0, _ref8 = feature.vectors.length; 0 <= _ref8 ? _n < _ref8 : _n > _ref8; k = 0 <= _ref8 ? ++_n : --_n) {
+                  for (k = _m = 0, _ref7 = feature.vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
                     _results.push(feature.vectors[k].on("click", function(event) {
                       return me._showPopup(feature, event);
                     }));
@@ -1079,14 +1062,14 @@
               me = this;
               feature = data.features[i];
               (function(feature) {
-                var _n, _ref8, _results;
+                var _m, _ref7, _results;
                 if (feature.vector) {
                   return feature.vector.on("click", function(event) {
                     return me._fireClickEvent(feature, event);
                   });
                 } else if (feature.vectors) {
                   _results = [];
-                  for (k = _n = 0, _ref8 = feature.vectors.length; 0 <= _ref8 ? _n < _ref8 : _n > _ref8; k = 0 <= _ref8 ? ++_n : --_n) {
+                  for (k = _m = 0, _ref7 = feature.vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
                     _results.push(feature.vectors[k].on("click", function(event) {
                       return me._fireClickEvent(feature, event);
                     }));
@@ -1099,14 +1082,14 @@
               me = this;
               feature = data.features[i];
               (function(feature) {
-                var _n, _ref8, _results;
+                var _m, _ref7, _results;
                 if (feature.vector) {
                   return feature.vector.on("mouseover", function(event) {
                     return me._fireMouseoverEvent(feature, event);
                   });
                 } else if (feature.vectors) {
                   _results = [];
-                  for (k = _n = 0, _ref8 = feature.vectors.length; 0 <= _ref8 ? _n < _ref8 : _n > _ref8; k = 0 <= _ref8 ? ++_n : --_n) {
+                  for (k = _m = 0, _ref7 = feature.vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
                     _results.push(feature.vectors[k].on("mouseover", function(event) {
                       return me._fireMouseoverEvent(feature, event);
                     }));
@@ -1119,14 +1102,14 @@
               me = this;
               feature = data.features[i];
               (function(feature) {
-                var _n, _ref8, _results;
+                var _m, _ref7, _results;
                 if (feature.vector) {
                   return feature.vector.on("mouseout", function(event) {
                     return me._fireMouseoutEvent(feature, event);
                   });
                 } else if (feature.vectors) {
                   _results = [];
-                  for (k = _n = 0, _ref8 = feature.vectors.length; 0 <= _ref8 ? _n < _ref8 : _n > _ref8; k = 0 <= _ref8 ? ++_n : --_n) {
+                  for (k = _m = 0, _ref7 = feature.vectors.length; 0 <= _ref7 ? _m < _ref7 : _m > _ref7; k = 0 <= _ref7 ? ++_m : --_m) {
                     _results.push(feature.vectors[k].on("mouseout", function(event) {
                       return me._fireMouseoutEvent(feature, event);
                     }));
@@ -1146,7 +1129,7 @@
         });
       }
       if (this.options.focus) {
-        this.options.map.panInsideBounds(this.layer.getBounds());
+        this.options.map.fitBounds(this.layer.getBounds());
       }
       return data = null;
     }
@@ -1238,7 +1221,11 @@
       this._globalPointer = "Postgis_" + this.options.geotable + "_" + this.options.geomFieldName;
       window[this._globalPointer] = this;
       this._vectors = [];
-      this.layer = L.featureGroup();
+      if (this.options.cluster) {
+        this.layer = new L.MarkerClusterGroup();
+      } else {
+        this.layer = new L.featureGroup();
+      }
       if (this.options.map) {
         if (this.options.scaleRange && this.options.scaleRange instanceof Array && this.options.scaleRange.length === 2) {
           z = this.options.map.getZoom();
@@ -1628,5 +1615,466 @@
       return this._form.className = this._form.className.replace(" switch-control-layers-expanded", "");
     }
   });
+
+  H5.Table = (function() {
+    Table.prototype.options = {
+      container: null,
+      fields: null,
+      uniqueField: null,
+      title: null,
+      table: null,
+      url: "",
+      buttons: {
+        arrows: false,
+        "export": false,
+        minimize: false,
+        maximize: false,
+        close: false
+      }
+    };
+
+    Table.prototype.data = null;
+
+    function Table(options) {
+      this.options = $.extend({}, this.options, options);
+      this._createContainer();
+    }
+
+    Table.prototype._createContainer = function() {
+      var boxContent, boxHeader, boxTitle, closeBtn, closeIcon, exportBtn, exportIcon, leftBtn, leftCtrl, leftIcon, maxBtn, maxIcon, minBtn, minIcon, pipeline, rightBtn, rightCtrl, rightIcon;
+      this._container = document.getElementById(this.options.container);
+      boxHeader = document.createElement("div");
+      boxHeader.className = "box-header";
+      this._boxHeader = boxHeader;
+      boxTitle = document.createElement("h2");
+      boxTitle.innerHTML = this.options.title;
+      this._boxTitle = boxTitle;
+      leftCtrl = document.createElement("div");
+      leftCtrl.className = "btn-group chart-icon btn-left";
+      this._leftCtrl = leftCtrl;
+      rightCtrl = document.createElement("div");
+      rightCtrl.className = "btn-group chart-icon btn-right";
+      this._rightCtrl = rightCtrl;
+      boxContent = document.createElement("div");
+      boxContent.id = "database-" + this.options.container;
+      boxContent.className = "box-content-database";
+      this._boxContent = boxContent;
+      $(this._boxHeader).append(this._leftCtrl, this._boxTitle, this._rightCtrl);
+      $(this._container).append(this._boxHeader, this._boxContent, this._chartFooter);
+      pipeline = "<span class=\"break\"></span>";
+      if (this.options.buttons.arrows) {
+        $(this._boxTitle).prepend(pipeline);
+        leftBtn = document.createElement("button");
+        leftBtn.id = this.options.container + "-btn-left";
+        leftBtn.className = "btn";
+        this._leftBtn = leftBtn;
+        leftIcon = document.createElement("i");
+        leftIcon.className = "icon-arrow-left";
+        this._leftIcon = leftIcon;
+        $(this._leftBtn).append(this._leftIcon);
+        rightBtn = document.createElement("button");
+        rightBtn.id = this.options.container + "-btn-right";
+        rightBtn.className = "btn";
+        this._rightBtn = rightBtn;
+        rightIcon = document.createElement("i");
+        rightIcon.className = "icon-arrow-right";
+        this._rightIcon = rightIcon;
+        $(this._rightBtn).append(this._rightIcon);
+        $(this._leftCtrl).append(this._leftBtn, this._rightBtn);
+      }
+      if (this.options.buttons["export"]) {
+        exportBtn = document.createElement("button");
+        exportBtn.id = this.options.container + "-btn-export";
+        exportBtn.className = "btn";
+        this._exportBtn = exportBtn;
+        exportIcon = document.createElement("i");
+        exportIcon.className = "icon-download-alt";
+        this._exportIcon = exportIcon;
+        $(this._exportBtn).append(this._exportIcon);
+        $(this._rightCtrl).append(this._exportBtn);
+        this._enableExport();
+      }
+      if (this.options.buttons.minimize) {
+        minBtn = document.createElement("button");
+        minBtn.id = this.options.container + "-btn-minimize";
+        minBtn.className = "btn";
+        this._minBtn = minBtn;
+        minIcon = document.createElement("i");
+        minIcon.className = "icon-chevron-up";
+        this._minIcon = minIcon;
+        $(this._minBtn).append(this._minIcon);
+        $(this._rightCtrl).append(this._minBtn);
+        this._enableMinimize();
+      }
+      if (this.options.buttons.maximize) {
+        maxBtn = document.createElement("button");
+        maxBtn.id = this.options.container + "-btn-maximize";
+        maxBtn.className = "btn";
+        this._maxBtn = maxBtn;
+        maxIcon = document.createElement("i");
+        maxIcon.className = "icon-resize-full";
+        this._maxIcon = maxIcon;
+        $(this._maxBtn).append(this._maxIcon);
+        $(this._rightCtrl).append(this._maxBtn);
+        this._enableMaximize();
+      }
+      if (this.options.buttons.close) {
+        closeBtn = document.createElement("button");
+        closeBtn.id = this.options.container + "-btn-close";
+        closeBtn.className = "btn";
+        this._closeBtn = closeBtn;
+        closeIcon = document.createElement("i");
+        closeIcon.className = "icon-remove";
+        this._closeIcon = closeIcon;
+        $(this._closeBtn).append(this._closeIcon);
+        $(this._rightCtrl).append(this._closeBtn);
+        this._enableClose();
+      }
+      return this._createTable();
+    };
+
+    Table.prototype._enableMinimize = function() {
+      var _this = this;
+      return $(this._minBtn).on("click", function(event) {
+        event.preventDefault();
+        if ($(_this._boxContent).is(":visible")) {
+          _this._minIcon.className = "icon-chevron-down";
+          if (_this.options.buttons.minusplus) {
+            $(_this._addBtn).prop("disabled", true);
+            $(_this._delBtn).prop("disabled", true);
+          } else if (_this.options.buttons.arrows) {
+            $(_this._leftBtn).prop("disabled", true);
+            $(_this._rightBtn).prop("disabled", true);
+          }
+        } else {
+          _this._minIcon.className = "icon-chevron-up";
+          if (_this.options.buttons.minusplus) {
+            $(_this._addBtn).prop("disabled", false);
+            $(_this._delBtn).prop("disabled", false);
+          } else if (_this.options.buttons.arrows) {
+            $(_this._leftBtn).prop("disabled", false);
+            $(_this._rightBtn).prop("disabled", false);
+          }
+        }
+        if ($(_this._boxTable).is(":visible")) {
+          $(_this._boxTable).slideToggle("fast", "linear");
+        }
+        return $(_this._boxContent).slideToggle("fast", "linear");
+      });
+    };
+
+    Table.prototype._enableMaximize = function() {
+      var _this = this;
+      return $(this._maxBtn).on("click", function(event) {
+        event.preventDefault();
+        if (_this._maxIcon.className === "icon-resize-full") {
+          _this.defaultClass = _this._container.className;
+          $(_this._minBtn).prop("disabled", true);
+          $(_this._closeBtn).prop("disabled", true);
+          _this._maxIcon.className = "icon-resize-small";
+          $("#navbar").hide();
+        } else {
+          $(_this._minBtn).prop("disabled", false);
+          $(_this._closeBtn).prop("disabled", false);
+          _this._maxIcon.className = "icon-resize-full";
+          $("#navbar").show();
+        }
+        $(_this._boxTable).hide();
+        $(_this._boxTable).toggleClass("box-table-overlay");
+        $(_this._container).toggleClass(_this.defaultClass);
+        $(_this._container).toggleClass("box-overlay");
+        $("body").toggleClass("body-overlay");
+        $(_this._boxContent).toggleClass("content-overlay");
+        $(_this._boxTable).toggleClass("content-overlay");
+        $(_this._boxContent).hide();
+        return $(_this._boxContent).fadeToggle(500, "linear");
+      });
+    };
+
+    Table.prototype._enableClose = function() {
+      var _this = this;
+      return $(this._closeBtn).on("click", function(event) {
+        event.preventDefault();
+        return $(_this._container).hide("slide", "linear", 600);
+      });
+    };
+
+    Table.prototype._enableExport = function() {
+      var generateCSV,
+        _this = this;
+      generateCSV = function() {
+        var line, str;
+        str = "";
+        line = "";
+        $.each(_this.options.fields, function(key, value) {
+          return line += "\"" + value.columnName + "\",";
+        });
+        str += line + "\r\n";
+        $.each(_this.data, function(key, value) {
+          line = "";
+          $.each(value, function(key, field) {
+            return line += "\"" + field + "\",";
+          });
+          return str += line + "\r\n";
+        });
+        return str;
+      };
+      return $(this._exportBtn).click(function() {
+        var csv;
+        csv = generateCSV();
+        return window.open("data:text/csv;charset=utf-8," + escape(csv));
+      });
+    };
+
+    Table.prototype._formatFields = function() {
+      var formatedFields;
+      formatedFields = "";
+      $.each(this.options.fields, function(key, properties) {
+        return formatedFields += key + ",";
+      });
+      return formatedFields.substring(0, formatedFields.length - 1);
+    };
+
+    Table.prototype._createTable = function() {
+      var addBtn, field, head, i, iconBtn, rest, row,
+        _this = this;
+      this._table = document.createElement("table");
+      this._table.className = "table table-striped";
+      rest = new H5.Rest({
+        url: this.options.url,
+        table: this.options.table,
+        fields: this._formatFields(),
+        order: this.options.uniqueField.field
+      });
+      this.data = rest.data;
+      $.each(this.data, function(key, properties) {
+        var actionBtns, delBtn, field, i, icon, row;
+        row = _this._table.insertRow();
+        i = 0;
+        $.each(properties, function(nameField, nameTable) {
+          var field, span;
+          span = document.createElement("span");
+          field = row.insertCell(i++);
+          $(field).append(span);
+          if (!(nameField === _this.options.uniqueField.field && !_this.options.uniqueField.insertable)) {
+            $(span).editable({
+              type: 'text',
+              pk: key,
+              value: nameTable,
+              validate: function(value) {
+                if (_this.options.fields[nameField].validation != null) {
+                  return _this.options.fields[nameField].validation(value);
+                }
+              },
+              url: function(params) {
+                var fields, where;
+                where = "";
+                $.each(row.children, function(key, cell) {
+                  var tableCell;
+                  tableCell = cell.children[0];
+                  if ($(tableCell).attr("data-field") === _this.options.uniqueField.field) {
+                    return where = _this.options.uniqueField.field + "%3D" + tableCell.innerHTML;
+                  }
+                });
+                fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
+                rest = new H5.Rest({
+                  url: _this.options.url,
+                  table: _this.options.table,
+                  fields: fields,
+                  parameters: where,
+                  restService: "ws_updatequery.php"
+                });
+                return _this._reloadTable();
+              }
+            });
+          } else {
+            span.innerHTML = nameTable;
+          }
+          return $(span).attr("data-field", nameField);
+        });
+        field = row.insertCell(i++);
+        delBtn = document.createElement("a");
+        delBtn.id = "delRowBtn";
+        delBtn.className = "btn ";
+        icon = document.createElement("i");
+        icon.className = "icon-trash";
+        $(delBtn).append(icon);
+        actionBtns = document.createElement("div");
+        $(actionBtns).append(delBtn);
+        $(field).append(actionBtns);
+        _this._delFields(delBtn, row);
+        return _this._lastRow = row;
+      });
+      addBtn = document.createElement("a");
+      addBtn.id = "addBotao";
+      addBtn.className = "btn";
+      iconBtn = document.createElement("i");
+      iconBtn.className = "icon-plus";
+      $(addBtn).append(iconBtn);
+      this._addBtn = addBtn;
+      $(this._rightCtrl).append(addBtn);
+      this._addFields();
+      $(this._boxContent).append(this._table);
+      head = this._table.createTHead();
+      row = head.insertRow(0);
+      i = 0;
+      $.each(this.options.fields, function(key, value) {
+        var field;
+        field = row.insertCell(i++);
+        return field.innerHTML = "<strong>" + value.columnName + "</strong>";
+      });
+      field = row.insertCell(i++);
+      return $(field).width(37);
+    };
+
+    Table.prototype._addFields = function() {
+      var _this = this;
+      return $(this._addBtn).on("click", function(event) {
+        var delBtn, div, icon, newRow, saveBtn, td;
+        event.preventDefault();
+        newRow = document.createElement("tr");
+        $.each(_this._lastRow.cells, function(key, cell) {
+          var dataField, span, td;
+          dataField = $(cell.children[0]).attr("data-field");
+          if (dataField != null) {
+            td = newRow.insertCell();
+            span = document.createElement("span");
+            if (!(_this.options.uniqueField.field === $(cell.children[0]).attr("data-field") && !_this.options.uniqueField.insertable)) {
+              $(span).editable({
+                type: 'text',
+                value: ""
+              });
+            }
+            $(span).attr("data-field", dataField);
+            return $(td).append(span);
+          }
+        });
+        delBtn = document.createElement("a");
+        delBtn.id = "deletarBotaoTabela";
+        delBtn.className = "btn ";
+        delBtn.style = "display:none;";
+        icon = document.createElement("i");
+        icon.className = "icon-trash ";
+        $(delBtn).append(icon);
+        _this._delFields(delBtn, newRow);
+        saveBtn = document.createElement("a");
+        saveBtn.id = "salvarBotaoTabela";
+        saveBtn.className = "btn btn-primary editable-submit ";
+        icon = document.createElement("i");
+        icon.className = "icon-ok ";
+        $(saveBtn).append(icon);
+        _this._saveFields(saveBtn, delBtn, newRow);
+        div = document.createElement("div");
+        $(div).append(saveBtn);
+        $(div).append(delBtn);
+        td = newRow.insertCell();
+        $(td).append(div);
+        $(newRow).insertAfter($(_this._lastRow));
+        return _this._lastRow = newRow;
+      });
+    };
+
+    Table.prototype._delFields = function(delBtn, tableRow) {
+      var _this = this;
+      return $(delBtn).on("click", function(event) {
+        var rest, where;
+        event.preventDefault();
+        if (confirm("Você deseja excluir essa linha do banco de dados?")) {
+          if (_this._lastRow === tableRow) {
+            _this._lastRow = _this._table.rows.item(_this._table.rows.length - 2);
+          }
+          where = "";
+          $.each(tableRow.children, function(key, cell) {
+            var span;
+            span = cell.children[0];
+            if ($(span).attr("data-field") === _this.options.uniqueField.field) {
+              return where = _this.options.uniqueField.field + "%3D" + span.innerHTML;
+            }
+          });
+          rest = new H5.Rest({
+            url: _this.options.url,
+            table: _this.options.table,
+            parameters: where,
+            restService: "ws_deletequery.php"
+          });
+          return _this._reloadTable();
+        } else {
+          return alert("Operação cancelada");
+        }
+      });
+    };
+
+    Table.prototype._saveFields = function(saveBtn, delBtn, tableRow) {
+      var _this = this;
+      return $(saveBtn).on("click", function(event) {
+        var fields, i, rest, values;
+        event.preventDefault();
+        fields = "";
+        values = "";
+        i = 0;
+        $.each(_this.options.fields, function(key, properties) {
+          var span;
+          span = tableRow.children[i].children[0];
+          if (_this.options.uniqueField.insertable && $(span).attr("data-field") === _this.options.uniqueField.field) {
+            fields += key + ",";
+            values += "'" + span.innerHTML + "',";
+          } else if (span.innerHTML !== "" && span.innerHTML !== "Empty") {
+            fields += "" + key + ",";
+            values += "'" + span.innerHTML + "',";
+          }
+          if (!($(span).attr("data-field") === _this.options.uniqueField.field && !_this.options.uniqueField.insertable)) {
+            $(span).editable({
+              validate: function(value) {
+                if (_this.options.fields[key].validation != null) {
+                  return _this.options.fields[key].validation(value);
+                }
+              },
+              url: function(params) {
+                var rest, where;
+                where = "";
+                $.each(row.children, function(key, cell) {
+                  var tableCell;
+                  tableCell = cell.children[0];
+                  if ($(tableCell).attr("data-field") === _this.options.uniqueField.field) {
+                    return where = _this.options.uniqueField.field + "%3D" + tableCell.innerHTML;
+                  }
+                });
+                fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
+                rest = new H5.Rest({
+                  url: _this.options.url,
+                  table: _this.options.table,
+                  fields: fields,
+                  parameters: where,
+                  restService: "ws_updatequery.php"
+                });
+                return _this._reloadTable();
+              }
+            });
+          }
+          return i++;
+        });
+        fields = fields.substring(0, fields.length - 1);
+        values = values.substring(0, values.length - 1);
+        fields = " (" + fields + ") values (" + values + ") ";
+        rest = new H5.Rest({
+          url: _this.options.url,
+          table: _this.options.table,
+          fields: fields,
+          restService: "ws_insertquery.php"
+        });
+        return _this._reloadTable();
+      });
+    };
+
+    Table.prototype._reloadTable = function() {
+      $.each($(this._container.children), function(key, childs) {
+        return $(childs).remove();
+      });
+      return this.constructor(this.options);
+    };
+
+    return Table;
+
+  })();
 
 }).call(this);

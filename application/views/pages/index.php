@@ -1,11 +1,270 @@
-<div class="loading" id="loading">
-  <img src="http://siscom.ibama.gov.br/painel/assets/img/ibama_logo.png" id="loading_logo" style="display: inline;" title="">
+<div id="addMeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h5 id="myModalLabel">Acidente Ambiental</h5>
+  </div>
+  <div class="modal-body" style="padding: 5% 5.5%">
+    <div class="tab-content">
+      <div class="tab-pane active" id="tab1">
+        <div class="media">
+          <div class="pull-left">
+            <img class="media-object" src="../siema/assets/img/acidente_ambiental_logo_small.png">
+          </div>
+          <div class="media-body">
+            <label class="radio">
+              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteAmbiental" value="1" checked>
+              <h4 class="media-heading">Acidente Ambiental</h4>
+              <div class="media">
+                <p>Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.</p>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="media">
+          <div class="pull-left">
+            <img class="media-object" src="../siema/assets/img/linha_verde_logo_small.png">
+          </div>
+          <div class="media-body">
+            <label class="radio">
+              <input type="radio" name="optionsTipoAcidente" id="optionsLinhaVerde" value="0">
+              <h4 class="media-heading">Linha Verde</h4>
+              <div class="media">
+                <p>Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos a animais e demais danos ao meio ambiente que não se enquadram como acidente ambiental.</p>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="tab2">
+        <div class="row-fluid">
+            <?php
+              if( $this->session->userdata('logged_in') ) {
+                  echo '
+                <center>
+
+                <img src="./assets/img/check_sign.jpg" id="checkedUser" style="display: none;" title=""><br/>
+                <div id="containerProgress" class="progress progress-striped active" style="width: 50%;">
+                    <div id="authProgress" class="bar"></div>
+                </div>
+                <span id="textProgress">Checando Usuário...</span>
+                <p><a id="tipoForm" class="btn" href="#tab2" data-toggle="tab" style="margin-top: 20px;">Escolher Tipo de Formulário</a></p>
+                </center>
+                ';
+              } else {
+                echo '
+                <div class="span6">
+                  <iframe name="login_Form" src="' . base_url() . '/index.php/login" frameborder="0" style="width:100%; height: 175px;"></iframe>
+                  <div class="block text-center">
+                    <a id="btnCadastrar" href="#" class="btn btn-success span5" data-toggle="tab">Cadastrar</a>
+                    <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form.document.loginForm.submit()">Logar</button>
+                    <p><a id="tipoForm" class="btn" href="#tab2" data-toggle="tab" style="display:none;">Escolher Tipo de Formulário</a></p>
+                  </div>
+                </div>
+                <div id="divDenuncia" class="span6">
+                  <h4>Denúncia anônima</h4>
+                  <p>Esta opção não permite a revisão ou alteração do comunicado enviado.</p>
+                  <p>Ao optar pela denúncia anônima, o IBAMA não conseguirá entrar em contato para solicitar informações precisas sobre o acidente. Favor inserir o máximo e informações possíveis e completas.</p>
+                  <p><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
+                </div>
+                  ';
+              }
+            ?>
+        </div>
+      </div>
+      <div class="tab-pane" id="tab3">
+        <h3>Tipo de conta</h3>
+        <div class="media">
+          <div class="media-body">
+            <label class="radio">
+              <input id="radioPubExt" type="radio" name="tipoConta" checked>
+              <h5 class="media-heading">Público Externo</h5>
+              <span>Se você é público externo.. Adicionar comentário.</span>
+            </label>
+          </div>
+        </div>
+        <div class="media">
+          <div class="media-body">
+            <label class="radio">
+              <input id="radioServPub" type="radio" name="tipoConta">
+              <h5 class="media-heading">Servidor IBAMA</h5>
+              <span>Se você é servidor do IBAMA.. Adicionar comentário.</span>
+            </label>
+          </div>
+        </div>
+        <div class="media">
+          <div class="media-body">
+            <label class="radio">
+              <input id="radioEmp" type="radio" name="tipoConta">
+              <h5 class="media-heading">Empresa</h5>
+              <span>Se você é empresa.. Adicionar comentário.</span>
+            </label>
+          </div>
+        </div>
+        <div class="media">
+          <div class="media-body">
+            <label class="radio">
+              <input id="radioOrgao" type="radio" name="tipoConta">
+              <h5 class="media-heading">Órgão Público</h5>
+              <span>Se você é um Orgão Público . Adicionar comentário.</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="tab4">
+        <div class="row-fluid">
+          <br />
+          <div class="form-horizontal">
+            <div class="text-center">
+              <h5> <strong>Identificação do Orgão/Empresa</strong></h5>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="usuario">Usuário:</label>
+              <div class="controls">
+                <input id="usuario" type="text" class="inputUsuario" placeholder="Usuario">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="senha">Senha:</label>
+              <div class="controls">
+                <input id="senha" type="password" class="inputSenha" placeholder="Senha">
+              </div>
+            </div>
+          </div>
+          <br />
+        </div>
+      </div>
+      <div class="tab-pane" id="tab5">
+        <div class="row-fluid">
+          <div class="span6">
+            <div class="control-group">
+              <label class="control-label" for="inputNome">Nome:</label>
+              <div class="controls">
+                <input id="inputNome" class="input-large" type="text" name="inputNome" placeholder="Nome">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="inputCPF">CPF:</label>
+              <div class="controls">
+                <input id="inputCPF" class="input-large" type="text" name="inputCPF" placeholder="000.000.000-00">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="inputSenha">Senha:</label>
+              <div class="controls">
+                <input id="inputSenha" class="input-large" type="password" name="inputSenha" placeholder="">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="inputConfirmarSenha">Confirmar senha:</label>
+              <div class="controls">
+                <input id="inputConfirmarSenha" class="input-large" type="password" name="inputConfirmarSenha" placeholder="">
+              </div>
+            </div>
+          </div>
+          <div class="span6">
+            <div class="control-group">
+              <label class="control-label" for="inputEmail">Email:</label>
+              <div class="controls">
+                <input id="inputEmail" class="input-large" type="text" name="inputEmail" placeholder="nome@email.com">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="inputTelefone">Telefone:</label>
+              <div class="controls">
+                <input id="inputTelefone" class="input-large" type="text" name="inputTelefone" placeholder="(00) 0000-0000">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="tab6">
+        <div class="alert alert-info fade in" style="margin: 100px 120px">
+          <strong>Conta criada com sucesso!</strong><br/> Dados de sua conta foram enviados para seu e-mail.
+        </div>
+      </div>
+      <div class="tab-pane" id="tab7">
+        <div class="media">
+          <div class="media-body">
+            <label class="radio">
+              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOleo" value="1">
+              <h4 class="media-heading">Acidente envolvendo óleo</h4>
+              <div class="media">
+                <p>Qualquer incidente ocorrido em portos organizados, instalações portuárias, dutos, navios, plataformas e suas instalações de apoio, que possa provocar poluição das águas sob jurisdição nacional.</p>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="media">
+          <div class="media-body">
+            <label class="radio">
+              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOutros" value="0" checked>
+              <h4 class="media-heading">Demais acidentes ambientais</h4>
+              <div class="media">
+                <p>Acidente envolvendo produto(s) perigoso(s) (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.</p>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="media">
+          <div class="media-body">
+            <label class="radio" for="inputRegistro">
+              <input type="radio" name="optionsTipoAcidente" id="optionsAtualizarAcidente" value="-1">
+              <h4 class="media-heading">Atualizar acidentes enviados</h4>
+              <div class="media">
+                <p> Adicionar mais informações a acidentes ja comunicados.</p>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="inputRegistro">Número do Registro:</label>
+                <div class="controls">
+                  <input id="inputRegistro" class="input-large" type="text" name="inputRegistro" placeholder="Número do Registro do Acidente">
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <?php echo form_open('home/createform', array('id' => 'formCreate', 'target' => 'form_frame')); ?>
+          <label class="checkbox" style="display:none;">
+            <label id="defaultHtml" name="defaultHtml"></label>
+            <input type="checkbox" id="hasOleo" name="hasOleo">
+            <?php
+              if($this->session->userdata('logged_in'))
+                echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA" checked>';
+              else
+                echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA">';
+            ?>
+          </label>
+        <?php echo form_close(); ?>
+        <?php echo form_open('home/loadform', array('id' => 'formLoad', 'target' => 'form_frame')); ?>
+          <label class="checkbox" style="display:none;">
+            <input type="checkbox" id="hasOleo" name="hasOleo">
+            <?php
+              if($this->session->userdata('logged_in'))
+                echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA" checked>';
+              else
+                echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA">';
+            ?>
+          </label>
+        <?php echo form_close(); ?>
+      </div>
+      <div class="tab-pane" id="tab8">
+        <!-- <div class="row-fluid"> -->
+          <iframe name="form_frame" style="border: medium none white; height: 423px; width: 100%;"></iframe>
+        <!-- </div> -->
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a id="modalBtnBack" href="" class="btn" data-toggle="tab">Voltar</a>
+    <a id="modalBtnNext" href="#tab1" class="btn" data-toggle="tab">Avançar</a>
+    <a id="submit" class="btn btn-primary" type="button" style="display:none;" onClick="window.top.form_frame.document.formAcidentes.submit()">
+      <i class="icon-map-marker icon-white"></i>
+      Enviar Formulário
+    </a>
+  </div>
 </div>
-<?php
-  if(!$logged_in) {
-    echo '<div id="login" class="login"> </div>';
-  }
-?>
+<div class="loading" id="loading">
+  <img src="./assets/img/logo.png" id="loading_logo" style="display: inline;" title="">
+</div>
 <div id="map" class="map"></div>
 <div id="dash" class="dash">
   <div class="charts-content">

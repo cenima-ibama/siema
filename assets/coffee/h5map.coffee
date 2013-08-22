@@ -41,6 +41,22 @@ ucFederais = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geo-srv/cemam/wms",
   transparent: true
 )
 # }}}
+# SCREEN SIZE {{{
+# update size of the map container
+$( '#map' ).width( $( window ).width() )
+$( '#map' ).height( $( window ).height() - $('#navbar').height())
+
+# Detect whether device supports orientationchange event,
+# otherwise fall back to the resize event.
+supportsOrientationChange = "onorientationchange" of window
+orientationEvent = (if supportsOrientationChange then "orientationchange" else "resize")
+
+# update chart if orientation or the size of the screen changed
+window.addEventListener orientationEvent, (->
+  $( '#map' ).width( $( window ).width() )
+  $( '#map' ).height( $( window ).height() - $('#navbar').height())
+), false
+# }}}
 # MAP LAYER {{{
 H5.Map.base = new L.Map("map",
   center: new L.LatLng(-10.0, -58.0)
@@ -66,15 +82,40 @@ new L.control.fullscreen(
   title: 'Fullscreen'
 ).addTo(H5.Map.base)
 
-new L.Control.GeoSearch(
+new L.control.GeoSearch(
   provider: new L.GeoSearch.Provider.Google
   searchLabel: "Endereço, Estado - UF"
   notFoundMessage: "Endereço não encontrado."
   showMarker: false
 ).addTo(H5.Map.base)
 
+new L.control.locate(
+  position: "topleft"
+  drawCircle: true
+  follow: false
+  stopFollowingOnDrag: false
+  circleStyle: {}
+  markerStyle: {}
+  followCircleStyle: {}
+  followMarkerStyle: {}
+  metric: true
+  onLocationError: (err) ->
+    alert err.message
+
+  onLocationOutsideMapBounds: (context) ->
+    alert context.options.strings.outsideMapBoundsMsg
+
+  setView: true
+  strings:
+    title: "Localizar minha posição"
+    popup: "Você está a {distance} {unit} deste lugar"
+    outsideMapBoundsMsg: "Você está em um outra dimensão! o.O"
+
+  locateOptions: {}
+).addTo(H5.Map.base)
+
 # display stations
-H5.Data.restURL = "http://" + document.domain + "/painel/rest"
+H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 
 H5.Map.layer.alerta = new H5.Leaflet.Postgis(
   url: H5.Data.restURL
@@ -110,7 +151,7 @@ H5.Map.layer.alerta.setMap H5.Map.base
 
 customMarker = L.Icon.extend(
   options:
-    iconUrl: "http://" + document.domain + "/painel/assets/img/ibama_marker.png"
+    iconUrl: "http://" + document.domain + "/siema/assets/img/ibama_marker.png"
     shadowUrl: null
     iconSize: new L.Point(0, 0)
     iconAnchor: new L.Point(0, 0)

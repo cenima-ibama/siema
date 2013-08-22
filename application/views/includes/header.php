@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>SISCOM</title>
+    <title>SIEMA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Sistema de monitoramento de desmatamento">
     <meta name="author" content="Helmuth Saatkamp <helmuthdu@gmail.com>">
@@ -12,7 +12,8 @@
     <link href="<?= base_url()?>assets/css/leaflet-markercluster.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/leaflet-minimap.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/leaflet-fullscreen.css" rel="stylesheet">
-    <link href="<?= base_url()?>assets/css/leaflet-geosearch.css" rel="stylesheet">
+    <link href="<?= base_url()?>assets/css/leaflet-control-geosearch.css" rel="stylesheet">
+    <link href="<?= base_url()?>assets/css/leaflet-control-locate.css" rel="stylesheet">
     <!-- <link href="<?= base_url()?>assets/css/leaflet-draw.css" rel="stylesheet"> -->
 
     <!-- Bootstrap -->

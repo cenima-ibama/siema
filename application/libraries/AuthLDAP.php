@@ -39,6 +39,9 @@ class AuthLDAP {
         $this->ci->load->driver('session');
 
         // Load the configuration
+        $this->ci->load->library('Firephp');
+
+        // Load the configuration
         $this->ci->load->config('authldap');
 
         // Load the language file
@@ -109,7 +112,8 @@ class AuthLDAP {
          */
 
         $user_info = $this->_authenticate($username,$password);
-        if(empty($user_info['cn'])) {
+
+        if(empty($user_info['name'])) {
             return FALSE;
         }
         if(empty($user_info['role_level'])) {
@@ -117,14 +121,17 @@ class AuthLDAP {
             show_error($username.' succssfully authenticated, but is not allowed because the username was not found in an allowed access group.');
         }
         // Record the login
-        $this->_audit("Successful login: ".$user_info['cn']."(".$username.") from ".$this->ci->input->ip_address());
+        $this->_audit("Successful login: ".$user_info['name']."(".$username.") from ".$this->ci->input->ip_address());
 
         // Set the session data
-        $customdata = array('username' => $username,
-                            'cn' => $user_info['cn'],
-                            'role_name' => $user_info['role_name'],
-                            'role_level' => $user_info['role_level'],
-                            'logged_in' => TRUE);
+        $customdata = array(
+            'username' => $username,
+            'name' => $user_info['name'],
+            'mail' => $user_info['mail'],
+            'role_name' => $user_info['role_name'],
+            'role_level' => $user_info['role_level'],
+            'logged_in' => TRUE
+            );
 
         $this->ci->session->set_userdata($customdata);
         return TRUE;
@@ -240,11 +247,18 @@ class AuthLDAP {
         $cn = $this->_normalize_case($entries[0]['cn'][0]);
         $dn = stripslashes($entries[0]['dn']);
         $id = $entries[0][$this->login_attribute][0];
+        $mail = $entries[0]['mail'][0];
+
 
         $role_level = $this->_get_role($get_role_arg);
-        return array('cn' => $cn, 'dn' => $entries[0]['dn'], 'id' => $id,
+        return array(
+            'name' => $cn,
+            'dn' => $dn,
+            'id' => $id,
+            'mail' => $mail,
             'role_name' => $this->roles[$role_level],
-            'role_level' => $role_level);
+            'role_level' => $role_level
+            );
     }
 
     /**

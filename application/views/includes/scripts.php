@@ -11,13 +11,16 @@
   <script src="<?= base_url()?>assets/js/leaflet.markercluster.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.minimap.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.fullscreen.js"></script>
-  <script src="<?= base_url()?>assets/js/leaflet.geosearch.js"></script>
+  <script src="<?= base_url()?>assets/js/leaflet.control.locate.js"></script>
+  <script src="<?= base_url()?>assets/js/leaflet.control.geosearch.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.geosearch.provider.google.js"></script>
   <!-- <script src="<?= base_url()?>assets/js/leaflet.draw.js"></script> -->
   <!-- Bootstrap -->
   <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrap.select.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrap.switch.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.5/bootstrap-editable/js/bootstrap-editable.min.js"></script>
+
   <!-- Charts -->
   <script src="//www.google.com/jsapi" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/masonry.min.js"></script>
@@ -30,21 +33,15 @@
 
   <script>
       <?php
-        if($logged_in) {
-            echo "H5.DB.addDB({name:'alert', table:'daily_alert'});\n";
-            echo "H5.DB.addDB({name:'cloud', table:'daily_cloud'});\n";
-            echo "H5.DB.addDB({name:'diary', table:'daily_diary'});\n";
-            echo "H5.DB.addDB({name:'prodes', table:'daily_prodes'});\n";
-        }
-        else {
             echo "H5.DB.addDB({name:'alert', table:'public_alert'});\n";
             echo "H5.DB.addDB({name:'cloud', table:'public_cloud'});\n";
             echo "H5.DB.addDB({name:'diary', table:'public_diary'});\n";
             echo "H5.DB.addDB({name:'prodes', table:'public_prodes'});\n";
-        }
       ?>
   </script>
 
   <script src="<?= base_url()?>assets/js/h5home.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/h5map.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/h5charts.js" type="text/javascript"></script>
+  <script src="<?= base_url()?>assets/js/h5form.js" type="text/javascript"></script>
+  <script src="<?= base_url()?>assets/js/h5table.js" type="text/javascript"></script>

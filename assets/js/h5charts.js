@@ -2,7 +2,7 @@
 (function() {
   var chart1, chart2, chart3, chart4, chart5, chart6, chart7, chart8, chart9, i, knob1, knob2, knob3, rest, selectedYear, spark1, spark2, _i, _j, _ref, _ref1;
 
-  H5.Data.restURL = "http://" + document.domain + "/painel/rest";
+  H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   H5.Data.changed = false;
 
