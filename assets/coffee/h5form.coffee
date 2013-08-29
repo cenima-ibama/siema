@@ -689,9 +689,13 @@ $(document).ready ->
 
     $("#produtoDesc").on 'click', ()->
       if $(this).is(":checked")
+        $("#inputTipoSubstancia").attr("disabled","disabled")
+        $("#inputValorEstimado").attr("disabled","disabled")
         $("#btnAddProduto").attr("disabled","disabled")
       else
-        $("#btnAddProduto").removeAttr("disabled")
+        $("#inputTipoSubstancia").removeAttr("disabled")
+        $("#inputValorEstimado").removeAttr("disabled")
+        $("#btnAddProduto").removeAttr("disabled")    
 
     $("#semSubstancia").on 'click', ()->
       if $(this).is(":checked")
