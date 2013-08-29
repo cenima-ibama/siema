@@ -250,6 +250,7 @@ class AuthLDAP {
         $mail = $entries[0]['mail'][0];
 
 
+        $get_role_arg = '';
         $role_level = $this->_get_role($get_role_arg);
         return array(
             'name' => $cn,

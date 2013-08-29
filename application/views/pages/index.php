@@ -6,32 +6,34 @@
   <div class="modal-body" style="padding: 5% 5.5%">
     <div class="tab-content">
       <div class="tab-pane active" id="tab1">
-        <div class="media">
-          <div class="pull-left">
-            <img class="media-object" src="../siema/assets/img/acidente_ambiental_logo_small.png">
+        <div class="controls row-fluid">
+          <div class="media">
+            <div class="pull-left">
+              <img class="media-object" src="../siema/assets/img/acidente_ambiental_logo_small.png">
+            </div>
+            <div class="media-body">
+              <label class="radio">
+                <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteAmbiental" value="1" checked>
+                <h4 class="media-heading">Acidente Ambiental</h4>
+                <div class="media">
+                  <p>Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.</p>
+                </div>
+              </label>
+            </div>
           </div>
-          <div class="media-body">
-            <label class="radio">
-              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteAmbiental" value="1" checked>
-              <h4 class="media-heading">Acidente Ambiental</h4>
-              <div class="media">
-                <p>Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.</p>
-              </div>
-            </label>
-          </div>
-        </div>
-        <div class="media">
-          <div class="pull-left">
-            <img class="media-object" src="../siema/assets/img/linha_verde_logo_small.png">
-          </div>
-          <div class="media-body">
-            <label class="radio">
-              <input type="radio" name="optionsTipoAcidente" id="optionsLinhaVerde" value="0">
-              <h4 class="media-heading">Linha Verde</h4>
-              <div class="media">
-                <p>Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos a animais e demais danos ao meio ambiente que não se enquadram como acidente ambiental.</p>
-              </div>
-            </label>
+          <div class="media">
+            <div class="pull-left">
+              <img class="media-object" src="../siema/assets/img/linha_verde_logo_small.png">
+            </div>
+            <div class="media-body">
+              <label class="radio">
+                <input type="radio" name="optionsTipoAcidente" id="optionsLinhaVerde" value="0">
+                <h4 class="media-heading">Linha Verde</h4>
+                <div class="media">
+                  <p>Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos a animais e demais danos ao meio ambiente que não se enquadram como acidente ambiental.</p>
+                </div>
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -41,30 +43,52 @@
               if( $this->session->userdata('logged_in') ) {
                   echo '
                 <center>
-
                 <img src="./assets/img/check_sign.jpg" id="checkedUser" style="display: none;" title=""><br/>
                 <div id="containerProgress" class="progress progress-striped active" style="width: 50%;">
                     <div id="authProgress" class="bar"></div>
                 </div>
                 <span id="textProgress">Checando Usuário...</span>
-                <p><a id="tipoForm" class="btn" href="#tab2" data-toggle="tab" style="margin-top: 20px;">Escolher Tipo de Formulário</a></p>
+                <div>
+                  <p>
+                    <a id="btnLogout" class="btn" href="' . base_url() . 'index.php/auth/logout" style="margin-top: 20px;">Logout</a>
+                    &nbsp;
+                    <a id="tipoForm" class="btn" href="#tab2" data-toggle="tab" style="margin-top: 20px;">Avançar</a>
+                  </p>
+                </div>
                 </center>
                 ';
               } else {
                 echo '
-                <div class="span6">
-                  <iframe name="login_Form" src="' . base_url() . '/index.php/login" frameborder="0" style="width:100%; height: 175px;"></iframe>
-                  <div class="block text-center">
-                    <a id="btnCadastrar" href="#" class="btn btn-success span5" data-toggle="tab">Cadastrar</a>
-                    <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form.document.loginForm.submit()">Logar</button>
-                    <p><a id="tipoForm" class="btn" href="#tab2" data-toggle="tab" style="display:none;">Escolher Tipo de Formulário</a></p>
+                <div id="divLogout">
+                  <div class="span6">
+                    <iframe name="login_Form" src="' . base_url() . '/index.php/login" frameborder="0" style="width:100%; height: 175px;"></iframe>
+                    <div class="block text-center">
+                      <a id="btnCadastrar" href="#" class="btn btn-success span5" data-toggle="tab">Cadastrar</a>
+                      <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form.document.loginForm.submit()">Logar</button>
+                    </div>
+                  </div>
+                  <div id="divDenuncia" class="span6">
+                    <h4>Denúncia anônima</h4>
+                    <p>Esta opção não permite a revisão ou alteração do comunicado enviado.</p>
+                    <p>Ao optar pela denúncia anônima, o IBAMA não conseguirá entrar em contato para solicitar informações precisas sobre o acidente. Favor inserir o máximo e informações possíveis e completas.</p>
+                    <p><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
                   </div>
                 </div>
-                <div id="divDenuncia" class="span6">
-                  <h4>Denúncia anônima</h4>
-                  <p>Esta opção não permite a revisão ou alteração do comunicado enviado.</p>
-                  <p>Ao optar pela denúncia anônima, o IBAMA não conseguirá entrar em contato para solicitar informações precisas sobre o acidente. Favor inserir o máximo e informações possíveis e completas.</p>
-                  <p><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
+                <div id="divLogin" style="display:none;">
+                  <center>
+                    <img src="./assets/img/check_sign.jpg" id="checkedUser" style="display: none;" title=""><br/>
+                    <div id="containerProgress" class="progress progress-striped active" style="width: 50%;">
+                        <div id="authProgress" class="bar"></div>
+                    </div>
+                    <span id="textProgress">Checando Usuário...</span>
+                    <div>
+                      <p>
+                        <a id="btnLogout" class="btn" href="' . base_url() . 'index.php/auth/logout" style="margin-top: 20px;">Logout</a>
+                        &nbsp;
+                        <a id="tipoForm" class="btn" href="#tab2" data-toggle="tab" style="margin-top: 20px;">Avançar</a>
+                      </p>
+                    </div>
+                  </center>
                 </div>
                   ';
               }
@@ -186,7 +210,7 @@
         <div class="media">
           <div class="media-body">
             <label class="radio">
-              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOleo" value="1">
+              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOleo" value="1" checked>
               <h4 class="media-heading">Acidente envolvendo óleo</h4>
               <div class="media">
                 <p>Qualquer incidente ocorrido em portos organizados, instalações portuárias, dutos, navios, plataformas e suas instalações de apoio, que possa provocar poluição das águas sob jurisdição nacional.</p>
@@ -257,8 +281,8 @@
     <a id="modalBtnBack" href="" class="btn" data-toggle="tab">Voltar</a>
     <a id="modalBtnNext" href="#tab1" class="btn" data-toggle="tab">Avançar</a>
     <a id="submit" class="btn btn-primary" type="button" style="display:none;" onClick="window.top.form_frame.document.formAcidentes.submit()">
-      <i class="icon-map-marker icon-white"></i>
-      Enviar Formulário
+      <i class="icon-ok icon-white"></i>
+      Enviar
     </a>
   </div>
 </div>

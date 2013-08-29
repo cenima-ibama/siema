@@ -6,10 +6,22 @@ $(document).ready ->
   _tipoInstituicaoAtuando = null
   _tipoFonteInformacao = null
 
+  @produto = null
+
   #-------------------------------------------------------------------------
   # FORM
   #-------------------------------------------------------------------------
 
+
+  # Get the product name from the database, by ajax
+  rest = new H5.Rest (
+    url: "../../../../siema/rest_v2"
+    table: "produto"
+    fields: "id_produto,nome,num_onu,classe_risco"
+    order: "nome"
+  )
+
+  @produto = rest.data
 
   # List that stores the order on tabs to be accessed, going backwards
   history = []
@@ -27,9 +39,6 @@ $(document).ready ->
     $("#modalBtnNext").prop 'style', ''
     $("#submit").prop 'style', 'display:none;'
     $(".modal-footer").show()
-
-  # $('#submit').click (event) ->
-  #   $("#formAcidentes").submit()
 
   if !$("#comunicado").val()
     date = new Date()
@@ -57,11 +66,9 @@ $(document).ready ->
     else
       $(".modal-footer").show()
 
-    # if btnNext.innerHTML isnt "Avançar"
-      # btnNext.innerHTML = "Avançar"
-      # btnNext.type = ""
     if ("#tab" + collapse) is "#tab7"
       $(btnNext).prop 'style', ''
+      $(@).html('Voltar')
       $("#submit").prop 'style', 'display:none;'
 
     $(@).tab('show')
@@ -80,25 +87,29 @@ $(document).ready ->
     @.href = "#tab" + ++collapse
 
     if ("#tab" + collapse) is "#tab2"
-      progressBar = document.getElementById("authProgress")
-      textProgress = document.getElementById("textProgress")
-      containerProgress = document.getElementById("containerProgress")
-      checkedUser = document.getElementById("checkedUser")
-      tipoForm = document.getElementById("tipoForm")
+      if !(document.getElementById('divLogin'))?
+        progressBar = document.getElementById("authProgress")
+        textProgress = document.getElementById("textProgress")
+        containerProgress = document.getElementById("containerProgress")
+        checkedUser = document.getElementById("checkedUser")
+        tipoForm = document.getElementById("tipoForm")
+        btnLogout = document.getElementById("btnLogout")
 
-      $(tipoForm).hide()
-      i=0
-      progressAnimetion = setInterval( ->
-        $(progressBar).width(i++ + "0%")
-        if i is 15
-          $(containerProgress).hide()
-          $(textProgress).hide()
-          $(textProgress).html('Usuário registrado.')
-          $(textProgress).fadeToggle()
-          $(checkedUser).show()
-          $(tipoForm).show()
-          clearInterval(progressAnimetion)
-      , 100)
+        $(tipoForm).hide()
+        $(btnLogout).hide()
+        i=0
+        progressAnimetion = setInterval( ->
+          $(progressBar).width(i++ + "0%")
+          if i is 15
+            $(containerProgress).hide()
+            $(textProgress).hide()
+            $(textProgress).html('Usuário registrado.')
+            $(textProgress).fadeToggle()
+            $(checkedUser).show()
+            $(tipoForm).show()
+            $(btnLogout).show()
+            clearInterval(progressAnimetion)
+        , 100)
       $(".modal-footer").hide()
     else
       $(".modal-footer").show()
@@ -131,14 +142,12 @@ $(document).ready ->
 
         hasOleo.checked = isAcidOleo
 
-    # if ("#tab" + collapse) is "#tab7"
-      # @.innerHTML = "Finalizar"
-      # @.type = "submit"
-
     if ("#tab" + collapse) is "#tab8"
 
       $("#submit").prop 'style', ''
       $("#modalBtnNext").prop 'style', 'display:none;'
+      $("#modalBtnBack").html('<i class="icon-remove"></i> Cancelar')
+
 
       if isAtual
         if($("#inputRegistro").prop("value") isnt "")
@@ -151,23 +160,8 @@ $(document).ready ->
         else
           $("#inputRegistro").focus()
       else
+
         $("#formCreate").submit()
-
-      # icon = document.createElement('icon')
-      # $(icon).addClass "icon-map-marker icon-white"
-
-      # span = document.createElement('span')
-      # span.innerHTML = 'Enviar Formulário'
-
-      # button = document.createElement('button')
-      # $(button).addClass('btn btn-primary')
-      # button.type = "button"
-      # $(button).append icon
-      # $(button).append span
-      # button.id = "submit"
-
-      # @.innerHTML = "Enviar Formulário"
-      # $(@).addClass('btn-primary')
 
     $(@).tab('show')
 
@@ -220,6 +214,10 @@ $(document).ready ->
 
     $(@).tab('show')
 
+
+  # $(".accordion-body").on 'shown', ->
+  #   $(@).focus()
+
   #-------------------------------------------------------------------------
   # MINIMAP
   #-------------------------------------------------------------------------
@@ -262,9 +260,11 @@ $(document).ready ->
   # Update marker from changed inputs
   $("#inputLat, #inputLng").on 'change', ->
     if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
-      if (H5.Map.minimap.hasLayer(Marker))
-        latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
-        Marker.setLatLng(latlng).update()
+      latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
+      if (!H5.Map.minimap.hasLayer(Marker))
+        H5.Map.minimap.addLayer(Marker)
+
+      Marker.setLatLng(latlng).update()
 
     $("#inputEPSG").prop "value", ""
     $("#inputEPSG").removeAttr("disabled")
@@ -566,8 +566,33 @@ $(document).ready ->
 
     _tipoFonteInformacao = tipoFonteInformacao
 
-    # PRODUTO?!?!
+    # PRODUTO
 
+    subjects = []
+
+    $.each @produto, ()->
+      subjects.push(@nome)
+
+    $("#nomeProduto").typeahead({source: subjects})
+
+    $("#btnAddProduto").on 'click', ()=>
+      $.each @produto, ()->
+        if @nome is $("#nomeProduto").prop('value')
+          newRow = document.getElementById('tblProdutos').insertRow()
+
+          td = newRow.insertCell()
+          td.innerHTML = '<input name="produtos[]" value=' + @id_produto + ' />' +
+                         '<input name=' + @id_produto + '[]" value=' + @id_produto + ' />' +
+          td.style = 'display:none;'
+
+          td = newRow.insertCell()
+          td.innerHTML = @nome
+
+          td = newRow.insertCell()
+          td.innerHTML = @num_onu
+
+          td = newRow.insertCell()
+          td.innerHTML = @classe_risco
 
 
     # Code to disable inputs on the form
@@ -576,6 +601,7 @@ $(document).ready ->
       if $(this).is(":checked")
         $("#inputLat").attr("disabled","disabled")
         $("#inputLng").attr("disabled","disabled")
+        $("#inputEPSG").attr("disabled","disabled")
         $("#inputMunicipio").attr("disabled","disabled")
         $("#inputUF").attr("disabled","disabled")
         $("#inputEndereco").attr("disabled","disabled")
@@ -584,6 +610,7 @@ $(document).ready ->
       else
         $("#inputLat").removeAttr("disabled")
         $("#inputLng").removeAttr("disabled")
+        $("#inputEPSG").removeAttr("disabled")
         $("#inputMunicipio").removeAttr("disabled")
         $("#inputUF").removeAttr("disabled")
         $("#inputEndereco").removeAttr("disabled")
@@ -614,21 +641,21 @@ $(document).ready ->
         $("#PerObsNotu").removeAttr("disabled")
         $("#PerObsMadru").removeAttr("disabled")
 
-    $("#semDataInic").on 'click', ()->
+    $("#semDataInci").on 'click', ()->
       if $(this).is(":checked")
-        $("#inputDataInic").attr("disabled","disabled")
-        $("#inputHoraInic").attr("disabled","disabled")
-        $("#PerInicMatu").attr("disabled","disabled")
-        $("#PerInicVesper").attr("disabled","disabled")
-        $("#PerInicNotu").attr("disabled","disabled")
-        $("#PerInicMadru").attr("disabled","disabled")
+        $("#inputDataInci").attr("disabled","disabled")
+        $("#inputHoraInci").attr("disabled","disabled")
+        $("#PerInciMatu").attr("disabled","disabled")
+        $("#PerInciVesper").attr("disabled","disabled")
+        $("#PerInciNotu").attr("disabled","disabled")
+        $("#PerInciMadru").attr("disabled","disabled")
       else
-        $("#inputDataInic").removeAttr("disabled")
-        $("#inputHoraInic").removeAttr("disabled")
-        $("#PerInicMatu").removeAttr("disabled")
-        $("#PerInicVesper").removeAttr("disabled")
-        $("#PerInicNotu").removeAttr("disabled")
-        $("#PerInicMadru").removeAttr("disabled")
+        $("#inputDataInci").removeAttr("disabled")
+        $("#inputHoraInci").removeAttr("disabled")
+        $("#PerInciMatu").removeAttr("disabled")
+        $("#PerInciVesper").removeAttr("disabled")
+        $("#PerInciNotu").removeAttr("disabled")
+        $("#PerInciMadru").removeAttr("disabled")
 
 
     $("#semOrigem").on 'click', ()->
@@ -659,6 +686,15 @@ $(document).ready ->
 
         $("#inputEventoOutro").removeAttr("disabled")
         $("#inputCompEvento").removeAttr("disabled")
+
+    $("#produtoDesc").on 'click', ()->
+      if $(this).is(":checked")
+        $("#inputTipoSubstancia").attr("disabled","disabled")
+        $("#inputValorEstimado").attr("disabled","disabled")
+      else
+        $("#inputTipoSubstancia").removeAttr("disabled")
+        $("#inputValorEstimado").removeAttr("disabled")
+
 
 
     $("#semSubstancia").on 'click', ()->
@@ -717,7 +753,7 @@ $(document).ready ->
         # $("button[data-id='slctLicenca']").addClass("disabled")
       else
         $("#inputResponsavel").removeAttr("disabled")
-        $("#inputCPFCNPJ").removeAttr("disabled")
+        $("#inputCPFCNPJ").disabled("removeAttr")
         $("#slctLicenca").removeAttr("disabled")
         # $("button[data-id='slctLicenca']").removeClass("disabled")
 
@@ -725,3 +761,50 @@ $(document).ready ->
     #   $("button[data-id='slctLicenca']").addClass("disabled")
     # else
     #   $("button[data-id='slctLicenca']").removeClass("disabled")
+
+
+  $("#inputHoraObs").on 'change', ->
+    if ($(@).prop 'value') isnt ""
+      obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
+      if obsHour < 6
+        $("#PerObsMadru").prop('checked', 'checked')
+      else if obsHour < 12
+        $("#PerObsMatu").prop('checked', 'checked')
+      else if obsHour < 18
+        $("#PerObsVesper").prop('checked', 'checked')
+      else
+        $("#PerObsNotu").prop('checked', 'checked')
+
+      $("#divPeriodoObs").prop('style','display:none;')
+
+    else
+      $("#divPeriodoObs").prop('style','display:auto;')
+
+  $("#inputHoraInci").on 'change', ->
+    if ($(@).prop 'value') isnt ""
+      obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
+
+      if obsHour < 6
+        $("#PerInciMadru").prop('checked', 'checked')
+      else if obsHour < 12
+        $("#PerInciMatu").prop('checked', 'checked')
+      else if obsHour < 18
+        $("#PerInciVesper").prop('checked', 'checked')
+      else
+        $("#PerInciNotu").prop('checked', 'checked')
+
+      $("#divPeriodoInci").prop('style','display:none;')
+    else
+      $("#divPeriodoInci").prop('style','display:auto;')
+
+  if ($("#inputHoraObs").prop 'value') isnt ''
+    $("#divPeriodoObs").prop('style','display:none;')
+
+  if ($("#inputHoraInci").prop 'value') isnt ''
+    $("#divPeriodoInci").prop('style','display:none;')
+
+  # Mask for fields
+  $("#inputDataObs").mask("99/99/9999")
+  $("#inputHoraObs").mask("99:99")
+  $("#inputDataInci").mask("99/99/9999")
+  $("#inputHoraInci").mask("99:99")

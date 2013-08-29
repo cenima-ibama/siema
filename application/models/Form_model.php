@@ -68,27 +68,27 @@ class Form_model extends CI_Model {
     	}
     }
 
-    if(!isset($form['semDataInic'])) {
-    	if (isset($form["inputDataInic"])) {
+    if(!isset($form['semDataInci'])) {
+    	if (isset($form["inputDataInci"])) {
     		$fields = $fields ."dt_ocorrencia,";
-    		$values = $values . "'" . $form["inputDataInic"] . "',";
+    		$values = $values . "'" . $form["inputDataInci"] . "',";
     	}
-    	if (isset($form["inputHoraInic"])) {
+    	if (isset($form["inputHoraInci"])) {
     		$fields = $fields ."hr_ocorrencia,";
-    		$values = $values . "'" . $form["inputHoraInic"] . "',";
+    		$values = $values . "'" . $form["inputHoraInci"] . "',";
     	}
       $fields = $fields ."periodo_ocorrencia,";
-    	switch($form["PeriodoInic"]) {
-    		case "inicMatutino":
+    	switch($form["PeriodoInci"]) {
+    		case "inciMatutino":
           $values = $values . "'M',";
     			break;
-    		case "inicVespertino":
+    		case "inciVespertino":
   	  		$values = $values . "'V',";
     			break;
-    		case "inicNoturno":
+    		case "inciNoturno":
   			$values = $values . "'N',";
     			break;
-    		case "inicMadrugada":
+    		case "inciMadrugada":
   	  		$values = $values . "'S',";
     			break;
     	}
@@ -401,20 +401,20 @@ class Form_model extends CI_Model {
         $form['PeriodoObs'] = 'obsMatutino';
         break;
     }
-    $form['inputDataInic'] = date('d/m/Y', strtotime($dbResult['dt_ocorrencia']));
-    $form['inputHoraInic'] = $dbResult['hr_ocorrencia'];
+    $form['inputDataInci'] = date('d/m/Y', strtotime($dbResult['dt_ocorrencia']));
+    $form['inputHoraInci'] = $dbResult['hr_ocorrencia'];
     switch ($dbResult['periodo_ocorrencia']) {
       case 'M':
-        $form['PeriodoInic'] = 'inicMatutino';
+        $form['PeriodoInci'] = 'inciMatutino';
         break;
       case 'V':
-        $form['PeriodoInic'] = 'inicVespertino';
+        $form['PeriodoInci'] = 'inciVespertino';
         break;
       case 'N':
-        $form['PeriodoInic'] = 'inicNoturno';
+        $form['PeriodoInci'] = 'inciNoturno';
         break;
       case 'S':
-        $form['PeriodoInic'] = 'inicMadrugada';
+        $form['PeriodoInci'] = 'inciMadrugada';
         break;
     }
 
@@ -468,7 +468,7 @@ class Form_model extends CI_Model {
     if ($dbResult['plano_emergencia_acionado'] == "S") {
       $form['planoAcionado'] = "on";
     }
-    if ($dbResult['iniciados_outras_providencias'] == "S") {
+    if ($dbResult['iniciados_outras_pro,idencias'] == "S") {
       $form['planoAcionado'] = "on";
       $form['inputMedidasTomadas'] = $dbResult['des_outras_providencias'];
     }
@@ -493,11 +493,15 @@ class Form_model extends CI_Model {
 
     $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
 
-    $query = "select * from ocorrencia join responsavel as res on (res.id_responsavel = ocorrencia.id_usuario) where nro_ocorrencia='" . $nro_ocorrencia . "';";
+    $query = "select * from ocorrencia left join responsavel as res on (res.id_responsavel = ocorrencia.id_usuario) where nro_ocorrencia='" . $nro_ocorrencia . "';";
 
     $res = $ocorrenciasDatabase->query($query);
 
     // return $res->row_array();
-    return $this->convertDBtoForm($res->row_array());
+
+    if($res->num_rows() > 0)
+      return $this->convertDBtoForm($res->row_array());
+    else
+      return "";
   }
 }

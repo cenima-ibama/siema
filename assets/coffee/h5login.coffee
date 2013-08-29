@@ -1,14 +1,29 @@
 $(document).ready ->
 
-  tipoForm = window.parent.document.getElementById("denunciaAnonima")
-  modalFooter = window.parent.document.getElementsByClassName("modal-footer")
-  btnCadastrar = window.parent.document.getElementById('btnCadastrar')
-  btnLogar = window.parent.document.getElementById('btnLogar')
-  tipoForm = window.parent.document.getElementById('tipoForm')
-  divDenuncia = window.parent.document.getElementById('divDenuncia')
+  divLogout = window.parent.document.getElementById("divLogout")
+  divLogin = window.parent.document.getElementById("divLogin")
 
-  $(divDenuncia).hide()
-  $(btnCadastrar).hide()
-  $(btnLogar).hide()
-  $(tipoForm).show()
-  tipoForm.click()
+  progressBar = window.parent.document.getElementById("authProgress")
+  textProgress = window.parent.document.getElementById("textProgress")
+  containerProgress = window.parent.document.getElementById("containerProgress")
+  checkedUser = window.parent.document.getElementById("checkedUser")
+  tipoForm = window.parent.document.getElementById("tipoForm")
+  btnLogout = window.parent.document.getElementById("btnLogout")
+
+  $(tipoForm).hide()
+  $(btnLogout).hide()
+
+  $(divLogin).show()
+  $(divLogout).hide()
+
+  i=0
+  progressAnimetion = setInterval( ->
+    $(progressBar).width(i++ + "0%")
+    if i is 15
+      $(containerProgress).hide()
+      $(textProgress).html('Usuário registrado.')
+      $(checkedUser).show()
+      $(tipoForm).show()
+      $(btnLogout).show()
+      clearInterval(progressAnimetion)
+  , 100)

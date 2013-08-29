@@ -21,7 +21,7 @@
             <strong>Número do Comunicado:</strong>
             <span id="nroComunicado" name="nroComunicado"><?php
               if (isset($comunicado)) {
-                echo set_value('comunicado');
+                echo $comunicado;
               }
             ?></span>
 
@@ -29,7 +29,7 @@
           <input type="hidden" id="comunicado" name="comunicado"
             <?php
               if (isset($comunicado)) {
-                echo ' value="' . set_value('comunicado') . '" ';
+                echo ' value="' . $comunicado . '" ';
               }
             ?>
           />
@@ -53,90 +53,15 @@
                     <div class="span8">
                       <label class="control-label" for="inputLat">Latitude(y)/Longitude(x)</label>
                       <div class="controls">
-                        <input id="inputLat" class="input-small" type="text" name="inputLat" placeholder="Latitude"
-                          <?php
-                            if ($typeOfForm == 'load') {
-                              if(isset($semLocalizacao) && ($semLocalizacao == "on"))
-                                echo 'disabled="disabled"';
-                              else
-                                if(isset($inputLat))
-                                  echo 'value="' . $inputLat . '"';
-
-                            } else {
-                              echo 'value="' . set_value('inputLat') . '"';
-                              if(set_value('semLocalizacao') == "on")
-                                echo 'disabled="disabled"';
-                            }
-                          ?>
-                        >
-                        <input id="inputLng" class="input-small" type="text" name="inputLng" placeholder="Longitude"
-                          <?php
-                            if ($typeOfForm == 'load') {
-                              if(isset($semLocalizacao) && ($semLocalizacao == "on"))
-                                echo 'disabled="disabled"';
-                              else
-                                if(isset($inputLng))
-                                  echo 'value="' . $inputLng . '"';
-
-                            } else {
-                              echo 'value="' . set_value('inputLng') . '"';
-                              if(set_value('semLocalizacao') == "on")
-                                echo 'disabled="disabled"';
-                            }
-                          ?>
-                        >
+                        <?php echo form_input($inputLat); ?>
+                        <?php echo form_input($inputLng); ?>
                       </div>
                     </div>
                     <div class="span4">
                       <div class="control-group">
                         <label class="control-label" for="inputEPSG">EPSG</label>
                         <div class="controls">
-                          <select id="inputEPSG" name="inputEPSG" class="input-small"
-                            <?php
-                              if ($typeOfForm == 'load') {
-                                if(isset($semLocalizacao) && ($semLocalizacao == "on"))
-                                  echo 'disabled="disabled"';
-                                else
-                                  if (!isset($inputEPSG))
-                                    echo ' disabled="disabled" ';
-                              } else {
-                                echo ' disabled="disabled" ';
-                              }
-                            ?>
-                          >
-                            <option selected="selected" value="4674"
-                              <?php
-                                if (isset($inputEPSG)) {
-                                  if( $inputEPSG == "4674")
-                                    echo ' selected="selected" ';
-                                }
-                              ?>
-                            >SIRGAS 2000 - 4674</option>
-                            <option value="900913"
-                              <?php
-                                if (isset($inputEPSG)) {
-                                  if( $inputEPSG == "900913")
-                                    echo ' selected="selected" ';
-                                }
-                              ?>
-                            >Google - 900913</option>
-                            <option value="4326"
-                              <?php
-                                if (isset($inputEPSG)) {
-                                  if( $inputEPSG == "4326")
-                                    echo ' selected="selected" ';
-                                }
-                              ?>
-                            >WGS84 - 4326</option>
-                            <option value="4291"
-                              <?php
-                                if (isset($inputEPSG)) {
-                                  if( $inputEPSG == "4291")
-                                    echo ' selected="selected" ';
-                                }
-                              ?>
-                            >SAD69 - 4291</option>
-                          </select>
+                          <?php echo form_dropdown('inputEPSG', $inputEPSG, set_value('inputEPSG'), 'id="inputEPSG" class="input-small"'); ?>
                         </div>
                       </div>
                     </div>
@@ -144,56 +69,14 @@
                   <div class="control-group">
                     <label class="control-label" for="inputMunicipio">Município/UF:</label>
                     <div class="controls">
-                      <input id="inputMunicipio" class="input-small" type="text" name="inputMunicipio" placeholder="Nome"
-                        <?php
-                          if ($typeOfForm == 'load') {
-                            if(isset($semLocalizacao) && ($semLocalizacao == "on"))
-                              echo 'disabled="disabled"';
-                            else
-                              if (isset($inputMunicipio))
-                                echo 'value="' . $inputMunicipio . '"';
-                          } else {
-                            echo 'value="' . set_value('inputMunicipio') . '"';
-                            if(set_value('semLocalizacao') == "on")
-                              echo 'disabled="disabled"';
-                          }
-                        ?>
-                      >
-                      <input id="inputUF" class="input-micro" type="text" name="inputUF" placeholder="UF"
-                        <?php
-                          if ($typeOfForm == 'load') {
-                            if(isset($semLocalizacao) && ($semLocalizacao == "on"))
-                              echo 'disabled="disabled"';
-                            else
-                              if (isset($inputUF))
-                                echo 'value="' . $inputUF . '"';
-                          } else {
-                            echo 'value="' . set_value('inputUF') . '"';
-                            if(set_value('semLocalizacao') == "on")
-                              echo 'disabled="disabled"';
-                          }
-                        ?>
-                      >
+                      <?php echo form_input($inputMunicipio); ?>
+                      <?php echo form_input($inputUF); ?>
                     </div>
                   </div>
                   <div class="control-group">
                     <label class="control-label" for="inputEndereco">Endereço:</label>
                     <div class="controls">
-                      <input id="inputEndereco" class="input-large" type="text" name="inputEndereco" placeholder=""
-                        <?php
-                          if ($typeOfForm == 'load') {
-                            if(isset($semLocalizacao) && ($semLocalizacao == "on"))
-                              echo 'disabled="disabled"';
-                            else
-                              if (isset($inputEndereco))
-                                echo 'value="' . $inputEndereco . '"';
-                          } else {
-                            echo 'value="' . set_value('inputEndereco') . '"';
-                            if(set_value('semLocalizacao') == "on")
-                              echo 'disabled="disabled"';
-                          }
-                        ?>
-                      >
+                      <?php echo form_input($inputEndereco); ?>
                     </div>
                   </div>
                 </div>
@@ -202,17 +85,7 @@
                 <div class="span12">
                   <div class="control-group">
                     <label class="checkbox text-left">
-                      <input id="semLocalizacao" type="checkbox" name="semLocalizacao"
-                        <?php
-                          if ($typeOfForm == 'load') {
-                            if(isset($semLocalizacao) && ($semLocalizacao == "on"))
-                              echo 'disabled="disabled"';
-                          } else {
-                            if (set_value('semLocalizacao') == "on")
-                              echo 'checked="checked"';
-                          }
-                        ?>
-                      >
+                      <?php echo form_input($semLocalizacao); ?>
                       Sem condições de indicar a localização do acidente no mapa
                     </label>
                   </div>
@@ -229,7 +102,7 @@
           </div>
           <div id="collapse2" class="accordion-body collapse">
             <div class="accordion-inner">
-              <div class="control-group">
+              <div id="DataHoraObs" class="control-group">
                 <div class="control-label">
                   <h5>
                     > Data e Hora da primeira observação:
@@ -239,121 +112,38 @@
                   <div class="span6">
                     <label class="control-label" for="inputDataObs">Data:</label>
                     <div class="controls">
-                      <input id="inputDataObs" class="input-medium" type="datetime" name="inputDataObs" placeholder="DD/MM/AAAA"
-                        <?php
-                          if ($typeOfForm == 'load') {
-                            if(isset($semLocalizacao) && ($semLocalizacao == "on"))
-                              echo 'disabled="disabled"';
-                            else
-                              if (isset($inputDataObs))
-                                echo 'value="' . $inputDataObs . '"';
-                          } else {
-                            echo 'value="' . set_value('inputDataObs') . '"';
-                            if(set_value('semDataObs') == "on")
-                              echo 'disabled="disabled"';
-                          }
-                        ?>
-                      >
+                      <?php echo form_input($inputDataObs); ?>
                     </div>
                   </div>
                   <div class="span6">
                     <label class="control-label" for="inputHoraObs">Hora</label>
                     <div class="controls">
-                      <input id="inputHoraObs" class="input-medium" type="text" name="inputHoraObs" placeholder="HH:MM"
-                        <?php
-                          if ($typeOfForm == 'load') {
-                            if(isset($semLocalizacao) && ($semLocalizacao == "on"))
-                              echo 'disabled="disabled"';
-                            else
-                              if (isset($inputHoraObs))
-                                echo 'value="' . $inputHoraObs . '"';
-                          } else {
-                            echo 'value="' . set_value('inputHoraObs') . '"';
-                            if(set_value('semDataObs') == "on")
-                              echo 'disabled="disabled"';
-                          }
-                        ?>
-                      >
+                      <?php echo form_input($inputHoraObs); ?>
                     </div>
                   </div>
                 </div>
-                <div class="row-fluid">
+                <div id="divPeriodoObs" class="row-fluid">
                   <div class="span12">
                     <label class="control-label"> Período: </label>
                     <div class="controls row-fluid">
                       <div class="span3">
                         <label class="radio">
-                          <input id="PerObsMatu" type="radio" name="PeriodoObs" value="obsMatutino" checked
-                            <?php
-                              if ($typeOfForm == 'load') {
-                                if(isset($semDataObs) && ($semDataObs == "on"))
-                                  echo 'disabled="disabled"';
-                              } else {
-                                if(set_value('semDataObs') == "on")
-                                   echo 'disabled="disabled"';
-                              }
-                            ?>
-                          > Matutino
+                          <?php echo form_radio($PerObsMatu, 'obsMatutino', $PeriodoObs == 'obsMatutino' ? TRUE : FALSE); ?> Matutino
                         </label>
                       </div>
                       <div class="span3">
                         <label class="radio">
-                          <input id="PerObsVesper" type="radio" name="PeriodoObs" value="obsVespertino"
-                            <?php
-                              if ($typeOfForm == 'load') {
-                                if(isset($semDataObs) && ($semDataObs == "on"))
-                                  echo 'disabled="disabled"';
-                                else
-                                  if ($PeriodoObs == "obsVespertino")
-                                    echo 'checked';
-                              } else {
-                                if (set_value('PeriodoObs') == "obsVespertino")
-                                  echo 'checked';
-                                if(set_value('semDataObs') == "on")
-                                  echo 'disabled="disabled"';
-                              }
-                            ?>
-                          > Vespertino
+                          <?php echo form_radio($PerObsVesper, 'obsVespertino', $PeriodoObs == 'obsVespertino' ? TRUE : FALSE); ?> Vespertino
                         </label>
                       </div>
                       <div class="span3">
                         <label class="radio">
-                          <input id="PerObsNotu" type="radio" name="PeriodoObs" value="obsNoturno"
-                            <?php
-                              if ($typeOfForm == 'load') {
-                                if(isset($semDataObs) && ($semDataObs == "on"))
-                                  echo 'disabled="disabled"';
-                                else
-                                  if ($PeriodoObs == "obsNoturno")
-                                    echo 'checked';
-                              } else {
-                                if (set_value('PeriodoObs') == "obsNoturno")
-                                  echo 'checked';
-                                if(set_value('semDataObs') == "on")
-                                  echo 'disabled="disabled"';
-                              }
-                            ?>
-                          > Noturno
+                          <?php echo form_radio($PerObsNotu, 'obsNoturno', $PeriodoObs == 'obsNoturno' ? TRUE : FALSE); ?> Noturno
                         </label>
                       </div>
                       <div class="span3">
                         <label class="radio">
-                          <input id="PerObsMadru" type="radio" name="PeriodoObs" value="obsMadrugada"
-                            <?php
-                              if ($typeOfForm == 'load') {
-                                if(isset($semDataObs) && ($semDataObs == "on"))
-                                  echo 'disabled="disabled"';
-                                else
-                                  if ($PeriodoObs == "obsMadrugada")
-                                    echo 'checked';
-                              } else {
-                                if (set_value('PeriodoObs') == "obsMadrugada")
-                                  echo 'checked';
-                                if(set_value('semDataObs') == "on")
-                                  echo 'disabled="disabled"';
-                              }
-                            ?>
-                          > Madrugada
+                          <?php echo form_radio($PerObsMadru, 'obsMadrugada', $PeriodoObs == 'obsMadrugada' ? TRUE: FALSE); ?> Madrugada
                         </label>
                       </div>
                     </div>
@@ -364,24 +154,15 @@
                     <div class="control-group">
                       <div class="controls">
                         <label class="checkbox text-left">
-                          <input id="semDataObs" type="checkbox" name="semDataObs"
-                            <?php
-                              if ($typeOfForm == 'load') {
-                                if(isset($semDataObs) && ($semDataObs == "on"))
-                                  echo 'disabled="disabled"';
-                              } else {
-                                if (set_value('semDataObs') == "on")
-                                  echo 'checked="checked"';
-                              }
-                            ?>
-                          > Sem informação sobre data e hora da primeira observação
+                          <?php echo form_input($semDataObs); ?>
+                          Sem informação sobre data e hora da primeira observação
                         </label>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="control-group">
+              <div id="DataHoraInci" class="control-group">
                 <div class="control-label">
                   <h5>
                     > Data e Hora estimadas do Incidente:
@@ -389,127 +170,43 @@
                 </div> <br />
                 <div class="row-fluid">
                   <div class="span6">
-                    <label class="control-label" for="inputDataInic">Data:</label>
+                    <label class="control-label" for="inputDataInci">Data:</label>
                     <div class="controls">
-                      <input id="inputDataInic" class="input-medium" type="date" name="inputDataInic" placeholder="DD/MM/AAAA"
-                        <?php
-                          if ($typeOfForm == 'load') {
-                            if(isset($semDataInic) && ($semDataInic == "on"))
-                              echo 'disabled="disabled"';
-                            else
-                              if (isset($inputDataInic))
-                                echo 'value="' . $inputDataInic . '"';
-                          } else {
-                            echo 'value="' . set_value('inputDataInic') . '"';
-                            if(set_value('semDataInic') == "on")
-                              echo 'disabled="disabled"';
-                          }
-                        ?>
-                      >
+                      <?php echo form_input($inputDataInci); ?>
                     </div>
                   </div>
                   <div class="span6">
-                    <label class="control-label" for="inputHoraInic">Hora</label>
+                    <label class="control-label" for="inputHoraInci">Hora</label>
                     <div class="controls">
-                      <input id="inputHoraInic" class="input-medium" type="text" name="inputHoraInic" placeholder="HH:MM"
-                        <?php
-                          if ($typeOfForm == 'load') {
-                            if(isset($semDataInic) && ($semDataInic == "on"))
-                              echo 'disabled="disabled"';
-                            else
-                              if (isset($inputHoraInic))
-                                echo 'value="' . $inputHoraInic . '"';
-                          } else {
-                            echo 'value="' . set_value('inputHoraInic') . '"';
-                            if(set_value('semDataInic') == "on")
-                              echo 'disabled="disabled"';
-                          }
-                        ?>
-                      >
+                      <?php echo form_input($inputHoraInci); ?>
                     </div>
                   </div>
                 </div>
-                <div class="row-fluid">
+                <div id="divPeriodoInci" class="row-fluid">
                   <div class="span12">
                     <label class="control-label"> Período: </label>
                     <div class="control-group">
                       <div class="controls row-fluid">
-                        <div class="span3">
-                          <label class="radio">
-                            <input id="PerInicMatu" type="radio" name="PeriodoInic" value="inicMatutino" checked
-                              <?php
-                                if ($typeOfForm == 'load') {
-                                  if(isset($semDataInic) && ($semDataInic == "on"))
-                                    echo 'disabled="disabled"';
-                                } else {
-                                  if(set_value('semDataInic') == "on")
-                                     echo 'disabled="disabled"';
-                                }
-                              ?>
-                            > Matutino
-                          </label>
-                        </div>
-                        <div class="span3">
-                          <label class="radio">
-                            <input id="PerInicVesper" type="radio" name="PeriodoInic" value="inicVespertino"
-                              <?php
-                                    $this->firephp->log(set_value('PeriodoInic'));
-                                if ($typeOfForm == 'load') {
-                                  if(isset($semDataInic) && ($semDataInic == "on"))
-                                    echo 'disabled="disabled"';
-                                  else {
-                                    if ($PeriodoInic == "inicVespertino")
-                                      echo 'checked';}
-                                } else {
-                                  if (set_value('PeriodoInic') == "inicVespertino")
-                                    echo 'checked';
-                                  if(set_value('semDataInic') == "on")
-                                    echo 'disabled="disabled"';
-                                }
-                              ?>
-                            > Vespertino
-                          </label>
-                        </div>
-                        <div class="span3">
-                          <label class="radio">
-                            <input id="PerInicNotu" type="radio" name="PeriodoInic" value="inicNoturno"
-                              <?php
-                                if ($typeOfForm == 'load') {
-                                  if(isset($semDataInic) && ($semDataInic == "on"))
-                                    echo 'disabled="disabled"';
-                                  else
-                                    if ($PeriodoInic == "inicNoturno")
-                                      echo 'checked';
-                                } else {
-                                  if (set_value('PeriodoInic') == "inicNoturno")
-                                    echo 'checked';
-                                  if(set_value('semDataInic') == "on")
-                                    echo 'disabled="disabled"';
-                                }
-                              ?>
-                            > Noturno
-                          </label>
-                        </div>
-                        <div class="span3">
-                          <label class="radio">
-                            <input id="PerInicMadru" type="radio" name="PeriodoInic" value="inicMadrugada"
-                              <?php
-                                if ($typeOfForm == 'load') {
-                                  if(isset($semDataInic) && ($semDataInic == "on"))
-                                    echo 'disabled="disabled"';
-                                  else
-                                    if ($PeriodoInic == "inicMadrugada")
-                                      echo 'checked';
-                                } else {
-                                  if (set_value('PeriodoInic') == "inicMadrugada")
-                                    echo 'checked';
-                                  if(set_value('semDataInic') == "on")
-                                    echo 'disabled="disabled"';
-                                }
-                              ?>
-                            > Madrugada
-                          </label>
-                        </div>
+                      <div class="span3">
+                        <label class="radio">
+                          <?php echo form_radio($PerInciMatu, 'inciMatutino', $PeriodoInci == 'inciMatutino' ? TRUE: FALSE); ?> Matutino
+                        </label>
+                      </div>
+                      <div class="span3">
+                        <label class="radio">
+                          <?php echo form_radio($PerInciVesper, 'inciVespertino', $PeriodoInci == 'inciVespertino' ? TRUE: FALSE); ?> Vespertino
+                        </label>
+                      </div>
+                      <div class="span3">
+                        <label class="radio">
+                          <?php echo form_radio($PerInciNotu, 'inciNoturno', $PeriodoInci == 'inciNoturno' ? TRUE: FALSE); ?> Noturno
+                        </label>
+                      </div>
+                      <div class="span3">
+                        <label class="radio">
+                          <?php echo form_radio($PerInciMadru, 'inciMadrugada', $PeriodoInci == 'inciMadrugada' ? TRUE: FALSE); ?> Madrugada
+                        </label>
+                      </div>
                       </div>
                     </div>
                   </div>
@@ -517,17 +214,8 @@
                 <div class="row-fluid">
                   <div class="span12">
                     <label class="checkbox text-left">
-                      <input id="semDataInic" type="checkbox" name="semDataInic"
-                        <?php
-                          if ($typeOfForm == 'load') {
-                            if(isset($semDataInic) && ($semDataInic == "on"))
-                              echo 'disabled="disabled"';
-                          } else {
-                          if (set_value('semDataInic') == "on")
-                            echo 'checked="checked"';
-                          }
-                        ?>
-                      > Sem informação sobre data e hora estimada
+                      <?php echo form_input($semDataInci); ?>
+                      Sem informação sobre data e hora estimada
                     </label>
                   </div>
                 </div>
@@ -555,22 +243,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <div class="row-fluid">
-                <div class="span12">
-                  <div class="control-group">
-                    <label class="control-label" for="inputOrigemOutro"> Outro:</label>
-                    <div class="controls">
-                      <input id="inputOrigemOutro" class="input-large" type="text" name="inputOrigemOutro"
-                        <?php
-                          echo 'value="' . set_value('inputOrigemOutro') . '"';
-                          if(set_value('semOrigem') == "on")
-                            echo 'disabled="disabled"';
-                        ?>
-                      >
-                    </div>
-                  </div>
-                </div>
-              </div> -->
               <div class="row-fluid">
                 <div class="control-group">
                   <div class="span12">
@@ -581,30 +253,18 @@
                     </label>
                   </div>
                   <div class="controls">
-                    <textarea id="inputCompOrigem" class="form-control span12" rows="2" name="inputCompOrigem"
-                      <?php
-                        if(set_value('semOrigem') == "on")
-                          echo 'disabled="disabled"';
-                      ?>
-                      ><?php
-                        echo set_value('inputCompOrigem');
-                      ?></textarea>
+                    <?php echo form_textarea($inputCompOrigem); ?>
                   </div>
                 </div>
               </div>
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
-                    <input id="semOrigem" type="checkbox" name="semOrigem"
-                      <?php
-                        if (set_value('semOrigem') == "on")
-                          echo 'checked="checked"';
-                      ?>
-                    > Sem informação sobre a origem do acidente
+                    <?php echo form_input($semOrigem); ?>
+                    Sem informação sobre a origem do acidente
                   </label>
                 </div>
               </div>
-
               <?php
                 if  (isset($hasOleo)) {
                   echo '
@@ -618,51 +278,34 @@
                         <label class="control-label span4" for="inputNomeNavio">
                           Nome do navio:
                         </label>
-                        <div class="controls">
-                          <input id="inputNomeNavio" class="input" type="text" name="inputNomeNavio" placeholder="Nome do Navio" ';
-
-                    echo 'value="' . set_value('inputNomeNavio') . '"';
-
-                    if(set_value('semNavioInstalacao') == "on")
-                      echo 'disabled="disabled"';
-                    echo  '>
+                        <div class="controls">';
+                          echo form_input($inputNomeInstalacao);
+                  echo  '
                         </div>
                       </div>
                       <div class="control-group">
-                        <label class="control-label span4" for="inputNomeNavio">
+                        <label class="control-label span4" for="inputNomeInstalacao">
                           Nome da instalação:
                         </label>
-                        <div class="controls">
-                          <input id="inputNomeInstalacao" class="input" type="text" name="inputNomeInstalacao" placeholder="Nome da Instalação" ';
-
-                    echo 'value="' . set_value('inputNomeInstalacao') . '"';
-
-                    if(set_value('semNavioInstalacao') == "on")
-                      echo 'disabled="disabled"';
-
-                    echo '
-                          >
+                        <div class="controls">';
+                  echo form_input($inputNomeInstalacao);
+                  echo '
                         </div>
                       </div>
                     </div>
                     <div class="row-fluid">
                       <div class="control-group">
                         <div class="controls">
-                          <label class="checkbox text-left">
-                            <input id="semNavioInstalacao" type="checkbox" name="semNavioInstalacao" ';
-
-                    if (set_value('semNavioInstalacao') == "on")
-                      echo 'checked="checked"';
-                    echo '
-                            >
+                          <label class="checkbox text-left">';
+                  echo form_input($semNavioInstalacao);
+                  echo '
                             Sem condições de informar
                           </label>
                         </div>
                       </div>
                     </div>';
-                }
+              }
               ?>
-
             </div>
           </div>
         </div>
@@ -685,22 +328,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <div class="row-fluid">
-                <div class="span12">
-                  <div class="control-group">
-                    <label class="control-label" for="inputEventoOutro"> Outro:</label>
-                    <div class="controls">
-                      <input id="inputEventoOutro" class="input-large" type="text" name="inputEventoOutro"
-                        <?php
-                          echo 'value="' . set_value('inputEventoOutro') . '"';
-                          if(set_value('semEvento') == "on")
-                            echo 'disabled="disabled"';
-                        ?>
-                      >
-                    </div>
-                  </div>
-                </div>
-              </div> -->
               <div class="row-fluid">
                 <div class="control-group">
                   <div class="span12">
@@ -711,14 +338,7 @@
                     </label>
                   </div>
                   <div class="controls">
-                    <textarea id="inputCompEvento" class="form-control span12" rows="2" name="inputCompEvento"
-                      <?php
-                        if(set_value('semEvento') == "on")
-                          echo 'disabled="disabled"';
-                      ?>
-                    ><?php
-                        echo set_value('inputCompEvento');
-                      ?></textarea>
+                    <?php echo form_textarea($inputCompEvento); ?>
                   </div>
                 </div>
               </div>
@@ -726,12 +346,8 @@
                 <div class="span12">
                   <div class="control-group">
                     <label class="checkbox text-left">
-                      <input id="semEvento" type="checkbox" name="semEvento"
-                        <?php
-                          if (set_value('semEvento') == "on")
-                            echo 'checked="checked"';
-                        ?>
-                      > Sem informação sobre o tipo do evento
+                      <?php echo form_input($semEvento); ?>
+                      Sem informação sobre o tipo do evento
                     </label>
                   </div>
                 </div>
@@ -752,11 +368,7 @@
                   <div class="control-group">
                     <label class="control-label">Nome do Produto:</label>
                     <div class="controls">
-                      <select class="input-medium">
-                        <option>Alcool</option>
-                        <option>Chocolate</option>
-                        <option>Cerveja</option>
-                      </select>
+                      <input id="nomeProduto" type="text" data-provide="typeahead" data-source=""/>
                     </div>
                   </div>
                 </div>
@@ -779,14 +391,14 @@
                   <div class="control-group">
                     <label class="control-label">&nbsp;</label>
                     <div class="controls">
-                      <button class="btn btn-primary" type="button"><i class="icon-plus icon-white"></i> Adicionar</button>
+                      <button id='btnAddProduto' class="btn btn-primary" type="button"><i class="icon-plus icon-white"></i> Adicionar</button>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="row-fluid">
                 <div class="span12">
-                  <table class="table table-condesed table-bordered table-hover">
+                  <table id='tblProdutos' class="table table-condesed table-bordered table-hover">
                     <thead>
                       <tr>
                         <th>Nome da substância</th>
@@ -796,9 +408,6 @@
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Alcool</td>
-                        <td>254</td>
-                        <td>3</td>
                       </tr>
                     </tbody>
                   </table>
@@ -901,16 +510,9 @@
               <div class="row-fluid">
                 <div class="span12">
                   <div class="control-group">
-                    <label class="control-label" for="inputCausaProvavel"> Causa Provavel do Acidente:</label>
+                    <label class="control-label" for="inputCausaProvavel"> Causa Provável do Acidente:</label>
                     <div class="controls">
-                      <textarea id="inputCausaProvavel" class="form-control span12"rows="2" name="inputCausaProvavel"
-                        <?php
-                          if(set_value('semCausa') == "on")
-                            echo 'disabled="disabled"';
-                        ?>
-                      ><?php
-                          echo set_value('inputCausaProvavel');
-                      ?></textarea>
+                    <?php echo form_textarea($inputCausaProvavel); ?>
                     </div>
                   </div>
                 </div>
@@ -918,12 +520,8 @@
               <div class="row-fluid">
                 <div class="span4" style="align:center;">
                   <label class="checkbox text-left">
-                    <input id="semCausa" type="checkbox" name="semCausa"
-                      <?php
-                        if (set_value('semCausa') == "on")
-                          echo 'checked="checked"';
-                      ?>
-                    > Sem condições de informar
+                    <?php echo form_input($semCausa); ?>
+                    Sem condições de informar
                   </label>
                 </div>
               </div>
@@ -933,37 +531,22 @@
                 <div class="controls row-fluid">
                   <div class="span3">
                     <label class="radio">
-                      <input id="SitParal" type="radio" name="SituacaoDescarga" value="1" checked> Paralisada
+                      <?php echo form_input($SitParal); ?> Paralisada
                     </label>
                   </div>
                   <div class="span3">
                     <label class="radio">
-                      <input id="SitNaoParal" type="radio" name="SituacaoDescarga" value="2"
-                        <?php
-                          if (set_value('SituacaoDescarga') == "2")
-                            echo 'checked';
-                        ?>
-                      > Não foi paralisada
+                      <?php echo form_input($SitParal); ?> Não foi paralisada
                     </label>
                   </div>
                   <div class="span3">
                     <label class="radio">
-                      <input id="SitSemCondi" type="radio" name="SituacaoDescarga" value="3"
-                        <?php
-                          if (set_value('SituacaoDescarga') == "3")
-                            echo 'checked';
-                        ?>
-                      > Sem condições de informar
+                      <?php echo form_input($SitSemCondi); ?> Sem condições de informar
                     </label>
                   </div>
                   <div class="span3">
                     <label class="radio">
-                      <input id="SitNaoSeApl" type="radio" name="SituacaoDescarga" value="4"
-                        <?php
-                          if (set_value('SituacaoDescarga') == "4")
-                            echo 'checked';
-                        ?>
-                      > <strong> Não se aplica </strong>
+                      <?php echo form_input($SitSemCondi); ?> <strong> Não se aplica </strong>
                     </label>
                   </div>
                 </div>
@@ -992,22 +575,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <div class="row-fluid">
-                <div class="span12">
-                  <div class="control-group">
-                    <label class="control-label" for="inputDanoOutro"> Outro:</label>
-                    <div class="controls">
-                      <input id="inputDanoOutro" class="input-large" type="text" name="inputDanoOutro"
-                        <?php
-                          echo 'value="' . set_value('inputDanoOutro') . '"';
-                          if(set_value('semDanos') == "on")
-                            echo 'disabled="disabled"';
-                        ?>
-                      >
-                    </div>
-                  </div>
-                </div>
-              </div> -->
               <div class="row-fluid">
                 <div class="control-group">
                   <div class="span12">
@@ -1018,14 +585,7 @@
                     </label>
                   </div>
                   <div class="controls">
-                    <textarea id="inputCompDano" class="form-control span12" rows="2" name="inputCompDano"
-                        <?php
-                          if(set_value('semDanos') == "on")
-                            echo 'disabled="disabled"';
-                        ?>
-                      ><?php
-                          echo set_value('inputCompDano');
-                      ?></textarea>
+                    <?php echo form_textarea($inputCompDano); ?>
                   </div>
                 </div>
               </div>
@@ -1037,26 +597,15 @@
                     </label>
                   </div>
                   <div class="controls">
-                    <textarea id="inputDesDanos" class="form-control span12" rows="4" name="inputDesDanos"
-                      <?php
-                        if(set_value('semOrigem') == "on")
-                          echo 'disabled="disabled"';
-                      ?>
-                      ><?php
-                        echo set_value('inputDesDanos');
-                      ?></textarea>
+                    <?php echo form_textarea($inputDesDanos); ?>
                   </div>
                 </div>
               </div>
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
-                    <input id="semDanos" type="checkbox" name="semDanos"
-                      <?php
-                        if (set_value('semDanos') == "on")
-                          echo 'checked="checked"';
-                      ?>
-                    > Sem informação sobre os danos
+                    <?php echo form_input($semDanos); ?>
+                    Sem informação sobre os danos
                   </label>
                 </div>
               </div>
@@ -1078,25 +627,13 @@
                       Nome:
                     </label>
                     <div class="controls">
-                      <input id="inputResponsavel" class="input-medium" type="text" name="inputResponsavel" placeholder="Nome do Responsavel"
-                        <?php
-                          echo 'value="' . set_value('inputResponsavel') . '"';
-                          if(set_value('semResponsavel') == "on")
-                            echo 'disabled="disabled"';
-                        ?>
-                      >
+                      <?php echo form_input($inputResponsavel); ?>
                     </div>
                   </div>
                   <div class="control-group">
                     <label class="control-label" for="inputCPFCNPJ">CPF/CNPJ: </label>
                     <div class="controls">
-                      <input id="inputCPFCNPJ" class="input-medium" type="text" name="inputCPFCNPJ" placeholder="CPF/CNPJ do Responsavel"
-                        <?php
-                          echo 'value="' . set_value('inputCPFCNPJ') . '"';
-                          if(set_value('semResponsavel') == "on")
-                            echo 'disabled="disabled"';
-                        ?>
-                      >
+                      <?php echo form_input($inputCPFCNPJ); ?>
                     </div>
                   </div>
                 </div>
@@ -1106,43 +643,7 @@
                       Licença ambiental:
                     </label>
                     <div class="controls">
-                      <select id="slctLicenca" name="slctLicenca" class="input-medium"
-                        <?php
-                          if (set_value('semResponsavel') == "on")
-                            echo 'disabled="disabled"';
-                        ?>
-                      >
-                        <option
-                          <?php
-                            if(set_value('slctLicenca') == "1")
-                              echo 'selected="selected"';
-                          ?>
-                        >1</option>
-                        <option
-                          <?php
-                            if(set_value('slctLicenca') == "2")
-                              echo 'selected="selected"';
-                          ?>
-                        >2</option>
-                        <option
-                          <?php
-                            if(set_value('slctLicenca') == "3")
-                              echo 'selected="selected"';
-                          ?>
-                        >3</option>
-                        <option
-                          <?php
-                            if(set_value('slctLicenca') == "4")
-                              echo 'selected="selected"';
-                          ?>
-                        >4</option>
-                        <option
-                          <?php
-                            if(set_value('slctLicenca') == "5")
-                              echo 'selected="selected"';
-                          ?>
-                        >5</option>
-                      </select>
+                      <?php echo form_dropdown('slctLicenca', $slctLicenca, set_value('slctLicenca'), 'id="slctLicenca" class="input-medium"'); ?>
                     </div>
                   </div>
                 </div>
@@ -1152,12 +653,8 @@
                   <div class="control-group">
                     <div class="controls">
                       <label class="checkbox text-left">
-                        <input id="semResponsavel" type="checkbox" name="semResponsavel"
-                          <?php
-                            if (set_value('semResponsavel') == "on")
-                              echo 'checked="checked"';
-                          ?>
-                        > Sem informação sobre a empresa
+                        <?php echo form_input($semResponsavel); ?>
+                        Sem informação sobre a empresa
                       </label>
                     </div>
                   </div>
@@ -1185,24 +682,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <div class="row-fluid">
-                <div class="span12">
-                  <div class="control-group">
-                    <label class="control-label" for="inputInstituicaoOutro">
-                      Outro:
-                    </label>
-                    <div class="controls">
-                      <input id="inputInstituicaoOutro" class="input-large" type="text" name="inputInstituicaoOutro"
-                        <?php
-                          echo 'value="' . set_value('inputInstituicaoOutro') . '"';
-                          if(set_value('semInstituicao') == "on")
-                            echo 'disabled="disabled"';
-                        ?>
-                      >
-                    </div>
-                  </div>
-                </div>
-              </div> -->
               <div class="row-fluid">
                 <div class="control-group">
                   <div class="span12">
@@ -1213,26 +692,15 @@
                     </label>
                   </div>
                   <div class="controls">
-                    <textarea id="inputCompInstituicao" class="form-control span12" rows="2" name="inputCompInstituicao"
-                      <?php
-                        if(set_value('semInstituicao') == "on")
-                          echo 'disabled="disabled"';
-                      ?>
-                    ><?php
-                        echo set_value('inputCompInstituicao');
-                    ?></textarea>
+                    <?php echo form_textarea($inputCompInstituicao); ?>
                   </div>
                 </div>
               </div>
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
-                    <input id="semInstituicao" type="checkbox" name="semInstituicao"
-                      <?php
-                        if (set_value('semInstituicao') == "on")
-                          echo 'checked="checked"';
-                      ?>
-                    > Sem informação sobre as instituções.
+                    <?php echo form_input($semInstituicao); ?>
+                    Sem informação sobre as instituções.
                   </label>
                 </div>
               </div>
@@ -1254,17 +722,12 @@
                     <div class="controls">
                       <div class="span6">
                         <label class="radio">
-                          <input id="Nao" type="radio" name="planoEmergencia" value="0" checked > Não
+                          <?php echo form_input($planoEmergNao); ?> Não
                         </label>
                       </div>
                       <div class="span6">
                         <label class="radio">
-                          <input id="Sim" type="radio" name="planoEmergencia" value="1"
-                            <?php
-                              if (set_value('planoEmergencia') == "1")
-                                echo 'checked';
-                            ?>
-                          > Sim
+                          <?php echo form_input($planoEmergSim); ?> Sim
                         </label>
                       </div>
                     </div>
@@ -1274,12 +737,8 @@
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
-                    <input id="planoAcionado" type="checkbox" name="planoAcionado"
-                      <?php
-                        if (set_value('planoAcionado') == "on")
-                          echo 'checked="checked"';
-                      ?>
-                    > Acionado Plano Individual de Emergência
+                    <?php echo form_input($planoAcionado); ?>
+                    Acionado Plano Individual de Emergência
                   </label>
                 </div>
               </div>
@@ -1287,40 +746,15 @@
                 <div class="span12">
                   <div class="controls">
                     <label class="control-label checkbox span6" for="inputMedidasTomadas">
-                      <input id="outrasMedidas" type="checkbox" name="outrasMedidas"
-                        <?php
-                          if (set_value('outrasMedidas') == "on")
-                            echo 'checked="checked"';
-                        ?>
-                      > Foram tomadas outras providências a saber:
+                      <?php echo form_input($outrasMedidas); ?>
+                      Foram tomadas outras providências a saber:
                     </label>
                     <div class="span6">
-                      <input id="inputMedidasTomadas" class="input-large" type="text" name="inputMedidasTomadas"
-                        <?php
-                          echo 'value="' . set_value('inputMedidasTomadas') . '" ';
-                          if (set_value('inputMedidasTomadas') == "on")
-                            echo ' checked="checked"';
-                        ?>
-                      >
+                      <?php echo form_textarea($inputMedidasTomadas); ?>
                     </div>
                   </div>
                 </div>
               </div>
-              <!-- <div class="row-fluid">
-                <div class="control-group">
-                  <label class="checkbox text-left">
-                    <input id="" type="checkbox" name="instOrgaoEst"> Órgão Estadual ou Municipal
-                  </label>
-                </div>
-                <div class="controls">
-                  <label class="control-label checkbox span6" for="inputMedidasTomadas">
-                    <input id="outrasMedidas" type="checkbox" name="outrasMedidas"> Outras medidas foram tomadas
-                  </label>
-                  <div class="span6">
-                    <input id="inputMedidasTomadas" class="input-medium-large" type="text" name="inputMedidasTomadas">
-                  </div>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>
@@ -1337,14 +771,7 @@
                   <label class="control-label span5" for="inputNomeInformante">Nome Completo:
                   </label>
                   <div class="span6">
-                    <input id="inputNomeInformante" class="input-medium-large" type="text" name="inputNomeInformante"
-                      <?php
-                        if($this->session->userdata('logged_in')) {
-                          echo 'value="' . $this->session->userdata('name') . '" ';
-                        }
-                        echo 'value="' . set_value('inputNomeInformante') . '" ';
-                      ?>
-                    >
+                    <?php echo form_input($inputNomeInformante); ?>
                   </div>
                 </div>
                 <?php
@@ -1353,11 +780,9 @@
                       <div class="controls span12">
                         <label class="control-label span5" for="inputFuncaoNavio">Função navio ou instalação:
                         </label>
-                        <div class="span6">
-                          <input id="inputFuncaoNavio" class="input-medium-large" type="text" name="inputFuncaoNavio" ';
-                    echo ' value="' . set_value('inputFuncaoNavio') . '"';
+                        <div class="span6">';
+                    echo form_input($inputFuncaoNavio);
                     echo '
-                          >
                         </div>
                       </div>
                     ';
@@ -1367,25 +792,14 @@
                   <label class="control-label span5" for="inputTelInformante">Telefone de Contato:
                   </label>
                   <div class="span6">
-                    <input id="inputTelInformante" class="input-medium-large" type="text" name="inputTelInformante"
-                      <?php
-                        echo 'value="' . set_value('inputTelInformante') . '" ';
-                      ?>
-                    >
+                    <?php echo form_input($inputTelInformante); ?>
                   </div>
                 </div>
                 <div class="controls span12">
                   <label class="control-label span5" for="inputEmailInformante">Email de Contato:
                   </label>
                   <div class="span6">
-                    <input id="inputEmailInformante" class="input-medium-large" type="text" name="inputEmailInformante"
-                      <?php
-                        if($this->session->userdata('logged_in')) {
-                          echo 'value="' . $this->session->userdata('mail') . '" ';
-                        }
-                        echo 'value="' . set_value('inputEmailInformante') . '" ';
-                      ?>
-                    >
+                    <?php echo form_input($inputEmailInformante); ?>
                   </div>
                 </div>
               </div>
@@ -1408,10 +822,7 @@
                     </label>
                   </div>
                   <div class="controls">
-                    <textarea id="inputDesOcorrencia" class="form-control span12" rows="4" name="inputDesOcorrencia"
-                      ><?php
-                        echo set_value('inputDesOcorrencia');
-                      ?></textarea>
+                    <?php echo form_textarea($inputDesOcorrencia); ?>
                   </div>
                 </div>
               </div>
@@ -1423,10 +834,7 @@
                     </label>
                   </div>
                   <div class="controls">
-                    <textarea id="inputDesObs" class="form-control span12" rows="3" name="inputDesObs"
-                      ><?php
-                        echo set_value('inputDesObs');
-                      ?></textarea>
+                    <?php echo form_textarea($inputDesObs); ?>
                   </div>
                 </div>
               </div>
