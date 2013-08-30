@@ -114,7 +114,7 @@ class Home extends CI_Controller {
         if (!isset($form_data['semResponsavel'])) {
             $this->form_validation->set_rules('inputResponsavel', 'Nome da Empresa/Orgão Responsavel', 'required');
             $this->form_validation->set_rules('slctLicenca', 'Licença Ambiental da Empresa/Orgão Responsavel', 'required');
-            $this->form_validation->set_rules('inputCPFCNPJ', 'CPF/CNPJ da Empresa/Orgão Responsavel', 'required');
+            // $this->form_validation->set_rules('inputCPFCNPJ', 'CPF/CNPJ da Empresa/Orgão Responsavel', 'required');
         } else {
             $this->form_validation->set_rules('semResponsavel', 'Responsavel', 'required');
         }
@@ -128,8 +128,8 @@ class Home extends CI_Controller {
 
         // Validating the oil form: ship identification
         if (!isset($form_data['semNavioInstalacao'])) {
-            $this->form_validation->set_rules('inputNomeNavio', 'Nome do Navio', 'required');
-            $this->form_validation->set_rules('inputNomeInstalacao', 'Nome da Instalação', 'required');
+            // $this->form_validation->set_rules('inputNomeNavio', 'Nome do Navio', 'required');
+            // $this->form_validation->set_rules('inputNomeInstalacao', 'Nome da Instalação', 'required');
         } else {
             $this->form_validation->set_rules('semInstituicao', 'Informações sobre o navio/instalação', 'required');
         }
@@ -766,6 +766,12 @@ class Home extends CI_Controller {
         $data['instituicaoAtuandoLocal'] = isset($formLoad['instituicaoAtuandoLocal']) ? $formLoad['instituicaoAtuandoLocal'] : '';
 
         $data['tipoFonteInformacao'] = isset($formLoad['tipoFonteInformacao']) ? $formLoad['tipoFonteInformacao'] : '';
+
+
+        // Variables that control the type or the form.
+        $data['hasOleo'] = isset($formLoad['hasOleo']) ? $formLoad['hasOleo'] : '';
+
+        $data['isServIBAMA'] = isset($formLoad['isServIBAMA']) ? $formLoad['isServIBAMA'] : '';
 
         return $data;
     }

@@ -279,7 +279,7 @@
                           Nome do navio:
                         </label>
                         <div class="controls">';
-                          echo form_input($inputNomeInstalacao);
+                          echo form_input($inputNomeNavio);
                   echo  '
                         </div>
                       </div>
@@ -767,7 +767,7 @@
                   </div>
                 </div>
                 <?php
-                  if (isset($hasOleo)) {
+                  if (isset($hasOleo) && isset($isServIBAMA)) {
                     echo '
                       <div class="controls span12">
                         <label class="control-label span5" for="inputFuncaoNavio">Função navio ou instalação:
