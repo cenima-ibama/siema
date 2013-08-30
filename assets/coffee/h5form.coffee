@@ -696,6 +696,7 @@ $(document).ready ->
         $("#inputTipoSubstancia").removeAttr("disabled")
         $("#inputValorEstimado").removeAttr("disabled")
         $("#btnAddProduto").removeAttr("disabled")     
+        
 
     $("#semSubstancia").on 'click', ()->
       if $(this).is(":checked")
