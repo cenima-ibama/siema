@@ -1,3 +1,4 @@
+# author: Helmuth Saatkamp <helmuthdu@gmail.com>
 # include the google charts api
 google.load "visualization", "1",
   packages: ["corechart"]
