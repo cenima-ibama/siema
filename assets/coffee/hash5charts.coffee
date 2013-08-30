@@ -1,4 +1,3 @@
-# author: Helmuth Saatkamp <helmuthdu@gmail.com>
 # include the google charts api
 google.load "visualization", "1",
   packages: ["corechart"]
@@ -524,3 +523,5 @@ class H5.Charts.Sparks extends H5.Charts.SmallContainer
       minSpotColor: "#67C2EF" #The CSS colour of the marker displayed for the mimum value.
       spotRadius: 1.5 #Radius of all spot markers.
       lineWidth: 1 #In pixels (default: 1)
+
+# FUCK
