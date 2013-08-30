@@ -358,18 +358,22 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
         visualization.draw @data, null
 
   _enableExport: ->
-
+  
+    # generate csv from the @data file
     generateCSV = =>
 
       str = ""
       line = ""
 
+      # get the title of table
       for col in [0...@data.getNumberOfColumns()]
         title = @data.getColumnLabel(col)
         line += "\"" + title + "\","
 
+      # create a new line
       str += line + "\r\n"
 
+      # get data for the rows
       for row in [0...@data.getNumberOfRows()]
         line = ""
         for col in [0...@data.getNumberOfColumns()]
