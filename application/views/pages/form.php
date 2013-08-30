@@ -8,6 +8,13 @@
       }
     ?>
 
+
+  <!-- <div class="box-header"> </div>
+  <div class="box-content"> -->
+  <!-- <div class="box-header"> </div>
+  <div class="box-content"> -->
+  <!-- <div class="box-header"> </div>
+  <div class="box-content"> -->
   <div class="box-header"> </div>
   <div class="box-content">
 
@@ -414,6 +421,22 @@
                 </div>
               </div>
               <div class="row-fluid">
+                <!-- <div class="span6">
+                  <div class="control-group">
+                    <label class="control-label" for="inputTipoOutro"> Outro:</label>
+                    <div class="controls">
+                      <input id="inputTipoOutro" class="input-large" type="text" name="inputTipoOutro">
+                    </div>
+                  </div>
+                </div> -->
+                <!-- <div class="span6">
+                  <div class="control-group">
+                    <label class="control-label" for="inputTipoOutro"> Outro:</label>
+                    <div class="controls">
+                      <input id="inputTipoOutro" class="input-large" type="text" name="inputTipoOutro">
+                    </div>
+                  </div>
+                </div> -->
                 <!-- <div class="span6">
                   <div class="control-group">
                     <label class="control-label" for="inputTipoOutro"> Outro:</label>
@@ -871,13 +894,29 @@
         ?>
       </div>
       <!-- <a id="submit" class="btn btn-primary" type="button"><i class="icon-map-marker icon-white"></i> Enviar Formulário</a> -->
-
+      <!-- <a id="submit" class="btn btn-primary" type="button"><i class="icon-map-marker icon-white"></i> Enviar Formulário</a> -->
+      <!-- <a id="submit" class="btn btn-primary" type="button"><i class="icon-map-marker icon-white"></i> Enviar Formulário</a> -->
+      <!-- <a id="submit" class="btn btn-primary" type="button"><i class="icon-map-marker icon-white"></i> Enviar Formulário</a> -->
 
       <div class="checkbox" style="display:none;">
         <input type="checkbox" id="hasOleo" name="hasOleo" <?php if(isset($hasOleo)) {echo ' checked="checked"';} ?>>
         <input type="checkbox" id="isServIBAMA" name="isServIBAMA" <?php if(isset($isServIBAMA)) {echo ' checked="checked"';} ?>>
       </div>
 
+
+  <!-- <div class="box-header"> </div>
+  <div class="box-content"> -->
+  <!-- <div class="box-header"> </div>
+  <div class="box-content"> -->
+  <!-- <div class="box-header"> </div>
+  <div class="box-content"> -->
+
+  <!-- <div class="box-header"> </div>
+  <div class="box-content"> -->
+  <!-- <div class="box-header"> </div>
+  <div class="box-content"> -->
+  <!-- <div class="box-header"> </div>
+  <div class="box-content"> -->
     <?php echo form_close(); ?>
   </div>
 </div>
