@@ -279,6 +279,7 @@ class H5.Charts.Container
       # always hide the charttable div
       $(@_boxTable).hide()
       $(@_boxTable).toggleClass "box-table-overlay"
+      @_tableIcon.className = "icon-table"
 
       $(@_container).toggleClass @defaultClass
       $(@_container).toggleClass "box-overlay"
@@ -346,26 +347,26 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
 
       $(@_boxTable).fadeToggle('fast', 'linear')
 
-      # only update values when visible
-      if $(@_boxTable).is(":visible")
-
-        # Create and draw the visualization.
+      # update values
+      if @_tableIcon.className is "icon-table"
+        @_tableIcon.className = "icon-bar-chart"
         visualization = new google.visualization.Table(
           @_boxTable
         )
-
         visualization.draw @data, null
-        
-      $(@_leftBtn, @_rightBtn, @_addBtn, @_delBtn).on "click", (event) ->
+      else
+        @_tableIcon.className = "icon-table"
+
+      $(@_leftBtn).add(@_rightBtn).add(@_addBtn).add(@_delBtn).on "click", (event) =>
         if $(@_boxTable).is(":visible")
           # Create and draw the visualization.
           visualization = new google.visualization.Table(
             @_boxTable
           )
-        visualization.draw @data, null
+          visualization.draw @data, null
 
   _enableExport: ->
-  
+
     # generate csv from the @data file
     generateCSV = =>
 
