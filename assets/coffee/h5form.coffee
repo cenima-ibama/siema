@@ -727,7 +727,6 @@ $(document).ready ->
         $("#inputCompDano").removeAttr("disabled")
         $("#inputDesDanos").removeAttr("disabled")
 
-
     $("#semInstituicao").on 'click', ()->
       if $(this).is(":checked")
         $("input[name='instituicaoAtuandoLocal[]']").each ()->
@@ -741,7 +740,6 @@ $(document).ready ->
 
         $("#inputInstituicaoOutro").removeAttr("disabled")
         $("#inputCompInstituicao").removeAttr("disabled")
-
 
     $("#semResponsavel").on 'click', ()->
       if $(this).is(":checked")
@@ -759,7 +757,6 @@ $(document).ready ->
     #   $("button[data-id='slctLicenca']").addClass("disabled")
     # else
     #   $("button[data-id='slctLicenca']").removeClass("disabled")
-
 
   $("#inputHoraObs").on 'change', ->
     if ($(@).prop 'value') isnt ""
