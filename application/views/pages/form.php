@@ -8,6 +8,7 @@
       }
     ?>
 
+
   <div class="box-header"> </div>
   <div class="box-content">
 
@@ -862,8 +863,6 @@
           }
         ?>
       </div>
-      <!-- <a id="submit" class="btn btn-primary" type="button"><i class="icon-map-marker icon-white"></i> Enviar Formulário</a> -->
-
 
       <div class="checkbox" style="display:none;">
         <input type="checkbox" id="hasOleo" name="hasOleo" <?php if(isset($hasOleo)) {echo ' checked="checked"';} ?>>

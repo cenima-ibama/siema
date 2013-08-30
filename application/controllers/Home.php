@@ -43,9 +43,6 @@ class Home extends CI_Controller {
     public function formSetRules ($form_data)
     {
 
-        // Validation message
-        // $this->form_validation->set_error_delimiters('<p class="error">', '</p>');
-
         $this->form_validation->set_message('required', 'O Campo %s é obrigatório');
 
         // $this->firephp->log($form_data);
