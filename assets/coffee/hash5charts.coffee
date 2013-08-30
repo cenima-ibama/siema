@@ -524,4 +524,8 @@ class H5.Charts.Sparks extends H5.Charts.SmallContainer
       spotRadius: 1.5 #Radius of all spot markers.
       lineWidth: 1 #In pixels (default: 1)
 
+<<<<<<< HEAD
 # FUCK
+=======
+# EOF
+>>>>>>> b0afad37a31c81dd763852b8d2b2e6421ba2e30f
