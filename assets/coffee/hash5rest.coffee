@@ -8,7 +8,6 @@ class H5.Rest
     parameters: null
     order: null
     limit: null
-    lines: {}
 
   data: null
 
@@ -22,7 +21,7 @@ class H5.Rest
 
     @_request()
 
-  _request: (service) ->
+  _request: ->
     url = @options.url + "v1/" + @options.restService
 
     if @options.table then query = "&table=" + @options.table
