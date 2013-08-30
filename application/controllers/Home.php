@@ -126,7 +126,6 @@ class Home extends CI_Controller {
         // Validating the oil form: ship identification
         if (!isset($form_data['semNavioInstalacao'])) {
             // $this->form_validation->set_rules('inputNomeNavio', 'Nome do Navio', 'required');
-            // $this->form_validation->set_rules('inputNomeNavio', 'Nome do Navio', 'required');
             // $this->form_validation->set_rules('inputNomeInstalacao', 'Nome da Instalação', 'required');
         } else {
             $this->form_validation->set_rules('semInstituicao', 'Informações sobre o navio/instalação', 'required');
