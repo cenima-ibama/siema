@@ -356,6 +356,14 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
         )
 
         visualization.draw @data, null
+        
+      $(@_leftBtn, @_rightBtn, @_addBtn, @_delBtn).on "click", (event) ->
+        if $(@_boxTable).is(":visible")
+          # Create and draw the visualization.
+          visualization = new google.visualization.Table(
+            @_boxTable
+          )
+        visualization.draw @data, null
 
   _enableExport: ->
   
