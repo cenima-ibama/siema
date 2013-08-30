@@ -421,30 +421,6 @@
                 </div>
               </div>
               <div class="row-fluid">
-                <!-- <div class="span6">
-                  <div class="control-group">
-                    <label class="control-label" for="inputTipoOutro"> Outro:</label>
-                    <div class="controls">
-                      <input id="inputTipoOutro" class="input-large" type="text" name="inputTipoOutro">
-                    </div>
-                  </div>
-                </div> -->
-                <!-- <div class="span6">
-                  <div class="control-group">
-                    <label class="control-label" for="inputTipoOutro"> Outro:</label>
-                    <div class="controls">
-                      <input id="inputTipoOutro" class="input-large" type="text" name="inputTipoOutro">
-                    </div>
-                  </div>
-                </div> -->
-                <!-- <div class="span6">
-                  <div class="control-group">
-                    <label class="control-label" for="inputTipoOutro"> Outro:</label>
-                    <div class="controls">
-                      <input id="inputTipoOutro" class="input-large" type="text" name="inputTipoOutro">
-                    </div>
-                  </div>
-                </div> -->
                 <div class="span4">
                   <div class="control-group">
                     <label class="control-label">&nbsp;</label>
