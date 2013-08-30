@@ -320,7 +320,6 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
       @chart = new google.visualization[@options.type + "Chart"](
         @_boxContent
       )
-    # only init one time
     @_detectScreenChanges()
 
   _detectScreenChanges: ->
