@@ -1103,8 +1103,11 @@ knob1.drawChart = ->
       else
         for reg of H5.DB.occurence.data.regions[H5.Data.region]
           reg = H5.DB.occurence.data.regions[H5.Data.region][reg]
-          if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth() and (reg.type.indexOf(type) >= 0)
-            sum += reg.area
+          if type is "Todos"
+            if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
+              sum++
+          else if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth() and (reg.type.indexOf(type) >= 0)
+            sum++ #counter of occurrences
       return sum
 
     # definir periodo atual

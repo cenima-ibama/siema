@@ -857,7 +857,7 @@
     periodDeforestationRate = function(year, month, type) {
       var curDate, curValue, preDate, preValue, sumValues;
       sumValues = function(date) {
-        var reg, region, sum, _ref, _ref1, _ref2;
+        var reg, region, sum, _ref, _ref1, _ref2, _ref3;
         sum = 0;
         if (H5.Data.region === "Todos") {
           for (region in H5.DB.occurence.data.regions) {
@@ -875,8 +875,12 @@
         } else {
           for (reg in H5.DB.occurence.data.regions[H5.Data.region]) {
             reg = H5.DB.occurence.data.regions[H5.Data.region][reg];
-            if ((date.getFullYear() <= (_ref2 = reg.year) && _ref2 <= date.getFullYear()) && reg.month === date.getMonth() && (reg.type.indexOf(type) >= 0)) {
-              sum += reg.area;
+            if (type === "Todos") {
+              if ((date.getFullYear() <= (_ref2 = reg.year) && _ref2 <= date.getFullYear()) && reg.month === date.getMonth()) {
+                sum++;
+              }
+            } else if ((date.getFullYear() <= (_ref3 = reg.year) && _ref3 <= date.getFullYear()) && reg.month === date.getMonth() && (reg.type.indexOf(type) >= 0)) {
+              sum++;
             }
           }
         }
