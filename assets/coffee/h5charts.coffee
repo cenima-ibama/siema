@@ -15,18 +15,6 @@ H5.Data.thisType = 0
 
 console.log H5.Data.thisYear
 
-#remove prodes years
-# H5.Data.thisProdesYear = if H5.Data.thisMonth < 7 then H5.Data.thisYear else H5.Data.thisYear + 1
-#remove
-
-
-# H5.Data.totalPeriods = if H5.Data.thisMonth < 7 then (H5.Data.thisDate.getFullYear() - 2005) else (H5.Data.thisDate.getFullYear() - 2004)
-# H5.Data.periods = new Array(H5.Data.totalPeriods)
-# for i in [0..H5.Data.totalPeriods]
-#   if H5.Data.thisMonth < 7
-#     H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i - 1) + "-" + (H5.Data.thisDate.getFullYear() - i)
-#   else
-#     H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i) + "-" + (H5.Data.thisDate.getFullYear() - i + 1)
 
 H5.Data.months =
   0: "Jan"
@@ -102,69 +90,7 @@ $.each rest.data, (i, properties) ->
     properties.id_ocorrencia, properties.regiao, properties.dt_registro, properties.sigla, properties.eventos
     )
 
-# H5.DB.prodes.data =
-#   init: ->
-#     @regions = {}
-#     for region in H5.Data.regions
-#       @regions[region] = {}
-#       for period in H5.Data.periods
-#         @regions[region][period] = {}
 
-#   populate: (period, ac, am, ap, ma, mt, pa, ro, rr, to) ->
-#     self = @regions
-#     self.AC[period].area = ac
-#     self.AM[period].area = am
-#     self.AP[period].area = ap
-#     self.MA[period].area = ma
-#     self.MT[period].area = mt
-#     self.PA[period].area = pa
-#     self.RO[period].area = ro
-#     self.RR[period].area = rr
-#     self.TO[period].area = to
-
-# rest = new H5.Rest (
-#   url: H5.Data.restURL
-#   table: H5.DB.prodes.table
-# )
-
-# H5.DB.prodes.data.init()
-# $.each rest.data, (i, properties) ->
-#   H5.DB.prodes.data.populate(
-#     properties.ano_prodes.replace('/','-'),
-#     parseFloat(properties.ac), parseFloat(properties.am),
-#     parseFloat(properties.ap), parseFloat(properties.ma),
-#     parseFloat(properties.mt), parseFloat(properties.pa),
-#     parseFloat(properties.ro), parseFloat(properties.rr),
-#     parseFloat(properties.to)
-#   )
-
-# H5.DB.cloud.data =
-#   init: ->
-#     @nuvem = {}
-
-#   populate: (date, value) ->
-#     convertDate = (dateStr) ->
-#       dateStr = String(dateStr)
-#       dArr = dateStr.split("-")
-#       new Date(dArr[0], (dArr[1]) - 1, dArr[2])
-#     self = @nuvem
-#     self[date] = {}
-#     self[date].value = value
-#     self[date].date = convertDate(date)
-#     self[date].year = convertDate(date).getFullYear()
-#     self[date].month = convertDate(date).getMonth()
-#     self[date].day = convertDate(date).getDate()
-
-# rest = new H5.Rest (
-#   url: H5.Data.restURL
-#   table: H5.DB.cloud.table
-# )
-
-# H5.DB.cloud.data.init()
-# $.each rest.data, (i, properties) ->
-#   H5.DB.cloud.data.populate(
-#     properties.data, properties.percent,
-#   )
 #}}}
 # RELOAD DATE {{{
 # reload date based on database
@@ -178,13 +104,7 @@ H5.Data.selectedYear = H5.Data.thisYear
 H5.Data.selectedMonth = H5.Data.thisMonth
 H5.Data.selectedType = 0 #first item of the list
 
-# H5.Data.totalPeriods = if H5.Data.thisMonth < 7 then (H5.Data.thisDate.getFullYear() - 2005) else (H5.Data.thisDate.getFullYear() - 2004)
-# H5.Data.periods = new Array(H5.Data.totalPeriods)
-# for i in [0..H5.Data.totalPeriods]
-#   if H5.Data.thisMonth < 7
-#     H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i - 1) + "-" + (H5.Data.thisDate.getFullYear() - i)
-#   else
-#     H5.Data.periods[i] = (H5.Data.thisDate.getFullYear() - i) + "-" + (H5.Data.thisDate.getFullYear() - i + 1)
+
 #}}}
 # CHART1 {{{
 chart1 = new H5.Charts.GoogleCharts (
@@ -201,10 +121,6 @@ chart1 = new H5.Charts.GoogleCharts (
 chart1._yearsSlct = document.getElementById('yearsSlct')
 chart1._monthsSlct = document.getElementById('monthsSlct')
 chart1._typesSlct = document.getElementById('typesSlct')
-
-# console.log "Esse mês " , H5.Data.thisMonth
-# console.log "Mês selecionado " , chart1._monthsSlct
-# console.log "Chart1 messlct " , chart1._monthsSlct.options[H5.Data.thisMonth]
 
 # make those options selected
 # selectedYear = if H5.Data.thisMonth < 7 then H5.Data.totalPeriods + 1 else H5.Data.totalPeriods
@@ -394,7 +310,7 @@ chart2.drawChart = ->
   # init table
   @data.addColumn "string", "Mês"
   for i in [0...@options.period] #from the current year to the last of the database
-    @data.addColumn "number", H5.Data.thisYear - i + 1 #the year selected
+    @data.addColumn "number", H5.Data.thisYear - i #the year selected
 
   for month of H5.Data.months #increment in number
     data = [H5.Data.months[month]] #create the position with the name month ex:data[Ago]
@@ -514,7 +430,7 @@ chart3.drawChart = ->
   # populate table
   for i in [0..@options.period]
     #data = [H5.Data.periods[i]] #create the data for the period
-    period = 2014 - i
+    period = H5.Data.selectedYear - i
     data = ["#{period}"]
     sumTotal = sumTotalValues(H5.Data.selectedYear - i) #for the selected year
     sumAvg = sumAvgValues(H5.Data.selectedYear - i)
@@ -918,7 +834,10 @@ chart8.drawChart = ->
   sumValues = (region, type) ->
     sum = 0
     $.each H5.DB.occurence.data.regions[region], (key, reg) ->
-      if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0)
+      if type is "Todos"
+        if firstPeriod <= reg.date <= secondPeriod
+          sum++
+      else if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0)
         #counter of ocurrences
         sum++
     if firstPeriod > H5.Data.thisDate
@@ -1289,17 +1208,13 @@ knob3.drawChart = ->
     # if month > 6 then year++ else year
 
     sumPeriods = (year, month) ->
-      firstPeriod = new Date(year-1, 7, 1)
-      if month > 6
-        if month is H5.Data.thisMonth
-          secondPeriod = new Date(year-1, month, H5.Data.thisDay)
-        else
-          secondPeriod = new Date(year-1, month+1, 0)
+      firstPeriod = new Date(year, 1, 1)
+
+      if month is H5.Data.thisMonth
+        secondPeriod = new Date(year, month, H5.Data.thisDay)
       else
-        if month is H5.Data.thisMonth
-          secondPeriod = new Date(year, month, H5.Data.thisDay)
-        else
-          secondPeriod = new Date(year, month+1, 0)
+        secondPeriod = new Date(year, month+1, 0)
+
       sumValues firstPeriod, secondPeriod
 
     curValue = sumPeriods(year, month)

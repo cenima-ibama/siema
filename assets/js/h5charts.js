@@ -327,7 +327,7 @@
     this.createDataTable();
     this.data.addColumn("string", "Mês");
     for (i = _i = 0, _ref = this.options.period; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-      this.data.addColumn("number", H5.Data.thisYear - i + 1);
+      this.data.addColumn("number", H5.Data.thisYear - i);
     }
     for (month in H5.Data.months) {
       data = [H5.Data.months[month]];
@@ -444,7 +444,7 @@
     this.data.addColumn("number", "Parcial");
     this.data.addColumn("number", "Diferença");
     for (i = _i = 0, _ref = this.options.period; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-      period = 2014 - i;
+      period = H5.Data.selectedYear - i;
       data = ["" + period];
       sumTotal = sumTotalValues(H5.Data.selectedYear - i);
       sumAvg = sumAvgValues(H5.Data.selectedYear - i);
@@ -676,8 +676,12 @@
       var sum;
       sum = 0;
       $.each(H5.DB.occurence.data.regions[region], function(key, reg) {
-        var _ref;
-        if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod) && (reg.type.indexOf(type) >= 0)) {
+        var _ref, _ref1;
+        if (type === "Todos") {
+          if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
+            return sum++;
+          }
+        } else if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod) && (reg.type.indexOf(type) >= 0)) {
           return sum++;
         }
       });
@@ -982,19 +986,11 @@
       };
       sumPeriods = function(year, month) {
         var firstPeriod, secondPeriod;
-        firstPeriod = new Date(year - 1, 7, 1);
-        if (month > 6) {
-          if (month === H5.Data.thisMonth) {
-            secondPeriod = new Date(year - 1, month, H5.Data.thisDay);
-          } else {
-            secondPeriod = new Date(year - 1, month + 1, 0);
-          }
+        firstPeriod = new Date(year, 1, 1);
+        if (month === H5.Data.thisMonth) {
+          secondPeriod = new Date(year, month, H5.Data.thisDay);
         } else {
-          if (month === H5.Data.thisMonth) {
-            secondPeriod = new Date(year, month, H5.Data.thisDay);
-          } else {
-            secondPeriod = new Date(year, month + 1, 0);
-          }
+          secondPeriod = new Date(year, month + 1, 0);
         }
         return sumValues(firstPeriod, secondPeriod);
       };
