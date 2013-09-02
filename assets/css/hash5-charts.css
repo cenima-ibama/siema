@@ -403,35 +403,23 @@
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-.quick-btn .item i.icon-ac {
-  background-image: url("../img/icons/AC.png");
+.quick-btn .item i.icon-no {
+  background-image: url("../img/icons/Norte.png");
 }
-.quick-btn .item i.icon-ap {
-  background-image: url("../img/icons/AP.png");
+.quick-btn .item i.icon-nd {
+  background-image: url("../img/icons/Nordeste.png");
 }
 .quick-btn .item i.icon-br {
-  background-image: url("../img/icons/BR.png");
+  background-image: url("../img/icons/Brasil.png");
 }
-.quick-btn .item i.icon-to {
-  background-image: url("../img/icons/TO.png");
+.quick-btn .item i.icon-co {
+  background-image: url("../img/icons/CentroOeste.png");
 }
-.quick-btn .item i.icon-pa {
-  background-image: url("../img/icons/PA.png");
+.quick-btn .item i.icon-su {
+  background-image: url("../img/icons/Sul.png");
 }
-.quick-btn .item i.icon-mt {
-  background-image: url("../img/icons/MT.png");
-}
-.quick-btn .item i.icon-ro {
-  background-image: url("../img/icons/RO.png");
-}
-.quick-btn .item i.icon-ma {
-  background-image: url("../img/icons/MA.png");
-}
-.quick-btn .item i.icon-rr {
-  background-image: url("../img/icons/RR.png");
-}
-.quick-btn .item i.icon-am {
-  background-image: url("../img/icons/AM.png");
+.quick-btn .item i.icon-sd {
+  background-image: url("../img/icons/Sudeste.png");
 }
 .quick-slct {
   display: inline-block;

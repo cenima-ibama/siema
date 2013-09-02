@@ -561,10 +561,12 @@
       $("#produtoDesc").on('click', function() {
         if ($(this).is(":checked")) {
           $("#inputTipoSubstancia").attr("disabled", "disabled");
-          return $("#inputValorEstimado").attr("disabled", "disabled");
+          $("#inputValorEstimado").attr("disabled", "disabled");
+          return $("#btnAddProduto").attr("disabled", "disabled");
         } else {
           $("#inputTipoSubstancia").removeAttr("disabled");
-          return $("#inputValorEstimado").removeAttr("disabled");
+          $("#inputValorEstimado").removeAttr("disabled");
+          return $("#btnAddProduto").removeAttr("disabled");
         }
       });
       $("#semSubstancia").on('click', function() {

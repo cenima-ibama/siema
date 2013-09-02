@@ -338,47 +338,46 @@
             <option value="2014">2014</option>
           </select>
         </div>
+      <div class="item">
+          <label>Tipo de Evento</label>
+          <select id="typesSlct" class="" name="types">
+            <option value="0">Derramamento de líquidos</option>
+            <option value="1">Desastre natural</option>
+            <option value="2">Explosão/incêncio</option>
+            <option value="3">Lançamento de sólidos</option>
+            <option value="4">Mortandade de peixes</option>
+            <option value="5">Produtos químicos/embalagens abandonadas</option>
+            <option value="6">Rompimento de barragem</option>
+            <option value="7">Vazamento de gases</option>
+            <option value="8">Outros</option>
+            <option value="9">Todos</option>
+          </select>
+        </div>
       </div>
       <div class="quick-btn">
-        <a id="AC" href="#" class="item">
-          <i class="icon-ac"></i>
-          <span>AC</span>
+        <a id="NO" href="#" class="item">
+          <i class="icon-no"></i>
+          <span>Norte</span>
         </a>
-        <a id="AM" href="#" class="item">
-          <i class="icon-am"></i>
-          <span>AM</span>
+        <a id="NE" href="#" class="item">
+          <i class="icon-nd"></i>
+          <span>Nordeste</span>
         </a>
-        <a id="AP" href="#" class="item">
-          <i class="icon-ap"></i>
-          <span>AP</span>
+        <a id="CO" href="#" class="item">
+          <i class="icon-co"></i>
+          <span>Centro-Oeste</span>
         </a>
-        <a id="MA" href="#" class="item">
-          <i class="icon-ma"></i>
-          <span>MA</span>
+        <a id="SE" href="#" class="item">
+          <i class="icon-sd"></i>
+          <span>Sudeste</span>
         </a>
-        <a id="MT" href="#" class="item">
-          <i class="icon-mt"></i>
-          <span>MT</span>
-        </a>
-        <a id="PA" href="#" class="item">
-          <i class="icon-pa"></i>
-          <span>PA</span>
-        </a>
-        <a id="RO" href="#" class="item">
-          <i class="icon-ro"></i>
-          <span>RO</span>
-        </a>
-        <a id="RR" href="#" class="item">
-          <i class="icon-rr"></i>
-          <span>RR</span>
-        </a>
-        <a id="TO" href="#" class="item">
-          <i class="icon-to"></i>
-          <span>TO</span>
+        <a id="SU" href="#" class="item">
+          <i class="icon-su"></i>
+          <span>Sul</span>
         </a>
         <a id="Todos" href="#" class="item active">
           <i class="icon-br"></i>
-          <span>Todos</span>
+          <span>Brasil</span>
         </a>
       </div>
     </div>
