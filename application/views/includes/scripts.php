@@ -25,7 +25,7 @@
   <!-- Charts -->
   <script src="//www.google.com/jsapi" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/masonry.min.js"></script>
-  <script src="<?= base_url()?>assets/js/knob.js"></script>
+  <script src="<?= base_url()?>assets/js/jquery.knob.js"></script>
   <script src="<?= base_url()?>assets/js/sparkline.min.js"></script>
   <script src="<?= base_url()?>assets/js/pusher.color.min.js"></script>
 
