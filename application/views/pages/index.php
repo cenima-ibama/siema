@@ -43,7 +43,7 @@
               if( $this->session->userdata('logged_in') ) {
                   echo '
                 <center>
-                <img src="./assets/img/check_sign.jpg" id="checkedUser" style="display: none;" title=""><br/>
+                <img src="./assets/img/check_sign.png" id="checkedUser" style="display: none;" title=""><br/>
                 <div id="containerProgress" class="progress progress-striped active" style="width: 50%;">
                     <div id="authProgress" class="bar"></div>
                 </div>
@@ -76,7 +76,7 @@
                 </div>
                 <div id="divLogin" style="display:none;">
                   <center>
-                    <img src="./assets/img/check_sign.jpg" id="checkedUser" style="display: none;" title=""><br/>
+                    <img src="./assets/img/check_sign.png" id="checkedUser" style="display: none;" title=""><br/>
                     <div id="containerProgress" class="progress progress-striped active" style="width: 50%;">
                         <div id="authProgress" class="bar"></div>
                     </div>
