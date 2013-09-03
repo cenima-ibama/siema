@@ -22,8 +22,6 @@
 
   H5.Data.thisType = 0;
 
-  console.log(H5.Data.thisYear);
-
   H5.Data.months = {
     0: "Jan",
     1: "Fev",
@@ -135,9 +133,10 @@
 
   chart1._typesSlct = document.getElementById('typesSlct');
 
-  chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true;
-
-  chart1._monthsSlct.options[H5.Data.thisMonth].selected = true;
+  $(document).ready(function() {
+    chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true;
+    return chart1._monthsSlct.options[H5.Data.thisMonth].selected = true;
+  });
 
   $(chart1._monthsSlct).on("change", function(event) {
     H5.Data.selectedMonth = parseInt(chart1._monthsSlct.value);
@@ -849,7 +848,8 @@
   knob1 = new H5.Charts.Knobs({
     container: "knob1",
     title: "Taxa VAA",
-    popover: "Taxa de variação em relação ao mesmo mês do ano anterior"
+    popover: "Taxa de variação em relação ao mesmo mês do ano anterior",
+    color: "coldtohot"
   });
 
   knob1.drawChart = function() {
@@ -890,12 +890,10 @@
       preDate = new Date(year - 1, month);
       curValue = sumValues(curDate);
       preValue = sumValues(preDate);
-      console.log("Current Value ", curValue);
-      console.log("Per Value ", preValue);
       if (preValue === 0) {
         return 0;
       } else {
-        return Math.round((curValue - preValue) / preValue * 100);
+        return Math.round((curValue - preValue) / preValue) * 100;
       }
     };
     value = periodDeforestationRate(H5.Data.selectedYear, H5.Data.selectedMonth, H5.Data.typesOfEvents[H5.Data.selectedType]);
@@ -905,7 +903,8 @@
   knob2 = new H5.Charts.Knobs({
     container: "knob2",
     title: "Taxa VMA",
-    popover: "Taxa de variação em relação ao mês anterior"
+    popover: "Taxa de variação em relação ao mês anterior",
+    color: "coldtohot"
   });
 
   knob2.drawChart = function() {
@@ -955,7 +954,8 @@
   knob3 = new H5.Charts.Knobs({
     container: "knob3",
     title: "Taxa VPA",
-    popover: "Taxa de variação em relação ao período PRODES anterior"
+    popover: "Taxa de variação em relação ao período PRODES anterior",
+    color: "coldtohot"
   });
 
   knob3.drawChart = function() {

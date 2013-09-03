@@ -559,13 +559,13 @@
         height: 58,
         thickness: 0.5,
         displayInput: false,
-        color: "alert",
+        color: this.options.color,
         draw: function() {
           var color, value, _max, _min;
           value = this.val();
           _min = this.o.min;
           _max = this.o.max;
-          if (this.color === "coldtohot") {
+          if (this.o.color === "coldtohot") {
             if ((_min <= value && value <= _min * 0.3)) {
               color = pusher.color("#67C2EF");
             } else if ((_min * 0.3 < value && value <= _max * 0.3)) {
@@ -602,7 +602,7 @@
           value: total
         }, {
           duration: 2000,
-          easing: "easeOutSine",
+          easing: "easeOutBounce",
           step: function() {
             return dial.val(Math.floor(this.value)).trigger("change");
           }

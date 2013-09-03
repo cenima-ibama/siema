@@ -465,12 +465,12 @@ class H5.Charts.Knobs extends H5.Charts.SmallContainer
       height: 58
       thickness: 0.5
       displayInput: false
-      color: "alert"
+      color: @options.color
       draw: ->
         value = @val()
         _min = @o.min
         _max = @o.max
-        if @color is "coldtohot"
+        if @o.color is "coldtohot"
           if _min <= value <= _min*0.3 then color = pusher.color("#67C2EF")
           else if _min*0.3 < value <= _max*0.3 then color = pusher.color("#CBE968")
           else if _max*0.3 < value <= _max*0.7 then color = pusher.color("#FABB3D")
@@ -492,7 +492,7 @@ class H5.Charts.Knobs extends H5.Charts.SmallContainer
       $(value: dial.val()).animate
         value: total,
           duration: 2000
-          easing: "easeOutSine"
+          easing: "easeOutBounce"
           step: ->
             dial.val(Math.floor @value).trigger "change"
     else

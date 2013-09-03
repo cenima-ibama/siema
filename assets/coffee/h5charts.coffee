@@ -13,9 +13,6 @@ H5.Data.thisMonth = H5.Data.thisDate.getMonth()
 H5.Data.thisDay = H5.Data.thisDate.getDate()
 H5.Data.thisType = 0
 
-console.log H5.Data.thisYear
-
-
 H5.Data.months =
   0: "Jan"
   1: "Fev"
@@ -41,7 +38,7 @@ else
 
 #}}}
 # DATABASES {{{
-H5.DB.addDB({name:'occurence', table:'vw_ocorrencia'});
+H5.DB.addDB({name:'occurence', table:'vw_ocorrencia'})
 
 
 H5.DB.occurence.data =
@@ -89,8 +86,6 @@ $.each rest.data, (i, properties) ->
   H5.DB.occurence.data.populate(
     properties.id_ocorrencia, properties.regiao, properties.dt_registro, properties.sigla, properties.eventos
     )
-
-
 #}}}
 # RELOAD DATE {{{
 # reload date based on database
@@ -98,12 +93,10 @@ H5.Data.thisDate = H5.DB.occurence.data.lastValue.date
 H5.Data.thisDay = H5.DB.occurence.data.lastValue.day
 H5.Data.thisMonth = H5.DB.occurence.data.lastValue.month
 H5.Data.thisYear = H5.DB.occurence.data.lastValue.year
-# H5.Data.thisProdesYear = if H5.Data.thisMonth < 7 then H5.Data.thisYear else H5.Data.thisYear + 1
 
 H5.Data.selectedYear = H5.Data.thisYear
 H5.Data.selectedMonth = H5.Data.thisMonth
 H5.Data.selectedType = 0 #first item of the list
-
 
 #}}}
 # CHART1 {{{
@@ -123,13 +116,12 @@ chart1._monthsSlct = document.getElementById('monthsSlct')
 chart1._typesSlct = document.getElementById('typesSlct')
 
 # make those options selected
-# selectedYear = if H5.Data.thisMonth < 7 then H5.Data.totalPeriods + 1 else H5.Data.totalPeriods
-chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true
-chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
+$(document).ready ->
+  chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true
+  chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
 
 $(chart1._monthsSlct).on "change", (event) ->
   H5.Data.selectedMonth = parseInt chart1._monthsSlct.value
-  # console.log "Reload do Mês"
   chart1.drawChart()
   chart3.drawChart()
   chart8.drawChart()
@@ -141,7 +133,6 @@ $(chart1._monthsSlct).on "change", (event) ->
 
 $(chart1._yearsSlct).on "change", (event) ->
   H5.Data.selectedYear = parseInt chart1._yearsSlct.value
-  # console.log "Reload do Year"
   chart1.drawChart()
   chart3.drawChart()
   chart8.drawChart()
@@ -154,7 +145,6 @@ $(chart1._yearsSlct).on "change", (event) ->
 
 $(chart1._typesSlct).on "change", (event) ->
   H5.Data.selectedType = parseInt chart1._typesSlct.value
-  # console.log "Reload do Type"
   chart1.drawChart()
   chart2.drawChart()
   chart3.drawChart()
@@ -1084,6 +1074,7 @@ knob1 = new H5.Charts.Knobs(
   container: "knob1"
   title: "Taxa VAA"
   popover: "Taxa de variação em relação ao mesmo mês do ano anterior"
+  color: "coldtohot"
 )
 
 knob1.drawChart = ->
@@ -1118,15 +1109,13 @@ knob1.drawChart = ->
     # definir valores referentes ao periodo atual
     curValue = sumValues(curDate)
     preValue = sumValues(preDate)
-    console.log "Current Value ", curValue
-    console.log "Per Value ", preValue
 
     # caso o valor do periodo anterior seja 0, retorna 0
     # para evitar uma divisão por 0
     if preValue is 0
       return 0
     else
-      return Math.round (curValue - preValue) / preValue * 100
+      return Math.round((curValue - preValue) / preValue) * 100
 
   value = periodDeforestationRate(
     H5.Data.selectedYear, H5.Data.selectedMonth, H5.Data.typesOfEvents[H5.Data.selectedType]
@@ -1138,6 +1127,7 @@ knob2 = new H5.Charts.Knobs(
   container: "knob2"
   title: "Taxa VMA"
   popover: "Taxa de variação em relação ao mês anterior"
+  color: "coldtohot"
 )
 
 knob2.drawChart = ->
@@ -1187,6 +1177,7 @@ knob3 = new H5.Charts.Knobs(
   container: "knob3"
   title: "Taxa VPA"
   popover: "Taxa de variação em relação ao período PRODES anterior"
+  color: "coldtohot"
 )
 
 knob3.drawChart = ->
@@ -1237,7 +1228,6 @@ knob3.drawChart = ->
 #}}}
 # CONTROLS {{{
 H5.Charts.reloadCharts = ->
-  # console.log "Reload dos Charts!"
   chart1.drawChart()
   chart2.drawChart()
   chart3.drawChart()

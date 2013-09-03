@@ -305,9 +305,9 @@
       }
       ?>
       <div class="quick-slct">
-        <div class="item">
+        <div class="item ">
           <label>Mês</label>
-          <select id="monthsSlct" class="" name="months">
+          <select id="monthsSlct" class="selectpicker" data-width="80px" data-size="auto" name="months">
             <option value="0">Jan</option>
             <option value="1">Fev</option>
             <option value="2">Mar</option>
@@ -324,7 +324,7 @@
         </div>
         <div class="item">
           <label>Ano</label>
-          <select id="yearsSlct" class="" name="years">
+          <select id="yearsSlct" class="selectpicker" data-width="80px" data-size="6" name="years">
             <option value="2004">2004</option>
             <option value="2005">2005</option>
             <option value="2006">2006</option>
@@ -340,7 +340,7 @@
         </div>
       <div class="item">
           <label>Tipo de Evento</label>
-          <select id="typesSlct" class="" name="types">
+          <select id="typesSlct" class="selectpicker" data-width="140px" data-size="6" name="types">
             <option value="0">Derramamento de líquidos</option>
             <option value="1">Desastre natural</option>
             <option value="2">Explosão/incêncio</option>
