@@ -26,7 +26,7 @@ $(document).ready ->
   # List that stores the order on tabs to be accessed, going backwards
   history = []
   # Stores the next tab to be accessed
-  collapse=1
+  collapse=2
 
   $('#addMeModal').on 'hidden', ->
     history = []
@@ -49,6 +49,9 @@ $(document).ready ->
     $("#comunicado").val(nroComunicado)
     $("#nroComunicado").html(nroComunicado)
 
+  #hide footer o form when click on topbar
+  $("#btn-form").click (event) ->
+    $(".modal-footer").hide()
 
   # Dealing with going backwards on the form and possibles jumps
   $("#modalBtnBack").click (event) ->
@@ -657,7 +660,6 @@ $(document).ready ->
         $("#PerInciNotu").removeAttr("disabled")
         $("#PerInciMadru").removeAttr("disabled")
 
-
     $("#semOrigem").on 'click', ()->
       if $(this).is(":checked")
         $("input[name='tipoLocalizacao[]']").each ()->
@@ -686,7 +688,7 @@ $(document).ready ->
 
         $("#inputEventoOutro").removeAttr("disabled")
         $("#inputCompEvento").removeAttr("disabled")
-        
+
     $("#produtoDesc").on 'click', ()->
       if $(this).is(":checked")
         $("#inputTipoSubstancia").attr("disabled","disabled")
@@ -695,8 +697,7 @@ $(document).ready ->
       else
         $("#inputTipoSubstancia").removeAttr("disabled")
         $("#inputValorEstimado").removeAttr("disabled")
-        $("#btnAddProduto").removeAttr("disabled")     
-        
+        $("#btnAddProduto").removeAttr("disabled")
 
     $("#semSubstancia").on 'click', ()->
       if $(this).is(":checked")

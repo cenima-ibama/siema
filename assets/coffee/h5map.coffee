@@ -114,7 +114,7 @@ new L.control.locate(
   locateOptions: {}
 ).addTo(H5.Map.base)
 
-# display stations
+# display somethings
 H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 
 H5.Map.layer.alerta = new H5.Leaflet.Postgis(
@@ -193,6 +193,8 @@ new H5.Leaflet.LayerControl(
     overlayControl: false
   "DETER Polígonos":
     layer: H5.Map.layer.alerta.layer
+  "Terras Indígenas":
+    layer: terrasIndigenas
 ).addTo(H5.Map.base)
 
 # }}}

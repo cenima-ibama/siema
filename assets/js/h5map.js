@@ -205,6 +205,9 @@
     },
     "DETER Polígonos": {
       layer: H5.Map.layer.alerta.layer
+    },
+    "Terras Indígenas": {
+      layer: terrasIndigenas
     }
   }).addTo(H5.Map.base);
 

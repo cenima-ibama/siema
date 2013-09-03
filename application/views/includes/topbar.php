@@ -10,7 +10,7 @@
       <ul class="nav">
         <li class=""><a id="btn-map" href="#"><i class="icon-globe icon-white"></i> Mapa</a></li>
         <li class="active"><a id="btn-charts" href="#"><i class="icon-bar-chart icon-white"></i> Estatística</a></li>
-        <li><a data-toggle="modal" href="#addMeModal"><i class="icon-plus-sign icon-white"></i> Informar Acidente</a></li>
+        <li><a id="btn-form" data-toggle="modal" href="#addMeModal"><i class="icon-plus-sign icon-white"></i> Informar Acidente</a></li>
       </ul>
     </div>
   </div>

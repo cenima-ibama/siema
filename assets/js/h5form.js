@@ -16,7 +16,7 @@
     });
     this.produto = rest.data;
     history = [];
-    collapse = 1;
+    collapse = 2;
     $('#addMeModal').on('hidden', function() {
       var btnBack;
       history = [];
@@ -35,6 +35,9 @@
       $("#comunicado").val(nroComunicado);
       $("#nroComunicado").html(nroComunicado);
     }
+    $("#btn-form").click(function(event) {
+      return $(".modal-footer").hide();
+    });
     $("#modalBtnBack").click(function(event) {
       var btnNext, tab;
       event.preventDefault();
