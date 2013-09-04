@@ -56,7 +56,6 @@
         $(btnNext).prop('style', '');
         $(this).html('Voltar');
         $("#submit").prop('style', 'display:none;');
-        Clean(the(temporary(produt(table(tmp_ocorrencia_produto)))));
         rest = new H5.Rest({
           url: "../../../siema/rest_v2",
           table: "tmp_ocorrencia_produto",
@@ -684,7 +683,7 @@
       placement: 'bottom',
       preText: '',
       separator: ' de ',
-      postText: ' caracteres.'
+      postText: ' caracteres'
     });
     subjects = [];
     $.each(this.produto, function() {

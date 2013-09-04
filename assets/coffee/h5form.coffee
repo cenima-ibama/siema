@@ -8,11 +8,6 @@ $(document).ready ->
 
   @produto = null
 
-  #-------------------------------------------------------------------------
-  # FORM
-  #-------------------------------------------------------------------------
-
-
   # Get the product name from the database, by ajax
   rest = new H5.Rest (
     url: "../../../../siema/rest_v2"
@@ -22,6 +17,10 @@ $(document).ready ->
   )
 
   @produto = rest.data
+
+  #-------------------------------------------------------------------------
+  # FORM
+  #-------------------------------------------------------------------------
 
   # List that stores the order on tabs to be accessed, going backwards
   history = []
@@ -74,7 +73,7 @@ $(document).ready ->
       $(@).html('Voltar')
       $("#submit").prop 'style', 'display:none;'
 
-      Clean the temporary produt table (tmp_ocorrencia_produto)
+      # Clean the temporary produt table (tmp_ocorrencia_produto)
       rest = new H5.Rest (
        url: "../../../siema/rest_v2"
        table: "tmp_ocorrencia_produto"
@@ -82,7 +81,6 @@ $(document).ready ->
       )
 
     $(@).tab('show')
-
 
   # Dealing with going foward on the form and possibles jumps
   $("#modalBtnNext").click (event) ->
@@ -207,7 +205,6 @@ $(document).ready ->
 
     $(@).tab('show')
 
-
   # Dealing with the register part on the accident form
   $("#btnCadastrar").click (event) ->
     event.preventDefault()
@@ -223,10 +220,6 @@ $(document).ready ->
     $(".modal-footer").show()
 
     $(@).tab('show')
-
-
-  # $(".accordion-body").on 'shown', ->
-  #   $(@).focus()
 
   #-------------------------------------------------------------------------
   # MINIMAP
@@ -244,7 +237,6 @@ $(document).ready ->
   $( '#minimap' ).css("width", "100%")
   $( '#minimap' ).css("box-shadow", "0 0 0 1px rgba(0, 0, 0, 0.15)")
   $( '#minimap' ).css("border-radius", "4px")
-
 
   #-------------------------------------------------------------------------
   # MARKER CREATION
@@ -348,7 +340,6 @@ $(document).ready ->
         if $(this).is(":checked")
           addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
 
-
       span = document.createElement("span")
       span.innerHTML = value.des_tipo_localizacao
 
@@ -366,7 +357,6 @@ $(document).ready ->
     $(tipoLocalizacao).append labelOutros
 
     _tipoLocalizacao = tipoLocalizacao
-
 
     # Put the data from table tipo_evento on the form
     tipoEvento = document.getElementById("tipoEvento")
@@ -474,7 +464,6 @@ $(document).ready ->
 
     _tipoDanoIdentificado = tipoDanoIdentificado
 
-
     # Put the data from table instituicao_atuando_local on the form
     tipoInstituicaoAtuando = document.getElementById("tipoInstituicaoAtuando")
 
@@ -527,7 +516,6 @@ $(document).ready ->
     $(tipoInstituicaoAtuando).append labelOutros
 
     _tipoInstituicaoAtuando = tipoInstituicaoAtuando
-
 
     # Put the data from table instituicao_atuando_local on the form
     tipoFonteInformacao = document.getElementById("tipoFonteInformacao")
@@ -604,8 +592,9 @@ $(document).ready ->
           td = newRow.insertCell()
           td.innerHTML = @classe_risco
 
-
-    # Code to disable inputs on the form
+  #-------------------------------------------------------------------------
+  # DISABLE SELECTED INPUTS
+  #-------------------------------------------------------------------------
 
     $("#semLocalizacao").on 'click', ()->
       if $(this).is(":checked")
@@ -808,12 +797,14 @@ $(document).ready ->
   if ($("#inputHoraInci").prop 'value') isnt ''
     $("#divPeriodoInci").prop('style','display:none;')
 
-  # Mask for fields
+  #-------------------------------------------------------------------------
+  # MASK FOR FIELDS
+  #-------------------------------------------------------------------------
+
   $("#inputDataObs").mask("99/99/9999")
   $("#inputHoraObs").mask("99:99")
   $("#inputDataInci").mask("99/99/9999")
   $("#inputHoraInci").mask("99:99")
-
 
   $('#inputCompOrigem')
     .add('#inputCompEvento')
@@ -832,8 +823,12 @@ $(document).ready ->
       placement: 'bottom',
       preText: '',
       separator: ' de ',
-      postText: ' caracteres.'
+      postText: ' caracteres'
   )
+
+  #-------------------------------------------------------------------------
+  # FORM DATA TABLE
+  #-------------------------------------------------------------------------
 
   subjects = []
 
