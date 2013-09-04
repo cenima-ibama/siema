@@ -1,5 +1,5 @@
 <?php echo form_open('auth/login', array('id' => 'loginForm', 'class' => 'form-horizontal', 'name' => 'loginForm')); ?>
-<h4 class="">Login</h4>
+<h4 style="margin:0;">Login</h4>
 <div class="control-group">
     <?php echo form_label('Usuário:', 'inputUsername', array('class' => 'control-label', 'for' => 'username')); ?>
     <div class="controls">

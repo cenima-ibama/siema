@@ -7,6 +7,7 @@
       backdrop: false,
       show: false
     });
+    $('.selectpicker').selectpicker();
     $(".dropdown-menu input, .dropdown-menu label").click(function(e) {
       return e.stopPropagation();
     });

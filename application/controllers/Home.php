@@ -8,14 +8,13 @@ class Home extends CI_Controller {
         $this->load->library('AuthLDAP');
 
         // Enable firebug
-        // $this->load->library('Firephp');
+        $this->load->library('Firephp');
         $this->firephp->setEnabled(TRUE);
     }
 
     public function index()
     {
-        // $this->firephp->log("Index");
-
+        //$this->firephp->log("Index");
         if($this->authldap->is_authenticated()) {
             $data['name'] = $this->session->userdata('name');
             $data['username'] = $this->session->userdata('username');
@@ -148,6 +147,7 @@ class Home extends CI_Controller {
             $this->insertDB($form_data);
             if($this->session->userdata('logged_in'))
                 $this->sendMail($form_data);
+
         }
     }
 
@@ -225,6 +225,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => 'UF',
+            'maxlength'    => '2',
             'value'        => set_value('inputUF')
         );
         if(set_value('semLocalizacao') == "on"){
@@ -401,6 +402,7 @@ class Home extends CI_Controller {
             'name'         => 'inputCompOrigem',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '150',
             'value'        => set_value('inputCompOrigem')
         );
         if(set_value('semOrigem') == "on"){
@@ -464,6 +466,7 @@ class Home extends CI_Controller {
             'name'         => 'inputCompEvento',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '150',
             'value'        => set_value('inputCompEvento')
         );
         if(set_value('semEvento') == "on"){
@@ -490,6 +493,7 @@ class Home extends CI_Controller {
             'name'         => 'inputCausaProvavel',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '2000',
             'value'        => set_value('inputCausaProvavel')
         );
         if(set_value('semCausa') == "on"){
@@ -543,6 +547,7 @@ class Home extends CI_Controller {
             'id'           => 'inputCompDano',
             'name'         => 'inputCompDano',
             'rows'         => '2',
+            'maxlength'    => '1000',
             'class'        => 'input-large',
             'value'        => set_value('inputCompDano')
         );
@@ -556,6 +561,7 @@ class Home extends CI_Controller {
             'id'           => 'inputDesDanos',
             'name'         => 'inputDesDanos',
             'rows'         => '2',
+            'maxlength'    => '2500',
             'class'        => 'input-large',
             'value'        => set_value('inputDesDanos')
         );
@@ -632,6 +638,7 @@ class Home extends CI_Controller {
             'name'         => 'inputCompInstituicao',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '150',
             'value'        => set_value('inputCompInstituicao')
         );
         if(set_value('semInstituicao') == "on"){
@@ -694,6 +701,7 @@ class Home extends CI_Controller {
             'name'         => 'inputMedidasTomadas',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '1000',
             'value'        => set_value('inputMedidasTomadas')
         );
 
@@ -734,6 +742,7 @@ class Home extends CI_Controller {
             'name'         => 'inputDesOcorrencia',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '2500',
             'value'        => set_value('inputDesOcorrencia')
         );
 
@@ -741,6 +750,7 @@ class Home extends CI_Controller {
             'id'           => 'inputDesObs',
             'name'         => 'inputDesObs',
             'rows'         => '2',
+            'maxlength'    => '2000',
             'class'        => 'input-large',
             'value'        => set_value('inputDesObs')
         );
@@ -851,7 +861,7 @@ class Home extends CI_Controller {
 
     public function sendMail($form_data)
     {
-
+        $this->firephp->log("sendMail!!");
         $config = Array(
             'protocol' => "smtp",
             'smtp_host' => "mailrelay.ibama.gov.br",
@@ -861,11 +871,12 @@ class Home extends CI_Controller {
             'charset'   => "iso-8859-1"
             );
 
+
         $this->load->library("email", $config);
         $this->email->set_newline("\r\n");
 
         $this->email->from("ibama.siema@gmail.com", "SIEMA");
-        $this->email->to($this->session->userdata('mail'));
+        $this->email->to("carolsro@gmail.com");
 
         $this->email->subject($form_data['comunicado'] . ' - SIEMA');
         $this->email->message('Formuário número '. $form_data['comunicado'] . ' enviado com sucesso.');

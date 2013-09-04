@@ -63,6 +63,7 @@
         this.cH = null; // change hook
         this.eH = null; // cancel hook
         this.rH = null; // release hook
+        this.scale = 1; // scale factor
 
         this.run = function () {
             var cf = function (e, conf) {
@@ -106,7 +107,8 @@
                     draw : null, // function () {}
                     change : null, // function (value) {}
                     cancel : null, // function () {}
-                    release : null // function (value) {}
+                    release : null, // function (value) {}
+                    error : null // function () {}
                 }, this.o
             );
 
@@ -148,16 +150,42 @@
 
             (!this.o.displayInput) && this.$.hide();
 
-            this.$c = $('<canvas width="' +
-                            this.o.width + 'px" height="' +
-                            this.o.height + 'px"></canvas>');
-            this.c = this.$c[0].getContext("2d");
+            this.$c = $(document.createElement('canvas')).attr({
+              width: this.o.width,
+              height: this.o.height
+            });
+            
+            if (typeof G_vmlCanvasManager !== 'undefined') {
+              G_vmlCanvasManager.initElement(this.$c[0]);
+            }
+
+            this.c = this.$c[0].getContext? this.$c[0].getContext('2d') : null;
+			
+            if (!this.c) {
+                this.o.error && this.o.error();
+                return;
+            }
 
             this.$
                 .wrap($('<div style="' + (this.o.inline ? 'display:inline;' : '') +
                         'width:' + this.o.width + 'px;height:' +
                         this.o.height + 'px;"></div>'))
                 .before(this.$c);
+
+            this.scale = (window.devicePixelRatio || 1) /
+                        (
+                            this.c.webkitBackingStorePixelRatio ||
+                            this.c.mozBackingStorePixelRatio ||
+                            this.c.msBackingStorePixelRatio ||
+                            this.c.oBackingStorePixelRatio ||
+                            this.c.backingStorePixelRatio || 1
+                        );
+            if (this.scale !== 1) {
+                this.$c[0].width = this.$c[0].width * this.scale;
+                this.$c[0].height = this.$c[0].height * this.scale;
+                this.$c.width(this.o.width);
+                this.$c.height(this.o.height);
+            }
 
             if (this.v instanceof Object) {
                 this.cv = {};
@@ -186,12 +214,9 @@
         this._draw = function () {
 
             // canvas pre-rendering
-            var d = true,
-                c = document.createElement('canvas');
+            var d = true;
 
-            c.width = s.o.width;
-            c.height = s.o.height;
-            s.g = c.getContext('2d');
+            s.g = s.c;
 
             s.clear();
 
@@ -200,8 +225,6 @@
 
             (d !== false) && s.draw();
 
-            s.c.drawImage(c, 0, 0);
-            c = null;
         };
 
         this._touch = function (e) {
@@ -544,7 +567,7 @@
             this.$.val(this.v);
             this.w2 = this.o.width / 2;
             this.cursorExt = this.o.cursor / 100;
-            this.xy = this.w2;
+            this.xy = this.w2 * this.scale;
             this.lineWidth = this.xy * this.o.thickness;
             this.lineCap = this.o.lineCap;
             this.radius = this.xy - this.lineWidth / 2;

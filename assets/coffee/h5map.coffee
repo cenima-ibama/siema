@@ -29,17 +29,20 @@ openstreet = new L.TileLayer(openstreetUrl,
   subdomains: openstreetSub
 )
 
-terrasIndigenas = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geo-srv/cemam/wms",
-  layers: "cemam:t_indigena"
+geoserverUrl = "http://siscom.ibama.gov.br/geoserver/csr/wms"
+
+terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
+  layers: "csr:terra_indigena"
   format: "image/png"
   transparent: true
 )
 
-ucFederais = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geo-srv/cemam/wms",
-  layers: "cemam:uc_federal"
+unidadeUsoSustentavel = new L.TileLayer.WMS(geoserverUrl,
+  layers: "csr:unidade_uso_sustentavel"
   format: "image/png"
   transparent: true
 )
+
 # }}}
 # SCREEN SIZE {{{
 # update size of the map container
@@ -114,69 +117,69 @@ new L.control.locate(
   locateOptions: {}
 ).addTo(H5.Map.base)
 
-# display stations
-H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+# display somethings
+# H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 
-H5.Map.layer.alerta = new H5.Leaflet.Postgis(
-  url: H5.Data.restURL
-  geotable: H5.DB.alert.table
-  fields: "id_des, tipo, data_imagem, area_km2, dominio"
-  srid: 4326
-  geomFieldName: "shape"
-  popupTemplate: (properties) ->
-    html = '<div class="iw-content"><h4>' + properties.id_des + '</h4>'
-    html += '<h5>' + properties.tipo + '</h5>'
-    html += '<table class="condensed-table bordered-table zebra-striped"><tbody>'
-    html += '<tr><th>Data: </th><td>' + properties.data_imagem.split(" ", 1) + '</td></tr>'
-    html += '<tr><th>Área: </th><td>' + properties.area_km2+ '</td></tr>'
-    if properties.dominio.length > 1
-      html += '<tr><th>Domínio: </th><td>' + properties.dominio + '</td></tr>'
-    html += '</tbody></table></div>'
-    return html
-  singlePopup: true
-  where: "ano = '2013'"
-  showAll: false
-  limit: 200
-  scaleRange: [9, 20]
-  symbology:
-    type: "single"
-    vectorStyle:
-      fillColor: "#ff0000"
-      fillOpacity: 0.6
-      weight: 4.0
-      color: "#ff0000"
-      opacity: 0.8
-)
-H5.Map.layer.alerta.setMap H5.Map.base
+# H5.Map.layer.alerta = new H5.Leaflet.Postgis(
+#   url: H5.Data.restURL
+#   geotable: H5.DB.alert.table
+#   fields: "id_des, tipo, data_imagem, area_km2, dominio"
+#   srid: 4326
+#   geomFieldName: "shape"
+#   popupTemplate: (properties) ->
+#     html = '<div class="iw-content"><h4>' + properties.id_des + '</h4>'
+#     html += '<h5>' + properties.tipo + '</h5>'
+#     html += '<table class="condensed-table bordered-table zebra-striped"><tbody>'
+#     html += '<tr><th>Data: </th><td>' + properties.data_imagem.split(" ", 1) + '</td></tr>'
+#     html += '<tr><th>Área: </th><td>' + properties.area_km2+ '</td></tr>'
+#     if properties.dominio.length > 1
+#       html += '<tr><th>Domínio: </th><td>' + properties.dominio + '</td></tr>'
+#     html += '</tbody></table></div>'
+#     return html
+#   singlePopup: true
+#   where: "ano = '2013'"
+#   showAll: false
+#   limit: 200
+#   scaleRange: [9, 20]
+#   symbology:
+#     type: "single"
+#     vectorStyle:
+#       fillColor: "#ff0000"
+#       fillOpacity: 0.6
+#       weight: 4.0
+#       color: "#ff0000"
+#       opacity: 0.8
+# )
+# H5.Map.layer.alerta.setMap H5.Map.base
 
-customMarker = L.Icon.extend(
-  options:
-    iconUrl: "http://" + document.domain + "/siema/assets/img/ibama_marker.png"
-    shadowUrl: null
-    iconSize: new L.Point(0, 0)
-    iconAnchor: new L.Point(0, 0)
-    popupAnchor: new L.Point(0, 0)
-    clickable: false
-)
+# customMarker = L.Icon.extend(
+#   options:
+#     iconUrl: "http://" + document.domain + "/siema/assets/img/ibama_marker.png"
+#     shadowUrl: null
+#     iconSize: new L.Point(0, 0)
+#     iconAnchor: new L.Point(0, 0)
+#     popupAnchor: new L.Point(0, 0)
+#     clickable: false
+# )
 
-# display clusters
-H5.Map.layer.clusters = new H5.Leaflet.Postgis(
-  url: H5.Data.restURL
-  geotable: H5.DB.alert.table
-  fields: "id_des"
-  srid: 4326
-  geomFieldName: "centroide"
-  showAll: true
-  cluster: true
-  popupTemplate: null
-  where: "ano = '2013'"
-  focus: true
-  symbology:
-    type: "single"
-    vectorStyle:
-      icon: new customMarker()
-)
-H5.Map.layer.clusters.setMap H5.Map.base
+# # display clusters
+# H5.Map.layer.clusters = new H5.Leaflet.Postgis(
+#   url: H5.Data.restURL
+#   geotable: H5.DB.alert.table
+#   fields: "id_des"
+#   srid: 4326
+#   geomFieldName: "centroide"
+#   showAll: true
+#   cluster: true
+#   popupTemplate: null
+#   where: "ano = '2013'"
+#   focus: true
+#   symbology:
+#     type: "single"
+#     vectorStyle:
+#       icon: new customMarker()
+# )
+# H5.Map.layer.clusters.setMap H5.Map.base
 
 new H5.Leaflet.LayerControl(
   "OSM":
@@ -188,11 +191,17 @@ new H5.Leaflet.LayerControl(
   "Bing Hybrid":
     layer: binghybrid
 ,
-  "DETER Indicadores":
-    layer: H5.Map.layer.clusters.layer
+  # "DETER Indicadores":
+  #   layer: H5.Map.layer.clusters.layer
+  #   overlayControl: false
+  # "DETER Polígonos":
+  #   layer: H5.Map.layer.alerta.layer
+  "Terras Indígenas":
+    layer: terrasIndigenas
     overlayControl: false
-  "DETER Polígonos":
-    layer: H5.Map.layer.alerta.layer
+  "Unidade de Uso Sustentável":
+    layer: unidadeUsoSustentavel
+    overlayControl: false
 ).addTo(H5.Map.base)
 
 # }}}

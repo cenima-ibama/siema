@@ -347,6 +347,7 @@
         }
         $(_this._boxTable).hide();
         $(_this._boxTable).toggleClass("box-table-overlay");
+        _this._tableIcon.className = "icon-table";
         $(_this._container).toggleClass(_this.defaultClass);
         $(_this._container).toggleClass("box-overlay");
         $("body").toggleClass("body-overlay");
@@ -422,15 +423,18 @@
           $(_this._boxContent).fadeToggle('fast', 'linear');
         }
         $(_this._boxTable).fadeToggle('fast', 'linear');
-        if ($(_this._boxTable).is(":visible")) {
+        if (_this._tableIcon.className === "icon-table") {
+          _this._tableIcon.className = "icon-bar-chart";
           visualization = new google.visualization.Table(_this._boxTable);
           visualization.draw(_this.data, null);
+        } else {
+          _this._tableIcon.className = "icon-table";
         }
-        return $(_this._leftBtn, _this._rightBtn, _this._addBtn, _this._delBtn).on("click", function(event) {
-          if ($(this._boxTable).is(":visible")) {
-            visualization = new google.visualization.Table(this._boxTable);
+        return $(_this._leftBtn).add(_this._rightBtn).add(_this._addBtn).add(_this._delBtn).on("click", function(event) {
+          if ($(_this._boxTable).is(":visible")) {
+            visualization = new google.visualization.Table(_this._boxTable);
+            return visualization.draw(_this.data, null);
           }
-          return visualization.draw(this.data, null);
         });
       });
     };
@@ -555,13 +559,13 @@
         height: 58,
         thickness: 0.5,
         displayInput: false,
-        color: "alert",
+        color: this.options.color,
         draw: function() {
           var color, value, _max, _min;
           value = this.val();
           _min = this.o.min;
           _max = this.o.max;
-          if (this.color === "coldtohot") {
+          if (this.o.color === "coldtohot") {
             if ((_min <= value && value <= _min * 0.3)) {
               color = pusher.color("#67C2EF");
             } else if ((_min * 0.3 < value && value <= _max * 0.3)) {
@@ -598,7 +602,7 @@
           value: total
         }, {
           duration: 2000,
-          easing: "easeOutSine",
+          easing: "easeOutBounce",
           step: function() {
             return dial.val(Math.floor(this.value)).trigger("change");
           }

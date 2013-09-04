@@ -3,39 +3,25 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h5 id="myModalLabel">Acidente Ambiental</h5>
   </div>
-  <div class="modal-body" style="padding: 5% 5.5%">
+  <div class="modal-body" style="padding: 5%">
     <div class="tab-content">
       <div class="tab-pane active" id="tab1">
-        <div class="controls row-fluid">
-          <div class="media">
-            <div class="pull-left">
-              <img class="media-object" src="../siema/assets/img/acidente_ambiental_logo_small.png">
-            </div>
-            <div class="media-body">
-              <label class="radio">
-                <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteAmbiental" value="1" checked>
-                <h4 class="media-heading">Acidente Ambiental</h4>
-                <div class="media">
-                  <p>Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.</p>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div class="media">
-            <div class="pull-left">
-              <img class="media-object" src="../siema/assets/img/linha_verde_logo_small.png">
-            </div>
-            <div class="media-body">
-              <label class="radio">
-                <input type="radio" name="optionsTipoAcidente" id="optionsLinhaVerde" value="0">
-                <h4 class="media-heading">Linha Verde</h4>
-                <div class="media">
-                  <p>Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos a animais e demais danos ao meio ambiente que não se enquadram como acidente ambiental.</p>
-                </div>
-              </label>
-            </div>
-          </div>
-        </div>
+        <div class="row-fluid">
+          <div class="span6" style="text-align:center;">
+            <p style="text-align:left; margin-top: 10px">
+            <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0">
+            Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental.
+            <a class="btn btn-block" href="#" style="margin-top: 10px">Linha Verde</a>
+            </p>
+          </div><!--/span-->
+          <div class="span6" style="text-align:center;">
+            <p style="text-align:left; margin-top: 10px">
+            <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0">
+            Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.
+            <a class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 10px">Acidente Ambiental</a>
+            </p>
+          </div><!--/span-->
+        </div><!--/row-->
       </div>
       <div class="tab-pane" id="tab2">
         <div class="row-fluid">
@@ -43,7 +29,7 @@
               if( $this->session->userdata('logged_in') ) {
                   echo '
                 <center>
-                <img src="./assets/img/check_sign.jpg" id="checkedUser" style="display: none;" title=""><br/>
+                <img src="./assets/img/check_sign.png" id="checkedUser" style="display: none;" title=""><br/>
                 <div id="containerProgress" class="progress progress-striped active" style="width: 50%;">
                     <div id="authProgress" class="bar"></div>
                 </div>
@@ -76,7 +62,7 @@
                 </div>
                 <div id="divLogin" style="display:none;">
                   <center>
-                    <img src="./assets/img/check_sign.jpg" id="checkedUser" style="display: none;" title=""><br/>
+                    <img src="./assets/img/check_sign.png" id="checkedUser" style="display: none;" title=""><br/>
                     <div id="containerProgress" class="progress progress-striped active" style="width: 50%;">
                         <div id="authProgress" class="bar"></div>
                     </div>
@@ -221,7 +207,7 @@
         <div class="media">
           <div class="media-body">
             <label class="radio">
-              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOutros" value="0" checked>
+              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOutros" value="0">
               <h4 class="media-heading">Demais acidentes ambientais</h4>
               <div class="media">
                 <p>Acidente envolvendo produto(s) perigoso(s) (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.</p>
@@ -231,17 +217,17 @@
         </div>
         <div class="media">
           <div class="media-body">
-            <label class="radio" for="inputRegistro">
+            <label class="radio">
               <input type="radio" name="optionsTipoAcidente" id="optionsAtualizarAcidente" value="-1">
               <h4 class="media-heading">Atualizar acidentes enviados</h4>
               <div class="media">
-                <p> Adicionar mais informações a acidentes ja comunicados.</p>
+                <p> Adicionar mais informações a acidentes já existentes.</p>
               </div>
-              <div class="control-group">
-                <label class="control-label" for="inputRegistro">Número do Registro:</label>
-                <div class="controls">
-                  <input id="inputRegistro" class="input-large" type="text" name="inputRegistro" placeholder="Número do Registro do Acidente">
-                </div>
+            </label>
+            <label class="radio">
+              <label>Número do Registro:</label>
+              <div class="controls">
+                <input id="inputRegistro" class="input-large" type="text" name="inputRegistro" placeholder="Número do Registro do Acidente">
               </div>
             </label>
           </div>
@@ -295,19 +281,19 @@
     <div class="row-fluid">
       <?php
       if(!$logged_in) {
-        echo '<div class="alert alert-info alert-block fade in" style="margin: 0 20% 20px">';
+        echo '<div class="alert alert-danger alert-block fade in" style="margin: 0 20% 20px">';
         echo '<button class="close" data-dismiss="alert">&times;</button>
         <h4 style="text-align: left">Importante:</h4></br>
         <p style="text-align: left">
-        As informações do DETER/INPE devem ser usadas com cuidado, pois este sistema não foi concebido para medição de áreas desmatadas.
-        Informação: '. anchor('http://www.obt.inpe.br/deter/metodologia_v2.pdf', 'Metodologia DETER') . '</p>';
+        Esse sistema encontra-se em fase de teste, alguns recursos ou funcionalidades não foram totalmente testados ou não foram implementados.
+        </p>';
         echo '</div>';
       }
       ?>
       <div class="quick-slct">
-        <div class="item">
+        <div class="item ">
           <label>Mês</label>
-          <select id="monthsSlct" class="" name="months">
+          <select id="monthsSlct" class="selectpicker" data-width="80px" data-size="auto" name="months">
             <option value="0">Jan</option>
             <option value="1">Fev</option>
             <option value="2">Mar</option>
@@ -324,7 +310,7 @@
         </div>
         <div class="item">
           <label>Ano</label>
-          <select id="yearsSlct" class="" name="years">
+          <select id="yearsSlct" class="selectpicker" data-width="80px" data-size="6" name="years">
             <option value="2004">2004</option>
             <option value="2005">2005</option>
             <option value="2006">2006</option>
@@ -338,47 +324,46 @@
             <option value="2014">2014</option>
           </select>
         </div>
+      <div class="item">
+          <label>Tipo de Evento</label>
+          <select id="typesSlct" class="selectpicker" data-width="140px" data-size="6" name="types">
+            <option value="0">Derramamento de líquidos</option>
+            <option value="1">Desastre natural</option>
+            <option value="2">Explosão/incêncio</option>
+            <option value="3">Lançamento de sólidos</option>
+            <option value="4">Mortandade de peixes</option>
+            <option value="5">Produtos químicos/embalagens abandonadas</option>
+            <option value="6">Rompimento de barragem</option>
+            <option value="7">Vazamento de gases</option>
+            <option value="8">Outros</option>
+            <option value="9">Todos</option>
+          </select>
+        </div>
       </div>
       <div class="quick-btn">
-        <a id="AC" href="#" class="item">
-          <i class="icon-ac"></i>
-          <span>AC</span>
+        <a id="NO" href="#" class="item">
+          <i class="icon-no"></i>
+          <span>Norte</span>
         </a>
-        <a id="AM" href="#" class="item">
-          <i class="icon-am"></i>
-          <span>AM</span>
+        <a id="NE" href="#" class="item">
+          <i class="icon-nd"></i>
+          <span>Nordeste</span>
         </a>
-        <a id="AP" href="#" class="item">
-          <i class="icon-ap"></i>
-          <span>AP</span>
+        <a id="CO" href="#" class="item">
+          <i class="icon-co"></i>
+          <span>Centro-Oeste</span>
         </a>
-        <a id="MA" href="#" class="item">
-          <i class="icon-ma"></i>
-          <span>MA</span>
+        <a id="SE" href="#" class="item">
+          <i class="icon-sd"></i>
+          <span>Sudeste</span>
         </a>
-        <a id="MT" href="#" class="item">
-          <i class="icon-mt"></i>
-          <span>MT</span>
-        </a>
-        <a id="PA" href="#" class="item">
-          <i class="icon-pa"></i>
-          <span>PA</span>
-        </a>
-        <a id="RO" href="#" class="item">
-          <i class="icon-ro"></i>
-          <span>RO</span>
-        </a>
-        <a id="RR" href="#" class="item">
-          <i class="icon-rr"></i>
-          <span>RR</span>
-        </a>
-        <a id="TO" href="#" class="item">
-          <i class="icon-to"></i>
-          <span>TO</span>
+        <a id="SU" href="#" class="item">
+          <i class="icon-su"></i>
+          <span>Sul</span>
         </a>
         <a id="Todos" href="#" class="item active">
           <i class="icon-br"></i>
-          <span>Todos</span>
+          <span>Brasil</span>
         </a>
       </div>
     </div>

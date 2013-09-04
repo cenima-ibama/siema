@@ -26,7 +26,7 @@ $(document).ready ->
   # List that stores the order on tabs to be accessed, going backwards
   history = []
   # Stores the next tab to be accessed
-  collapse=1
+  collapse=2
 
   $('#addMeModal').on 'hidden', ->
     history = []
@@ -49,6 +49,9 @@ $(document).ready ->
     $("#comunicado").val(nroComunicado)
     $("#nroComunicado").html(nroComunicado)
 
+  #hide footer o form when click on topbar
+  $("#btn-form").click (event) ->
+    $(".modal-footer").hide()
 
   # Dealing with going backwards on the form and possibles jumps
   $("#modalBtnBack").click (event) ->
@@ -71,12 +74,12 @@ $(document).ready ->
       $(@).html('Voltar')
       $("#submit").prop 'style', 'display:none;'
 
-      # Clean the temporary produt table (tmp_ocorrencia_produto)
-      # rest = new H5.Rest (
-      #   url: "../../../siema/rest_v2"
-      #   table: "tmp_ocorrencia_produto"
-      #   restService: "ws_deletequery.php"
-      # )
+      Clean the temporary produt table (tmp_ocorrencia_produto)
+      rest = new H5.Rest (
+       url: "../../../siema/rest_v2"
+       table: "tmp_ocorrencia_produto"
+       restService: "ws_deletequery.php"
+      )
 
     $(@).tab('show')
 
@@ -585,9 +588,12 @@ $(document).ready ->
     $("#btnAddProduto").on 'click', ()=>
       $.each @produto, ()->
         if @nome is $("#nomeProduto").prop('value')
-          table = document.getElementById('tblProdutos')
+          newRow = document.getElementById('tblProdutos').insertRow()
 
-          newRow = table.insertRow()
+          td = newRow.insertCell()
+          td.innerHTML = '<input name="produtos[]" value=' + @id_produto + ' />' +
+                         '<input name=' + @id_produto + '[]" value=' + @id_produto + ' />' +
+          td.style = 'display:none;'
 
           td = newRow.insertCell()
           td.innerHTML = @nome
@@ -598,28 +604,6 @@ $(document).ready ->
           td = newRow.insertCell()
           td.innerHTML = @classe_risco
 
-          td = newRow.insertCell()
-          td.innerHTML = '<input name="produtosId[]" value="' + @id_produto + '"/>'
-          td.style = 'display:none;'
-
-          td = newRow.insertCell()
-          td.innerHTML = $("#inputQtd").prop('value') + $("#slctQtd option:selected").prop('value')
-
-
-          inputs = table.insertRow()
-          td = inputs.insertCell()
-
-          td.innerHTML = '<input name="' + @id_produto + '" value="' + @nome + ',' + @num_onu + ',' + @classe_risco + ',' + $("#inputQtd").prop('value') + ',' + $("#slctQtd option:selected").prop('value') + '"/>'
-          td.style = 'display:none;'
-
-          # td.innerHTML = '<input name="' + @id_produto + '[]" value="' + $("#inputQtd").prop('value') + ',"/>'
-          # td.style = 'display:none;'
-
-          # inputs = table.insertRow()
-          # td = inputs.insertCell()
-
-          # td.innerHTML = '<input name="' + @id_produto + '[]" value="' + $("#slctQtd option:selected").prop('value') + '"/>'
-          # td.style = 'display:none;'
 
     # Code to disable inputs on the form
 
@@ -722,7 +706,6 @@ $(document).ready ->
         $("#inputTipoSubstancia").removeAttr("disabled")
         $("#inputValorEstimado").removeAttr("disabled")
         $("#btnAddProduto").removeAttr("disabled")
-
 
     $("#semSubstancia").on 'click', ()->
       if $(this).is(":checked")
@@ -831,6 +814,26 @@ $(document).ready ->
   $("#inputDataInci").mask("99/99/9999")
   $("#inputHoraInci").mask("99:99")
 
+
+  $('#inputCompOrigem')
+    .add('#inputCompEvento')
+    .add('#inputCompInstituicao')
+    .add('#inputCompDano')
+    .add('#inputCausaProvavel')
+    .add('#inputMedidasTomadas')
+    .add('#inputDesOcorrencia')
+    .add('#inputDesObs')
+    .add('#inputDesDanos')
+    .maxlength(
+      alwaysShow: true,
+      threshold: 10,
+      warningClass: "label label-info",
+      limitReachedClass: "label label-important",
+      placement: 'bottom',
+      preText: '',
+      separator: ' de ',
+      postText: ' caracteres.'
+  )
 
   subjects = []
 

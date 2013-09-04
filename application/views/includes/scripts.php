@@ -20,12 +20,12 @@
   <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrap.select.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrap.switch.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.5/bootstrap-editable/js/bootstrap-editable.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/js/bootstrap-editable.min.js"></script>
 
   <!-- Charts -->
   <script src="//www.google.com/jsapi" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/masonry.min.js"></script>
-  <script src="<?= base_url()?>assets/js/knob.js"></script>
+  <script src="<?= base_url()?>assets/js/jquery.knob.js"></script>
   <script src="<?= base_url()?>assets/js/sparkline.min.js"></script>
   <script src="<?= base_url()?>assets/js/pusher.color.min.js"></script>
 

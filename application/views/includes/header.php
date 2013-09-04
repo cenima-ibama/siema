@@ -19,6 +19,7 @@
     <!-- Bootstrap -->
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/css/bootstrap-editable.css" rel="stylesheet"/>
     <link href="<?= base_url()?>assets/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrap-switch.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrap-jqueryui.css" rel="stylesheet">

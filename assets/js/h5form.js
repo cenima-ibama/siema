@@ -16,7 +16,7 @@
     });
     this.produto = rest.data;
     history = [];
-    collapse = 1;
+    collapse = 2;
     $('#addMeModal').on('hidden', function() {
       var btnBack;
       history = [];
@@ -35,6 +35,9 @@
       $("#comunicado").val(nroComunicado);
       $("#nroComunicado").html(nroComunicado);
     }
+    $("#btn-form").click(function(event) {
+      return $(".modal-footer").hide();
+    });
     $("#modalBtnBack").click(function(event) {
       var btnNext, tab;
       event.preventDefault();
@@ -53,6 +56,12 @@
         $(btnNext).prop('style', '');
         $(this).html('Voltar');
         $("#submit").prop('style', 'display:none;');
+        Clean(the(temporary(produt(table(tmp_ocorrencia_produto)))));
+        rest = new H5.Rest({
+          url: "../../../siema/rest_v2",
+          table: "tmp_ocorrencia_produto",
+          restService: "ws_deletequery.php"
+        });
       }
       return $(this).tab('show');
     });
@@ -442,25 +451,17 @@
       });
       $("#btnAddProduto").on('click', function() {
         return $.each(_this.produto, function() {
-          var inputs, newRow, table, td;
+          var newRow, td;
           if (this.nome === $("#nomeProduto").prop('value')) {
-            table = document.getElementById('tblProdutos');
-            newRow = table.insertRow();
+            newRow = document.getElementById('tblProdutos').insertRow();
+            td = newRow.insertCell();
+            td.innerHTML = '<input name="produtos[]" value=' + this.id_produto + ' />' + '<input name=' + this.id_produto + '[]" value=' + this.id_produto + ' />' + (td.style = 'display:none;');
             td = newRow.insertCell();
             td.innerHTML = this.nome;
             td = newRow.insertCell();
             td.innerHTML = this.num_onu;
             td = newRow.insertCell();
-            td.innerHTML = this.classe_risco;
-            td = newRow.insertCell();
-            td.innerHTML = '<input name="produtosId[]" value="' + this.id_produto + '"/>';
-            td.style = 'display:none;';
-            td = newRow.insertCell();
-            td.innerHTML = $("#inputQtd").prop('value') + $("#slctQtd option:selected").prop('value');
-            inputs = table.insertRow();
-            td = inputs.insertCell();
-            td.innerHTML = '<input name="' + this.id_produto + '" value="' + this.nome + ',' + this.num_onu + ',' + this.classe_risco + ',' + $("#inputQtd").prop('value') + ',' + $("#slctQtd option:selected").prop('value') + '"/>';
-            return td.style = 'display:none;';
+            return td.innerHTML = this.classe_risco;
           }
         });
       });
@@ -675,6 +676,16 @@
     $("#inputHoraObs").mask("99:99");
     $("#inputDataInci").mask("99/99/9999");
     $("#inputHoraInci").mask("99:99");
+    $('#inputCompOrigem').add('#inputCompEvento').add('#inputCompInstituicao').add('#inputCompDano').add('#inputCausaProvavel').add('#inputMedidasTomadas').add('#inputDesOcorrencia').add('#inputDesObs').add('#inputDesDanos').maxlength({
+      alwaysShow: true,
+      threshold: 10,
+      warningClass: "label label-info",
+      limitReachedClass: "label label-important",
+      placement: 'bottom',
+      preText: '',
+      separator: ' de ',
+      postText: ' caracteres.'
+    });
     subjects = [];
     $.each(this.produto, function() {
       var element;

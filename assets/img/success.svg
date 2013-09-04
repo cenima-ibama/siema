@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="225"
+   height="225"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="success.svg"
+   inkscape:export-filename="/home/helmuth/Github/siema/assets/img/check_sign.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.629964"
+     inkscape:cx="98.142673"
+     inkscape:cy="113.76928"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1440"
+     inkscape:window-height="846"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Camada 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-287.5,-374.14789)">
+    <path
+       style="fill:#339900;fill-opacity:1;stroke:none"
+       d="m 310.90455,483.81947 c -1.56695,1.56694 -1.56695,4.0899 0,5.65685 l 42.4264,42.42641 22.62742,22.62741 c 1.56695,1.56695 4.08991,1.56695 5.65685,0 l 22.62742,-22.62741 84.85281,-84.85282 c 1.56695,-1.56694 1.56695,-4.0899 0,-5.65685 l -22.62741,-22.62742 c -1.56695,-1.56695 -4.08991,-1.56695 -5.65686,0 l -82.02438,82.02439 -39.59798,-39.59798 c -1.56695,-1.56695 -4.08991,-1.56695 -5.65686,0 l -22.62741,22.62742 z"
+       id="rect2991"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

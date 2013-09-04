@@ -53,6 +53,8 @@ class Auth extends CI_Controller {
                     // Login WIN!
                     if($this->session->flashdata('tried_to')) {
                         redirect($this->session->flashdata('tried_to'));
+                    } else {
+                        $this->load->view('templates/login_success');
                     }
                 }
             else {
@@ -60,6 +62,9 @@ class Auth extends CI_Controller {
                 $this->load->view('templates/login', array('login_fail_msg'
                     => 'Error with LDAP authentication.'));
             }
+        } else {
+            // Already logged in...
+            $this->load->view('templates/login_success');
         }
     }
 
