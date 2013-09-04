@@ -463,6 +463,7 @@ class Home extends CI_Controller {
             'name'         => 'inputCompEvento',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '150',
             'value'        => set_value('inputCompEvento')
         );
         if(set_value('semEvento') == "on"){
@@ -542,6 +543,7 @@ class Home extends CI_Controller {
             'id'           => 'inputCompDano',
             'name'         => 'inputCompDano',
             'rows'         => '2',
+            'maxlength'    => '150',
             'class'        => 'input-large',
             'value'        => set_value('inputCompDano')
         );
@@ -631,6 +633,7 @@ class Home extends CI_Controller {
             'name'         => 'inputCompInstituicao',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '150',
             'value'        => set_value('inputCompInstituicao')
         );
         if(set_value('semInstituicao') == "on"){

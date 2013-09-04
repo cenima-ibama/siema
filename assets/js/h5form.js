@@ -678,7 +678,7 @@
     $("#inputHoraObs").mask("99:99");
     $("#inputDataInci").mask("99/99/9999");
     $("#inputHoraInci").mask("99:99");
-    return $('#inputCompOrigem').maxlength({
+    return $('#inputCompOrigem').add('#inputCompEvento').add('#inputCompInstituicao').add('#inputCompDano').maxlength({
       alwaysShow: true,
       threshold: 10,
       warningClass: "label label-info",

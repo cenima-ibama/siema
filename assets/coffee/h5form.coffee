@@ -807,13 +807,17 @@ $(document).ready ->
   $("#inputHoraInci").mask("99:99")
 
 
-  $('#inputCompOrigem').maxlength(
-    alwaysShow: true,
-    threshold: 10,
-    warningClass: "label label-info",
-    limitReachedClass: "label label-important",
-    placement: 'bottom',
-    preText: '',
-    separator: ' de ',
-    postText: ' carácteres.'
+  $('#inputCompOrigem')
+    .add('#inputCompEvento')
+    .add('#inputCompInstituicao')
+    .add('#inputCompDano')
+    .maxlength(
+      alwaysShow: true,
+      threshold: 10,
+      warningClass: "label label-info",
+      limitReachedClass: "label label-important",
+      placement: 'bottom',
+      preText: '',
+      separator: ' de ',
+      postText: ' carácteres.'
   )
