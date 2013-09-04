@@ -677,7 +677,17 @@
     $("#inputDataObs").mask("99/99/9999");
     $("#inputHoraObs").mask("99:99");
     $("#inputDataInci").mask("99/99/9999");
-    return $("#inputHoraInci").mask("99:99");
+    $("#inputHoraInci").mask("99:99");
+    return $('#inputCompOrigem').maxlength({
+      alwaysShow: true,
+      threshold: 10,
+      warningClass: "label label-info",
+      limitReachedClass: "label label-important",
+      placement: 'bottom',
+      preText: '',
+      separator: ' de ',
+      postText: ' carácteres.'
+    });
   });
 
 }).call(this);

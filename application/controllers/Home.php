@@ -399,6 +399,7 @@ class Home extends CI_Controller {
             'name'         => 'inputCompOrigem',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '150',
             'value'        => set_value('inputCompOrigem')
         );
         if(set_value('semOrigem') == "on"){
