@@ -64,7 +64,7 @@
                     <iframe name="login_Form" src="' . base_url() . '/index.php/login" frameborder="0" style="width:100%; height: 175px;"></iframe>
                     <div class="block text-center">
                       <a id="btnCadastrar" href="#" class="btn btn-success span5" data-toggle="tab">Cadastrar</a>
-                      <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form.document.loginForm.submit()">Logar</button>
+                      <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form.document.loginForm.submit();">Logar</button>
                     </div>
                   </div>
                   <div id="divDenuncia" class="span6">

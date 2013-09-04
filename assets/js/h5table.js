@@ -9,7 +9,9 @@
       table: "tipo_evento",
       fields: {
         id_tipo_evento: {
+          tableName: "id_tipo_evento",
           columnName: "Identificador",
+          isVisible: true,
           validation: function(string) {
             if (!$.isNumeric(string)) {
               return "Não é número minino!!!";
@@ -19,7 +21,9 @@
           }
         },
         nome: {
+          tableName: "nome",
           columnName: "Tipo do Evento",
+          isVisible: true,
           validation: null
         }
       },
@@ -40,6 +44,7 @@
       table: "tipo_produto",
       fields: {
         id_tipo_produto: {
+          tableName: "id_tipo_produto",
           columnName: "Identificador",
           validation: function(string) {
             if (!$.isNumeric(string)) {
@@ -50,6 +55,7 @@
           }
         },
         nome: {
+          tableName: "nome",
           columnName: "Tipo do Produto",
           validation: null
         }
@@ -71,6 +77,7 @@
       table: "tipo_fonte_informacao",
       fields: {
         id_tipo_fonte_informacao: {
+          tableName: "id_tipo_fonte_informacao",
           columnName: "Identificador",
           validation: function(string) {
             if (!$.isNumeric(string)) {
@@ -81,6 +88,7 @@
           }
         },
         nome: {
+          tableName: "nome",
           columnName: "Fonte da Informação",
           validation: null
         }

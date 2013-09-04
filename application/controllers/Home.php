@@ -141,9 +141,8 @@ class Home extends CI_Controller {
         // Set the rules for validating the form
         $this->formSetRules($form_data);
 
-        // $this->firephp->log($form_data);
-
         if ($this->form_validation->run() == FALSE) {
+            $form_data['typeOfForm'] = 'validate';
             $this->validateForm($form_data);
         } else {
             $this->insertDB($form_data);
@@ -154,9 +153,9 @@ class Home extends CI_Controller {
 
     public function createForm()
     {
-        $data = $this->dataForm('');
+        $formLoad['typeOfForm'] = 'create';
 
-        $data['typeOfForm'] = "create";
+        $data = $this->dataForm($formLoad);
 
         $form['data'] = $data;
 
@@ -166,6 +165,9 @@ class Home extends CI_Controller {
 
     public function dataForm($formLoad)
     {
+
+        $data['typeOfForm'] = $formLoad['typeOfForm'];
+
         // 1. Localizacao
 
         $data['inputLat'] = array(
@@ -743,6 +745,42 @@ class Home extends CI_Controller {
             'value'        => set_value('inputDesObs')
         );
 
+
+        // if ($formLoad['typeOfForm'] == 'validate') {
+
+        //     $var1 = [];
+
+        //     if (isset($formLoad['produtosId']) ){
+
+        //         $data['produtosId'] = $formLoad['produtosId'];
+
+        //         foreach ($formLoad['produtosId'] as $id) {
+
+        //             $vector = preg_split('/,/', $formLoad[$id]);
+
+        //             $this->firephp->log($vector);
+
+        //             foreach ($vector as $value) {
+        //                 $data[$id] = $data[$id] . $value;
+        //             }
+
+        //             // $this->firephp->log($id);
+        //             // $var1 = preg_split(',', $formLoad[$id]);
+
+        //             // $this->firephp->log($var1);
+
+        //             // foreach ($var1 as $value) {
+        //             //     $this->firephp->log('teste: ' . $value);
+        //             // }
+        //         }
+        //     }
+        // } else if ($formLoad['typeOfForm'] == 'load') {
+
+        // }
+
+        // $this->firephp->log($formLoad);
+        // $this->firephp->log($data);
+
         // Values of the Period
         $data['PeriodoObs'] = isset($formLoad['PeriodoObs']) ? $formLoad['PeriodoObs'] : '' ;
 
@@ -779,14 +817,14 @@ class Home extends CI_Controller {
 
         $this->load->model('form_model');
 
-        $data = $this->form_model->load($nro_ocorrencia);
+        $formLoad = $this->form_model->load($nro_ocorrencia);
 
-        if ($data != "") {
-            $this->firephp->log($data);
+        if ($formLoad != "") {
+            $this->firephp->log($formLoad);
 
-            $data['typeOfForm'] = "load";
+            $formLoad['typeOfForm'] = "load";
 
-            $form['data'] = $data;
+            $form['data'] = $formLoad;
 
             // $this->firephp->log($form);
 

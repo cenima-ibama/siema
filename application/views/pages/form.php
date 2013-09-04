@@ -364,12 +364,12 @@
           </div>
           <div id="collapse5" class="accordion-body collapse">
             <div class="accordion-inner">
-              <div class="row-fluid">
+              <!-- <div class="row-fluid">
                 <div class="span4">
                   <div class="control-group">
                     <label class="control-label">Nome do Produto:</label>
                     <div class="controls">
-                      <input id="nomeProduto" type="text" data-provide="typeahead" data-source=""/>
+                      <input id="nomeProduto" type="text" data-provide="typeahead" data-source="" data-info="prod"/>
                     </div>
                   </div>
                 </div>
@@ -377,7 +377,7 @@
                   <div class="control-group">
                     <label class="control-label" for="inputQtd">Qtd. Aproximada: </label>
                     <div class="controls">
-                      <input id="inputQtd" class="input-small" type="text" name="inputQtd" placeholder="1,2,..">
+                      <input id="inputQtd" class="input-small" type="text" name="inputQtd" placeholder="1,2,.." data-info="prod">
                       <select id="slctQtd" name="slctQtd" class="input-mini">
                         <option>T</option>
                         <option>Kg</option>
@@ -396,22 +396,31 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="row-fluid">
                 <div class="span12">
-                  <table id='tblProdutos' class="table table-condesed table-bordered table-hover">
+                  <div id="myTable"></div>
+                  <!-- <table id='tblProdutos' class="table table-condesed table-bordered table-hover">
                     <thead>
                       <tr>
                         <th>Nome da substância</th>
                         <th>Nº da ONU</th>
                         <th>Classe de Risco</th>
+                        <th>Qtd.</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                      </tr>
+                      <?php
+                        if (isset($data['produtosId'])) {
+                          foreach ($data['produtosId'] as $produtoId) {
+                            foreach ($data[$produtoId] as $value) {
+                              # code...
+                            }
+                          }
+                        }
+                       ?>
                     </tbody>
-                  </table>
+                  </table> -->
                 </div>
               </div>
               <div class="row-fluid">

@@ -71,6 +71,13 @@ $(document).ready ->
       $(@).html('Voltar')
       $("#submit").prop 'style', 'display:none;'
 
+      # Clean the temporary produt table (tmp_ocorrencia_produto)
+      # rest = new H5.Rest (
+      #   url: "../../../siema/rest_v2"
+      #   table: "tmp_ocorrencia_produto"
+      #   restService: "ws_deletequery.php"
+      # )
+
     $(@).tab('show')
 
 
@@ -131,14 +138,14 @@ $(document).ready ->
         hasOleo = document.getElementById("hasOleo")
         isServIBAMA = document.getElementById("isServIBAMA")
 
-        if isAtual
-          # Get the accident data for atualization
-          rest = new H5.Rest (
-            url: "../../../siema/rest_v2"
-            table: "tipo_dano_identificado"
-            fields: "id_tipo_dano_identificado, nome"
-            order: "id_tipo_dano_identificado"
-          )
+        # if isAtual
+        #   # Get the accident data for atualization
+        #   rest = new H5.Rest (
+        #     url: "../../../siema/rest_v2"
+        #     table: "tipo_dano_identificado"
+        #     fields: "id_tipo_dano_identificado, nome"
+        #     order: "id_tipo_dano_identificado"
+        #   )
 
         hasOleo.checked = isAcidOleo
 
@@ -578,12 +585,9 @@ $(document).ready ->
     $("#btnAddProduto").on 'click', ()=>
       $.each @produto, ()->
         if @nome is $("#nomeProduto").prop('value')
-          newRow = document.getElementById('tblProdutos').insertRow()
+          table = document.getElementById('tblProdutos')
 
-          td = newRow.insertCell()
-          td.innerHTML = '<input name="produtos[]" value=' + @id_produto + ' />' +
-                         '<input name=' + @id_produto + '[]" value=' + @id_produto + ' />' +
-          td.style = 'display:none;'
+          newRow = table.insertRow()
 
           td = newRow.insertCell()
           td.innerHTML = @nome
@@ -594,6 +598,28 @@ $(document).ready ->
           td = newRow.insertCell()
           td.innerHTML = @classe_risco
 
+          td = newRow.insertCell()
+          td.innerHTML = '<input name="produtosId[]" value="' + @id_produto + '"/>'
+          td.style = 'display:none;'
+
+          td = newRow.insertCell()
+          td.innerHTML = $("#inputQtd").prop('value') + $("#slctQtd option:selected").prop('value')
+
+
+          inputs = table.insertRow()
+          td = inputs.insertCell()
+
+          td.innerHTML = '<input name="' + @id_produto + '" value="' + @nome + ',' + @num_onu + ',' + @classe_risco + ',' + $("#inputQtd").prop('value') + ',' + $("#slctQtd option:selected").prop('value') + '"/>'
+          td.style = 'display:none;'
+
+          # td.innerHTML = '<input name="' + @id_produto + '[]" value="' + $("#inputQtd").prop('value') + ',"/>'
+          # td.style = 'display:none;'
+
+          # inputs = table.insertRow()
+          # td = inputs.insertCell()
+
+          # td.innerHTML = '<input name="' + @id_produto + '[]" value="' + $("#slctQtd option:selected").prop('value') + '"/>'
+          # td.style = 'display:none;'
 
     # Code to disable inputs on the form
 
@@ -686,7 +712,7 @@ $(document).ready ->
 
         $("#inputEventoOutro").removeAttr("disabled")
         $("#inputCompEvento").removeAttr("disabled")
-        
+
     $("#produtoDesc").on 'click', ()->
       if $(this).is(":checked")
         $("#inputTipoSubstancia").attr("disabled","disabled")
@@ -695,8 +721,8 @@ $(document).ready ->
       else
         $("#inputTipoSubstancia").removeAttr("disabled")
         $("#inputValorEstimado").removeAttr("disabled")
-        $("#btnAddProduto").removeAttr("disabled")     
-        
+        $("#btnAddProduto").removeAttr("disabled")
+
 
     $("#semSubstancia").on 'click', ()->
       if $(this).is(":checked")
@@ -804,3 +830,83 @@ $(document).ready ->
   $("#inputHoraObs").mask("99:99")
   $("#inputDataInci").mask("99/99/9999")
   $("#inputHoraInci").mask("99:99")
+
+
+  subjects = []
+
+  $.each @produto, ()->
+
+    element =
+      value: @id_produto
+      text: $.trim(@nome) + '-' + $.trim(@num_onu) + '-' + $.trim(@classe_risco)
+    subjects.push(element)
+
+    # subjects.push(@nome)
+
+  if $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
+    table = new H5.Table (
+      container: "myTable"
+      url: "../../../siema/rest_v2"       # Alter to the defined url
+      table: "ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Docorrencia_produto.id_produto)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
+      primaryTable: 'ocorrencia_produto'
+      parameters: "nro_ocorrencia%3D'" + $("#comunicado").prop('value') + "'"
+      fields:
+        id_ocorrencia_produto:
+          columnName: "Identificador"
+          tableName: "id_ocorrencia_produto"
+          isVisible: false
+          validation: null
+        nome:
+          columnName: "Nome da Substância - Nro. da Onu - Classe de Risco"
+          tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
+          primaryField: "id_produto"
+          validation: null
+          searchData: subjects
+        quantidade:
+          columnName: "Qtd."
+          tableName: "quantidade"
+          validation: null
+        unidade_medida:
+          columnName: "Unidade"
+          tableName: "unidade_medida"
+          validation: null
+        nro_ocorrencia:
+          columnName: "Nro. Ocorrencia"
+          tableName: "nro_ocorrencia"
+          validation: null
+          isVisible: false
+
+      uniqueField:
+        field: "id_ocorrencia_produto"
+        insertable: false
+    )
+  else
+    table = new H5.Table (
+      container: "myTable"
+      url: "../../../siema/rest_v2"       # Alter to the defined url
+      table: "tmp_ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Dtmp_ocorrencia_produto.id_produto)"
+      primaryTable: 'tmp_ocorrencia_produto'
+      fields:
+        id_ocorrencia_produto:
+          columnName: "Identificador"
+          tableName: "id_ocorrencia_produto"
+          isVisible: false
+          validation: null
+        nome:
+          columnName: "Nome da Substância - Nro. da Onu - Classe de Risco"
+          tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
+          primaryField: "id_produto"
+          validation: null
+          searchData: subjects
+        quantidade:
+          columnName: "Qtd."
+          tableName: "quantidade"
+          validation: null
+        unidade_medida:
+          columnName: "Unidade"
+          tableName: "unidade_medida"
+          validation: null
+      uniqueField:
+        field: "id_ocorrencia_produto"
+        insertable: false
+    )
