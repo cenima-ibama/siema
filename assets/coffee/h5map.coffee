@@ -43,6 +43,12 @@ unidadeUsoSustentavel = new L.TileLayer.WMS(geoserverUrl,
   transparent: true
 )
 
+unidadeProtecaoIntegral = new L.TileLayer.WMS(geoserverUrl,
+  layers: "csr:unidade_protecao_integral"
+  format: "image/png"
+  transparent: true
+)
+
 # }}}
 # SCREEN SIZE {{{
 # update size of the map container
@@ -201,6 +207,9 @@ new H5.Leaflet.LayerControl(
     overlayControl: false
   "Unidade de Uso Sustentável":
     layer: unidadeUsoSustentavel
+    overlayControl: false
+  "Unidade Proteção Integral":
+    layer: unidadeProtecaoIntegral
     overlayControl: false
 ).addTo(H5.Map.base)
 
