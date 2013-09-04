@@ -805,3 +805,15 @@ $(document).ready ->
   $("#inputHoraObs").mask("99:99")
   $("#inputDataInci").mask("99/99/9999")
   $("#inputHoraInci").mask("99:99")
+
+
+  $('#inputCompOrigem').maxlength(
+    alwaysShow: true,
+    threshold: 10,
+    warningClass: "label label-info",
+    limitReachedClass: "label label-important",
+    placement: 'bottom',
+    preText: '',
+    separator: ' de ',
+    postText: ' carácteres.'
+  )
