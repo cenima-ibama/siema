@@ -39,7 +39,7 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse1">
-              1. Localização
+              1. Localização*
             </a>
           </div>
           <div id="collapse1" class="accordion-body collapse in">
@@ -98,7 +98,7 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">
-              2. Data e Hora do Acidente
+              2. Data e Hora do Acidente*
             </a>
           </div>
           <div id="collapse2" class="accordion-body collapse">
@@ -227,7 +227,7 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse3">
-              3. Origem do Acidente
+              3. Origem do Acidente*
             </a>
           </div>
           <div id="collapse3" class="accordion-body collapse">
@@ -313,7 +313,7 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse4">
-              4. Tipo de Evento
+              4. Tipo de Evento*
             </a>
           </div>
           <div id="collapse4" class="accordion-body collapse">
@@ -359,7 +359,7 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse5">
-              5. Tipo de Produto
+              5. Tipo de Produto*
             </a>
           </div>
           <div id="collapse5" class="accordion-body collapse">
@@ -608,7 +608,7 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse8">
-              8. Identificação Empresa/Órgão Responsável
+              8. Identificação Empresa/Órgão Responsável*
             </a>
           </div>
           <div id="collapse8" class="accordion-body collapse">
@@ -659,7 +659,7 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse9">
-              9. Instituição/Empresa Atuando no Local
+              9. Instituição/Empresa Atuando no Local*
             </a>
           </div>
           <div id="collapse9" class="accordion-body collapse">

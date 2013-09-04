@@ -8,14 +8,13 @@ class Home extends CI_Controller {
         $this->load->library('AuthLDAP');
 
         // Enable firebug
-        // $this->load->library('Firephp');
+        $this->load->library('Firephp');
         $this->firephp->setEnabled(TRUE);
     }
 
     public function index()
     {
-        // $this->firephp->log("Index");
-
+        //$this->firephp->log("Index");
         if($this->authldap->is_authenticated()) {
             $data['name'] = $this->session->userdata('name');
             $data['username'] = $this->session->userdata('username');
@@ -149,6 +148,7 @@ class Home extends CI_Controller {
             $this->insertDB($form_data);
             if($this->session->userdata('logged_in'))
                 $this->sendMail($form_data);
+
         }
     }
 
@@ -813,7 +813,7 @@ class Home extends CI_Controller {
 
     public function sendMail($form_data)
     {
-
+        $this->firephp->log("sendMail!!");
         $config = Array(
             'protocol' => "smtp",
             'smtp_host' => "mailrelay.ibama.gov.br",
@@ -823,11 +823,12 @@ class Home extends CI_Controller {
             'charset'   => "iso-8859-1"
             );
 
+
         $this->load->library("email", $config);
         $this->email->set_newline("\r\n");
 
         $this->email->from("ibama.siema@gmail.com", "SIEMA");
-        $this->email->to($this->session->userdata('mail'));
+        $this->email->to("carolsro@gmail.com");
 
         $this->email->subject($form_data['comunicado'] . ' - SIEMA');
         $this->email->message('Formuário número '. $form_data['comunicado'] . ' enviado com sucesso.');

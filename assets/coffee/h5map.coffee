@@ -35,6 +35,12 @@ terrasIndigenas = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geo-srv/cemam/
   transparent: true
 )
 
+unidadeUsoSustentavel = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms",
+  layers: "csr:unidade_uso_sustentavel"
+  format: "image/png"
+  transparent: true
+)
+
 ucFederais = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geo-srv/cemam/wms",
   layers: "cemam:uc_federal"
   format: "image/png"
@@ -195,6 +201,10 @@ new H5.Leaflet.LayerControl(
     layer: H5.Map.layer.alerta.layer
   "Terras Indígenas":
     layer: terrasIndigenas
+    overlayControl: false
+  "Unidade de Uso Sustentável":
+    layer: unidadeUsoSustentavel
+    overlayControl: false
 ).addTo(H5.Map.base)
 
 # }}}
