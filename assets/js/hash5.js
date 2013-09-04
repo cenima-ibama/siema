@@ -1635,6 +1635,7 @@
       uniqueField: null,
       title: null,
       table: null,
+      primaryTable: null,
       url: "",
       buttons: {
         arrows: false,
@@ -1819,7 +1820,9 @@
         str = "";
         line = "";
         $.each(_this.options.fields, function(key, value) {
-          return line += "\"" + value.columnName + "\",";
+          if (!((value.isVisible != null) && !value.isVisible)) {
+            return line += "\"" + value.columnName + "\",";
+          }
         });
         str += line + "\r\n";
         $.each(_this.data, function(key, value) {
@@ -1842,7 +1845,7 @@
       var formatedFields;
       formatedFields = "";
       $.each(this.options.fields, function(key, properties) {
-        return formatedFields += key + ",";
+        return formatedFields += properties.tableName + ",";
       });
       return formatedFields.substring(0, formatedFields.length - 1);
     };
@@ -1856,7 +1859,8 @@
         url: this.options.url,
         table: this.options.table,
         fields: this._formatFields(),
-        order: this.options.uniqueField.field
+        order: this.options.uniqueField.field,
+        parameters: this.options.parameters
       });
       this.data = rest.data;
       $.each(this.data, function(key, properties) {
@@ -1864,45 +1868,96 @@
         row = _this._table.insertRow();
         i = 0;
         $.each(properties, function(nameField, nameTable) {
-          var field, span;
+          var field, span, value;
           span = document.createElement("span");
           field = row.insertCell(i++);
           $(field).append(span);
           if (!(nameField === _this.options.uniqueField.field && !_this.options.uniqueField.insertable)) {
-            $(span).editable({
-              type: 'text',
-              pk: key,
-              value: nameTable,
-              validate: function(value) {
-                if (_this.options.fields[nameField].validation != null) {
-                  return _this.options.fields[nameField].validation(value);
+            if (_this.options.fields[nameField].searchData != null) {
+              value = '';
+              $.grep(_this.options.fields[nameField].searchData, function(e) {
+                if (e.text === nameTable) {
+                  return value = e.value;
                 }
-              },
-              url: function(params) {
-                var fields, where;
-                where = "";
-                $.each(row.children, function(key, cell) {
-                  var tableCell;
-                  tableCell = cell.children[0];
-                  if ($(tableCell).attr("data-field") === _this.options.uniqueField.field) {
-                    return where = _this.options.uniqueField.field + "%3D" + tableCell.innerHTML;
+              });
+              $(span).editable({
+                type: 'typeahead',
+                placement: 'right',
+                source: _this.options.fields[nameField].searchData,
+                value: value,
+                validate: function(value) {
+                  if (_this.options.fields[nameField].validation != null) {
+                    return _this.options.fields[nameField].validation(value);
                   }
-                });
-                fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
-                rest = new H5.Rest({
-                  url: _this.options.url,
-                  table: _this.options.table,
-                  fields: fields,
-                  parameters: where,
-                  restService: "ws_updatequery.php"
-                });
-                return _this._reloadTable();
-              }
-            });
+                },
+                url: function(params) {
+                  var fields, where;
+                  where = "";
+                  $.each(row.children, function(key, cell) {
+                    var tableCell;
+                    tableCell = cell.children[0];
+                    if ($(tableCell).attr("data-field") === _this.options.uniqueField.field) {
+                      return where = _this.options.uniqueField.field + "%3D" + tableCell.innerHTML;
+                    }
+                  });
+                  if (params.value != null) {
+                    fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
+                  } else {
+                    fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
+                  }
+                  rest = new H5.Rest({
+                    url: _this.options.url,
+                    table: _this.options.primaryTable,
+                    fields: fields,
+                    parameters: where,
+                    restService: "ws_updatequery.php"
+                  });
+                  return _this._reloadTable();
+                }
+              });
+            } else {
+              $(span).editable({
+                type: 'text',
+                pk: key,
+                value: nameTable,
+                validate: function(value) {
+                  if (_this.options.fields[nameField].validation != null) {
+                    return _this.options.fields[nameField].validation(value);
+                  }
+                },
+                url: function(params) {
+                  var fields, where;
+                  where = "";
+                  $.each(row.children, function(key, cell) {
+                    var tableCell;
+                    tableCell = cell.children[0];
+                    if ($(tableCell).attr("data-field") === _this.options.uniqueField.field) {
+                      return where = _this.options.uniqueField.field + "%3D" + tableCell.innerHTML;
+                    }
+                  });
+                  fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
+                  rest = new H5.Rest({
+                    url: _this.options.url,
+                    table: _this.options.table,
+                    fields: fields,
+                    parameters: where,
+                    restService: "ws_updatequery.php"
+                  });
+                  return _this._reloadTable();
+                }
+              });
+            }
           } else {
             span.innerHTML = nameTable;
           }
-          return $(span).attr("data-field", nameField);
+          if (_this.options.fields[nameField].primaryField) {
+            $(span).attr("data-field", _this.options.fields[nameField].primaryField);
+          } else {
+            $(span).attr("data-field", nameField);
+          }
+          if ((_this.options.fields[nameField].isVisible != null) && !_this.options.fields[nameField].isVisible) {
+            return $(span).attr("style", "display:none;");
+          }
         });
         field = row.insertCell(i++);
         delBtn = document.createElement("a");
@@ -1933,7 +1988,9 @@
       $.each(this.options.fields, function(key, value) {
         var field;
         field = row.insertCell(i++);
-        return field.innerHTML = "<strong>" + value.columnName + "</strong>";
+        if (!((value.isVisible != null) && !value.isVisible)) {
+          return field.innerHTML = "<strong>" + value.columnName + "</strong>";
+        }
       });
       field = row.insertCell(i++);
       return $(field).width(37);
@@ -1942,24 +1999,37 @@
     Table.prototype._addFields = function() {
       var _this = this;
       return $(this._addBtn).on("click", function(event) {
-        var delBtn, div, icon, newRow, saveBtn, td;
+        var delBtn, div, icon, newRow, saveBtn, tbody, td;
         event.preventDefault();
         newRow = document.createElement("tr");
-        $.each(_this._lastRow.cells, function(key, cell) {
-          var dataField, span, td;
-          dataField = $(cell.children[0]).attr("data-field");
-          if (dataField != null) {
-            td = newRow.insertCell();
-            span = document.createElement("span");
-            if (!(_this.options.uniqueField.field === $(cell.children[0]).attr("data-field") && !_this.options.uniqueField.insertable)) {
+        $.each(_this.options.fields, function(key, properties) {
+          var span, td;
+          td = newRow.insertCell();
+          span = document.createElement("span");
+          if (key !== _this.options.uniqueField.field || _this.options.uniqueField.insertable) {
+            if (properties.searchData != null) {
+              $(span).editable({
+                type: 'typeahead',
+                value: "",
+                source: properties.searchData,
+                placement: 'right'
+              });
+            } else {
               $(span).editable({
                 type: 'text',
                 value: ""
               });
             }
-            $(span).attr("data-field", dataField);
-            return $(td).append(span);
+            if ((properties.isVisible != null) && !properties.isVisible) {
+              $(td).attr("style", "display:none");
+            }
           }
+          if (properties.primaryField != null) {
+            $(span).attr("data-field", properties.primaryField);
+          } else {
+            $(span).attr("data-field", key);
+          }
+          return $(td).append(span);
         });
         delBtn = document.createElement("a");
         delBtn.id = "deletarBotaoTabela";
@@ -1981,7 +2051,12 @@
         $(div).append(delBtn);
         td = newRow.insertCell();
         $(td).append(div);
-        $(newRow).insertAfter($(_this._lastRow));
+        if (_this._lastRow != null) {
+          $(newRow).insertAfter($(_this._lastRow));
+        } else {
+          tbody = document.getElementsByClassName("table")[0].appendChild(document.createElement('tbody'));
+          tbody.appendChild(newRow);
+        }
         return _this._lastRow = newRow;
       });
     };
@@ -1989,7 +2064,7 @@
     Table.prototype._delFields = function(delBtn, tableRow) {
       var _this = this;
       return $(delBtn).on("click", function(event) {
-        var rest, where;
+        var rest, table, where;
         event.preventDefault();
         if (confirm("Você deseja excluir essa linha do banco de dados?")) {
           if (_this._lastRow === tableRow) {
@@ -2003,9 +2078,15 @@
               return where = _this.options.uniqueField.field + "%3D" + span.innerHTML;
             }
           });
+          table = '';
+          if (_this.options.primaryTable != null) {
+            table = _this.options.primaryTable;
+          } else {
+            table = _this.options.table;
+          }
           rest = new H5.Rest({
             url: _this.options.url,
-            table: _this.options.table,
+            table: table,
             parameters: where,
             restService: "ws_deletequery.php"
           });
@@ -2019,61 +2100,121 @@
     Table.prototype._saveFields = function(saveBtn, delBtn, tableRow) {
       var _this = this;
       return $(saveBtn).on("click", function(event) {
-        var fields, i, rest, values;
+        var fields, i, rest, values, vector;
         event.preventDefault();
         fields = "";
         values = "";
         i = 0;
         $.each(_this.options.fields, function(key, properties) {
-          var span;
+          var span, val;
           span = tableRow.children[i].children[0];
-          if (_this.options.uniqueField.insertable && $(span).attr("data-field") === _this.options.uniqueField.field) {
-            fields += key + ",";
-            values += "'" + span.innerHTML + "',";
+          if (_this.options.uniqueField.field !== key || _this.options.uniqueField.insertable) {
+            if (properties.primaryField != null) {
+              fields += properties.primaryField + ",";
+            } else {
+              fields += key + ",";
+            }
+            if (properties.searchData != null) {
+              val = null;
+              val = $.grep(properties.searchData, function(e) {
+                if (e.text === span.innerHTML) {
+                  return e;
+                }
+              });
+              values += "'" + val[0].value + "',";
+            } else {
+              values += "'" + span.innerHTML + "',";
+            }
+            if (_this.options.primaryTable != null) {
+              $(span).editable({
+                validate: function(value) {
+                  if (_this.options.fields[key].validation != null) {
+                    return _this.options.fields[key].validation(value);
+                  }
+                },
+                url: function(params) {
+                  var rest, where;
+                  where = "";
+                  $.each(row.children, function(key, cell) {
+                    var tableCell;
+                    tableCell = cell.children[0];
+                    if ($(tableCell).attr("data-field") === _this.options.uniqueField.field) {
+                      return where = _this.options.uniqueField.field + "%3D" + tableCell.innerHTML;
+                    }
+                  });
+                  fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
+                  rest = new H5.Rest({
+                    url: _this.options.url,
+                    table: _this.options.table,
+                    fields: fields,
+                    parameters: where,
+                    restService: "ws_updatequery.php"
+                  });
+                  return _this._reloadTable();
+                }
+              });
+            } else {
+              $(span).editable({
+                validate: function(value) {
+                  if (_this.options.fields[key].validation != null) {
+                    return _this.options.fields[key].validation(value);
+                  }
+                },
+                url: function(params) {
+                  var rest, where;
+                  where = "";
+                  $.each(row.children, function(key, cell) {
+                    var tableCell;
+                    tableCell = cell.children[0];
+                    if ($(tableCell).attr("data-field") === _this.options.uniqueField.field) {
+                      return where = _this.options.uniqueField.field + "%3D" + tableCell.innerHTML;
+                    }
+                  });
+                  if (params.value != null) {
+                    fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
+                  } else {
+                    fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
+                  }
+                  rest = new H5.Rest({
+                    url: _this.options.url,
+                    table: _this.options.primaryTable,
+                    fields: fields,
+                    parameters: where,
+                    restService: "ws_updatequery.php"
+                  });
+                  return _this._reloadTable();
+                }
+              });
+            }
           } else if (span.innerHTML !== "" && span.innerHTML !== "Empty") {
             fields += "" + key + ",";
             values += "'" + span.innerHTML + "',";
           }
-          if (!($(span).attr("data-field") === _this.options.uniqueField.field && !_this.options.uniqueField.insertable)) {
-            $(span).editable({
-              validate: function(value) {
-                if (_this.options.fields[key].validation != null) {
-                  return _this.options.fields[key].validation(value);
-                }
-              },
-              url: function(params) {
-                var rest, where;
-                where = "";
-                $.each(row.children, function(key, cell) {
-                  var tableCell;
-                  tableCell = cell.children[0];
-                  if ($(tableCell).attr("data-field") === _this.options.uniqueField.field) {
-                    return where = _this.options.uniqueField.field + "%3D" + tableCell.innerHTML;
-                  }
-                });
-                fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
-                rest = new H5.Rest({
-                  url: _this.options.url,
-                  table: _this.options.table,
-                  fields: fields,
-                  parameters: where,
-                  restService: "ws_updatequery.php"
-                });
-                return _this._reloadTable();
-              }
-            });
-          }
           return i++;
         });
+        if (_this.options.parameters != null) {
+          vector = _this.options.parameters.split('%3D');
+          fields += "" + vector[0] + ",";
+          values += "" + vector[1] + ",";
+        }
         fields = fields.substring(0, fields.length - 1);
         values = values.substring(0, values.length - 1);
         fields = " (" + fields + ") values (" + values + ") ";
-        rest = new H5.Rest({
-          url: _this.options.url,
-          table: _this.options.table,
-          fields: fields,
-          restService: "ws_insertquery.php"
-        });
+        if (_this.options.primaryTable != null) {
+          rest = new H5.Rest({
+            url: _this.options.url,
+            table: _this.options.primaryTable,
+            fields: fields,
+            restService: "ws_insertquery.php"
+          });
+        } else {
+          rest = new H5.Rest({
+            url: _this.options.url,
+            table: _this.options.table,
+            fields: fields,
+            restService: "ws_insertquery.php"
+          });
+        }
         return _this._reloadTable();
       });
     };

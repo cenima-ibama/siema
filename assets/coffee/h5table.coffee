@@ -9,14 +9,18 @@ $(document).ready ->
     table: "tipo_evento"
     fields:
       id_tipo_evento:
+        tableName: "id_tipo_evento"
         columnName: "Identificador"
+        isVisible: true
         validation: (string)->
           if !$.isNumeric(string)
             return "Não é número minino!!!"
           else
             return null
       nome:
+        tableName: "nome"
         columnName: "Tipo do Evento"
+        isVisible: true
         validation: null
 
     uniqueField:
@@ -35,6 +39,7 @@ $(document).ready ->
     table: "tipo_produto"
     fields:
       id_tipo_produto:
+        tableName: "id_tipo_produto"
         columnName: "Identificador"
         validation: (string)->
           if !$.isNumeric(string)
@@ -42,6 +47,7 @@ $(document).ready ->
           else
             return null
       nome:
+        tableName: "nome"
         columnName: "Tipo do Produto"
         validation: null
     uniqueField:
@@ -60,6 +66,7 @@ $(document).ready ->
     table: "tipo_fonte_informacao"
     fields:
       id_tipo_fonte_informacao:
+        tableName: "id_tipo_fonte_informacao"
         columnName: "Identificador"
         validation: (string)->
           if !$.isNumeric(string)
@@ -67,6 +74,7 @@ $(document).ready ->
           else
             return null
       nome:
+        tableName: "nome"
         columnName: "Fonte da Informação"
         validation: null
     uniqueField:

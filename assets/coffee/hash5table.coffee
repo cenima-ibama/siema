@@ -3,9 +3,19 @@ class H5.Table
   options:
     container: null
     fields: null
+    #   columnName: string
+    #   validation: function
+    #   tableName:  string
+    #   isVisible:  boolean
+    #   searchData:  array
+    #   primaryField:  string
     uniqueField: null
+    #   field:      string
+    #   insertable: boolean
     title: null
     table: null
+    # table used on remotion when the html table is composed of 2 or more tables
+    primaryTable: null
     url: ""
     buttons:
       arrows: false
@@ -212,7 +222,8 @@ class H5.Table
         line = ""
 
         $.each @options.fields, (key, value) ->
-          line += "\"" + value.columnName + "\","
+          if !(value.isVisible? and !value.isVisible)
+            line += "\"" + value.columnName + "\","
 
         str += line + "\r\n"
 
@@ -232,7 +243,7 @@ class H5.Table
   _formatFields: ->
     formatedFields = ""
     $.each @options.fields, (key, properties) ->
-      formatedFields += key + ","
+      formatedFields += properties.tableName + ","
     return formatedFields.substring(0,formatedFields.length-1)
 
   _createTable: ->
@@ -246,6 +257,7 @@ class H5.Table
       table: @options.table
       fields: @_formatFields()
       order: @options.uniqueField.field
+      parameters: @options.parameters
     )
 
     # Stores the data on the class
@@ -268,45 +280,96 @@ class H5.Table
         # Verifies if the new field added to the row has the editable function
         # It will whenever it's not a unique field (primary key) of the table
         if !(nameField is @options.uniqueField.field and !@options.uniqueField.insertable)
-          $(span).editable(
-            type: 'text'
-            pk: key
-            value:
-              nameTable
-            validate: (value)=>
-              if @options.fields[nameField].validation?
-                @options.fields[nameField].validation(value)
-            # Function to save the editted value on the database
-            url: (params)=>
-              where = ""
+          if @options.fields[nameField].searchData?
 
-              # Gets the key of the row, to update on the database
-              $.each row.children, (key,cell) =>
-                tableCell = cell.children[0]
-                if $(tableCell).attr("data-field") is @options.uniqueField.field
-                  where = @options.uniqueField.field + "%3D" + tableCell.innerHTML
+            value = ''
 
-              # Construct the query on the database
-              fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+            $.grep @options.fields[nameField].searchData, (e) ->
+                if e.text is nameTable
+                 value = e.value
 
-              # Make the request
-              rest = new H5.Rest (
-                url: @options.url
-                table: @options.table
-                fields: fields
-                parameters: where
-                restService: "ws_updatequery.php"
-              )
+            $(span).editable(
+              type: 'typeahead'
+              placement: 'right'
+              source: @options.fields[nameField].searchData
+              value: value
+              validate: (value)=>
+                if @options.fields[nameField].validation?
+                  @options.fields[nameField].validation(value)
+              # Function to save the editted value on the database
+              url: (params)=>
+                where = ""
 
-              # Reload the table
-              @_reloadTable()
-          )
+                # Gets the key of the row, to update on the database
+                $.each row.children, (key,cell) =>
+                  tableCell = cell.children[0]
+                  if $(tableCell).attr("data-field") is @options.uniqueField.field
+                    where = @options.uniqueField.field + "%3D" + tableCell.innerHTML
+
+                # Construct the query on the database
+                if params.value?
+                  fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+                else
+                  fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+
+                # Make the request
+                rest = new H5.Rest (
+                  url: @options.url
+                  table: @options.primaryTable
+                  fields: fields
+                  parameters: where
+                  restService: "ws_updatequery.php"
+                )
+
+                # Reload the table
+                @_reloadTable()
+            )
+          else
+            $(span).editable(
+              type: 'text'
+              pk: key
+              value:
+                nameTable
+              validate: (value)=>
+                if @options.fields[nameField].validation?
+                  @options.fields[nameField].validation(value)
+              # Function to save the editted value on the database
+              url: (params)=>
+                where = ""
+
+                # Gets the key of the row, to update on the database
+                $.each row.children, (key,cell) =>
+                  tableCell = cell.children[0]
+                  if $(tableCell).attr("data-field") is @options.uniqueField.field
+                    where = @options.uniqueField.field + "%3D" + tableCell.innerHTML
+
+                # Construct the query on the database
+                fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+
+                # Make the request
+                rest = new H5.Rest (
+                  url: @options.url
+                  table: @options.table
+                  fields: fields
+                  parameters: where
+                  restService: "ws_updatequery.php"
+                )
+
+                # Reload the table
+                @_reloadTable()
+            )
         else
           # If it's the unique field of the table, it must not be editable. Insert only his value, if asked for.
           span.innerHTML = nameTable
 
         # Add the name of the field on the database. It helps on control.
-        $(span).attr "data-field", nameField
+        if @options.fields[nameField].primaryField
+          $(span).attr "data-field", @options.fields[nameField].primaryField
+        else
+          $(span).attr "data-field", nameField
+
+        if @options.fields[nameField].isVisible? and !@options.fields[nameField].isVisible
+          $(span).attr "style", "display:none;"
 
       # Adding the group buttons
       field = row.insertCell(i++)
@@ -358,7 +421,8 @@ class H5.Table
     i = 0
     $.each @options.fields, (key,value) ->
       field = row.insertCell(i++)
-      field.innerHTML = "<strong>" + value.columnName + "</strong>"
+      if !(value.isVisible? and !value.isVisible)
+        field.innerHTML = "<strong>" + value.columnName + "</strong>"
     field = row.insertCell(i++)
     $(field).width(37)
 
@@ -372,28 +436,108 @@ class H5.Table
       newRow = document.createElement("tr")
 
       # For each field on the last row, mirror it to the new row.
-      $.each @_lastRow.cells, (key, cell)=>
+      # $.each @_lastRow.cells, (key, cell)=>
 
-        # Retrieves the name of the field
-        dataField = $(cell.children[0]).attr "data-field"
+      #   # Retrieves the name of the field
+      #   dataField = $(cell.children[0]).attr "data-field"
 
-        # If it has a field (meaning, if it's not a action field), then add the framework to edit the field
-        if dataField?
-          td = newRow.insertCell()
-          span = document.createElement("span")
+      #   # If it has a field (meaning, if it's not a action field), then add the framework to edit the field
+      #   if dataField?
+      #     td = newRow.insertCell()
+      #     span = document.createElement("span")
 
-          # Verifies if the table has a unique field (primary key), and if it has, if it is editable
-          if !(@options.uniqueField.field is $(cell.children[0]).attr("data-field") and !@options.uniqueField.insertable)
+      #     # Verifies if the table has a unique field (primary key), and if it has, if it is editable
+      #     if !(@options.uniqueField.field is $(cell.children[0]).attr("data-field") and !@options.uniqueField.insertable)
+      #       # if @options.fields[nameField].searchData?
+
+      #       #   value = ''
+
+      #       #   $.grep @options.fields[nameField].searchData, (e) ->
+      #       #       if e.text is nameTable
+      #       #        value = e.value
+
+      #       #   $(span).editable(
+      #       #     type: 'typeahead'
+      #       #     placement: 'right'
+      #       #     source: @options.fields[nameField].searchData
+      #       #     value: value
+      #       #     validate: (value)=>
+      #       #       if @options.fields[nameField].validation?
+      #       #         @options.fields[nameField].validation(value)
+      #       #     # Function to save the editted value on the database
+      #       #     url: (params)=>
+      #       #       where = ""
+
+      #       #       # Gets the key of the row, to update on the database
+      #       #       $.each row.children, (key,cell) =>
+      #       #         tableCell = cell.children[0]
+      #       #         if $(tableCell).attr("data-field") is @options.uniqueField.field
+      #       #           where = @options.uniqueField.field + "%3D" + tableCell.innerHTML
+
+      #       #       # Construct the query on the database
+      #       #       if params.value?
+      #       #         fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+      #       #       else
+      #       #         fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+
+      #       #       # Make the request
+      #       #       rest = new H5.Rest (
+      #       #         url: @options.url
+      #       #         table: @options.primaryTable
+      #       #         fields: fields
+      #       #         parameters: where
+      #       #         restService: "ws_updatequery.php"
+      #       #       )
+
+      #       #       # Reload the table
+      #       #       @_reloadTable()
+      #       #   )
+      #       # else
+      #       $(span).editable(
+      #         type: 'text'
+      #         value: ""
+      #       )
+
+      #     # Stores the name of the field on the database
+      #     $(span).attr "data-field",dataField
+
+      #     # Add the new field to the new row.
+      #     $(td).append span
+
+      $.each @options.fields, (key, properties) =>
+
+        td = newRow.insertCell()
+        span = document.createElement("span")
+
+        # Verifies if the table has a unique field (primary key), and if it has, if it is editable
+        if (key isnt @options.uniqueField.field or @options.uniqueField.insertable)
+          if properties.searchData?
+            $(span).editable(
+              type: 'typeahead'
+              value: ""
+              source: properties.searchData
+              placement: 'right'
+            )
+          else
             $(span).editable(
               type: 'text'
               value: ""
             )
 
-          # Stores the name of the field on the database
-          $(span).attr "data-field",dataField
+          if properties.isVisible? and !properties.isVisible
+            $(td).attr "style", "display:none"
 
-          # Add the new field to the new row.
-          $(td).append span
+
+        # Stores the name of the field on the database
+        if properties.primaryField?
+          $(span).attr "data-field", properties.primaryField
+        else
+          $(span).attr "data-field", key
+
+
+        # Add the new field to the new row.
+        $(td).append span
+
 
       # Creates and configures the new delete button
       delBtn = document.createElement("a")
@@ -426,7 +570,12 @@ class H5.Table
       $(td).append div
 
       # Adds the new row to the table.
-      $(newRow).insertAfter $(@_lastRow)
+      if @_lastRow?
+        $(newRow).insertAfter $(@_lastRow)
+      else
+        tbody = document.getElementsByClassName("table")[0].appendChild(document.createElement('tbody'))
+        tbody.appendChild newRow
+
 
       # Stores the new row as the last row of the table
       @_lastRow = newRow
@@ -451,10 +600,17 @@ class H5.Table
           if $(span).attr("data-field") is @options.uniqueField.field
             where = @options.uniqueField.field + "%3D" + span.innerHTML
 
+        table = ''
+
+        if @options.primaryTable?
+          table = @options.primaryTable
+        else
+          table =  @options.table
+
         # Send the request for the deletion
         rest = new H5.Rest (
           url: @options.url
-          table: @options.table
+          table: table
           parameters: where
           restService: "ws_deletequery.php"
         )
@@ -477,13 +633,136 @@ class H5.Table
       i = 0
       # insertFunction
 
+      # $.each @options.fields, (key, properties) =>
+      #   span = tableRow.children[i].children[0]
+
+      #   # Verifies if the field is a unique field and if it's editable. If it is, stores in the query string
+      #   if @options.uniqueField.insertable and $(span).attr("data-field") is @options.uniqueField.field
+      #     fields +=  key + ","
+      #     values += "'" + span.innerHTML + "',"
+
+      #   # Verifies if the passed field has a value
+      #   # in case it doesnt have any value ("" or Empty), the field is not added to the query string
+      #   else if span.innerHTML isnt "" and span.innerHTML isnt "Empty"
+      #     fields +=  "" + key + ","
+      #     values += "'" + span.innerHTML + "',"
+
+      #   # Reset the function of the popover submit button
+      #   if !($(span).attr("data-field") is @options.uniqueField.field and !@options.uniqueField.insertable)
+      #     $(span).editable(
+      #       validate: (value) =>
+      #         if @options.fields[key].validation?
+      #           @options.fields[key].validation(value)
+      #       url: (params)=>
+      #         where = ""
+
+      #         # Gets the key to the row.
+      #         $.each row.children, (key,cell) =>
+      #           tableCell = cell.children[0]
+      #           if $(tableCell).attr("data-field") is @options.uniqueField.field
+      #             where = @options.uniqueField.field + "%3D" + tableCell.innerHTML
+
+      #         # Creates the string query
+      #         fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+
+      #         # Sends the request
+      #         rest = new H5.Rest (
+      #           url: @options.url
+      #           table: @options.table
+      #           fields: fields
+      #           parameters: where
+      #           restService: "ws_updatequery.php"
+      #         )
+
+      #         # Reload the table
+      #         @_reloadTable()
+      #     )
+
+      #   i++
+
       $.each @options.fields, (key, properties) =>
         span = tableRow.children[i].children[0]
 
         # Verifies if the field is a unique field and if it's editable. If it is, stores in the query string
-        if @options.uniqueField.insertable and $(span).attr("data-field") is @options.uniqueField.field
-          fields +=  key + ","
-          values += "'" + span.innerHTML + "',"
+        if @options.uniqueField.field isnt key or @options.uniqueField.insertable
+          if properties.primaryField?
+            fields +=  properties.primaryField + ","
+          else
+            fields +=  key + ","
+
+          if properties.searchData?
+            val = null
+            val = $.grep properties.searchData, (e)=>
+              if e.text is span.innerHTML
+                e
+
+            values += "'" + val[0].value + "',"
+          else
+            values += "'" + span.innerHTML + "',"
+
+
+          if @options.primaryTable?
+            $(span).editable(
+              validate: (value) =>
+                if @options.fields[key].validation?
+                  @options.fields[key].validation(value)
+              url: (params)=>
+                where = ""
+
+                # Gets the key to the row.
+                $.each row.children, (key,cell) =>
+                  tableCell = cell.children[0]
+                  if $(tableCell).attr("data-field") is @options.uniqueField.field
+                    where = @options.uniqueField.field + "%3D" + tableCell.innerHTML
+
+                # Creates the string query
+                fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+
+                # Sends the request
+                rest = new H5.Rest (
+                  url: @options.url
+                  table: @options.table
+                  fields: fields
+                  parameters: where
+                  restService: "ws_updatequery.php"
+                )
+
+                # Reload the table
+                @_reloadTable()
+            )
+          else
+            $(span).editable(
+              validate: (value) =>
+                if @options.fields[key].validation?
+                  @options.fields[key].validation(value)
+              url: (params)=>
+                where = ""
+
+                # Gets the key of the row, to update on the database
+                $.each row.children, (key,cell) =>
+                  tableCell = cell.children[0]
+                  if $(tableCell).attr("data-field") is @options.uniqueField.field
+                    where = @options.uniqueField.field + "%3D" + tableCell.innerHTML
+
+                # Construct the query on the database
+                if params.value?
+                  fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+                else
+                  fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+
+                # Make the request
+                rest = new H5.Rest (
+                  url: @options.url
+                  table: @options.primaryTable
+                  fields: fields
+                  parameters: where
+                  restService: "ws_updatequery.php"
+                )
+
+                # Reload the table
+                @_reloadTable()
+            )
+
 
         # Verifies if the passed field has a value
         # in case it doesnt have any value ("" or Empty), the field is not added to the query string
@@ -491,38 +770,13 @@ class H5.Table
           fields +=  "" + key + ","
           values += "'" + span.innerHTML + "',"
 
-        # Reset the function of the popover submit button
-        if !($(span).attr("data-field") is @options.uniqueField.field and !@options.uniqueField.insertable)
-          $(span).editable(
-            validate: (value) =>
-              if @options.fields[key].validation?
-                @options.fields[key].validation(value)
-            url: (params)=>
-              where = ""
-
-              # Gets the key to the row.
-              $.each row.children, (key,cell) =>
-                tableCell = cell.children[0]
-                if $(tableCell).attr("data-field") is @options.uniqueField.field
-                  where = @options.uniqueField.field + "%3D" + tableCell.innerHTML
-
-              # Creates the string query
-              fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
-
-              # Sends the request
-              rest = new H5.Rest (
-                url: @options.url
-                table: @options.table
-                fields: fields
-                parameters: where
-                restService: "ws_updatequery.php"
-              )
-
-              # Reload the table
-              @_reloadTable()
-          )
-
         i++
+
+      # Works only for 1 parameter passed
+      if @options.parameters?
+        vector = @options.parameters.split('%3D')
+        fields += "" + vector[0] + ","
+        values += "" + vector[1] + ","
 
       # Removes the last comma on the string
       fields = fields.substring(0,fields.length-1)
@@ -531,13 +785,22 @@ class H5.Table
       # Finish creating the query string for the insert function
       fields = " (" + fields + ") values (" + values + ") "
 
-      # Send the request for the database to insert a new row on the table
-      rest = new H5.Rest (
-        url: @options.url
-        table: @options.table
-        fields: fields
-        restService: "ws_insertquery.php"
-      )
+        # Send the request for the database to insert a new row on the table
+      if @options.primaryTable?
+        rest = new H5.Rest (
+          url: @options.url
+          table: @options.primaryTable
+          fields: fields
+          restService: "ws_insertquery.php"
+        )
+      else
+        rest = new H5.Rest (
+          url: @options.url
+          table: @options.table
+          fields: fields
+          restService: "ws_insertquery.php"
+        )
+
 
       # Reload table
       @_reloadTable()
