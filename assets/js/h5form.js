@@ -678,7 +678,7 @@
     $("#inputHoraObs").mask("99:99");
     $("#inputDataInci").mask("99/99/9999");
     $("#inputHoraInci").mask("99:99");
-    return $('#inputCompOrigem').add('#inputCompEvento').add('#inputCompInstituicao').add('#inputCompDano').maxlength({
+    return $('#inputCompOrigem').add('#inputCompEvento').add('#inputCompInstituicao').add('#inputCompDano').add('#inputCausaProvavel').add('#inputMedidasTomadas').add('#inputDesOcorrencia').add('#inputDesObs').add('#inputDesDanos').maxlength({
       alwaysShow: true,
       threshold: 10,
       warningClass: "label label-info",
@@ -686,7 +686,7 @@
       placement: 'bottom',
       preText: '',
       separator: ' de ',
-      postText: ' carácteres.'
+      postText: ' caracteres.'
     });
   });
 

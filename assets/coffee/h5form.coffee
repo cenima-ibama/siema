@@ -811,6 +811,11 @@ $(document).ready ->
     .add('#inputCompEvento')
     .add('#inputCompInstituicao')
     .add('#inputCompDano')
+    .add('#inputCausaProvavel')
+    .add('#inputMedidasTomadas')
+    .add('#inputDesOcorrencia')
+    .add('#inputDesObs')
+    .add('#inputDesDanos')
     .maxlength(
       alwaysShow: true,
       threshold: 10,
@@ -819,5 +824,5 @@ $(document).ready ->
       placement: 'bottom',
       preText: '',
       separator: ' de ',
-      postText: ' carácteres.'
+      postText: ' caracteres.'
   )

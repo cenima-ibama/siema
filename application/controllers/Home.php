@@ -223,6 +223,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => 'UF',
+            'maxlength'    => '2',
             'value'        => set_value('inputUF')
         );
         if(set_value('semLocalizacao') == "on"){
@@ -490,6 +491,7 @@ class Home extends CI_Controller {
             'name'         => 'inputCausaProvavel',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '2000',
             'value'        => set_value('inputCausaProvavel')
         );
         if(set_value('semCausa') == "on"){
@@ -543,7 +545,7 @@ class Home extends CI_Controller {
             'id'           => 'inputCompDano',
             'name'         => 'inputCompDano',
             'rows'         => '2',
-            'maxlength'    => '150',
+            'maxlength'    => '1000',
             'class'        => 'input-large',
             'value'        => set_value('inputCompDano')
         );
@@ -557,6 +559,7 @@ class Home extends CI_Controller {
             'id'           => 'inputDesDanos',
             'name'         => 'inputDesDanos',
             'rows'         => '2',
+            'maxlength'    => '2500',
             'class'        => 'input-large',
             'value'        => set_value('inputDesDanos')
         );
@@ -696,6 +699,7 @@ class Home extends CI_Controller {
             'name'         => 'inputMedidasTomadas',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '1000',
             'value'        => set_value('inputMedidasTomadas')
         );
 
@@ -736,6 +740,7 @@ class Home extends CI_Controller {
             'name'         => 'inputDesOcorrencia',
             'rows'         => '2',
             'class'        => 'input-large',
+            'maxlength'    => '2500',
             'value'        => set_value('inputDesOcorrencia')
         );
 
@@ -743,6 +748,7 @@ class Home extends CI_Controller {
             'id'           => 'inputDesObs',
             'name'         => 'inputDesObs',
             'rows'         => '2',
+            'maxlength'    => '2000',
             'class'        => 'input-large',
             'value'        => set_value('inputDesObs')
         );
