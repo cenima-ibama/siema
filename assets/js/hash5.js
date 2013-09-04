@@ -1551,8 +1551,13 @@
       controlgroup = L.DomUtil.create("div", "control-group", container);
       checked = this._map.hasLayer(obj.layer);
       label = L.DomUtil.create("label", "control-label", controlgroup);
-      if (H5.isMobile.any() || obj.name.length < 12) {
-        label.innerHTML = obj.name;
+      if (H5.isMobile.any() || (obj.name.length < 12 && !obj.overlayControl) || !obj.overlayControl) {
+        if (obj.name.length > 26) {
+          name = obj.name.substr(0, 26) + "…";
+          label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>";
+        } else {
+          label.innerHTML = obj.name;
+        }
       } else {
         name = obj.name.substr(0, 12) + "…";
         label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>";
@@ -2018,12 +2023,21 @@
             if ((properties.isVisible != null) && !properties.isVisible) {
               $(td).attr("style", "display:none");
             }
+<<<<<<< HEAD
           }
           if (properties.primaryField != null) {
             $(span).attr("data-field", properties.primaryField);
           } else {
             $(span).attr("data-field", key);
           }
+=======
+          }
+          if (properties.primaryField != null) {
+            $(span).attr("data-field", properties.primaryField);
+          } else {
+            $(span).attr("data-field", key);
+          }
+>>>>>>> 239d8a55e05d0e09169b65a55d410808b2293646
           return $(td).append(span);
         });
         delBtn = document.createElement("a");

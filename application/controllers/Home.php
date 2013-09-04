@@ -211,6 +211,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => 'Nome',
+            'maxlength'    => '128',
             'value'        => set_value('inputMunicipio')
         );
         if(set_value('semLocalizacao') == "on"){
@@ -240,6 +241,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-large',
             'placeholder'  => '',
+            'maxlength'    => '512',
             'value'        => set_value('inputEndereco')
         );
         if(set_value('semLocalizacao') == "on"){
@@ -429,6 +431,7 @@ class Home extends CI_Controller {
             'name'         => 'inputNomeNavio',
             'type'         => 'text',
             'class'        => 'input-medium',
+            'maxlength'    => '150',
             'value'        => set_value('inputNomeNavio')
         );
         if(set_value('semNavioInstalacao') == "on"){
@@ -442,6 +445,7 @@ class Home extends CI_Controller {
             'name'         => 'inputNomeInstalacao',
             'type'         => 'text',
             'class'        => 'input-medium',
+            'maxlength'    => '150',
             'value'        => set_value('inputNomeInstalacao')
         );
         if(set_value('semNavioInstalacao') == "on"){
@@ -590,6 +594,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => '',
+            'maxlength'    => '150',
             'value'        => set_value('inputResponsavel')
         );
         if(set_value('semResponsavel') == "on"){
@@ -604,6 +609,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => '',
+            'maxlength'    => '20',
             'value'        => set_value('inputCPFCNPJ')
         );
         if(set_value('semResponsavel') == "on"){
@@ -711,6 +717,7 @@ class Home extends CI_Controller {
             'id'           => 'inputNomeInformante',
             'name'         => 'inputNomeInformante',
             'class'        => 'input-large',
+            'maxlength'    => '150',
             'value'        => set_value('inputNomeInformante',  $this->session->userdata('name'))
         );
 
@@ -718,6 +725,7 @@ class Home extends CI_Controller {
             'id'           => 'inputFuncaoNavio',
             'name'         => 'inputFuncaoNavio',
             'class'        => 'input-large',
+            'maxlength'    => '150',
             'value'        => set_value('inputFuncaoNavio')
         );
 
@@ -725,6 +733,7 @@ class Home extends CI_Controller {
             'id'           => 'inputEmailInformante',
             'name'         => 'inputEmailInformante',
             'class'        => 'input-large',
+            'maxlength'    => '150',
             'value'        => set_value('inputEmailInformante', $this->session->userdata('mail'))
         );
 
@@ -732,6 +741,7 @@ class Home extends CI_Controller {
             'id'           => 'inputTelInformante',
             'name'         => 'inputTelInformante',
             'class'        => 'input-large',
+            'maxlength'    => '13',
             'value'        => set_value('inputTelInformante')
         );
 
