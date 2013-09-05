@@ -1,5 +1,5 @@
 # DATA {{{
-H5.Data.restURL = "http://" + document.domain + "/siema/rest_v2"
+H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 
 H5.Data.changed = false
 
@@ -46,6 +46,7 @@ H5.DB.occurence.data =
     @regions = {}
     for region in H5.Data.regions
       @regions[region] = {}
+    @regions["Todos"] = {}
 
   populate: (id_ocorrencia, region, date, state, type) ->
     # convert string into date
@@ -58,6 +59,8 @@ H5.DB.occurence.data =
     newType = (type.replace /[{}"]/g, "").split ","
 
     #recover the register belonging to the current region
+    if region not in H5.Data.regions
+      region = "Todos"
     self = @regions[region]
     self[id_ocorrencia] = {}
     self[id_ocorrencia].type = newType #type of the event
@@ -116,9 +119,8 @@ chart1._monthsSlct = document.getElementById('monthsSlct')
 chart1._typesSlct = document.getElementById('typesSlct')
 
 # make those options selected
-$(document).ready ->
-  chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true
-  chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
+chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true
+chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
 
 $(chart1._monthsSlct).on "change", (event) ->
   H5.Data.selectedMonth = parseInt chart1._monthsSlct.value

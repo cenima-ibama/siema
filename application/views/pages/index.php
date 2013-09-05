@@ -11,14 +11,14 @@
             <p style="text-align:left; margin-top: 10px">
             <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0">
             Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental.
-            <a class="btn btn-block" href="http://www.ibama.gov.br/servicos/a-linha-verde" style="margin-top: 10px" target="_parent">Linha Verde</a>
+            <a class="btn btn-block" href="http://www.ibama.gov.br/servicos/a-linha-verde" style="margin-top: 10px" target="_blank">Linha Verde</a>
             </p>
           </div><!--/span-->
           <div class="span6" style="text-align:center;">
             <p style="text-align:left; margin-top: 10px">
             <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0">
             Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.
-            <a class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 10px">Acidente Ambiental</a>
+            <a id="btnBeginForm" class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 10px">Acidente Ambiental</a>
             </p>
           </div><!--/span-->
         </div><!--/row-->
@@ -49,7 +49,7 @@
                   <div class="span6">
                     <iframe name="login_Form" src="' . base_url() . '/index.php/login" frameborder="0" style="width:100%; height: 175px;"></iframe>
                     <div class="block text-center">
-                      <a id="btnCadastrar" href="#" class="btn btn-success span5" data-toggle="tab">Cadastrar</a>
+                      <button id="btnCadastrar" class="btn btn-success span5" data-toggle="tab" disabled="disabled">Cadastrar</button>
                       <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form.document.loginForm.submit();">Logar</button>
                     </div>
                   </div>
@@ -215,7 +215,7 @@
             </label>
           </div>
         </div>
-        <div class="media">
+        <div id="inputLoadForm" class="media" style="display:none;">
           <div class="media-body">
             <label class="radio">
               <input type="radio" name="optionsTipoAcidente" id="optionsAtualizarAcidente" value="-1">
@@ -321,7 +321,6 @@
             <option value="2011">2011</option>
             <option value="2012">2012</option>
             <option value="2013">2013</option>
-            <option value="2014">2014</option>
           </select>
         </div>
       <div class="item">

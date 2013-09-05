@@ -575,7 +575,7 @@ H5.Leaflet.Postgis = H5.Leaflet.GeoJSONLayer.extend(
   _getFeatures: ->
 
     # Build Query
-    where = (if (@options.where) then "&parameters=" + encodeURIComponent(@options.where) else null)
+    where = (if (@options.where) then "&parameters=" + encodeURIComponent(@options.where) else "")
     if not @options.showAll
       bounds = @options.map.getBounds()
       sw = bounds.getSouthWest()
@@ -872,13 +872,13 @@ H5.Leaflet.LayerControl = L.Control.extend (
     # layer name
     label = L.DomUtil.create("label", "control-label", controlgroup)
     if H5.isMobile.any() or ( obj.name.length < 12 and not obj.overlayControl ) or not obj.overlayControl
-      if obj.name.length > 26
-        name =  obj.name.substr(0,26) + "…"
+      if obj.name.length > 22
+        name = obj.name.substr(0,22) + "…"
         label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>"
       else
         label.innerHTML = obj.name
     else
-      name =  obj.name.substr(0,12) + "…"
+      name = obj.name.substr(0,12) + "…"
       label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>"
 
     control = L.DomUtil.create("div", "control", controlgroup)

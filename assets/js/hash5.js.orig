@@ -1254,7 +1254,7 @@
     _requiredParams: ["url", "geotable"],
     _getFeatures: function() {
       var bounds, fields, ne, sw, url, where;
-      where = (this.options.where ? "&parameters=" + encodeURIComponent(this.options.where) : "");
+      where = (this.options.where ? "&parameters=" + encodeURIComponent(this.options.where) : null);
       if (!this.options.showAll) {
         bounds = this.options.map.getBounds();
         sw = bounds.getSouthWest();
@@ -1552,8 +1552,8 @@
       checked = this._map.hasLayer(obj.layer);
       label = L.DomUtil.create("label", "control-label", controlgroup);
       if (H5.isMobile.any() || (obj.name.length < 12 && !obj.overlayControl) || !obj.overlayControl) {
-        if (obj.name.length > 22) {
-          name = obj.name.substr(0, 22) + "…";
+        if (obj.name.length > 26) {
+          name = obj.name.substr(0, 26) + "…";
           label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>";
         } else {
           label.innerHTML = obj.name;
@@ -2050,16 +2050,25 @@
                 value: value
               });
             }
+<<<<<<< HEAD
+            if ((properties.isVisible != null) && !properties.isVisible) {
+              $(td).attr("style", "display:none");
+            }
+=======
+>>>>>>> 6f62cc0076f6f4028e793c7dcd32a887262ceeca
           }
           if (properties.primaryField != null) {
             dataField = properties.primaryField;
           } else {
             dataField = key;
           }
+<<<<<<< HEAD
+=======
           if ((properties.isVisible != null) && !properties.isVisible) {
             $(td).attr("style", "display:none");
           }
           $(span).attr("data-field", dataField);
+>>>>>>> 6f62cc0076f6f4028e793c7dcd32a887262ceeca
           return $(td).append(span);
         });
         delBtn = document.createElement("a");

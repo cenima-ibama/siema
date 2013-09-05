@@ -448,7 +448,7 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse6">
-              6. Detalhes do Acidente
+              6. Detalhes do Acidente*
             </a>
           </div>
           <div id="collapse6" class="accordion-body collapse">
@@ -503,7 +503,7 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse7">
-              7. Danos Identificados
+              7. Danos Identificados*
             </a>
           </div>
           <div id="collapse7" class="accordion-body collapse">
@@ -570,7 +570,7 @@
                 <div class="span6">
                   <div class="control-group">
                     <label class="control-label" for="inputResponsavel">
-                      Nome:
+                      Nome:*
                     </label>
                     <div class="controls">
                       <?php echo form_input($inputResponsavel); ?>
