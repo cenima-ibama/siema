@@ -1909,13 +1909,23 @@
                   } else {
                     fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
                   }
-                  rest = new H5.Rest({
-                    url: _this.options.url,
-                    table: _this.options.primaryTable,
-                    fields: fields,
-                    parameters: where,
-                    restService: "ws_updatequery.php"
-                  });
+                  if (_this.options.primaryTable != null) {
+                    rest = new H5.Rest({
+                      url: _this.options.url,
+                      table: _this.options.primaryTable,
+                      fields: fields,
+                      parameters: where,
+                      restService: "ws_updatequery.php"
+                    });
+                  } else {
+                    rest = new H5.Rest({
+                      url: _this.options.url,
+                      table: _this.options.table,
+                      fields: fields,
+                      parameters: where,
+                      restService: "ws_updatequery.php"
+                    });
+                  }
                   return _this._reloadTable();
                 }
               });
@@ -1940,13 +1950,23 @@
                     }
                   });
                   fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
-                  rest = new H5.Rest({
-                    url: _this.options.url,
-                    table: _this.options.table,
-                    fields: fields,
-                    parameters: where,
-                    restService: "ws_updatequery.php"
-                  });
+                  if (_this.options.primaryTable != null) {
+                    rest = new H5.Rest({
+                      url: _this.options.url,
+                      table: _this.options.primaryTable,
+                      fields: fields,
+                      parameters: where,
+                      restService: "ws_updatequery.php"
+                    });
+                  } else {
+                    rest = new H5.Rest({
+                      url: _this.options.url,
+                      table: _this.options.table,
+                      fields: fields,
+                      parameters: where,
+                      restService: "ws_updatequery.php"
+                    });
+                  }
                   return _this._reloadTable();
                 }
               });
@@ -2156,7 +2176,7 @@
                   fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
                   rest = new H5.Rest({
                     url: _this.options.url,
-                    table: _this.options.table,
+                    table: _this.options.primaryTable,
                     fields: fields,
                     parameters: where,
                     restService: "ws_updatequery.php"
@@ -2188,7 +2208,7 @@
                   }
                   rest = new H5.Rest({
                     url: _this.options.url,
-                    table: _this.options.primaryTable,
+                    table: _this.options.table,
                     fields: fields,
                     parameters: where,
                     restService: "ws_updatequery.php"

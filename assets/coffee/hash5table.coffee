@@ -316,14 +316,26 @@ class H5.Table
                 else
                   fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
 
-                # Make the request
-                rest = new H5.Rest (
-                  url: @options.url
-                  table: @options.primaryTable
-                  fields: fields
-                  parameters: where
-                  restService: "ws_updatequery.php"
-                )
+
+                if @options.primaryTable?
+                  # Make the request
+                  rest = new H5.Rest (
+                    url: @options.url
+                    table: @options.primaryTable
+                    fields: fields
+                    parameters: where
+                    restService: "ws_updatequery.php"
+                  )
+                else
+                  # Make the request
+                  rest = new H5.Rest (
+                    url: @options.url
+                    table: @options.table
+                    fields: fields
+                    parameters: where
+                    restService: "ws_updatequery.php"
+                  )
+
 
                 # Reload the table
                 @_reloadTable()
@@ -350,14 +362,24 @@ class H5.Table
                 # Construct the query on the database
                 fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
 
-                # Make the request
-                rest = new H5.Rest (
-                  url: @options.url
-                  table: @options.table
-                  fields: fields
-                  parameters: where
-                  restService: "ws_updatequery.php"
-                )
+                if @options.primaryTable?
+                  # Make the request
+                  rest = new H5.Rest (
+                    url: @options.url
+                    table: @options.primaryTable
+                    fields: fields
+                    parameters: where
+                    restService: "ws_updatequery.php"
+                  )
+                else
+                  # Make the request
+                  rest = new H5.Rest (
+                    url: @options.url
+                    table: @options.table
+                    fields: fields
+                    parameters: where
+                    restService: "ws_updatequery.php"
+                  )
 
                 # Reload the table
                 @_reloadTable()
@@ -585,54 +607,6 @@ class H5.Table
       fields = ""
       values = ""
       i = 0
-      # insertFunction
-
-      # $.each @options.fields, (key, properties) =>
-      #   span = tableRow.children[i].children[0]
-
-      #   # Verifies if the field is a unique field and if it's editable. If it is, stores in the query string
-      #   if @options.uniqueField.insertable and $(span).attr("data-field") is @options.uniqueField.field
-      #     fields +=  key + ","
-      #     values += "'" + span.innerHTML + "',"
-
-      #   # Verifies if the passed field has a value
-      #   # in case it doesnt have any value ("" or Empty), the field is not added to the query string
-      #   else if span.innerHTML isnt "" and span.innerHTML isnt "Empty"
-      #     fields +=  "" + key + ","
-      #     values += "'" + span.innerHTML + "',"
-
-      #   # Reset the function of the popover submit button
-      #   if !($(span).attr("data-field") is @options.uniqueField.field and !@options.uniqueField.insertable)
-      #     $(span).editable(
-      #       validate: (value) =>
-      #         if @options.fields[key].validation?
-      #           @options.fields[key].validation(value)
-      #       url: (params)=>
-      #         where = ""
-
-      #         # Gets the key to the row.
-      #         $.each row.children, (key,cell) =>
-      #           tableCell = cell.children[0]
-      #           if $(tableCell).attr("data-field") is @options.uniqueField.field
-      #             where = @options.uniqueField.field + "%3D" + tableCell.innerHTML
-
-      #         # Creates the string query
-      #         fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
-
-      #         # Sends the request
-      #         rest = new H5.Rest (
-      #           url: @options.url
-      #           table: @options.table
-      #           fields: fields
-      #           parameters: where
-      #           restService: "ws_updatequery.php"
-      #         )
-
-      #         # Reload the table
-      #         @_reloadTable()
-      #     )
-
-      #   i++
 
       $.each @options.fields, (key, properties) =>
         span = tableRow.children[i].children[0]
@@ -675,7 +649,7 @@ class H5.Table
                 # Sends the request
                 rest = new H5.Rest (
                   url: @options.url
-                  table: @options.table
+                  table: @options.primaryTable
                   fields: fields
                   parameters: where
                   restService: "ws_updatequery.php"
@@ -707,7 +681,7 @@ class H5.Table
                 # Make the request
                 rest = new H5.Rest (
                   url: @options.url
-                  table: @options.primaryTable
+                  table: @options.table
                   fields: fields
                   parameters: where
                   restService: "ws_updatequery.php"
