@@ -98,7 +98,7 @@ H5.Data.thisMonth = H5.DB.occurence.data.lastValue.month
 H5.Data.thisYear = H5.DB.occurence.data.lastValue.year
 
 H5.Data.selectedYear = H5.Data.thisYear
-H5.Data.selectedMonth = H5.Data.thisMonth + 1
+H5.Data.selectedMonth = H5.Data.thisMonth
 H5.Data.selectedType = 0 #first item of the list
 
 #}}}
@@ -119,9 +119,8 @@ chart1._monthsSlct = document.getElementById('monthsSlct')
 chart1._typesSlct = document.getElementById('typesSlct')
 
 # make those options selected
-$(document).ready ->
-  chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true
-  chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
+chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true
+chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
 
 $(chart1._monthsSlct).on "change", (event) ->
   H5.Data.selectedMonth = parseInt chart1._monthsSlct.value

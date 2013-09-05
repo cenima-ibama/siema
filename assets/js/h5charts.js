@@ -114,7 +114,7 @@
 
   H5.Data.selectedYear = H5.Data.thisYear;
 
-  H5.Data.selectedMonth = H5.Data.thisMonth + 1;
+  H5.Data.selectedMonth = H5.Data.thisMonth;
 
   H5.Data.selectedType = 0;
 
@@ -136,10 +136,9 @@
 
   chart1._typesSlct = document.getElementById('typesSlct');
 
-  $(document).ready(function() {
-    chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true;
-    return chart1._monthsSlct.options[H5.Data.thisMonth].selected = true;
-  });
+  chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true;
+
+  chart1._monthsSlct.options[H5.Data.thisMonth].selected = true;
 
   $(chart1._monthsSlct).on("change", function(event) {
     H5.Data.selectedMonth = parseInt(chart1._monthsSlct.value);
