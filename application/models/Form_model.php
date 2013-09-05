@@ -468,9 +468,13 @@ class Form_model extends CI_Model {
     if ($dbResult['plano_emergencia_acionado'] == "S") {
       $form['planoAcionado'] = "on";
     }
-    if ($dbResult['iniciados_outras_pro,idencias'] == "S") {
+    if ($dbResult['iniciados_outras_providencias'] == "S") {
       $form['planoAcionado'] = "on";
       $form['inputMedidasTomadas'] = $dbResult['des_outras_providencias'];
+    }
+
+    if($dbResult['nro_ocorrencia']) {
+      $form['comunicado'] = $dbResult['nro_ocorrencia'];
     }
 
     // Informações sobre o Informante

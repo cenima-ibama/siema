@@ -78,4 +78,4 @@ $(document).ready ->
 
 
   # Mask for the "comunicado" number
-  $("#inputRegistro").mask("9999999999999", {placeholder:""})
+  # $("#inputRegistro").mask("9999999999999", {placeholder:""})
