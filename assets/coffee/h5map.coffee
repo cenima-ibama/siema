@@ -188,7 +188,13 @@ H5.Map.layer.acidentes = new H5.Leaflet.Postgis(
   symbology:
     type: "single"
     vectorStyle:
-      icon: new customMarker()
+      circleMarker: true
+      radius: 6
+      fillColor: "#ff0000"
+      fillOpacity: 0.6
+      weight: 4.0
+      color: "#ff0000"
+      opacity: 0.8
 )
 H5.Map.layer.acidentes.setMap H5.Map.base
 
@@ -212,7 +218,7 @@ new H5.Leaflet.LayerControl(
     layer: unidadeProtecaoIntegral
     overlayControl: false
   "Acidentes Ambientais":
-    layer: H5.Map.layer.acidentes
+    layer: H5.Map.layer.acidentes.layer
 ).addTo(H5.Map.base)
 
 # }}}

@@ -154,7 +154,13 @@
     symbology: {
       type: "single",
       vectorStyle: {
-        icon: new customMarker()
+        circleMarker: true,
+        radius: 6,
+        fillColor: "#ff0000",
+        fillOpacity: 0.6,
+        weight: 4.0,
+        color: "#ff0000",
+        opacity: 0.8
       }
     }
   });
@@ -188,7 +194,7 @@
       overlayControl: false
     },
     "Acidentes Ambientais": {
-      layer: H5.Map.layer.acidentes
+      layer: H5.Map.layer.acidentes.layer
     }
   }).addTo(H5.Map.base);
 
