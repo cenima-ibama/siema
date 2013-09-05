@@ -11,7 +11,7 @@
             <p style="text-align:left; margin-top: 10px">
             <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0">
             Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental.
-            <a class="btn btn-block" href="#" style="margin-top: 10px">Linha Verde</a>
+            <a class="btn btn-block" href="http://www.ibama.gov.br/servicos/a-linha-verde" style="margin-top: 10px" target="_parent">Linha Verde</a>
             </p>
           </div><!--/span-->
           <div class="span6" style="text-align:center;">

@@ -52,7 +52,7 @@
                 <div class="span6">
                   <div class="control-group span12">
                     <div class="span8">
-                      <label class="control-label" for="inputLat">Latitude(y)/Longitude(x)</label>
+                      <label class="control-label" for="inputLat">Latitude(y)/Longitude(x)*</label>
                       <div class="controls">
                         <?php echo form_input($inputLat); ?>
                         <?php echo form_input($inputLng); ?>
@@ -111,7 +111,7 @@
                 </div> <br />
                 <div class="row-fluid">
                   <div class="span6">
-                    <label class="control-label" for="inputDataObs">Data:</label>
+                    <label class="control-label" for="inputDataObs">Data:*</label>
                     <div class="controls">
                       <?php echo form_input($inputDataObs); ?>
                     </div>
@@ -125,7 +125,7 @@
                 </div>
                 <div id="divPeriodoObs" class="row-fluid">
                   <div class="span12">
-                    <label class="control-label"> Período: </label>
+                    <label class="control-label"> Período:* </label>
                     <div class="controls row-fluid">
                       <div class="span3">
                         <label class="radio">
@@ -171,7 +171,7 @@
                 </div> <br />
                 <div class="row-fluid">
                   <div class="span6">
-                    <label class="control-label" for="inputDataInci">Data:</label>
+                    <label class="control-label" for="inputDataInci">Data:*</label>
                     <div class="controls">
                       <?php echo form_input($inputDataInci); ?>
                     </div>
@@ -185,7 +185,7 @@
                 </div>
                 <div id="divPeriodoInci" class="row-fluid">
                   <div class="span12">
-                    <label class="control-label"> Período: </label>
+                    <label class="control-label"> Período:* </label>
                     <div class="control-group">
                       <div class="controls row-fluid">
                       <div class="span3">
@@ -512,7 +512,7 @@
               <div class="row-fluid">
                 <div class="span12">
                   <div class="control-group">
-                    <label class="control-label" for="inputCausaProvavel"> Causa Provável do Acidente:</label>
+                    <label class="control-label" for="inputCausaProvavel"> Causa Provável do Acidente:*</label>
                     <div class="controls">
                     <?php echo form_textarea($inputCausaProvavel); ?>
                     </div>

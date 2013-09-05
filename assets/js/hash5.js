@@ -1551,8 +1551,13 @@
       controlgroup = L.DomUtil.create("div", "control-group", container);
       checked = this._map.hasLayer(obj.layer);
       label = L.DomUtil.create("label", "control-label", controlgroup);
-      if (H5.isMobile.any() || obj.name.length < 12) {
-        label.innerHTML = obj.name;
+      if (H5.isMobile.any() || (obj.name.length < 12 && !obj.overlayControl) || !obj.overlayControl) {
+        if (obj.name.length > 26) {
+          name = obj.name.substr(0, 26) + "…";
+          label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>";
+        } else {
+          label.innerHTML = obj.name;
+        }
       } else {
         name = obj.name.substr(0, 12) + "…";
         label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>";

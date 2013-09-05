@@ -683,7 +683,7 @@
       placement: 'bottom',
       preText: '',
       separator: ' de ',
-      postText: ' caracteres.'
+      postText: ' caracteres'
     });
     subjects = [];
     $.each(this.produto, function() {

@@ -871,8 +871,12 @@ H5.Leaflet.LayerControl = L.Control.extend (
 
     # layer name
     label = L.DomUtil.create("label", "control-label", controlgroup)
-    if H5.isMobile.any() or obj.name.length < 12
-      label.innerHTML = obj.name
+    if H5.isMobile.any() or ( obj.name.length < 12 and not obj.overlayControl ) or not obj.overlayControl
+      if obj.name.length > 26
+        name =  obj.name.substr(0,26) + "…"
+        label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>"
+      else
+        label.innerHTML = obj.name
     else
       name =  obj.name.substr(0,12) + "…"
       label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>"
