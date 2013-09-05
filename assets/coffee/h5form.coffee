@@ -74,7 +74,7 @@ $(document).ready ->
       $(@).html('Voltar')
       $("#submit").prop 'style', 'display:none;'
 
-      Clean the temporary produt table (tmp_ocorrencia_produto)
+      # Clean the temporary produt table (tmp_ocorrencia_produto)
       rest = new H5.Rest (
        url: "../../../siema/rest_v2"
        table: "tmp_ocorrencia_produto"
@@ -846,13 +846,27 @@ $(document).ready ->
 
     # subjects.push(@nome)
 
+  # Get the data from the database
+  rest = new H5.Rest (
+    url: "../../../../siema/rest_v2"
+    table: "ocorrencia"
+    fields: "id_ocorrencia"
+    parameters: "nro_ocorrencia%3D'" + $("#comunicado").prop('value') + "'"
+  )
+
+  idOcorrencia = ""
+
+  $.each rest.data, (e,prop)->
+    $.each prop, (nameField, nameValue)->
+      idOcorrencia = nameValue
+
   if $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
     table = new H5.Table (
       container: "myTable"
-      url: "../../../siema/rest_v2"       # Alter to the defined url
+      url: "../../../../siema/rest_v2"       # Alter to the defined url
       table: "ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Docorrencia_produto.id_produto)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
       primaryTable: 'ocorrencia_produto'
-      parameters: "nro_ocorrencia%3D'" + $("#comunicado").prop('value') + "'"
+      parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'"
       fields:
         id_ocorrencia_produto:
           columnName: "Identificador"
@@ -873,9 +887,10 @@ $(document).ready ->
           columnName: "Unidade"
           tableName: "unidade_medida"
           validation: null
-        nro_ocorrencia:
+        id_ocorrencia:
           columnName: "Nro. Ocorrencia"
-          tableName: "nro_ocorrencia"
+          tableName: "ocorrencia_produto.id_ocorrencia"
+          defaultValue: idOcorrencia
           validation: null
           isVisible: false
 

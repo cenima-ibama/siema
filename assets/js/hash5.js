@@ -1870,11 +1870,15 @@
           if (!(nameField === _this.options.uniqueField.field && !_this.options.uniqueField.insertable)) {
             if (_this.options.fields[nameField].searchData != null) {
               value = '';
-              $.grep(_this.options.fields[nameField].searchData, function(e) {
-                if (e.text === nameTable) {
-                  return value = e.value;
-                }
-              });
+              if (_this.options.fields[nameField].defaultValue != null) {
+                value = _this.options.fields[nameField].defaultValue;
+              } else {
+                $.grep(_this.options.fields[nameField].searchData, function(e) {
+                  if (e.text === nameTable) {
+                    return value = e.value;
+                  }
+                });
+              }
               $(span).editable({
                 type: 'typeahead',
                 placement: 'right',
@@ -1951,7 +1955,7 @@
             $(span).attr("data-field", nameField);
           }
           if ((_this.options.fields[nameField].isVisible != null) && !_this.options.fields[nameField].isVisible) {
-            return $(span).attr("style", "display:none;");
+            return $(field).attr("style", "display:none;");
           }
         });
         field = row.insertCell(i++);
@@ -1985,6 +1989,8 @@
         field = row.insertCell(i++);
         if (!((value.isVisible != null) && !value.isVisible)) {
           return field.innerHTML = "<strong>" + value.columnName + "</strong>";
+        } else {
+          return $(field).attr('style', 'display:none;');
         }
       });
       field = row.insertCell(i++);
@@ -1998,32 +2004,37 @@
         event.preventDefault();
         newRow = document.createElement("tr");
         $.each(_this.options.fields, function(key, properties) {
-          var span, td;
+          var dataField, span, td, value;
           td = newRow.insertCell();
           span = document.createElement("span");
           if (key !== _this.options.uniqueField.field || _this.options.uniqueField.insertable) {
+            value = "";
+            if (properties.defaultValue != null) {
+              value = properties.defaultValue;
+            }
             if (properties.searchData != null) {
               $(span).editable({
                 type: 'typeahead',
-                value: "",
+                value: value,
                 source: properties.searchData,
                 placement: 'right'
               });
             } else {
               $(span).editable({
                 type: 'text',
-                value: ""
+                value: value
               });
-            }
-            if ((properties.isVisible != null) && !properties.isVisible) {
-              $(td).attr("style", "display:none");
             }
           }
           if (properties.primaryField != null) {
-            $(span).attr("data-field", properties.primaryField);
+            dataField = properties.primaryField;
           } else {
-            $(span).attr("data-field", key);
+            dataField = key;
           }
+          if ((properties.isVisible != null) && !properties.isVisible) {
+            $(td).attr("style", "display:none");
+          }
+          $(span).attr("data-field", dataField);
           return $(td).append(span);
         });
         delBtn = document.createElement("a");
@@ -2095,7 +2106,7 @@
     Table.prototype._saveFields = function(saveBtn, delBtn, tableRow) {
       var _this = this;
       return $(saveBtn).on("click", function(event) {
-        var fields, i, rest, values, vector;
+        var fields, i, rest, values;
         event.preventDefault();
         fields = "";
         values = "";
@@ -2187,11 +2198,6 @@
           }
           return i++;
         });
-        if (_this.options.parameters != null) {
-          vector = _this.options.parameters.split('%3D');
-          fields += "" + vector[0] + ",";
-          values += "" + vector[1] + ",";
-        }
         fields = fields.substring(0, fields.length - 1);
         values = values.substring(0, values.length - 1);
         fields = " (" + fields + ") values (" + values + ") ";
