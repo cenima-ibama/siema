@@ -1,5 +1,5 @@
 # DATA {{{
-H5.Data.restURL = "http://" + document.domain + "/siema/rest_v2"
+H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 
 H5.Data.changed = false
 

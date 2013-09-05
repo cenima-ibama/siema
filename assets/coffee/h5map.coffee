@@ -124,7 +124,7 @@ new L.control.locate(
 ).addTo(H5.Map.base)
 
 # display somethings
-# H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 
 # H5.Map.layer.alerta = new H5.Leaflet.Postgis(
 #   url: H5.Data.restURL

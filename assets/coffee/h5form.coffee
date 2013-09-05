@@ -1,3 +1,4 @@
+H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 $(document).ready ->
 
   _tipoLocalizacao = null
@@ -5,18 +6,17 @@ $(document).ready ->
   _tipoDanoIdentificado  = null
   _tipoInstituicaoAtuando = null
   _tipoFonteInformacao = null
-
-  @produto = null
+  _tipoProduto = null
 
   # Get the product name from the database, by ajax
   rest = new H5.Rest (
-    url: "../../../../siema/rest_v2"
+    url: H5.Data.restURL
     table: "produto"
     fields: "id_produto,nome,num_onu,classe_risco"
     order: "nome"
   )
 
-  @produto = rest.data
+  _tipoProduto = rest.data
 
   #-------------------------------------------------------------------------
   # FORM
@@ -75,7 +75,7 @@ $(document).ready ->
 
       # Clean the temporary produt table (tmp_ocorrencia_produto)
       rest = new H5.Rest (
-       url: "../../../siema/rest_v2"
+       url: H5.Data.restURL
        table: "tmp_ocorrencia_produto"
        restService: "ws_deletequery.php"
       )
@@ -172,7 +172,7 @@ $(document).ready ->
         # if isAtual
         #   # Get the accident data for atualization
         #   rest = new H5.Rest (
-        #     url: "../../../siema/rest_v2"
+        #     url: H5.Data.restURL
         #     table: "tipo_dano_identificado"
         #     fields: "id_tipo_dano_identificado, nome"
         #     order: "id_tipo_dano_identificado"
@@ -339,7 +339,7 @@ $(document).ready ->
 
     # Get the data from the database
     rest = new H5.Rest (
-      url: "../../../../siema/rest_v2"
+      url: H5.Data.restURL
       table: "tipo_localizacao"
       fields: "id_tipo_localizacao, des_tipo_localizacao"
       order: "id_tipo_localizacao"
@@ -393,7 +393,7 @@ $(document).ready ->
 
     # Get the data from the database
     rest = new H5.Rest (
-      url: "../../../../siema/rest_v2"
+      url: H5.Data.restURL
       table: "tipo_evento"
       fields: "id_tipo_evento, nome"
       order: "id_tipo_evento"
@@ -446,7 +446,7 @@ $(document).ready ->
 
     # Get the data from the database
     rest = new H5.Rest (
-      url: "../../../../siema/rest_v2"
+      url: H5.Data.restURL
       table: "tipo_dano_identificado"
       fields: "id_tipo_dano_identificado, nome"
       order: "id_tipo_dano_identificado"
@@ -499,7 +499,7 @@ $(document).ready ->
 
     # Get the data from the database
     rest = new H5.Rest (
-      url: "../../../../siema/rest_v2"
+      url: H5.Data.restURL
       table: "instituicao_atuando_local"
       fields: "id_instituicao_atuando_local, nome"
       order: "id_instituicao_atuando_local"
@@ -552,7 +552,7 @@ $(document).ready ->
 
     # Get the data from the database
     rest = new H5.Rest (
-      url: "../../../../siema/rest_v2"
+      url: H5.Data.restURL
       table: "tipo_fonte_informacao"
       fields: "id_tipo_fonte_informacao, nome"
       order: "id_tipo_fonte_informacao"
@@ -598,13 +598,13 @@ $(document).ready ->
 
     subjects = []
 
-    $.each @produto, ()->
+    $.each _tipoProduto, ()->
       subjects.push(@nome)
 
     $("#nomeProduto").typeahead({source: subjects})
 
     $("#btnAddProduto").on 'click', ()=>
-      $.each @produto, ()->
+      $.each _tipoProduto, ()->
         if @nome is $("#nomeProduto").prop('value')
           newRow = document.getElementById('tblProdutos').insertRow()
 
@@ -862,7 +862,7 @@ $(document).ready ->
 
   subjects = []
 
-  $.each @produto, ()->
+  $.each _tipoProduto, ()->
 
     element =
       value: @id_produto
@@ -873,7 +873,7 @@ $(document).ready ->
 
   # Get the data from the database
   rest = new H5.Rest (
-    url: "../../../../siema/rest_v2"
+    url: H5.Data.restURL
     table: "ocorrencia"
     fields: "id_ocorrencia"
     parameters: "nro_ocorrencia%3D'" + $("#comunicado").prop('value') + "'"
@@ -888,7 +888,7 @@ $(document).ready ->
   if $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
     table = new H5.Table (
       container: "myTable"
-      url: "../../../../siema/rest_v2"       # Alter to the defined url
+      url: H5.Data.restURL
       table: "ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Docorrencia_produto.id_produto)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
       primaryTable: 'ocorrencia_produto'
       parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'"
@@ -926,7 +926,7 @@ $(document).ready ->
   else
     table = new H5.Table (
       container: "myTable"
-      url: "../../../siema/rest_v2"       # Alter to the defined url
+      url: H5.Data.restURL
       table: "tmp_ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Dtmp_ocorrencia_produto.id_produto)"
       primaryTable: 'tmp_ocorrencia_produto'
       fields:

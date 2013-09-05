@@ -121,6 +121,8 @@
     locateOptions: {}
   }).addTo(H5.Map.base);
 
+  H5.Data.restURL = "http://" + document.domain + "/siema/rest";
+
   new H5.Leaflet.LayerControl({
     "OSM": {
       layer: openstreet
