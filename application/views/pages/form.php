@@ -86,7 +86,7 @@
                 <div class="span12">
                   <div class="control-group">
                     <label class="checkbox text-left">
-                      <?php echo form_input($semLocalizacao); ?>
+                      <?php echo form_checkbox($semLocalizacao); ?>
                       Sem condições de indicar a localização do acidente no mapa
                     </label>
                   </div>
@@ -155,7 +155,7 @@
                     <div class="control-group">
                       <div class="controls">
                         <label class="checkbox text-left">
-                          <?php echo form_input($semDataObs); ?>
+                          <?php echo form_checkbox($semDataObs); ?>
                           Sem informação sobre data e hora da primeira observação
                         </label>
                       </div>
@@ -215,7 +215,7 @@
                 <div class="row-fluid">
                   <div class="span12">
                     <label class="checkbox text-left">
-                      <?php echo form_input($semDataInci); ?>
+                      <?php echo form_checkbox($semDataInci); ?>
                       Sem informação sobre data e hora estimada
                     </label>
                   </div>
@@ -261,7 +261,7 @@
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
-                    <?php echo form_input($semOrigem); ?>
+                    <?php echo form_checkbox($semOrigem); ?>
                     Sem informação sobre a origem do acidente
                   </label>
                 </div>
@@ -298,7 +298,7 @@
                       <div class="control-group">
                         <div class="controls">
                           <label class="checkbox text-left">';
-                  echo form_input($semNavioInstalacao);
+                  echo form_checkbox($semNavioInstalacao);
                   echo '
                             Sem condições de informar
                           </label>
@@ -347,7 +347,7 @@
                 <div class="span12">
                   <div class="control-group">
                     <label class="checkbox text-left">
-                      <?php echo form_input($semEvento); ?>
+                      <?php echo form_checkbox($semEvento); ?>
                       Sem informação sobre o tipo do evento
                     </label>
                   </div>
@@ -364,66 +364,10 @@
           </div>
           <div id="collapse5" class="accordion-body collapse">
             <div class="accordion-inner">
-              <!-- <div class="row-fluid">
-                <div class="span4">
-                  <div class="control-group">
-                    <label class="control-label">Nome do Produto:</label>
-                    <div class="controls">
-                      <input id="nomeProduto" type="text" data-provide="typeahead" data-source="" data-info="prod"/>
-                    </div>
-                  </div>
-                </div>
-                <div class="span5">
-                  <div class="control-group">
-                    <label class="control-label" for="inputQtd">Qtd. Aproximada: </label>
-                    <div class="controls">
-                      <input id="inputQtd" class="input-small" type="text" name="inputQtd" placeholder="1,2,.." data-info="prod">
-                      <select id="slctQtd" name="slctQtd" class="input-mini">
-                        <option>T</option>
-                        <option>Kg</option>
-                        <option>G</option>
-                        <option>L</option>
-                        <option>m³</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="span3">
-                  <div class="control-group">
-                    <label class="control-label">&nbsp;</label>
-                    <div class="controls">
-                      <button id='btnAddProduto' class="btn btn-primary" type="button"><i class="icon-plus icon-white"></i> Adicionar</button>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-              <div class="row-fluid">
+              <div id="productsInfo" class="row-fluid">
                 <div class="span12">
                   <div id="myTable"></div>
-                  <!-- <table id='tblProdutos' class="table table-condesed table-bordered table-hover">
-                    <thead>
-                      <tr>
-                        <th>Nome da substância</th>
-                        <th>Nº da ONU</th>
-                        <th>Classe de Risco</th>
-                        <th>Qtd.</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php
-                        if (isset($data['produtosId'])) {
-                          foreach ($data['produtosId'] as $produtoId) {
-                            foreach ($data[$produtoId] as $value) {
-                              # code...
-                            }
-                          }
-                        }
-                       ?>
-                    </tbody>
-                  </table> -->
                 </div>
-              </div>
-              <div class="row-fluid">
                 <div class="span4">
                   <div class="control-group">
                     <label class="control-label">&nbsp;</label>
@@ -438,7 +382,7 @@
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
-                    <input id="produtoDesc" type="checkbox" name="produtoDesc"> Sem informação sobre o tipo do produto
+                    <input id="semProduto" type="checkbox" name="semProduto"> Sem informação sobre o tipo do produto
                   </label>
                 </div>
               </div>
@@ -522,7 +466,7 @@
               <div class="row-fluid">
                 <div class="span4" style="align:center;">
                   <label class="checkbox text-left">
-                    <?php echo form_input($semCausa); ?>
+                    <?php echo form_checkbox($semCausa); ?>
                     Sem condições de informar
                   </label>
                 </div>
@@ -606,7 +550,7 @@
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
-                    <?php echo form_input($semDanos); ?>
+                    <?php echo form_checkbox($semDanos); ?>
                     Sem informação sobre os danos
                   </label>
                 </div>
@@ -645,7 +589,12 @@
                       Licença ambiental:
                     </label>
                     <div class="controls">
-                      <?php echo form_dropdown('slctLicenca', $slctLicenca, set_value('slctLicenca'), 'id="slctLicenca" class="input-medium"'); ?>
+                      <?php
+                        if (isset($semResponsavel['checked']))
+                          echo form_dropdown('slctLicenca', $slctLicenca, set_value('slctLicenca'), 'id="slctLicenca" class="input-medium" disabled="disabled"');
+                        else
+                          echo form_dropdown('slctLicenca', $slctLicenca, set_value('slctLicenca'), 'id="slctLicenca" class="input-medium"');
+                      ?>
                     </div>
                   </div>
                 </div>
@@ -655,7 +604,7 @@
                   <div class="control-group">
                     <div class="controls">
                       <label class="checkbox text-left">
-                        <?php echo form_input($semResponsavel); ?>
+                        <?php echo form_checkbox($semResponsavel); ?>
                         Sem informação sobre a empresa
                       </label>
                     </div>
@@ -701,7 +650,7 @@
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
-                    <?php echo form_input($semInstituicao); ?>
+                    <?php echo form_checkbox($semInstituicao); ?>
                     Sem informação sobre as instituções.
                   </label>
                 </div>
@@ -724,12 +673,12 @@
                     <div class="controls">
                       <div class="span6">
                         <label class="radio">
-                          <?php echo form_input($planoEmergNao); ?> Não
+                          <?php echo form_radio($planoEmergNao); ?> Não
                         </label>
                       </div>
                       <div class="span6">
                         <label class="radio">
-                          <?php echo form_input($planoEmergSim); ?> Sim
+                          <?php echo form_radio($planoEmergSim); ?> Sim
                         </label>
                       </div>
                     </div>
@@ -844,7 +793,7 @@
           </div>
         </div>
         <?php
-          if(isset($isServIBAMA)) {
+          if($this->authldap->is_authenticated()) {
             echo '
               <div id="servIBAMA" class="accordion-group">
                 <div class="accordion-heading">

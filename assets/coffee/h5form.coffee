@@ -686,15 +686,13 @@ $(document).ready ->
         $("#inputEventoOutro").removeAttr("disabled")
         $("#inputCompEvento").removeAttr("disabled")
 
-    $("#produtoDesc").on 'click', ()->
+    $("#semProduto").on 'click', ()->
       if $(this).is(":checked")
-        $("#inputTipoSubstancia").attr("disabled","disabled")
-        $("#inputValorEstimado").attr("disabled","disabled")
-        $("#btnAddProduto").attr("disabled","disabled")
+        $("#myTable").attr("style", "display:none;")
+        $("#productsInfo").attr("style", "display:none;")
       else
-        $("#inputTipoSubstancia").removeAttr("disabled")
-        $("#inputValorEstimado").removeAttr("disabled")
-        $("#btnAddProduto").removeAttr("disabled")
+        $("#myTable").removeAttr("style")
+        $("#productsInfo").removeAttr("style")
 
     $("#semSubstancia").on 'click', ()->
       if $(this).is(":checked")
@@ -748,7 +746,7 @@ $(document).ready ->
         # $("button[data-id='slctLicenca']").addClass("disabled")
       else
         $("#inputResponsavel").removeAttr("disabled")
-        $("#inputCPFCNPJ").disabled("removeAttr")
+        $("#inputCPFCNPJ").removeAttr("disabled")
         $("#slctLicenca").removeAttr("disabled")
         # $("button[data-id='slctLicenca']").removeClass("disabled")
 

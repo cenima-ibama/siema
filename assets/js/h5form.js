@@ -558,15 +558,13 @@
           return $("#inputCompEvento").removeAttr("disabled");
         }
       });
-      $("#produtoDesc").on('click', function() {
+      $("#semProduto").on('click', function() {
         if ($(this).is(":checked")) {
-          $("#inputTipoSubstancia").attr("disabled", "disabled");
-          $("#inputValorEstimado").attr("disabled", "disabled");
-          return $("#btnAddProduto").attr("disabled", "disabled");
+          $("#myTable").attr("style", "display:none;");
+          return $("#productsInfo").attr("style", "display:none;");
         } else {
-          $("#inputTipoSubstancia").removeAttr("disabled");
-          $("#inputValorEstimado").removeAttr("disabled");
-          return $("#btnAddProduto").removeAttr("disabled");
+          $("#myTable").removeAttr("style");
+          return $("#productsInfo").removeAttr("style");
         }
       });
       $("#semSubstancia").on('click', function() {
@@ -624,7 +622,7 @@
           return $("#slctLicenca").attr("disabled", "disabled");
         } else {
           $("#inputResponsavel").removeAttr("disabled");
-          $("#inputCPFCNPJ").disabled("removeAttr");
+          $("#inputCPFCNPJ").removeAttr("disabled");
           return $("#slctLicenca").removeAttr("disabled");
         }
       });
