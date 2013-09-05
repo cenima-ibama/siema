@@ -20,7 +20,7 @@
     $('#addMeModal').on('hidden', function() {
       var btnBack;
       history = [];
-      collapse = 1;
+      collapse = 2;
       btnBack = document.getElementById("modalBtnBack");
       btnBack.href = '#tab1';
       $("#modalBtnBack").tab('show');
@@ -63,6 +63,37 @@
         });
       }
       return $(this).tab('show');
+    });
+    $("#btnBeginForm").click(function(event) {
+      var btnLogout, checkedUser, containerProgress, i, progressAnimetion, progressBar, textProgress, tipoForm;
+      if ((document.getElementById('divLogin')) == null) {
+        progressBar = document.getElementById("authProgress");
+        textProgress = document.getElementById("textProgress");
+        containerProgress = document.getElementById("containerProgress");
+        checkedUser = document.getElementById("checkedUser");
+        tipoForm = document.getElementById("tipoForm");
+        btnLogout = document.getElementById("btnLogout");
+        $(tipoForm).hide();
+        $(btnLogout).hide();
+        i = 0;
+        progressAnimetion = setInterval(function() {
+          $(progressBar).width(i++ + "0%");
+          if (i === 15) {
+            $(containerProgress).hide();
+            $(textProgress).hide();
+            $(textProgress).html('Usuário registrado.');
+            $(textProgress).fadeToggle();
+            $(checkedUser).show();
+            $(tipoForm).show();
+            $(btnLogout).show();
+            return clearInterval(progressAnimetion);
+          }
+        }, 100);
+      }
+      if ($("#containerProgress").is(":hidden")) {
+        $(tipoForm).show();
+        return $(btnLogout).show();
+      }
     });
     $("#modalBtnNext").click(function(event) {
       var action, btnLogout, checkedUser, containerProgress, defaultHtml, hasOleo, i, isAcidOleo, isAtual, isOutros, isPubExt, isServIBAMA, progressAnimetion, progressBar, textProgress, tipoForm;

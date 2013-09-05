@@ -2050,25 +2050,16 @@
                 value: value
               });
             }
-<<<<<<< HEAD
-            if ((properties.isVisible != null) && !properties.isVisible) {
-              $(td).attr("style", "display:none");
-            }
-=======
->>>>>>> 6f62cc0076f6f4028e793c7dcd32a887262ceeca
           }
           if (properties.primaryField != null) {
             dataField = properties.primaryField;
           } else {
             dataField = key;
           }
-<<<<<<< HEAD
-=======
           if ((properties.isVisible != null) && !properties.isVisible) {
             $(td).attr("style", "display:none");
           }
           $(span).attr("data-field", dataField);
->>>>>>> 6f62cc0076f6f4028e793c7dcd32a887262ceeca
           return $(td).append(span);
         });
         delBtn = document.createElement("a");

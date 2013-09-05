@@ -9,6 +9,7 @@ $(document).ready ->
   checkedUser = window.parent.document.getElementById("checkedUser")
   tipoForm = window.parent.document.getElementById("tipoForm")
   btnLogout = window.parent.document.getElementById("btnLogout")
+  inputLoadForm = window.parent.document.getElementById("inputLoadForm")
 
   $(tipoForm).hide()
   $(btnLogout).hide()
@@ -25,5 +26,6 @@ $(document).ready ->
       $(checkedUser).show()
       $(tipoForm).show()
       $(btnLogout).show()
+      $(inputLoadForm).show()
       clearInterval(progressAnimetion)
   , 100)

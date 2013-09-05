@@ -29,7 +29,7 @@ $(document).ready ->
 
   $('#addMeModal').on 'hidden', ->
     history = []
-    collapse = 1
+    collapse = 2
 
     btnBack = document.getElementById("modalBtnBack")
 
@@ -81,6 +81,36 @@ $(document).ready ->
       )
 
     $(@).tab('show')
+
+
+  $("#btnBeginForm").click (event) ->
+    if !(document.getElementById('divLogin'))?
+      progressBar = document.getElementById("authProgress")
+      textProgress = document.getElementById("textProgress")
+      containerProgress = document.getElementById("containerProgress")
+      checkedUser = document.getElementById("checkedUser")
+      tipoForm = document.getElementById("tipoForm")
+      btnLogout = document.getElementById("btnLogout")
+
+      $(tipoForm).hide()
+      $(btnLogout).hide()
+      i=0
+      progressAnimetion = setInterval( ->
+        $(progressBar).width(i++ + "0%")
+        if i is 15
+          $(containerProgress).hide()
+          $(textProgress).hide()
+          $(textProgress).html('Usuário registrado.')
+          $(textProgress).fadeToggle()
+          $(checkedUser).show()
+          $(tipoForm).show()
+          $(btnLogout).show()
+          clearInterval(progressAnimetion)
+      , 100)
+    if $("#containerProgress").is(":hidden")
+      $(tipoForm).show()
+      $(btnLogout).show()
+
 
   # Dealing with going foward on the form and possibles jumps
   $("#modalBtnNext").click (event) ->
