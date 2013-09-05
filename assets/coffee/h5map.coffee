@@ -164,16 +164,6 @@ H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 # )
 # H5.Map.layer.alerta.setMap H5.Map.base
 
-customMarker = L.Icon.extend(
-  options:
-    iconUrl: "http://" + document.domain + "/siema/assets/img/ibama_marker.png"
-    shadowUrl: null
-    iconSize: new L.Point(14, 14)
-    iconAnchor: new L.Point(0, 0)
-    popupAnchor: new L.Point(0, 0)
-    clickable: false
-)
-
 # display acidentes
 H5.Map.layer.acidentes = new H5.Leaflet.Postgis(
   url: H5.Data.restURL
@@ -191,7 +181,7 @@ H5.Map.layer.acidentes = new H5.Leaflet.Postgis(
       circleMarker: true
       radius: 6
       fillColor: "#ff0000"
-      fillOpacity: 0.6
+      fillOpacity: 0.8
       weight: 4.0
       color: "#ff0000"
       opacity: 0.8
