@@ -22,11 +22,17 @@ bingMini = new L.BingLayer(bingKey,
   maxZoom: 11
 )
 
-openstreetUrl = "http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png"
-openstreetSub = ['otile1','otile2','otile3','otile4']
+openstreetUrl = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 openstreet = new L.TileLayer(openstreetUrl,
   maxZoom: 18
-  subdomains: openstreetSub
+  attribution: ""
+)
+
+openmapquestUrl = "http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png"
+openmapquestSub = ['otile1','otile2','otile3','otile4']
+openmapquest = new L.TileLayer(openmapquestUrl,
+  maxZoom: 18
+  subdomains: openmapquestSub
 )
 
 geoserverUrl = "http://siscom.ibama.gov.br/geoserver/csr/wms"
@@ -158,34 +164,33 @@ H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 # )
 # H5.Map.layer.alerta.setMap H5.Map.base
 
-# customMarker = L.Icon.extend(
-#   options:
-#     iconUrl: "http://" + document.domain + "/siema/assets/img/ibama_marker.png"
-#     shadowUrl: null
-#     iconSize: new L.Point(0, 0)
-#     iconAnchor: new L.Point(0, 0)
-#     popupAnchor: new L.Point(0, 0)
-#     clickable: false
-# )
+customMarker = L.Icon.extend(
+  options:
+    iconUrl: "http://" + document.domain + "/siema/assets/img/ibama_marker.png"
+    shadowUrl: null
+    iconSize: new L.Point(14, 14)
+    iconAnchor: new L.Point(0, 0)
+    popupAnchor: new L.Point(0, 0)
+    clickable: false
+)
 
-# # display clusters
-# H5.Map.layer.clusters = new H5.Leaflet.Postgis(
-#   url: H5.Data.restURL
-#   geotable: H5.DB.alert.table
-#   fields: "id_des"
-#   srid: 4326
-#   geomFieldName: "centroide"
-#   showAll: true
-#   cluster: true
-#   popupTemplate: null
-#   where: "ano = '2013'"
-#   focus: true
-#   symbology:
-#     type: "single"
-#     vectorStyle:
-#       icon: new customMarker()
-# )
-# H5.Map.layer.clusters.setMap H5.Map.base
+# display acidentes
+H5.Map.layer.acidentes = new H5.Leaflet.Postgis(
+  url: H5.Data.restURL
+  geotable: "tmp_pon"
+  fields: "id_ocorrencia"
+  srid: 4326
+  geomFieldName: "shape"
+  showAll: true
+  cluster: true
+  popupTemplate: null
+  focus: false
+  symbology:
+    type: "single"
+    vectorStyle:
+      icon: new customMarker()
+)
+H5.Map.layer.acidentes.setMap H5.Map.base
 
 new H5.Leaflet.LayerControl(
   "OSM":
@@ -197,11 +202,6 @@ new H5.Leaflet.LayerControl(
   "Bing Hybrid":
     layer: binghybrid
 ,
-  # "DETER Indicadores":
-  #   layer: H5.Map.layer.clusters.layer
-  #   overlayControl: false
-  # "DETER Polígonos":
-  #   layer: H5.Map.layer.alerta.layer
   "Terras Indígenas":
     layer: terrasIndigenas
     overlayControl: false
@@ -211,6 +211,8 @@ new H5.Leaflet.LayerControl(
   "Unidade Proteção Integral":
     layer: unidadeProtecaoIntegral
     overlayControl: false
+  "Acidentes Ambientais":
+    layer: H5.Map.layer.acidentes
 ).addTo(H5.Map.base)
 
 # }}}

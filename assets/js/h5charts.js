@@ -72,7 +72,6 @@
         return new Date(dArr[0], dArr[1] - 1, dArr[2]);
       };
       newType = (type.replace(/[{}"]/g, "")).split(",");
-      console.log("Regiao ", region);
       if (__indexOf.call(H5.Data.regions, region) < 0) {
         region = "Todos";
       }
@@ -675,7 +674,6 @@
 
   chart8.drawChart = function() {
     var data, daysInMonth, firstPeriod, i, options, pieText, pieTooltip, region, secondPeriod, sumValues, _i, _ref;
-    console.log("Draw chart 8");
     sumValues = function(region, type) {
       var sum;
       sum = 0;

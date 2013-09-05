@@ -59,7 +59,6 @@ H5.DB.occurence.data =
     newType = (type.replace /[{}"]/g, "").split ","
 
     #recover the register belonging to the current region
-    console.log "Regiao ", region
     if region not in H5.Data.regions
       region = "Todos"
     self = @regions[region]
@@ -824,7 +823,6 @@ chart8 = new H5.Charts.GoogleCharts(
 )
 
 chart8.drawChart = ->
-  console.log "Draw chart 8"
   # sum values
   sumValues = (region, type) ->
     sum = 0
