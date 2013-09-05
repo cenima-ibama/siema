@@ -46,6 +46,7 @@ H5.DB.occurence.data =
     @regions = {}
     for region in H5.Data.regions
       @regions[region] = {}
+    @regions["Todos"] = {}
 
   populate: (id_ocorrencia, region, date, state, type) ->
     # convert string into date
@@ -58,6 +59,9 @@ H5.DB.occurence.data =
     newType = (type.replace /[{}"]/g, "").split ","
 
     #recover the register belonging to the current region
+    console.log "Regiao ", region
+    if region not in H5.Data.regions
+      region = "Todos"
     self = @regions[region]
     self[id_ocorrencia] = {}
     self[id_ocorrencia].type = newType #type of the event
@@ -95,7 +99,7 @@ H5.Data.thisMonth = H5.DB.occurence.data.lastValue.month
 H5.Data.thisYear = H5.DB.occurence.data.lastValue.year
 
 H5.Data.selectedYear = H5.Data.thisYear
-H5.Data.selectedMonth = H5.Data.thisMonth
+H5.Data.selectedMonth = H5.Data.thisMonth + 1
 H5.Data.selectedType = 0 #first item of the list
 
 #}}}
@@ -820,6 +824,7 @@ chart8 = new H5.Charts.GoogleCharts(
 )
 
 chart8.drawChart = ->
+  console.log "Draw chart 8"
   # sum values
   sumValues = (region, type) ->
     sum = 0

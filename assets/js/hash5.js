@@ -2023,21 +2023,12 @@
             if ((properties.isVisible != null) && !properties.isVisible) {
               $(td).attr("style", "display:none");
             }
-<<<<<<< HEAD
           }
           if (properties.primaryField != null) {
             $(span).attr("data-field", properties.primaryField);
           } else {
             $(span).attr("data-field", key);
           }
-=======
-          }
-          if (properties.primaryField != null) {
-            $(span).attr("data-field", properties.primaryField);
-          } else {
-            $(span).attr("data-field", key);
-          }
->>>>>>> 239d8a55e05d0e09169b65a55d410808b2293646
           return $(td).append(span);
         });
         delBtn = document.createElement("a");
