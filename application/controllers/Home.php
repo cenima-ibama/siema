@@ -840,13 +840,14 @@ class Home extends CI_Controller {
         $formLoad = $this->form_model->load($nro_ocorrencia);
 
         if ($formLoad != "") {
+
             $this->firephp->log($formLoad);
 
             $formLoad['typeOfForm'] = "load";
 
-            $form['data'] = $formLoad;
+            $data = $this->dataForm($formLoad);
 
-            // $this->firephp->log($form);
+            $form['data'] = $data;
 
             $this->load->view('templates/form',$form);
         } else {
