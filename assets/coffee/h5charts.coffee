@@ -218,7 +218,7 @@ chart1.drawChart = ->
     10: "Novembro"
     11: "Dezembro"
 
-  @changeTitle "Alerta DETER: Índice Diário [" + months[H5.Data.selectedMonth] + "]"
+  @changeTitle "Acidentes: Índice Diário [" + months[H5.Data.selectedMonth] + "]"
 
   options =
     title: ""
@@ -247,7 +247,7 @@ chart2 = new H5.Charts.GoogleCharts(
   type: "Area"
   container: "chart2"
   period: 2
-  title: "Alerta DETER: Índice Mensal"
+  title: "Acidentes: Índice Mensal"
   buttons:
     minusplus: true
     export: true
@@ -348,7 +348,7 @@ chart3 = new H5.Charts.GoogleCharts(
   type: "Bar"
   container: "chart3"
   period: 1
-  title: "Alerta DETER: Índice Períodos"
+  title: "Acidentes: Índice Períodos"
   buttons:
     minusplus: true
     export: true
@@ -467,7 +467,7 @@ chart4 = new H5.Charts.GoogleCharts(
   type: "Column"
   container: "chart4"
   period: 2
-  title: "Alerta DETER: UFs"
+  title: "Acidentes: UFs"
   buttons:
     minusplus: true
     export: true
@@ -782,6 +782,12 @@ chart7.drawChart = ->
     data[1] = sumValues(H5.Data.regions[i], H5.Data.thisYear - @options.period, H5.Data.typesOfEvents[H5.Data.selectedType])
     @data.addRow data
 
+  #Handles the registers without a region defined
+  region = H5.Data.regions[H5.Data.regions.length + 1] #for the data that doesnt have a region
+  data = ["Sem Região Cadastrada"]
+  data[1] = sumValues("Todos", H5.Data.thisYear - @options.period, H5.Data.typesOfEvents[H5.Data.selectedType])
+  @data.addRow data
+
   options =
     title: ""
     titleTextStyle:
@@ -796,7 +802,10 @@ chart7.drawChart = ->
     backgroundColor: "transparent"
 
   # @changeTitle H5.Data.periods[@options.period]
-  @changeTitle H5.Data.thisYear - @options.period
+  if (H5.Data.selectedType == 9)
+    @changeTitle H5.Data.thisYear - @options.period + " : Todos Tipos de Eventos"
+  else
+    @changeTitle H5.Data.thisYear - @options.period + " : " +  H5.Data.typesOfEvents[H5.Data.selectedType]
 
   # Disabling the buttons while the chart is drawing.
   @_rightBtn.disabled = true
@@ -858,12 +867,19 @@ chart8.drawChart = ->
     pieText = "percent"
     pieTooltip = "focus"
 
+
   # populate table
   for i in [0...H5.Data.regions.length]
     region = H5.Data.regions[i] #for every region
     data = [region]
     data[1] = sumValues(H5.Data.regions[i], H5.Data.typesOfEvents[H5.Data.selectedType])
     @data.addRow data
+
+  #Handles the registers without a region defined
+  region = H5.Data.regions[H5.Data.regions.length + 1] #for the data that doesnt have a region
+  data = ["Sem Região Cadastrada"]
+  data[1] = sumValues("Todos", H5.Data.typesOfEvents[H5.Data.selectedType])
+  @data.addRow data
 
   if(H5.Data.selectedType == 9)
     @changeTitle chart1._monthsSlct.options[H5.Data.selectedMonth].label + ", " + H5.Data.selectedYear + ": Todos Tipos de Eventos"
@@ -889,7 +905,7 @@ chart8.drawChart = ->
     bar:
       groupWidth: "100%"
     vAxis:
-      title: "Área km²"
+      title: "Número de Ocorrências"
     animation: H5.Data.animate
 
   @chart.draw @data, options
@@ -1074,7 +1090,7 @@ spark2.drawChart = ->
 # KNOB1 {{{
 knob1 = new H5.Charts.Knobs(
   container: "knob1"
-  title: "Taxa VAA"
+  title: "Taxa VMAA"
   popover: "Taxa de variação em relação ao mesmo mês do ano anterior"
   color: "coldtohot"
 )
@@ -1177,8 +1193,8 @@ knob2.drawChart = ->
 # KNOB3 {{{
 knob3 = new H5.Charts.Knobs(
   container: "knob3"
-  title: "Taxa VPA"
-  popover: "Taxa de variação em relação ao período PRODES anterior"
+  title: "Taxa VAA"
+  popover: "Taxa de variação em relação ao ano anterior"
   color: "coldtohot"
 )
 

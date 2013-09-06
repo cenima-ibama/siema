@@ -184,7 +184,7 @@ $(document).ready ->
 
       $("#submit").prop 'style', ''
       $("#modalBtnNext").prop 'style', 'display:none;'
-      $("#modalBtnBack").html('<i class="icon-remove"></i> Cancelar')
+      $("#modalBtnBack").html('<i class="icon-trash"></i> Cancelar')
 
 
       if isAtual
