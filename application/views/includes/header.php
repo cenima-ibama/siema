@@ -30,6 +30,7 @@
     <!-- <link href="<?= base_url()?>assets/less/hash5-map.less" rel="stylesheet/less" type="text/css" /> -->
     <!-- <link href="<?= base_url()?>assets/less/hash5-charts.less" rel="stylesheet/less" type="text/css" /> -->
 
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link href="<?= base_url()?>assets/css/global.css" rel="stylesheet" media="all">
     <link href="<?= base_url()?>assets/css/layout.css" rel="stylesheet" media="all">
 
