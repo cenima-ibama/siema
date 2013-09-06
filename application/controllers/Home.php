@@ -590,6 +590,11 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => set_value('SitParal', 1)
         );
+        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '1'){
+            $data['SitParal'] += array(
+                'checked'  => 'checked'
+            );
+        }
 
         $data['SitNaoParal'] = array(
             'id'           => 'SitNaoParal',
@@ -597,6 +602,11 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => set_value('SitNaoParal', 2)
         );
+        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '2'){
+            $data['SitNaoParal'] += array(
+                'checked'  => 'checked'
+            );
+        }
 
         $data['SitSemCondi'] = array(
             'id'           => 'SitSemCondi',
@@ -604,13 +614,23 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => set_value('SitSemCondi', 3)
         );
+        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '3'){
+            $data['SitSemCondi'] += array(
+                'checked'  => 'checked'
+            );
+        }
 
         $data['SitNaoSeApl'] = array(
             'id'           => 'SitNaoSeApl',
             'name'         => 'SituacaoDescarga',
             'type'         => 'radio',
-            'value'        => set_value('SitNaoSeApl', 2)
+            'value'        => set_value('SitNaoSeApl', 4)
         );
+        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '4'){
+            $data['SitNaoSeApl'] += array(
+                'checked'  => 'checked'
+            );
+        }
 
         // 7. Danos identificados
 
