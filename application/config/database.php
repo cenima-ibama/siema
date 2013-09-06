@@ -76,37 +76,15 @@
 | the query builder class.
 */
 
-$active_group = 'default';
+$active_group = 'emergencias';
 $query_builder = TRUE;
-
-$db['default'] = array(
-	'dsn'	=> '',
-	'hostname' => '10.1.8.65',
-	'username' => 'alertaconsulta',
-	'password' => 'sxpalrt',
-	'database' => 'indicar',
-	'dbdriver' => 'postgre',
-	'dbprefix' => '',
-	'pconnect' => TRUE,
-	'db_debug' => TRUE,
-	'cache_on' => FALSE,
-	'cachedir' => '',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
-	'swap_pre' => '',
-	'autoinit' => TRUE,
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
-	'failover' => array()
-);
 
 $db['emergencias'] = array(
 	'dsn'	=> '',
-	'hostname' => '10.1.8.65',
-	'username' => 'postgres',
-	'password' => 'shgtl275',
-	'database' => 'emergencias',
+	'hostname' => '10.1.8.45',
+	'username' => 'emergencias',
+	'password' => '3m3rg3nc14s',
+	'database' => 'emergencias_devel',
 	'dbdriver' => 'postgre',
 	'dbprefix' => '',
 	'pconnect' => TRUE,

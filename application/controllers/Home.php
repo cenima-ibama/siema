@@ -98,6 +98,11 @@ class Home extends CI_Controller {
         } else {
             $this->form_validation->set_rules('semCausa', 'Causa Provavel do Acidente', 'required');
         }
+        // Validating the "Situação Atual da Descarga"
+        if (!isset($form_data['SituacaoDescarga'])) {
+            $this->form_validation->set_rules('SituacaoDescarga', 'Situação Atual da Descarga', 'required');
+        }
+
 
         // Validating the Damage Type
         if (!isset($form_data['semDanos'])) {
@@ -120,6 +125,12 @@ class Home extends CI_Controller {
             $this->form_validation->set_rules('instituicaoAtuandoLocal[]', 'Instituição/Empresa Atuando no Local', 'required');
         } else {
             $this->form_validation->set_rules('semInstituicao', 'Instituição Atuando', 'required');
+        }
+
+
+        // Validating the "Existencia de Plano de Emergencia ou Similar"
+        if (!isset($form_data['planoEmergencia'])) {
+            $this->form_validation->set_rules('planoEmergencia', 'Plano de Emergencia ou Similar', 'required');
         }
 
         // Validating the oil form: ship identification
@@ -728,11 +739,11 @@ class Home extends CI_Controller {
 
         $data['planoEmergSim'] = array(
             'id'           => 'planoEmergSim',
-            'name'         => 'planoEmergincia',
+            'name'         => 'planoEmergencia',
             'type'         => 'radio',
             'value'        => set_value('planoEmergSim', 0)
         );
-        if(isset($formLoad['planoEmergincia']) && ($formLoad['planoEmergincia'] == '1')){
+        if(isset($formLoad['planoEmergencia']) && ($formLoad['planoEmergencia'] == '1')){
             $data['planoEmergSim'] += array(
                 'checked'  => 'checked'
             );
@@ -740,11 +751,11 @@ class Home extends CI_Controller {
 
         $data['planoEmergNao'] = array(
             'id'           => 'planoEmergNao',
-            'name'         => 'planoEmergincia',
+            'name'         => 'planoEmergencia',
             'type'         => 'radio',
             'value'        => set_value('planoEmergNao', 1)
         );
-        if(isset($formLoad['planoEmergincia']) && ($formLoad['planoEmergincia'] == '0')){
+        if(isset($formLoad['planoEmergencia']) && ($formLoad['planoEmergencia'] == '0')){
             $data['planoEmergNao'] += array(
                 'checked'  => 'checked'
             );
@@ -754,6 +765,7 @@ class Home extends CI_Controller {
             'id'           => 'planoAcionado',
             'name'         => 'planoAcionado',
             'type'         => 'checkbox',
+            'value'        => 'on'
         );
         if(isset($formLoad['planoAcionado'])){
             $data['planoAcionado'] += array(

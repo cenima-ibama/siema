@@ -86,7 +86,7 @@
                 <div class="span12">
                   <div class="control-group">
                     <label class="checkbox text-left">
-                      <?php echo form_checkbox($semLocalizacao); ?>
+                      <?php echo form_checkbox($semLocalizacao,'on'); ?>
                       Sem condições de indicar a localização do acidente no mapa
                     </label>
                   </div>
@@ -155,7 +155,7 @@
                     <div class="control-group">
                       <div class="controls">
                         <label class="checkbox text-left">
-                          <?php echo form_checkbox($semDataObs); ?>
+                          <?php echo form_checkbox($semDataObs,'on'); ?>
                           Sem informação sobre data e hora da primeira observação
                         </label>
                       </div>
@@ -215,7 +215,7 @@
                 <div class="row-fluid">
                   <div class="span12">
                     <label class="checkbox text-left">
-                      <?php echo form_checkbox($semDataInci); ?>
+                      <?php echo form_checkbox($semDataInci,'on'); ?>
                       Sem informação sobre data e hora estimada
                     </label>
                   </div>
@@ -261,7 +261,7 @@
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
-                    <?php echo form_checkbox($semOrigem); ?>
+                    <?php echo form_checkbox($semOrigem,'on'); ?>
                     Sem informação sobre a origem do acidente
                   </label>
                 </div>
@@ -298,7 +298,7 @@
                       <div class="control-group">
                         <div class="controls">
                           <label class="checkbox text-left">';
-                  echo form_checkbox($semNavioInstalacao);
+                  echo form_checkbox($semNavioInstalacao,'on');
                   echo '
                             Sem condições de informar
                           </label>
@@ -347,7 +347,7 @@
                 <div class="span12">
                   <div class="control-group">
                     <label class="checkbox text-left">
-                      <?php echo form_checkbox($semEvento); ?>
+                      <?php echo form_checkbox($semEvento, 'on'); ?>
                       Sem informação sobre o tipo do evento
                     </label>
                   </div>
@@ -466,7 +466,7 @@
               <div class="row-fluid">
                 <div class="span4" style="align:center;">
                   <label class="checkbox text-left">
-                    <?php echo form_checkbox($semCausa); ?>
+                    <?php echo form_checkbox($semCausa,'on'); ?>
                     Sem condições de informar
                   </label>
                 </div>
@@ -550,7 +550,7 @@
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
-                    <?php echo form_checkbox($semDanos); ?>
+                    <?php echo form_checkbox($semDanos,'on'); ?>
                     Sem informação sobre os danos
                   </label>
                 </div>
@@ -604,7 +604,7 @@
                   <div class="control-group">
                     <div class="controls">
                       <label class="checkbox text-left">
-                        <?php echo form_checkbox($semResponsavel); ?>
+                        <?php echo form_checkbox($semResponsavel,'on'); ?>
                         Sem informação sobre a empresa
                       </label>
                     </div>
@@ -650,7 +650,7 @@
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
-                    <?php echo form_checkbox($semInstituicao); ?>
+                    <?php echo form_checkbox($semInstituicao,'on'); ?>
                     Sem informação sobre as instituções.
                   </label>
                 </div>
