@@ -30,15 +30,6 @@ class Form_model extends CI_Model {
       $values = $values . "'N',";
     } else {
       $values = $values . "'S',";
-
-    	// if (isset($form["inputMunicipio"])) {
-    	// 	$fields = $fields ."id_municipio,";
-    	// 	$values = $values . "'" . $form["inputMunicipio"] . "',";
-    	// }
-    	// if (isset($form["inputUF"])) {
-    	// 	$fields = $fields ."id_uf,";
-    	// 	$values = $values . "'" . $form["inputUF"] . "',";
-    	// }
     }
 
 
@@ -95,7 +86,7 @@ class Form_model extends CI_Model {
     }
 
     $fields = $fields ."plano_emergencia,";
-  	if (isset($form["planoEmergencia"])) {
+  	if ($form["planoEmergencia"] == '1') {
   		$values = $values . "'S',";
   	} else {
   		$values = $values . "'N',";
@@ -172,17 +163,22 @@ class Form_model extends CI_Model {
     }
 
     $fields = $fields . "situacao_atual_descarga,";
+    $this->firephp->log($form["SituacaoDescarga"]);
     switch($form["SituacaoDescarga"]) {
-      case 1:
+      case '1':
+        $this->firephp->log("P");
         $values = $values . "'P',";
         break;
-      case 2:
+      case '2':
+        $this->firephp->log("N");
         $values = $values . "'N',";
         break;
-      case 3:
+      case '3':
+        $this->firephp->log("S");
         $values = $values . "'S',";
         break;
-      case 4:
+      case '4':
+        $this->firephp->log("A");
         $values = $values . "'A',";
         break;
     }
@@ -249,15 +245,6 @@ class Form_model extends CI_Model {
       $fields = $fields . "des_obs,";
       $values = $values . "'" . $form["inputDesObs"] . "',";
     }
-    // NON REQUIRED FIELDS
-
-    // $fields = $fields . "acao_inicial_tomada,";
-    // $values = $values . "1,";acionado plano individual de emergencia / sem evidencia de acao
-    // $fields = $fields . "des_obs,";
-    // $values = $values . "1,";
-    // NON REQUIRED FIELDS
-
-
 
     $fields = $fields . "dt_registro";
     $values = $values . "now()";
@@ -271,15 +258,27 @@ class Form_model extends CI_Model {
     // Saves on the Database the new entry
     $ocorrenciasDatabase->query($sqlOcorrencias);
 
-
+    $this->firephp->log($sqlOcorrencias);
 
     // Creating the relations on the Form
 
     $id = $ocorrenciasDatabase->insert_id();
 
+    // Creating the Geographic point of the form
+    if (isset($form["inputLat"]) and isset($form["inputLng"])) {
+      $subfields = "insert into tmp_pon (id_ocorrencia, shape) values (";
+      $subfields = $subfields . "" . $id . "," . "ST_SetSRID(ST_MakePoint(" . $form["inputLng"] . "," . $form["inputLat"] . "), ";
+      $epsg = isset($form["inputEPSG"]) ? $form["inputEPSG"] : "4674";
+      $subfields = $subfields . $epsg . "));";
+
+      $ocorrenciasDatabase->query($subfields);
+
+      $this->firephp->log($subfields);
+    }
+
 
     // Relation R1
-    $this->firephp->log("tipoLocalizacao");
+    // $this->firephp->log("tipoLocalizacao");
     if(isset($form['tipoLocalizacao'])) {
       foreach($form['tipoLocalizacao'] as $tipoLocalizacao) {
         $sql = "insert into r1 (id_ocorrencia, id_tipo_localizacao) VALUES (" .
@@ -295,7 +294,7 @@ class Form_model extends CI_Model {
 
 
     // Relation R2
-    $this->firephp->log("tipoEvento");
+    // $this->firephp->log("tipoEvento");
     if(isset($form['tipoEvento'])) {
       foreach($form['tipoEvento'] as $tipoEvento) {
         $sql = "insert into r2 (id_ocorrencia, id_tipo_evento ) VALUES (" .
@@ -311,7 +310,7 @@ class Form_model extends CI_Model {
 
 
     // Relation R3
-    $this->firephp->log("instituicaoAtuandoLocal");
+    // $this->firephp->log("instituicaoAtuandoLocal");
     if(isset($form['instituicaoAtuandoLocal'])) {
       foreach($form['instituicaoAtuandoLocal'] as $instituicaoAtuandoLocal) {
         $sql = "insert into r3 (id_ocorrencia, id_instituicao_atuando_local ) VALUES (" .
@@ -327,7 +326,7 @@ class Form_model extends CI_Model {
 
 
     // Relation R4
-    $this->firephp->log("tipoDanoIdentificado");
+    // $this->firephp->log("tipoDanoIdentificado");
     if(isset($form['tipoDanoIdentificado'])) {
       foreach($form['tipoDanoIdentificado'] as $tipoDanoIdentificado) {
         $sql = "insert into r4 (id_ocorrencia, id_tipo_dano_identificado ) VALUES (" .
@@ -343,7 +342,7 @@ class Form_model extends CI_Model {
 
 
     // Relation R5
-    $this->firephp->log("tipoFonteInformacao");
+    // $this->firephp->log("tipoFonteInformacao");
     if(isset($form['tipoFonteInformacao'])) {
       foreach($form['tipoFonteInformacao'] as $tipoFonteInformacao) {
         $sql = "insert into r5 (id_ocorrencia, id_tipo_fonte_informacao ) VALUES (" .
@@ -356,10 +355,58 @@ class Form_model extends CI_Model {
       }
     }
 
+    // SAVING PRODUTS! NEEDS TO BE TESTED!!
+
+    // Verifies if there is any fields on the tmp to be
+    // saved (in case it's a create form)
+    $sql = "select * from tmp_ocorrencia_produto;";
+
+    $res = $ocorrenciasDatabase->query($sql);
+
+    if($res->num_rows() > 0){
+
+      // Retrieve rows from tmp_ocorrencia_produto
+      $sql = "select * from tmp_ocorrencia_produto;";
+
+      $res = $ocorrenciasDatabase->query($sql);
+
+      $this->firephp->log($res->result_array());
+
+      // Copy rows from tmp_ocorrencia_produto to ocorrencia_produto
+
+      $sql = "";
+
+      foreach ($res->result_array() as $key => $row) {
+
+        $this->firephp->log($row);
+
+        $sql = $sql .
+               " insert into ocorrencia_produto " .
+               " (id_ocorrencia,id_produto,quantidade,unidade_medida) values " .
+               " ('" . $id . "','" . $row['id_produto'] . "','" . $row['quantidade'] . "','" . $row['unidade_medida'] . "');";
+      }
+
+      $this->firephp->log($sql);
+
+      $res = $ocorrenciasDatabase->query($sql);
+
+
+
+      // Clean tmp_ocorrencia_produto
+      $sql = "delete from tmp_ocorrencia_produto;";
+
+      $res = $ocorrenciasDatabase->query($sql);
+
+      $this->firephp->log($sql);
+    }
+
+
     // Inserting informations about the shipment, related to the oil form
     if(isset($form['inputNomeNavio'])) {
-      $sql = "insert into detalhamento_ocorrencia (id_ocorrencia, des_navio, des_instalacao, des_funcao_comunicante ) VALUES (" .
-              $id . "," . $form['inputNomeNavio'] . $form['inputNomeInstalacao'] . $form['inputFuncaoNavio'];
+      $sql = "insert into detalhamento_ocorrencia (id_ocorrencia, des_navio, des_instalacao, des_funcao_comunicante ) VALUES ('" .
+              $id . "','" . $form['inputNomeNavio'] . "','" . $form['inputNomeInstalacao'] . "','"  . $form['inputFuncaoNavio'] . "');";
+
+      $ocorrenciasDatabase->query($sql);
 
       $this->firephp->log($sql);
 
