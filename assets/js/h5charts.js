@@ -236,7 +236,7 @@
       10: "Novembro",
       11: "Dezembro"
     };
-    this.changeTitle("Alerta DETER: Índice Diário [" + months[H5.Data.selectedMonth] + "]");
+    this.changeTitle("Acidentes: Índice Diário [" + months[H5.Data.selectedMonth] + "]");
     options = {
       title: "",
       titleTextStyle: {
@@ -269,7 +269,7 @@
     type: "Area",
     container: "chart2",
     period: 2,
-    title: "Alerta DETER: Índice Mensal",
+    title: "Acidentes: Índice Mensal",
     buttons: {
       minusplus: true,
       "export": true,
@@ -369,7 +369,7 @@
     type: "Bar",
     container: "chart3",
     period: 1,
-    title: "Alerta DETER: Índice Períodos",
+    title: "Acidentes: Índice Períodos",
     buttons: {
       minusplus: true,
       "export": true,
@@ -491,7 +491,7 @@
     type: "Column",
     container: "chart4",
     period: 2,
-    title: "Alerta DETER: UFs",
+    title: "Acidentes: UFs",
     buttons: {
       minusplus: true,
       "export": true,
@@ -636,6 +636,10 @@
       data[1] = sumValues(H5.Data.regions[i], H5.Data.thisYear - this.options.period, H5.Data.typesOfEvents[H5.Data.selectedType]);
       this.data.addRow(data);
     }
+    region = H5.Data.regions[H5.Data.regions.length + 1];
+    data = ["Sem Região Cadastrada"];
+    data[1] = sumValues("Todos", H5.Data.thisYear - this.options.period, H5.Data.typesOfEvents[H5.Data.selectedType]);
+    this.data.addRow(data);
     options = {
       title: "",
       titleTextStyle: {
@@ -649,7 +653,11 @@
       colors: ['#3ABCFC', '#FC2121', '#D0FC3F', '#FCAC0A', '#67C2EF', '#FF5454', '#CBE968', '#FABB3D', '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258'],
       backgroundColor: "transparent"
     };
-    this.changeTitle(H5.Data.thisYear - this.options.period);
+    if (H5.Data.selectedType === 9) {
+      this.changeTitle(H5.Data.thisYear - this.options.period + " : Todos Tipos de Eventos");
+    } else {
+      this.changeTitle(H5.Data.thisYear - this.options.period + " : " + H5.Data.typesOfEvents[H5.Data.selectedType]);
+    }
     this._rightBtn.disabled = true;
     this._leftBtn.disabled = true;
     google.visualization.events.addListener(this.chart, "ready", function() {
@@ -712,6 +720,10 @@
       data[1] = sumValues(H5.Data.regions[i], H5.Data.typesOfEvents[H5.Data.selectedType]);
       this.data.addRow(data);
     }
+    region = H5.Data.regions[H5.Data.regions.length + 1];
+    data = ["Sem Região Cadastrada"];
+    data[1] = sumValues("Todos", H5.Data.typesOfEvents[H5.Data.selectedType]);
+    this.data.addRow(data);
     if (H5.Data.selectedType === 9) {
       this.changeTitle(chart1._monthsSlct.options[H5.Data.selectedMonth].label + ", " + H5.Data.selectedYear + ": Todos Tipos de Eventos");
     } else {
@@ -738,7 +750,7 @@
         groupWidth: "100%"
       },
       vAxis: {
-        title: "Área km²"
+        title: "Número de Ocorrências"
       },
       animation: H5.Data.animate
     };
@@ -849,7 +861,7 @@
 
   knob1 = new H5.Charts.Knobs({
     container: "knob1",
-    title: "Taxa VAA",
+    title: "Taxa VMAA",
     popover: "Taxa de variação em relação ao mesmo mês do ano anterior",
     color: "coldtohot"
   });
@@ -955,8 +967,8 @@
 
   knob3 = new H5.Charts.Knobs({
     container: "knob3",
-    title: "Taxa VPA",
-    popover: "Taxa de variação em relação ao período PRODES anterior",
+    title: "Taxa VAA",
+    popover: "Taxa de variação em relação ao ano anterior",
     color: "coldtohot"
   });
 

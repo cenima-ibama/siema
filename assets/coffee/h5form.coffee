@@ -35,8 +35,11 @@ $(document).ready ->
 
     btnBack.href = '#tab1'
     $("#modalBtnBack").tab('show')
+    $("#modalBtnBack").prop 'style', ''
     $("#modalBtnNext").prop 'style', ''
     $("#submit").prop 'style', 'display:none;'
+    $("#modalBtnCancel").prop 'style', 'display:none;'
+    $("#btnClose").prop 'style', 'display:none;'
     $(".modal-footer").show()
 
   if !$("#comunicado").val()
@@ -63,22 +66,34 @@ $(document).ready ->
       @.href = tab.tab
       collapse = tab.collapse
 
-    if ("#tab" + collapse) is "#tab2"
-      $(".modal-footer").hide()
-    else
-      $(".modal-footer").show()
+    $(".modal-footer").hide()
 
-    if ("#tab" + collapse) is "#tab7"
-      $(btnNext).prop 'style', ''
-      $(@).html('Voltar')
-      $("#submit").prop 'style', 'display:none;'
+    $(@).tab('show')
 
-      # Clean the temporary produt table (tmp_ocorrencia_produto)
-      rest = new H5.Rest (
-       url: H5.Data.restURL
-       table: "tmp_ocorrencia_produto"
-       restService: "ws_deletequery.php"
-      )
+  # Dealing with going backwards on the form and possibles jumps
+  $("#modalBtnCancel").click (event) ->
+    event.preventDefault()
+
+    btnNext = document.getElementById("modalBtnNext")
+    btnBack = document.getElementById("modalBtnBack")
+
+    if history.length > 0
+      tab = history.pop()
+      @.href = tab.tab
+      collapse = tab.collapse
+
+    $(".modal-footer").show()
+    $(btnNext).prop 'style', ''
+    $(btnBack).prop 'style', ''
+    $("#submit").prop 'style', 'display:none;'
+    $(@).prop 'style', 'display:none;'
+
+    # Clean the temporary produt table (tmp_ocorrencia_produto)
+    rest = new H5.Rest (
+     url: H5.Data.restURL
+     table: "tmp_ocorrencia_produto"
+     restService: "ws_deletequery.php"
+    )
 
     $(@).tab('show')
 
@@ -184,7 +199,9 @@ $(document).ready ->
 
       $("#submit").prop 'style', ''
       $("#modalBtnNext").prop 'style', 'display:none;'
-      $("#modalBtnBack").html('<i class="icon-remove"></i> Cancelar')
+      $("#modalBtnBack").prop 'style', 'display:none;'
+      # $("#modalBtnBack").html('<i class="icon-trash"></i> Cancelar')
+      $("#modalBtnCancel").prop 'style', ''
 
 
       if isAtual

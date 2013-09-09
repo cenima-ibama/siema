@@ -26,8 +26,11 @@
       btnBack = document.getElementById("modalBtnBack");
       btnBack.href = '#tab1';
       $("#modalBtnBack").tab('show');
+      $("#modalBtnBack").prop('style', '');
       $("#modalBtnNext").prop('style', '');
       $("#submit").prop('style', 'display:none;');
+      $("#modalBtnCancel").prop('style', 'display:none;');
+      $("#btnClose").prop('style', 'display:none;');
       return $(".modal-footer").show();
     });
     if (!$("#comunicado").val()) {
@@ -49,21 +52,29 @@
         this.href = tab.tab;
         collapse = tab.collapse;
       }
-      if (("#tab" + collapse) === "#tab2") {
-        $(".modal-footer").hide();
-      } else {
-        $(".modal-footer").show();
+      $(".modal-footer").hide();
+      return $(this).tab('show');
+    });
+    $("#modalBtnCancel").click(function(event) {
+      var btnBack, btnNext, tab;
+      event.preventDefault();
+      btnNext = document.getElementById("modalBtnNext");
+      btnBack = document.getElementById("modalBtnBack");
+      if (history.length > 0) {
+        tab = history.pop();
+        this.href = tab.tab;
+        collapse = tab.collapse;
       }
-      if (("#tab" + collapse) === "#tab7") {
-        $(btnNext).prop('style', '');
-        $(this).html('Voltar');
-        $("#submit").prop('style', 'display:none;');
-        rest = new H5.Rest({
-          url: H5.Data.restURL,
-          table: "tmp_ocorrencia_produto",
-          restService: "ws_deletequery.php"
-        });
-      }
+      $(".modal-footer").show();
+      $(btnNext).prop('style', '');
+      $(btnBack).prop('style', '');
+      $("#submit").prop('style', 'display:none;');
+      $(this).prop('style', 'display:none;');
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        table: "tmp_ocorrencia_produto",
+        restService: "ws_deletequery.php"
+      });
       return $(this).tab('show');
     });
     $("#btnBeginForm").click(function(event) {
@@ -151,7 +162,8 @@
       if (("#tab" + collapse) === "#tab8") {
         $("#submit").prop('style', '');
         $("#modalBtnNext").prop('style', 'display:none;');
-        $("#modalBtnBack").html('<i class="icon-remove"></i> Cancelar');
+        $("#modalBtnBack").prop('style', 'display:none;');
+        $("#modalBtnCancel").prop('style', '');
         if (isAtual) {
           if ($("#inputRegistro").prop("value") !== "") {
             defaultHtml = document.getElementById("defaultHtml");
