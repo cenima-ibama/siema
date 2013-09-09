@@ -72,10 +72,8 @@ class Auth extends CI_Controller {
         if($this->session->userdata('logged_in')) {
             $this->authldap->logout();
         } else {
-            $data['logged_in'] = FALSE;
+            $this->session->set_userdata(array('logged_in' => FALSE));
         }
         redirect(base_url());
     }
 }
-
-?>
