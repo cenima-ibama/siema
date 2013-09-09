@@ -1,6 +1,6 @@
 <div id="addMeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <button id="btnXClose" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h5 id="myModalLabel">Acidente Ambiental</h5>
   </div>
   <div class="modal-body" style="padding: 5%">
@@ -266,10 +266,13 @@
   <div class="modal-footer">
     <a id="modalBtnBack" href="" class="btn" data-toggle="tab">Voltar</a>
     <a id="modalBtnNext" href="#tab1" class="btn" data-toggle="tab">Avançar</a>
+    <a id="modalBtnCancel" href="#tab2" class="btn" data-toggle="tab" style="display:none;"><i class="icon-trash"></i> Cancelar</a>
     <a id="submit" class="btn btn-primary" type="button" style="display:none;" onClick="window.top.form_frame.document.formAcidentes.submit()">
       <i class="icon-ok icon-white"></i>
       Enviar
     </a>
+    <!-- Creating the new buttons Cancelar and Fechar - both hidden -->
+    <a id="btnClose" class="btn btn-primary" type="button" style="display:none;" data-dismiss="modal"><i class="icon-remove"></i>Fechar</a>
   </div>
 </div>
 <div class="loading" id="loading">
