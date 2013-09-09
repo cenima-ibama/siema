@@ -477,22 +477,22 @@
                 <div class="controls row-fluid">
                   <div class="span3">
                     <label class="radio">
-                      <?php echo form_input($SitParal); ?> Paralisada
+                      <?php echo form_radio($SitParal); ?> Paralisada
                     </label>
                   </div>
                   <div class="span3">
                     <label class="radio">
-                      <?php echo form_input($SitParal); ?> Não foi paralisada
+                      <?php echo form_radio($SitNaoParal); ?> Não foi paralisada
                     </label>
                   </div>
                   <div class="span3">
                     <label class="radio">
-                      <?php echo form_input($SitSemCondi); ?> Sem condições de informar
+                      <?php echo form_radio($SitSemCondi); ?> Sem condições de informar
                     </label>
                   </div>
                   <div class="span3">
                     <label class="radio">
-                      <?php echo form_input($SitSemCondi); ?> <strong> Não se aplica </strong>
+                      <?php echo form_radio($SitNaoSeApl); ?> <strong> Não se aplica </strong>
                     </label>
                   </div>
                 </div>
