@@ -675,7 +675,7 @@
         }
         return $("#divPeriodoObs").prop('style', 'display:none;');
       } else {
-        return $("#divPeriodoObs").prop('style', 'display:auto;');
+        return $("#divPeriodoObs").prop('style', '');
       }
     });
     $("#inputHoraInci").on('change', function() {

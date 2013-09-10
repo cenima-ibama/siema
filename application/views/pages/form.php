@@ -34,6 +34,11 @@
               }
             ?>
           />
+          <!-- <input type="hidden" id="typeOfForm" name="typeOfForm" -->
+            <?php
+              echo form_input($typeOfForm);
+            ?>
+          <!-- /> -->
           <br />
         </div>
         <div class="accordion-group">
@@ -62,7 +67,11 @@
                       <div class="control-group">
                         <label class="control-label" for="inputEPSG">EPSG</label>
                         <div class="controls">
-                          <?php echo form_dropdown('inputEPSG', $inputEPSG, set_value('inputEPSG'), 'id="inputEPSG" class="input-small"'); ?>
+                          <?php
+                          if (isset($semLocalizacao['checked']))
+                            echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small" disabled="disabled"');
+                          else
+                            echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small"');                           ?>
                         </div>
                       </div>
                     </div>

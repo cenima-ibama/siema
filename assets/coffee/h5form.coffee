@@ -800,7 +800,7 @@ $(document).ready ->
       $("#divPeriodoObs").prop('style','display:none;')
 
     else
-      $("#divPeriodoObs").prop('style','display:auto;')
+      $("#divPeriodoObs").prop('style','')
 
   $("#inputHoraInci").on 'change', ->
     if ($(@).prop 'value') isnt ""
