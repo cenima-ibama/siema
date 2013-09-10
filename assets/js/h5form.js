@@ -3,7 +3,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, history, idOcorrencia, latlng, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, history, idOcorrencia, latlng, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -26,8 +26,11 @@
       btnBack = document.getElementById("modalBtnBack");
       btnBack.href = '#tab1';
       $("#modalBtnBack").tab('show');
+      $("#modalBtnBack").prop('style', '');
       $("#modalBtnNext").prop('style', '');
       $("#submit").prop('style', 'display:none;');
+      $("#modalBtnCancel").prop('style', 'display:none;');
+      $("#btnClose").prop('style', 'display:none;');
       return $(".modal-footer").show();
     });
     if (!$("#comunicado").val()) {
@@ -49,21 +52,29 @@
         this.href = tab.tab;
         collapse = tab.collapse;
       }
-      if (("#tab" + collapse) === "#tab2") {
-        $(".modal-footer").hide();
-      } else {
-        $(".modal-footer").show();
+      $(".modal-footer").hide();
+      return $(this).tab('show');
+    });
+    $("#modalBtnCancel").click(function(event) {
+      var btnBack, btnNext, tab;
+      event.preventDefault();
+      btnNext = document.getElementById("modalBtnNext");
+      btnBack = document.getElementById("modalBtnBack");
+      if (history.length > 0) {
+        tab = history.pop();
+        this.href = tab.tab;
+        collapse = tab.collapse;
       }
-      if (("#tab" + collapse) === "#tab7") {
-        $(btnNext).prop('style', '');
-        $(this).html('Voltar');
-        $("#submit").prop('style', 'display:none;');
-        rest = new H5.Rest({
-          url: H5.Data.restURL,
-          table: "tmp_ocorrencia_produto",
-          restService: "ws_deletequery.php"
-        });
-      }
+      $(".modal-footer").show();
+      $(btnNext).prop('style', '');
+      $(btnBack).prop('style', '');
+      $("#submit").prop('style', 'display:none;');
+      $(this).prop('style', 'display:none;');
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        table: "tmp_ocorrencia_produto",
+        restService: "ws_deletequery.php"
+      });
       return $(this).tab('show');
     });
     $("#btnBeginForm").click(function(event) {
@@ -151,7 +162,8 @@
       if (("#tab" + collapse) === "#tab8") {
         $("#submit").prop('style', '');
         $("#modalBtnNext").prop('style', 'display:none;');
-        $("#modalBtnBack").html('<i class="icon-remove"></i> Cancelar');
+        $("#modalBtnBack").prop('style', 'display:none;');
+        $("#modalBtnCancel").prop('style', '');
         if (isAtual) {
           if ($("#inputRegistro").prop("value") !== "") {
             defaultHtml = document.getElementById("defaultHtml");
@@ -227,7 +239,54 @@
       layers: [binghybrid],
       zoomControl: true
     });
-    $("#inputLat, #inputLng").on('change', function() {
+    GeoSearch = {
+      _provider: new L.GeoSearch.Provider.Google,
+      _geosearch: function(qry) {
+        var error, results, url;
+        try {
+          console.log(qry);
+          if (typeof this._provider.GetLocations === "function") {
+            return results = this._provider.GetLocations(qry, (function(results) {
+              console.log(results);
+              return this._processResults(results);
+            }).bind(this));
+          } else {
+            url = this._provider.GetServiceUrl(qry);
+            return $.getJSON(url, data((function() {
+              var error;
+              try {
+                results = this._provider.ParseJSON(data);
+                return this._processResults(results);
+              } catch (_error) {
+                error = _error;
+                return this._printError(error);
+              }
+            }).bind(this)));
+          }
+        } catch (_error) {
+          error = _error;
+          return this._printError(error);
+        }
+      },
+      _processResults: function(results) {
+        return this._showLocation(results[0]);
+      },
+      _showLocation: function(location) {
+        var latlng;
+        latlng = new L.LatLng(location.Y, location.X);
+        if (!H5.Map.minimap.hasLayer(Marker)) {
+          H5.Map.minimap.addLayer(Marker);
+        }
+        Marker.setLatLng(latlng).update();
+        H5.Map.minimap.setView(latlng, 15, false);
+        $("#inputLat").prop("value", location.Y);
+        return $("#inputLng").prop("value", location.X);
+      },
+      _printError: function(error) {
+        return alert("Erro na Busca: " + error);
+      }
+    };
+    $("#inputLat, #inputLng").on('change', function(event) {
       var latlng;
       if ((($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
         latlng = new L.LatLng($("#inputLat").prop("value"), $("#inputLng").prop("value"));
@@ -235,9 +294,25 @@
           H5.Map.minimap.addLayer(Marker);
         }
         Marker.setLatLng(latlng).update();
+        H5.Map.minimap.setView(latlng, 8, false);
+        $("#inputLat").prop("value", location.Y);
+        $("#inputLng").prop("value", location.X);
       }
       $("#inputEPSG").prop("value", "");
       return $("#inputEPSG").removeAttr("disabled");
+    });
+    $("#inputEndereco").on('keyup', function(event) {
+      var enterKey, municipio, uf;
+      enterKey = 13;
+      if (event.keyCode === enterKey) {
+        municipio = $("#inputMunicipio").val();
+        uf = $("#inputUF").val();
+        if (municipio.length === 0 && uf.length === 0) {
+          return GeoSearch._geosearch(this.value);
+        } else {
+          return GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf);
+        }
+      }
     });
     H5.Map.minimap.on("click", function(event) {
       if (!H5.Map.minimap.hasLayer(Marker)) {

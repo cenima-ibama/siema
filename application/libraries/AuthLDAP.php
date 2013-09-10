@@ -109,7 +109,9 @@ class AuthLDAP {
         /*
          * For now just pass this along to _authenticate.  We could do
          * something else here before hand in the future.
-         */
+        */
+
+        $username = str_replace(array(".", "-"), "", $username);
 
         $user_info = $this->_authenticate($username,$password);
 

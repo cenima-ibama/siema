@@ -1552,8 +1552,8 @@
       checked = this._map.hasLayer(obj.layer);
       label = L.DomUtil.create("label", "control-label", controlgroup);
       if (H5.isMobile.any() || (obj.name.length < 12 && !obj.overlayControl) || !obj.overlayControl) {
-        if (obj.name.length > 22) {
-          name = obj.name.substr(0, 22) + "…";
+        if (obj.name.length > 21) {
+          name = obj.name.substr(0, 21) + "…";
           label.innerHTML = "<abbr title=\"" + obj.name + "\">" + name + "</abbr>";
         } else {
           label.innerHTML = obj.name;

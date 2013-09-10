@@ -35,22 +35,40 @@ openmapquest = new L.TileLayer(openmapquestUrl,
   subdomains: openmapquestSub
 )
 
-geoserverUrl = "http://siscom.ibama.gov.br/geoserver/csr/wms"
+geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms"
 
 terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
-  layers: "csr:terra_indigena"
+  layers: "cemam:t_indigena"
   format: "image/png"
   transparent: true
 )
 
-unidadeUsoSustentavel = new L.TileLayer.WMS(geoserverUrl,
-  layers: "csr:unidade_uso_sustentavel"
+unidadeConservacao = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:uc_federal"
   format: "image/png"
   transparent: true
 )
 
-unidadeProtecaoIntegral = new L.TileLayer.WMS(geoserverUrl,
-  layers: "csr:unidade_protecao_integral"
+blocoR9 = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:bloco_r9"
+  format: "image/png"
+  transparent: true
+)
+
+blocoExploratorio = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:bloco_exploratorio"
+  format: "image/png"
+  transparent: true
+)
+
+biomaIBGE = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:bioma_ibge"
+  format: "image/png"
+  transparent: true
+)
+
+portoTerminal = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:porto_terminal"
   format: "image/png"
   transparent: true
 )
@@ -201,11 +219,20 @@ new H5.Leaflet.LayerControl(
   "Terras Indígenas":
     layer: terrasIndigenas
     overlayControl: false
-  "Unidade de Uso Sustentável":
-    layer: unidadeUsoSustentavel
+  "Unidade de Convservação":
+    layer: unidadeConservacao
     overlayControl: false
-  "Unidade Proteção Integral":
-    layer: unidadeProtecaoIntegral
+  "Bloco R9":
+    layer: blocoR9
+    overlayControl: false
+  "Bloco Exploratório":
+    layer: blocoExploratorio
+    overlayControl: false
+  "Bioma IBGE":
+    layer: biomaIBGE
+    overlayControl: false
+  "Portos e Terminais":
+    layer: portoTerminal
     overlayControl: false
   "Acidentes Ambientais":
     layer: H5.Map.layer.acidentes.layer
