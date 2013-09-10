@@ -171,6 +171,8 @@ class Home extends CI_Controller {
 
     public function createForm()
     {
+        $formLoad = $this->input->post();
+
         $formLoad['typeOfForm'] = 'create';
 
         $data = $this->dataForm($formLoad);
@@ -186,7 +188,7 @@ class Home extends CI_Controller {
 
         $data['typeOfForm'] = $formLoad['typeOfForm'];
 
-        $this->firephp->log($formLoad);
+        // $this->firephp->log($formLoad);
 
 
         // Value of the "Comunicado"
@@ -514,7 +516,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-medium',
             'maxlength'    => '150',
-            'value'        => set_value('inputNomeNavio')
+            'value'        => set_value('inputNomeNavio', isset($formLoad['inputNomeNavio']) ? $formLoad['inputNomeNavio'] : '')
         );
         if(isset($formLoad['semNavioInstalacao'])){
             $data['inputNomeNavio'] += array(
@@ -528,7 +530,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-medium',
             'maxlength'    => '150',
-            'value'        => set_value('inputNomeInstalacao')
+            'value'        => set_value('inputNomeInstalacao', isset($formLoad['inputNomeInstalacao']) ? $formLoad['inputNomeInstalacao'] : '')
         );
         if(isset($formLoad['semNavioInstalacao'])){
             $data['inputNomeInstalacao'] += array(
@@ -582,7 +584,7 @@ class Home extends CI_Controller {
             'rows'         => '2',
             'class'        => 'input-large',
             'maxlength'    => '2000',
-            'value'        => set_value('inputCausaProvavel')
+            'value'        => set_value('inputCausaProvavel', isset($formLoad['inputCausaProvavel']) ? $formLoad['inputCausaProvavel'] : '')
         );
         if(isset($formLoad['semCausa'])){
             $data['inputCausaProvavel'] += array(
@@ -837,7 +839,7 @@ class Home extends CI_Controller {
             'name'         => 'inputNomeInformante',
             'class'        => 'input-large',
             'maxlength'    => '150',
-            'value'        => set_value('inputNomeInformante',  $this->session->userdata('name'))
+            'value'        => set_value('inputNomeInformante', $this->session->userdata('name'))
         );
 
         $data['inputFuncaoNavio'] = array(
@@ -845,7 +847,7 @@ class Home extends CI_Controller {
             'name'         => 'inputFuncaoNavio',
             'class'        => 'input-large',
             'maxlength'    => '150',
-            'value'        => set_value('inputFuncaoNavio')
+            'value'        => set_value('inputFuncaoNavio', isset($formLoad['inputFuncaoNavio']) ? $formLoad['inputFuncaoNavio'] : '')
         );
 
         $data['inputEmailInformante'] = array(
@@ -861,7 +863,7 @@ class Home extends CI_Controller {
             'name'         => 'inputTelInformante',
             'class'        => 'input-large',
             'maxlength'    => '13',
-            'value'        => set_value('inputTelInformante')
+            'value'        => set_value('inputTelInformante', isset($formLoad['inputTelInformante']) ? $formLoad['inputTelInformante'] : '')
         );
 
         // 12. Informacoes gerais
@@ -872,7 +874,7 @@ class Home extends CI_Controller {
             'rows'         => '2',
             'class'        => 'input-large',
             'maxlength'    => '2500',
-            'value'        => set_value('inputDesOcorrencia')
+            'value'        => set_value('inputDesOcorrencia', isset($formLoad['inputDesOcorrencia']) ? $formLoad['inputDesOcorrencia'] : '')
         );
 
         $data['inputDesObs'] = array(
@@ -881,14 +883,18 @@ class Home extends CI_Controller {
             'rows'         => '2',
             'maxlength'    => '2000',
             'class'        => 'input-large',
-            'value'        => set_value('inputDesObs')
+            'value'        => set_value('inputDesObs', isset($formLoad['inputDesObs']) ? $formLoad['inputDesObs'] : '')
         );
 
         // 13. Fonte da Informação.
         $data['tipoFonteInformacao'] = isset($formLoad['tipoFonteInformacao']) ? $formLoad['tipoFonteInformacao'] : '';
 
+        $this->firephp->log($formLoad);
+        $this->firephp->log($formLoad['hasOleo']);
+        // $this->firephp->log($formLoad['ocorrencia_oleo']);
+
         // Variables that control the type or the form.
-        $data['hasOleo'] = isset($formLoad['hasOleo']) ? $formLoad['hasOleo'] : '';
+        $data['hasOleo'] = (isset($formLoad['hasOleo']) and ($formLoad['hasOleo'] == 'S')) ? 'on' : '';
 
         $data['isServIBAMA'] = isset($formLoad['isServIBAMA']) ? $formLoad['isServIBAMA'] : '';
 
@@ -913,7 +919,7 @@ class Home extends CI_Controller {
 
             $form['data'] = $data;
 
-            $this->firephp->log($data);
+            // $this->firephp->log($data);
 
             $this->load->view('templates/form',$form);
         } else {

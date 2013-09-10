@@ -276,7 +276,7 @@
                 </div>
               </div>
               <?php
-                if  (isset($hasOleo)) {
+                if  (isset($hasOleo) and $hasOleo == 'on') {
                   echo '
                     <br />
                     <div class="row-fluid" data-oleo="true">
@@ -397,7 +397,7 @@
               </div>
 
               <?php
-                if (isset($hasOleo)) {
+                if (isset($hasOleo) and $hasOleo == 'on') {
                   echo '
                     <br />
                     <div class="row-fluid" data-oleo="true">
@@ -735,7 +735,7 @@
                   </div>
                 </div>
                 <?php
-                  if (isset($hasOleo) && isset($isServIBAMA)) {
+                  if (isset($hasOleo)  and $hasOleo == 'on' && isset($isServIBAMA)) {
                     echo '
                       <div class="controls span12">
                         <label class="control-label span5" for="inputFuncaoNavio">Função navio ou instalação:
@@ -832,7 +832,7 @@
       </div>
 
       <div class="checkbox" style="display:none;">
-        <input type="checkbox" id="hasOleo" name="hasOleo" <?php if(isset($hasOleo)) {echo ' checked="checked"';} ?>>
+        <input type="checkbox" id="hasOleo" name="hasOleo" <?php if(isset($hasOleo) and $hasOleo == 'on') {echo ' checked="checked"';} ?>>
         <input type="checkbox" id="isServIBAMA" name="isServIBAMA" <?php if(isset($isServIBAMA)) {echo ' checked="checked"';} ?>>
       </div>
 

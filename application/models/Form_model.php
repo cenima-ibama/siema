@@ -892,6 +892,15 @@ class Form_model extends CI_Model {
 
     $this->load->helper('date');
 
+
+    // Informations about the oil form
+    if($dbResult['ocorrencia_oleo']) {
+      $form['hasOleo'] = $dbResult['ocorrencia_oleo'];
+
+      $query = "select * from detalhamento_ocorrencia where id_ocorrencia='" . $dbResult['id_ocorrencia'] . "';";
+      $infoOil = $ocorrenciasDatabase->query($query)->row_array();
+    }
+
     // Localizacao
     $form['inputLat'] = $dbResult['inputlat'];
     $form['inputLng'] = $dbResult['inputlng'];
@@ -943,6 +952,9 @@ class Form_model extends CI_Model {
     }
     $form['inputCompOrigem'] = $dbResult['des_complemento_tipo_localizaca'];
 
+    $form['inputNomeNavio'] = $infoOil['des_navio'];
+    $form['inputNomeInstalacao'] = $infoOil['des_instalacao'];
+
     // Tipo de Evento
     $query = "select r2.id_tipo_evento from r2 where r2.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
     $form['tipoEvento'] = array();
@@ -952,7 +964,10 @@ class Form_model extends CI_Model {
     $form['inputCompEvento'] = $dbResult['des_complemento_tipo_evento'];
 
     // Detalhes do Acidente
-    $form['inputCausaProvavel'] = $dbResult['des_causa_provavel'];
+    if ($dbResult['des_causa_provavel']) {
+      $form['inputCausaProvavel'] = $dbResult['des_causa_provavel'];
+    }
+
     $form['SituacaoDescarga'] = $dbResult['situacao_atual_descarga'];
 
     // Danos Identificados
@@ -995,10 +1010,26 @@ class Form_model extends CI_Model {
     }
 
     // Informações sobre o Informante
-    // $form['AAAAAAAAAAAQQQQQQQQQQQQQQQQQUEEEEEEEEEEEEEEEEEEEEEEEEEEE'] = 'AAAAAAAAAAAQQQQQQQQQQQQQQQQQUEEEEEEEEEEEEEEEEEEEEEEEEEEE';
+    if ($dbResult['nome_comunicante']) {
+      $form['inputNomeInformante'] = $dbResult['nome_comunicante'];
+    }
+    if ($infoOil['des_funcao_comunicante']) {
+      $form['inputFuncaoNavio'] = $infoOil['des_funcao_comunicante'];
+    }
+    if ($dbResult['telefone_contato']) {
+      $form['inputTelInformante'] = $dbResult['telefone_contato'];
+    }
+    if ($dbResult['email_comunicante']) {
+      $form['inputEmailInformante'] = $dbResult['email_comunicante'];
+    }
 
     // Informações gerais sobre a Ocorrência
-
+    if($dbResult['des_ocorrencia']) {
+      $form['inputDesOcorrencia'] = $dbResult['des_ocorrencia'];
+    }
+    if($dbResult['des_obs']) {
+      $form['inputDesObs'] = $dbResult['des_obs'];
+    }
 
     // Fonte de Informação
     $query = "select r5.id_tipo_fonte_informacao from r5 where r5.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
