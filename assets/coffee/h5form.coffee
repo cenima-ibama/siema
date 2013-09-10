@@ -306,17 +306,79 @@ $(document).ready ->
     zoomControl: true
     )
 
+
+  #add search for the address inputText
+  GeoSearch =
+    _provider: new L.GeoSearch.Provider.Google
+    _geosearch: (qry) ->
+      try
+        # console.log @_provider
+        console.log qry
+        if typeof @_provider.GetLocations is "function"
+          # console.log "Is function"
+          results = @_provider.GetLocations(qry, ((results) ->
+            console.log results
+            @_processResults results
+          ).bind(this))
+        else
+          # console.log "Not a Function"
+          url = @_provider.GetServiceUrl(qry)
+          $.getJSON url, (data) (->
+            try
+              results = @_provider.ParseJSON(data)
+              @_processResults results
+            catch error
+              @_printError error
+          ).bind(this)
+      catch error
+        @_printError error
+
+    _processResults: (results) ->
+      # console.log "Process Results"
+      @_showLocation results[0]
+
+    _showLocation: (location) ->
+      # console.log "Show Location"
+      latlng = new L.LatLng(location.Y,location.X)
+      if (!H5.Map.minimap.hasLayer(Marker))
+        H5.Map.minimap.addLayer(Marker)
+
+      Marker.setLatLng(latlng).update()
+
+      H5.Map.minimap.setView(latlng, 15, false)
+      $("#inputLat").prop "value", location.Y
+      $("#inputLng").prop "value", location.X
+
+    _printError: (error) ->
+      alert "Erro na Busca: " + error
+
   # Update marker from changed inputs
-  $("#inputLat, #inputLng").on 'change', ->
+  $("#inputLat, #inputLng").on 'change', (event) ->
     if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
       latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
       if (!H5.Map.minimap.hasLayer(Marker))
         H5.Map.minimap.addLayer(Marker)
 
       Marker.setLatLng(latlng).update()
+      H5.Map.minimap.setView(latlng, 8, false)
+      $("#inputLat").prop "value", location.Y
+      $("#inputLng").prop "value", location.X
 
     $("#inputEPSG").prop "value", ""
     $("#inputEPSG").removeAttr("disabled")
+
+  #connect the GeoSearch to the inputAddress
+  $("#inputEndereco").on 'keyup', (event) ->
+    # console.log "Entrei no key pressed"
+    enterKey = 13
+    if event.keyCode is enterKey
+      # console.log this.value
+      municipio = $("#inputMunicipio").val()
+      uf = $("#inputUF").val()
+      if municipio.length is 0 and uf.length is 0
+        GeoSearch._geosearch(this.value)
+      else
+        GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf)
 
   # Create marker from a click event
   H5.Map.minimap.on "click", (event) ->

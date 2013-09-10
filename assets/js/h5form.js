@@ -3,7 +3,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, history, idOcorrencia, latlng, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, history, idOcorrencia, latlng, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -239,7 +239,54 @@
       layers: [binghybrid],
       zoomControl: true
     });
-    $("#inputLat, #inputLng").on('change', function() {
+    GeoSearch = {
+      _provider: new L.GeoSearch.Provider.Google,
+      _geosearch: function(qry) {
+        var error, results, url;
+        try {
+          console.log(qry);
+          if (typeof this._provider.GetLocations === "function") {
+            return results = this._provider.GetLocations(qry, (function(results) {
+              console.log(results);
+              return this._processResults(results);
+            }).bind(this));
+          } else {
+            url = this._provider.GetServiceUrl(qry);
+            return $.getJSON(url, data((function() {
+              var error;
+              try {
+                results = this._provider.ParseJSON(data);
+                return this._processResults(results);
+              } catch (_error) {
+                error = _error;
+                return this._printError(error);
+              }
+            }).bind(this)));
+          }
+        } catch (_error) {
+          error = _error;
+          return this._printError(error);
+        }
+      },
+      _processResults: function(results) {
+        return this._showLocation(results[0]);
+      },
+      _showLocation: function(location) {
+        var latlng;
+        latlng = new L.LatLng(location.Y, location.X);
+        if (!H5.Map.minimap.hasLayer(Marker)) {
+          H5.Map.minimap.addLayer(Marker);
+        }
+        Marker.setLatLng(latlng).update();
+        H5.Map.minimap.setView(latlng, 15, false);
+        $("#inputLat").prop("value", location.Y);
+        return $("#inputLng").prop("value", location.X);
+      },
+      _printError: function(error) {
+        return alert("Erro na Busca: " + error);
+      }
+    };
+    $("#inputLat, #inputLng").on('change', function(event) {
       var latlng;
       if ((($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
         latlng = new L.LatLng($("#inputLat").prop("value"), $("#inputLng").prop("value"));
@@ -247,9 +294,25 @@
           H5.Map.minimap.addLayer(Marker);
         }
         Marker.setLatLng(latlng).update();
+        H5.Map.minimap.setView(latlng, 8, false);
+        $("#inputLat").prop("value", location.Y);
+        $("#inputLng").prop("value", location.X);
       }
       $("#inputEPSG").prop("value", "");
       return $("#inputEPSG").removeAttr("disabled");
+    });
+    $("#inputEndereco").on('keyup', function(event) {
+      var enterKey, municipio, uf;
+      enterKey = 13;
+      if (event.keyCode === enterKey) {
+        municipio = $("#inputMunicipio").val();
+        uf = $("#inputUF").val();
+        if (municipio.length === 0 && uf.length === 0) {
+          return GeoSearch._geosearch(this.value);
+        } else {
+          return GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf);
+        }
+      }
     });
     H5.Map.minimap.on("click", function(event) {
       if (!H5.Map.minimap.hasLayer(Marker)) {
