@@ -238,7 +238,9 @@ class Home extends CI_Controller {
             '4326'         => 'WGS84 [4326]',
             '4291'         => 'SAD69 [4291]'
         );
-        $data['inputEPSG_Selected'] = $formLoad['inputEPSG'];
+        if(isset($formLoad['inputEPSG'])) {
+            $data['inputEPSG_Selected'] = $formLoad['inputEPSG'];
+        }
 
         $data['inputMunicipio'] = array(
             'id'           => 'inputMunicipio',
@@ -609,7 +611,7 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => set_value('SitParal', 1)
         );
-        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == 'P'){
+        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '1'){
             $data['SitParal'] += array(
                 'checked'  => 'checked'
             );
@@ -621,7 +623,7 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => set_value('SitNaoParal', 2)
         );
-        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == 'N'){
+        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '2'){
             $data['SitNaoParal'] += array(
                 'checked'  => 'checked'
             );
@@ -633,7 +635,7 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => set_value('SitSemCondi', 3)
         );
-        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == 'S'){
+        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '3'){
             $data['SitSemCondi'] += array(
                 'checked'  => 'checked'
             );
@@ -645,7 +647,7 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => set_value('SitNaoSeApl', 4)
         );
-        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == 'A'){
+        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '4'){
             $data['SitNaoSeApl'] += array(
                 'checked'  => 'checked'
             );
@@ -890,11 +892,14 @@ class Home extends CI_Controller {
         $data['tipoFonteInformacao'] = isset($formLoad['tipoFonteInformacao']) ? $formLoad['tipoFonteInformacao'] : '';
 
         $this->firephp->log($formLoad);
-        $this->firephp->log($formLoad['hasOleo']);
+        // $this->firephp->log($formLoad['hasOleo']);
         // $this->firephp->log($formLoad['ocorrencia_oleo']);
 
         // Variables that control the type or the form.
-        $data['hasOleo'] = (isset($formLoad['hasOleo']) and ($formLoad['hasOleo'] == 'S')) ? 'on' : '';
+        if(isset($formLoad['hasOleo']) and $formLoad['hasOleo'] != 'N')
+        {
+            $data['hasOleo'] = 'on';
+        }
 
         $data['isServIBAMA'] = isset($formLoad['isServIBAMA']) ? $formLoad['isServIBAMA'] : '';
 

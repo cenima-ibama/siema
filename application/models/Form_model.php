@@ -968,7 +968,23 @@ class Form_model extends CI_Model {
       $form['inputCausaProvavel'] = $dbResult['des_causa_provavel'];
     }
 
-    $form['SituacaoDescarga'] = $dbResult['situacao_atual_descarga'];
+    if($dbResult['situacao_atual_descarga']) {
+      switch($dbResult['situacao_atual_descarga']) {
+        case 'P':
+          $form['SituacaoDescarga'] = '1';
+          break;
+        case 'N':
+          $form['SituacaoDescarga'] = '2';
+          break;
+        case 'S':
+          $form['SituacaoDescarga'] = '3';
+          break;
+        case 'A':
+          $form['SituacaoDescarga'] = '4';
+          break;
+      }
+    }
+    // $form['SituacaoDescarga'] = $dbResult['situacao_atual_descarga'];
 
     // Danos Identificados
     $query = "select r4.id_tipo_dano_identificado from r4 where r4.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";

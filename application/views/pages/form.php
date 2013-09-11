@@ -814,12 +814,12 @@
                   <div class="accordion-inner">
                     <div class="row-fluid">
                       <div id="tipoFonteInformacao" class="span12">
-                        <div style="display:none;">
-                          <?php
-                              foreach ($tipoFonteInformacao as $id) {
-                                echo "<span data-id="postTFI">"" . $id . "</span>";
-                              }
-                          ?>
+                        <div style="display:none;">';
+            foreach ($tipoFonteInformacao as $id) {
+              echo
+                          '<span data-id="postTFI">' . $id . '</span>';
+            }
+            echo '
                         </div>
                       </div>
                     </div>
