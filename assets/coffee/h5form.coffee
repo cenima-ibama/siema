@@ -299,7 +299,7 @@ $(document).ready ->
     $("#inputEPSG").prop "value", "4674"
     $("#inputEPSG").prop "disabled", "disabled"
 
-  H5.Map.minimap = new L.Map("minimap",
+  minimapView = new L.Map("minimap",
     center: new L.LatLng(-10.0, -58.0)
     zoom: 6
     layers: [binghybrid]
@@ -340,12 +340,12 @@ $(document).ready ->
     _showLocation: (location) ->
       # console.log "Show Location"
       latlng = new L.LatLng(location.Y,location.X)
-      if (!H5.Map.minimap.hasLayer(Marker))
-        H5.Map.minimap.addLayer(Marker)
+      if (!minimapView.hasLayer(Marker))
+        minimapView.addLayer(Marker)
 
       Marker.setLatLng(latlng).update()
 
-      H5.Map.minimap.setView(latlng, 15, false)
+      minimapView.setView(latlng, 15, false)
       $("#inputLat").prop "value", location.Y
       $("#inputLng").prop "value", location.X
 
@@ -356,11 +356,11 @@ $(document).ready ->
   $("#inputLat, #inputLng").on 'change', (event) ->
     if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
       latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
-      if (!H5.Map.minimap.hasLayer(Marker))
-        H5.Map.minimap.addLayer(Marker)
+      if (!minimapView.hasLayer(Marker))
+        minimapView.addLayer(Marker)
 
       Marker.setLatLng(latlng).update()
-      H5.Map.minimap.setView(latlng, 8, false)
+      minimapView.setView(latlng, 8, false)
       $("#inputLat").prop "value", location.Y
       $("#inputLng").prop "value", location.X
 
@@ -381,9 +381,9 @@ $(document).ready ->
         GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf)
 
   # Create marker from a click event
-  H5.Map.minimap.on "click", (event) ->
-    if not H5.Map.minimap.hasLayer(Marker)
-      H5.Map.minimap.addLayer(Marker)
+  minimapView.on "click", (event) ->
+    if not minimapView.hasLayer(Marker)
+      minimapView.addLayer(Marker)
 
     Marker.setLatLng(event.latlng).update()
 
@@ -401,7 +401,7 @@ $(document).ready ->
     Marker.setLatLng(latlng).update()
     $("#inputEPSG").prop("disabled", disabled)
     $("#inputEPSG").prop("value", value)
-    H5.Map.minimap.addLayer(Marker)
+    minimapView.addLayer(Marker)
 
   #-------------------------------------------------------------------------
   # FORM VALIDATION

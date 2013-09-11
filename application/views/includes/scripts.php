@@ -12,6 +12,8 @@
   <script src="<?= base_url()?>assets/js/leaflet.markercluster.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.minimap.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.fullscreen.js"></script>
+  <script src="<?= base_url()?>assets/js/leaflet.vectorLayer.js"></script>
+  <script src="<?= base_url()?>assets/js/leaflet.control.switch.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.control.locate.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.control.geosearch.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.geosearch.provider.google.js"></script>

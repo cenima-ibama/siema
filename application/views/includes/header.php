@@ -12,6 +12,7 @@
     <link href="<?= base_url()?>assets/css/leaflet-markercluster.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/leaflet-minimap.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/leaflet-fullscreen.css" rel="stylesheet">
+    <link href="<?= base_url()?>assets/css/leaflet-control-switch.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/leaflet-control-geosearch.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/leaflet-control-locate.css" rel="stylesheet">
     <!-- <link href="<?= base_url()?>assets/css/leaflet-draw.css" rel="stylesheet"> -->

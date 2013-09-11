@@ -3,7 +3,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, history, idOcorrencia, latlng, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, history, idOcorrencia, latlng, minimapView, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -233,7 +233,7 @@
       $("#inputEPSG").prop("value", "4674");
       return $("#inputEPSG").prop("disabled", "disabled");
     });
-    H5.Map.minimap = new L.Map("minimap", {
+    minimapView = new L.Map("minimap", {
       center: new L.LatLng(-10.0, -58.0),
       zoom: 6,
       layers: [binghybrid],
@@ -274,11 +274,11 @@
       _showLocation: function(location) {
         var latlng;
         latlng = new L.LatLng(location.Y, location.X);
-        if (!H5.Map.minimap.hasLayer(Marker)) {
-          H5.Map.minimap.addLayer(Marker);
+        if (!minimapView.hasLayer(Marker)) {
+          minimapView.addLayer(Marker);
         }
         Marker.setLatLng(latlng).update();
-        H5.Map.minimap.setView(latlng, 15, false);
+        minimapView.setView(latlng, 15, false);
         $("#inputLat").prop("value", location.Y);
         return $("#inputLng").prop("value", location.X);
       },
@@ -290,11 +290,11 @@
       var latlng;
       if ((($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
         latlng = new L.LatLng($("#inputLat").prop("value"), $("#inputLng").prop("value"));
-        if (!H5.Map.minimap.hasLayer(Marker)) {
-          H5.Map.minimap.addLayer(Marker);
+        if (!minimapView.hasLayer(Marker)) {
+          minimapView.addLayer(Marker);
         }
         Marker.setLatLng(latlng).update();
-        H5.Map.minimap.setView(latlng, 8, false);
+        minimapView.setView(latlng, 8, false);
         $("#inputLat").prop("value", location.Y);
         $("#inputLng").prop("value", location.X);
       }
@@ -314,9 +314,9 @@
         }
       }
     });
-    H5.Map.minimap.on("click", function(event) {
-      if (!H5.Map.minimap.hasLayer(Marker)) {
-        H5.Map.minimap.addLayer(Marker);
+    minimapView.on("click", function(event) {
+      if (!minimapView.hasLayer(Marker)) {
+        minimapView.addLayer(Marker);
       }
       Marker.setLatLng(event.latlng).update();
       $("#inputLat").prop("value", event.latlng.lat);
@@ -331,7 +331,7 @@
       Marker.setLatLng(latlng).update();
       $("#inputEPSG").prop("disabled", disabled);
       $("#inputEPSG").prop("value", value);
-      H5.Map.minimap.addLayer(Marker);
+      minimapView.addLayer(Marker);
     }
     addSelection = function(idField, value) {
       var field;

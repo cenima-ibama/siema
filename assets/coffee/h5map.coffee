@@ -1,3 +1,11 @@
+# CREATE OBJECTS {{{
+H5.Map =
+  base: null
+  layer: {}
+  layerList: null
+
+H5.Leaflet = {}
+# }}}
 # LAYERS {{{
 bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h"
 bingaerial = new L.BingLayer(bingKey,
@@ -150,40 +158,8 @@ new L.control.locate(
 # display somethings
 H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 
-# H5.Map.layer.alerta = new H5.Leaflet.Postgis(
-#   url: H5.Data.restURL
-#   geotable: H5.DB.alert.table
-#   fields: "id_des, tipo, data_imagem, area_km2, dominio"
-#   srid: 4326
-#   geomFieldName: "shape"
-#   popupTemplate: (properties) ->
-#     html = '<div class="iw-content"><h4>' + properties.id_des + '</h4>'
-#     html += '<h5>' + properties.tipo + '</h5>'
-#     html += '<table class="condensed-table bordered-table zebra-striped"><tbody>'
-#     html += '<tr><th>Data: </th><td>' + properties.data_imagem.split(" ", 1) + '</td></tr>'
-#     html += '<tr><th>Área: </th><td>' + properties.area_km2+ '</td></tr>'
-#     if properties.dominio.length > 1
-#       html += '<tr><th>Domínio: </th><td>' + properties.dominio + '</td></tr>'
-#     html += '</tbody></table></div>'
-#     return html
-#   singlePopup: true
-#   where: "ano = '2013'"
-#   showAll: false
-#   limit: 200
-#   scaleRange: [9, 20]
-#   symbology:
-#     type: "single"
-#     vectorStyle:
-#       fillColor: "#ff0000"
-#       fillOpacity: 0.6
-#       weight: 4.0
-#       color: "#ff0000"
-#       opacity: 0.8
-# )
-# H5.Map.layer.alerta.setMap H5.Map.base
-
 # display acidentes
-H5.Map.layer.acidentes = new H5.Leaflet.Postgis(
+H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
   url: H5.Data.restURL
   geotable: "tmp_pon"
   fields: "id_ocorrencia"
@@ -206,7 +182,7 @@ H5.Map.layer.acidentes = new H5.Leaflet.Postgis(
 )
 H5.Map.layer.acidentes.setMap H5.Map.base
 
-new H5.Leaflet.LayerControl(
+new L.control.switch(
   "OSM":
     layer: openstreet
   "Bing Aerial":

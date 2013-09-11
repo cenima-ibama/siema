@@ -6,4 +6,4 @@ coffee --join js/h5home.js -cw coffee/h5home.coffee &
 coffee --join js/h5form.js -cw coffee/h5form.coffee &
 coffee --join js/h5login.js -cw coffee/h5login.coffee &
 coffee --join js/h5table.js -cw coffee/h5table.coffee &
-coffee --join js/hash5.js -cw coffee/hash5.coffee coffee/hash5rest.coffee coffee/hash5charts.coffee coffee/hash5leaflet.coffee coffee/hash5table.coffee
+coffee --join js/hash5.js -cw coffee/hash5.coffee coffee/hash5rest.coffee coffee/hash5charts.coffee coffee/hash5table.coffee

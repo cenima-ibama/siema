@@ -2,6 +2,14 @@
 (function() {
   var bingKey, bingMini, bingaerial, binghybrid, bingroad, biomaIBGE, blocoExploratorio, blocoR9, geoserverUrl, openmapquest, openmapquestSub, openmapquestUrl, openstreet, openstreetUrl, orientationEvent, portoTerminal, supportsOrientationChange, terrasIndigenas, unidadeConservacao;
 
+  H5.Map = {
+    base: null,
+    layer: {},
+    layerList: null
+  };
+
+  H5.Leaflet = {};
+
   bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h";
 
   bingaerial = new L.BingLayer(bingKey, {
@@ -148,7 +156,7 @@
 
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
-  H5.Map.layer.acidentes = new H5.Leaflet.Postgis({
+  H5.Map.layer.acidentes = new L.VectorLayer.Postgis({
     url: H5.Data.restURL,
     geotable: "tmp_pon",
     fields: "id_ocorrencia",
@@ -174,7 +182,7 @@
 
   H5.Map.layer.acidentes.setMap(H5.Map.base);
 
-  new H5.Leaflet.LayerControl({
+  new L.control["switch"]({
     "OSM": {
       layer: openstreet
     },
