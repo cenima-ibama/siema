@@ -964,7 +964,7 @@ class Home extends CI_Controller {
         $this->email->set_newline("\r\n");
 
         $this->email->from("ibama.siema@gmail.com", "SIEMA");
-        $this->email->to("carolsro@gmail.com");
+        $this->email->to("ibama.siema@gmail.com");
 
         $this->email->subject($form_data['comunicado'] . ' - SIEMA');
         $this->email->message('Formuário número '. $form_data['comunicado'] . ' enviado com sucesso.');
