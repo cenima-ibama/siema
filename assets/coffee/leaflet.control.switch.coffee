@@ -3,9 +3,9 @@ L.control.switch = L.Control.extend (
     collapsed: true
     position: "topright"
     autoZIndex: true
-    overlayControl: false
+    tab: "outros"
 
-  initialize: (baseLayers, overlayers, options) ->
+  initialize: (baseLayers, overlayers, tabs, options) ->
     L.setOptions this, options
     @_layers = {}
     @_lastZIndex = 0
@@ -13,17 +13,25 @@ L.control.switch = L.Control.extend (
     $.each baseLayers, (name, obj) =>
       @_addLayer(obj.layer, name, false, false)
 
+
+    @_tabs = tabs unless typeof tabs is "undefined"
+
     $.each overlayers, (name, obj) =>
-      control = if (typeof obj.overlayControl is "boolean") then obj.overlayControl else true
-      @_addLayer(obj.layer, name, true, control)
+      control = if (typeof obj.overlayControl is "boolean") then obj.overlayControl else false
+      @_addLayer(obj.layer, name, true, control, obj.tab)
 
   onAdd: (map) ->
     @_initLayout()
     @_update()
+    # @_activeTab()
+    # $("#tabsOverLayers a:last").tab('show')
     map
       .on("layeradd", @_onLayerChange, this)
       .on("layerremove", @_onLayerChange, this)
+
+    # $("#tabsOverLayers a:last").trigger('click');
     return @_container
+
 
   onRemove: (map) ->
     map
@@ -35,8 +43,8 @@ L.control.switch = L.Control.extend (
     @_update()
     return this
 
-  addOverLayer: (layer, name, overlayControl) ->
-    @_addLayer layer, name, true, overlayControl
+  addOverLayer: (layer, name, overlayControl, tab) ->
+    @_addLayer layer, name, true, overlayControl, tab
     @_update()
     return this
 
@@ -71,6 +79,9 @@ L.control.switch = L.Control.extend (
       link.href = "#"
       link.title = "Layers"
 
+      L.DomEvent
+        .on(link, "mouseover", @_activeTab, this)
+
       if L.Browser.touch
         L.DomEvent
           .on(link, "click", L.DomEvent.stop)
@@ -83,11 +94,65 @@ L.control.switch = L.Control.extend (
       @_expand()
 
     @_baseLayersList = L.DomUtil.create('div', className + '-base', form)
-    @_separator = L.DomUtil.create('div', className + '-separator', form)
+    if typeof @_tabs is "undefined"
+      @_separator = L.DomUtil.create('div', className + '-separator', form)
     @_overlayersList = L.DomUtil.create('div', className + '-overlayers', form)
+
+    if typeof @_tabs isnt "undefined"
+      @_tabsOverLayers = L.DomUtil.create('ul', 'nav nav-tabs', form)
+      $(@_tabsOverLayers).attr 'id', 'tabsOverLayers'
+      @_tabsContentOverLayers = L.DomUtil.create('div', 'tab-content', form)
+      $(@_tabsContentOverLayers).attr 'id', 'tabsContent'
+
+      $.each @_tabs, (tab, obj) =>
+        @_createTab(tab, obj)
+        if obj.tabs is undefined
+          @_hasTabOutros = true
+
+      if @_hasTabOutros
+        obj = {
+          icon: "http://" + document.domain + "/siema/assets/img/icons/world.png"
+          # name: "Outros"
+        }
+        @_createTab("outros", obj )
+
     $(container).append form
 
-  _addLayer: (layer, name, overlayer, overlayControl) ->
+  _createTab: (tab, obj) ->
+    #cria tab
+    id = "tab" + tab
+    newTab = L.DomUtil.create('li', '', @_tabsOverLayers)
+
+    #cria tab content :)
+    newTabContent = L.DomUtil.create('div', 'tab-pane', @_tabsContentOverLayers)
+    $(newTabContent).attr 'id', tab
+
+    newTabName = L.DomUtil.create('a', '', newTab)
+    $(newTabName).attr 'id', id
+    $(newTabName).attr 'href', '#' + tab
+    $(newTabName).attr 'data-toggle', 'tab'
+
+    if obj.name
+      newTabName.innerHTML =  obj.name
+    else
+      newTabName.innerHTML =  '<img src=" ' + obj.icon + '" width="22px" height="22px">'
+
+    if obj.selected
+      @_selectedTab = newTabName
+      @_selectedTabContent = newTabContent
+
+    L.DomEvent
+      .on(newTabName, "click", (->
+        @_selectedTab = newTabName
+        @_selectedTabContent = newTabContent
+      ), this)
+
+    return
+
+  _activeTab: ->
+    $(@_selectedTab).trigger("click")
+
+  _addLayer: (layer, name, overlayer, overlayControl, tab) ->
     id = L.stamp(layer)
 
     @_layers[id] =
@@ -95,6 +160,7 @@ L.control.switch = L.Control.extend (
       name: name
       overlayer: overlayer
       overlayControl: overlayControl
+      tab: tab
 
     if @options.autoZIndex and layer.setZIndex
       @_lastZIndex++
@@ -115,7 +181,8 @@ L.control.switch = L.Control.extend (
       overlayersPresent = overlayersPresent or obj.overlayer
       baseLayersPresent = baseLayersPresent or not obj.overlayer
 
-      @_separator.style.display = (if overlayersPresent and baseLayersPresent then "" else "none")
+      if typeof @_tabs is "undefined"
+        @_separator.style.display = (if overlayersPresent and baseLayersPresent then "" else "none")
 
   _onLayerChange: (e) ->
     obj = @_layers[L.stamp(e.layer)]
@@ -129,7 +196,18 @@ L.control.switch = L.Control.extend (
     @_map.fire(type, obj) if type
 
   _addItem: (obj) ->
-    container = (if obj.overlayer then @_overlayersList else @_baseLayersList)
+    # console.log obj
+    if obj.overlayer
+      if @_tabs
+        if obj.tab
+          container = document.getElementById(obj.tab)
+        else if @_hasTabOutros
+          container = document.getElementById("outros")
+      else
+        container = @_overlayersList
+    else
+      container = @_baseLayersList
+    # container = @_overlayersList
     controlgroup = L.DomUtil.create("div", "control-group", container)
     checked = @_map.hasLayer(obj.layer)
 
@@ -147,16 +225,16 @@ L.control.switch = L.Control.extend (
 
     control = L.DomUtil.create("div", "control", controlgroup)
     toggle = L.DomUtil.create("div", "switch-small", control)
-    $(toggle).addClass("baseLayers") unless obj.overlayer
+    L.DomUtil.addClass toggle, "baseLayers" unless obj.overlayer
     input = L.DomUtil.create("input", "", toggle)
     if obj.overlayControl
       input.type = "checkbox"
-      $(input).addClass("switch-control-layers-selector")
+      L.DomUtil.addClass input, "switch-control-layers-selector"
 
       # insert slider, but exclude from touch devices
       if obj.overlayControl
         slider = L.DomUtil.create("div", "", controlgroup)
-        $(slider).addClass("switch-control-layers-slider")
+        L.DomUtil.addClass slider, "switch-control-layers-slider"
         $(slider).slider
           min: 0
           max: 100

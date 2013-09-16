@@ -182,6 +182,9 @@ H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
 )
 H5.Map.layer.acidentes.setMap H5.Map.base
 
+# icons
+H5.Data.icons = "http://" + document.domain + "/siema/assets/img/icons/"
+
 new L.control.switch(
   "OSM":
     layer: openstreet
@@ -194,24 +197,30 @@ new L.control.switch(
 ,
   "Terras Indígenas":
     layer: terrasIndigenas
-    overlayControl: false
+    tab: "chemicals"
   "Unidade de Convservação":
     layer: unidadeConservacao
-    overlayControl: false
   "Bloco R9":
     layer: blocoR9
-    overlayControl: false
+    tab: "water"
   "Bloco Exploratório":
     layer: blocoExploratorio
-    overlayControl: false
+    tab: "water"
   "Bioma IBGE":
     layer: biomaIBGE
-    overlayControl: false
   "Portos e Terminais":
     layer: portoTerminal
-    overlayControl: false
   "Acidentes Ambientais":
     layer: H5.Map.layer.acidentes.layer
+    overlayControl: true
+,
+  water:
+    icon: H5.Data.icons + "water.png"
+    # name: "Water"
+    selected: true
+  chemicals:
+    # name: "Chemicals"
+    icon: H5.Data.icons + "chemicals.png"
 ).addTo(H5.Map.base)
 
 # }}}

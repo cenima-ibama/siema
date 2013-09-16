@@ -3,10 +3,16 @@
   border-radius: 7px 7px 7px 7px;
   display: none;
   margin: -10% 0 0;
-  max-height: 320px;
   padding: 0 15px 10px;
   width: 280px;
   overflow: auto;
+}
+
+@media (max-width: 979px) {
+  .form-layer-list {
+    max-height: 320px;
+
+  }
 }
 .form-layer-list .control-group {
   padding: 15px 5px;
@@ -62,4 +68,20 @@
 }
 .switch-control-layers-expanded {
   display: block;
+}
+
+.form-layer-list .nav-tabs > ul {
+
+}
+.form-layer-list .nav-tabs > li > a {
+  padding-bottom: 2px;
+  margin-right: 2px;
+  padding-left: 6px;
+  padding-right: 6px;
+  outline: none;
+}
+
+#tabsOverLayers{
+  padding-top: 8px;
+  margin-top: 15px;
 }
