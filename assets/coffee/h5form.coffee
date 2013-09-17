@@ -83,10 +83,10 @@ $(document).ready ->
       collapse = tab.collapse
 
     $(".modal-footer").show()
-    $(btnNext).prop 'style', ''
-    $(btnBack).prop 'style', ''
-    $("#submit").prop 'style', 'display:none;'
-    $(@).prop 'style', 'display:none;'
+    $(btnNext).show()
+    $(btnBack).show()
+    $("#submit").hide()
+    $(@).hide()
 
     # Clean the temporary produt table (tmp_ocorrencia_produto)
     rest = new H5.Rest (
@@ -184,25 +184,14 @@ $(document).ready ->
         hasOleo = document.getElementById("hasOleo")
         isServIBAMA = document.getElementById("isServIBAMA")
 
-        # if isAtual
-        #   # Get the accident data for atualization
-        #   rest = new H5.Rest (
-        #     url: H5.Data.restURL
-        #     table: "tipo_dano_identificado"
-        #     fields: "id_tipo_dano_identificado, nome"
-        #     order: "id_tipo_dano_identificado"
-        #   )
-
         hasOleo.checked = isAcidOleo
 
     if ("#tab" + collapse) is "#tab8"
 
-      $("#submit").prop 'style', ''
-      $("#modalBtnNext").prop 'style', 'display:none;'
-      $("#modalBtnBack").prop 'style', 'display:none;'
-      # $("#modalBtnBack").html('<i class="icon-trash"></i> Cancelar')
-      $("#modalBtnCancel").prop 'style', ''
-
+      $("#submit").show()
+      $("#modalBtnNext").hide()
+      $("#modalBtnBack").hide()
+      $("#modalBtnCancel").show()
 
       if isAtual
         if($("#inputRegistro").prop("value") isnt "")
