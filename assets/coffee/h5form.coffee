@@ -289,8 +289,8 @@ $(document).ready ->
     $("#inputEPSG").prop "disabled", "disabled"
 
   minimapView = new L.Map("minimap",
-    center: new L.LatLng(-10.0, -58.0)
-    zoom: 6
+    center: new L.LatLng(-10.0, -50.0)
+    zoom: 3
     layers: [binghybrid]
     zoomControl: true
     )
