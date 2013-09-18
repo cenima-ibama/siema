@@ -12,7 +12,7 @@
   <div class="box-header"> </div>
   <div class="box-content">
 
-    <?php echo form_open('home/validate', array('id' => 'formAcidentes', 'name' => 'formAcidentes')); ?>
+    <?php echo form_open('form/validate', array('id' => 'formAcidentes', 'name' => 'formAcidentes')); ?>
 
       <div class="accordion" id="accordion2">
         <div class="alert alert-block alert-error fade in" style="display:none;" id="error_box"></div>
@@ -68,10 +68,10 @@
                         <label class="control-label" for="inputEPSG">EPSG</label>
                         <div class="controls">
                           <?php
-                          if (isset($semLocalizacao['checked']))
+                          // if (isset($semLocalizacao['checked']))
                             echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small" disabled="disabled"');
-                          else
-                            echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small"');                           ?>
+                          // else
+                            // echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small"');                           ?>
                         </div>
                       </div>
                     </div>
@@ -832,7 +832,7 @@
       </div>
 
       <div class="checkbox" style="display:none;">
-        <input type="checkbox" id="hasOleo" name="hasOleo" <?php if(isset($hasOleo) and $hasOleo == 'on') {echo ' checked="checked"';} ?>>
+        <?php echo form_input($hasOleo);?>
         <input type="checkbox" id="isServIBAMA" name="isServIBAMA" <?php if(isset($isServIBAMA)) {echo ' checked="checked"';} ?>>
       </div>
 

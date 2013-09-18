@@ -15,7 +15,7 @@
     <link href="<?= base_url()?>assets/css/leaflet-control-switch.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/leaflet-control-geosearch.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/leaflet-control-locate.css" rel="stylesheet">
-    <!-- <link href="<?= base_url()?>assets/css/leaflet-draw.css" rel="stylesheet"> -->
+    <!--<link href="<?= base_url()?>assets/css/leaflet-draw.css" rel="stylesheet"> -->
 
     <!-- Bootstrap -->
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">

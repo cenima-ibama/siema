@@ -232,7 +232,7 @@
             </label>
           </div>
         </div>
-        <?php echo form_open('home/createform', array('id' => 'formCreate', 'target' => 'form_frame')); ?>
+        <?php echo form_open('form/createform', array('id' => 'formCreate', 'target' => 'form_frame')); ?>
           <label class="checkbox" style="display:none;">
             <label id="defaultHtml" name="defaultHtml"></label>
             <input type="checkbox" id="hasOleo" name="hasOleo">
@@ -244,7 +244,7 @@
             ?>
           </label>
         <?php echo form_close(); ?>
-        <?php echo form_open('home/loadform', array('id' => 'formLoad', 'target' => 'form_frame')); ?>
+        <?php echo form_open('form/loadform', array('id' => 'formLoad', 'target' => 'form_frame')); ?>
           <label class="checkbox" style="display:none;">
             <input type="checkbox" id="hasOleo" name="hasOleo">
             <?php

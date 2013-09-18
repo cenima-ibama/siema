@@ -8,10 +8,11 @@
   <script src="<?= base_url()?>assets/js/jquery.maskedinput.min.js"></script>
   <!-- Leaflet -->
   <script src="//cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+  <script src="<?= base_url()?>assets/js/leaflet.fullscreen.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.bing.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.control.geosearch.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.geosearch.provider.google.js"></script>
-  <!-- <script src="<?= base_url()?>assets/js/leaflet.draw.js"></script> -->
+  <script src="<?= base_url()?>assets/js/leaflet.draw.js"></script>
   <!-- Bootstrap -->
   <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrap.select.js"></script>

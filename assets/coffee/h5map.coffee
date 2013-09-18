@@ -163,11 +163,11 @@ H5.Data.shapesURL = "http://" + document.domain + "/siema/geoserve"r
 # display acidentes
 H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
   url: H5.Data.restURL
-  geotable: "tmp_pon"
+  geotable: "ocorrencia_pon"
   fields: "id_ocorrencia"
   srid: 4326
-  geomFieldName: "shape"
-  showAll: true
+  geomFieldName: "shape
+"  showAll: true
   cluster: true
   popupTemplate: null
   focus: false
@@ -226,4 +226,4 @@ new L.control.switch(
     icon: H5.Data.icons + "chemicals.png"
 ).addTo(H5.Map.base)
 
-# }}}
+# }}}l
