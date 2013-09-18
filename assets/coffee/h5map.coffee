@@ -42,45 +42,6 @@ openmapquest = new L.TileLayer(openmapquestUrl,
   maxZoom: 18
   subdomains: openmapquestSub
 )
-
-geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms"
-
-terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
-  layers: "cemam:t_indigena"
-  format: "image/png"
-  transparent: true
-)
-
-unidadeConservacao = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:uc_federal"
-  format: "image/png"
-  transparent: true
-)
-
-blocoR9 = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:bloco_r9"
-  format: "image/png"
-  transparent: true
-)
-
-blocoExploratorio = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:bloco_exploratorio"
-  format: "image/png"
-  transparent: true
-)
-
-biomaIBGE = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:bioma_ibge"
-  format: "image/png"
-  transparent: true
-)
-
-portoTerminal = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:porto_terminal"
-  format: "image/png"
-  transparent: true
-)
-
 # }}}
 # SCREEN SIZE {{{
 # update size of the map container
@@ -155,19 +116,55 @@ new L.control.locate(
   locateOptions: {}
 ).addTo(H5.Map.base)
 
-# display somethings
-H5.Data.restURL = "http://" + document.domain + "/siema/rest"
-H5.Data.shapesURL = "http://" + document.domain + "/siema/geoserve"r
 
+geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms"
+
+terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:t_indigena"
+  format: "image/png"
+  transparent: true
+)
+
+unidadeConservacao = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:uc_federal"
+  format: "image/png"
+  transparent: true
+)
+
+blocoR9 = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:bloco_r9"
+  format: "image/png"
+  transparent: true
+)
+
+blocoExploratorio = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:bloco_exploratorio"
+  format: "image/png"
+  transparent: true
+)
+
+biomaIBGE = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:bioma_ibge"
+  format: "image/png"
+  transparent: true
+)
+
+portoTerminal = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:porto_terminal"
+  format: "image/png"
+  transparent: true
+)
+
+restURL = "http://" + document.domain + "/siema/rest"
 
 # display acidentes
 H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
-  url: H5.Data.restURL
+  url: restURL
   geotable: "ocorrencia_pon"
   fields: "id_ocorrencia"
   srid: 4326
-  geomFieldName: "shape
-"  showAll: true
+  geomFieldName: "shape"
+  showAll: true
   cluster: true
   popupTemplate: null
   focus: false
@@ -212,7 +209,6 @@ new L.control.switch(
     layer: biomaIBGE
   "Portos e Terminais":
     layer: portoTerminal
-
   "Acidentes Ambientais":
     layer: H5.Map.layer.acidentes.layer
     overlayControl: true
