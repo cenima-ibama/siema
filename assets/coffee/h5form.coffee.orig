@@ -307,12 +307,13 @@ $(document).ready ->
     zoom: 3
     layers: [binghybrid]
     zoomControl: true
-    )
+  )
 
   # Add draw functionality to a map
   drawnItems = new L.FeatureGroup()
   minimapView.addLayer(drawnItems)
 
+<<<<<<< HEAD
   drawControl = new L.Control.Draw({
       draw: {
         marker: false
@@ -383,9 +384,19 @@ $(document).ready ->
        restService: "ws_insertquery.php"
       )
 
+      # Restoring from the db
+      # ST_X(
+      #   ST_PointN(
+      #     ST_SetSRID(ST_MakeLine(ST_GeomFromText('LINESTRING(-7.863381805309173 -59.74365234375,-9.838979375579331 -60.5126953125,-7.776308503776192 -56.00830078125,-6.839169626342808 -56.33789062499999)')), 4674)
+      #     ,2
+      #   )
+      # );
+
   minimapView.on 'draw:deleted', (e)->
     console.log e
 
+=======
+>>>>>>> 52062965cfde254e9c09fd7c66dabd1ef2e57bf2
   #add search for the address inputText
   GeoSearch =
     _provider: new L.GeoSearch.Provider.Google

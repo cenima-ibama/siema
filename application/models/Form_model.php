@@ -24,7 +24,7 @@ class Form_model extends CI_Model {
   	$fields = " (";
   	$values = " (";
 
-    $this->firephp->log($form);
+    // $this->firephp->log($form);
 
 
     $fields = $fields . "informacao_geografica,";
@@ -278,6 +278,47 @@ class Form_model extends CI_Model {
       $this->firephp->log($subfields);
     }
 
+    //Saving vectors on database, linking it to the "ocorrencia"
+    $fields = "select * from tmp_lin;";
+    $line = $ocorrenciasDatabase->query($fields);
+
+    $fields = "select * from tmp_pol;";
+    $polygon = $ocorrenciasDatabase->query($fields);
+
+    $this->firephp->log($polygon);
+    $this->firephp->log($polygon->num_rows());
+
+    if($line->num_rows() > 0 || $polygon->num_rows() > 0){
+
+      $sql = " update tmp_lin set id_ocorrencia='" . $id . "';";
+      $sql = $sql . "update tmp_pol set id_ocorrencia='" . $id . "';";
+
+      $fields = " insert into ocorrencia_lin " .
+                  " (id_ocorrencia_lin, id_ocorrencia, descricao, shape)" .
+                  " select nextval('ocorrencia_lin_id_ocorrencia_lin_seq'), " .
+                          "id_ocorrencia, " .
+                          "descricao, " .
+                          "shape " .
+                  " from tmp_lin; ";
+      $fields = $fields . " insert into ocorrencia_pol " .
+                  " (id_ocorrencia_pol, id_ocorrencia, descricao, shape)" .
+                  " select nextval('ocorrencia_pol_id_ocorrencia_pol_seq'), " .
+                          "id_ocorrencia, " .
+                          "descricao, " .
+                          "shape " .
+                  " from tmp_pol; ";
+
+
+      $fields = $fields . " delete from tmp_lin; delete from tmp_pol;";
+
+      $this->firephp->log($sql);
+      $this->firephp->log($fields);
+
+      $ocorrenciasDatabase->query($sql);
+      $teste = $ocorrenciasDatabase->query("select * from tmp_pol;");
+      $this->firephp->log($teste->row_array());
+      $ocorrenciasDatabase->query($fields);
+    }
 
     // Relation R1
     // $this->firephp->log("tipoLocalizacao");
@@ -701,40 +742,6 @@ class Form_model extends CI_Model {
       }
     }
 
-    //Saving vectors on database, linking it to the "ocorrencia"
-    $fields = "select * from tmp_lin;";
-    $line = $ocorrenciasDatabase->query($fields);
-
-    $fields = "select * from tmp_pol;";
-    $polygon = $ocorrenciasDatabase->query($fields);
-
-    if($line->row_array() > 0 || $polygon->row_array() > 0){
-
-      $sql = " update ocorrencia_lin set id_ocorrencia='" . $id . "';";
-      $sql = $sql . "update ocorrencia_pol set id_ocorrencia='" . $id . "';";
-
-      $fields = " insert into ocorrencia_lin " .
-                  " (id_ocorrencia_lin, id_ocorrencia, descricao, shape)" .
-                  " select nextval('ocorrencia_lin_id_ocorrencia_lin_seq'), " .
-                          "id_ocorrencia, " .
-                          "descricao, " .
-                          "shape " .
-                  " from tmp_lin; ";
-      $fields = $fields . " insert into ocorrencia_pol " .
-                  " (id_ocorrencia_pol, id_ocorrencia, descricao, shape)" .
-                  " select nextval('ocorrencia_pol_id_ocorrencia_pol_seq'), " .
-                          "id_ocorrencia, " .
-                          "descricao, " .
-                          "shape " .
-                  " from tmp_pol; ";
-
-
-      $fields = $fields . " delete from tmp_lin; delete from tmp_pol;"
-
-      $ocorrenciasDatabase->query($sql);
-      $ocorrenciasDatabase->query($fields);
-    }
-
     // Relation R1
     // Clean all relations before insert the new ones
     $fields = "delete from r1 where id_ocorrencia='" . $id . "';";
@@ -926,6 +933,7 @@ class Form_model extends CI_Model {
 
     $this->load->helper('date');
 
+    // $this->firephp->log($dbResult);
 
     // Informations about the oil form
     if($dbResult['ocorrencia_oleo']) {
@@ -1095,7 +1103,7 @@ class Form_model extends CI_Model {
 
     $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
 
-    $query = " select *, " .
+    $query = " select ocorrencia.*, " .
                 " ST_X(shape) as inputLng, " .
                 " ST_Y(shape) as inputLat, " .
                 " ST_SRID(shape) as inputEPSG, " .
@@ -1109,7 +1117,7 @@ class Form_model extends CI_Model {
 
     $res = $ocorrenciasDatabase->query($query);
 
-    // $this->firephp->log($res->result_array());
+    // $this->firephp->log($res->row_array());
 
     // return $res->row_array();
 
