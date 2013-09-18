@@ -276,7 +276,7 @@
                 </div>
               </div>
               <?php
-                if  (isset($hasOleo) and $hasOleo == 'on') {
+                if  (isset($hasOleo)) {
                   echo '
                     <br />
                     <div class="row-fluid" data-oleo="true">
@@ -314,7 +314,7 @@
                         </div>
                       </div>
                     </div>';
-              }
+                }
               ?>
             </div>
           </div>
@@ -397,7 +397,7 @@
               </div>
 
               <?php
-                if (isset($hasOleo) and $hasOleo == 'on') {
+                if (isset($hasOleo)) {
                   echo '
                     <br />
                     <div class="row-fluid" data-oleo="true">
@@ -735,7 +735,7 @@
                   </div>
                 </div>
                 <?php
-                  if (isset($hasOleo)  and $hasOleo == 'on' && isset($isServIBAMA)) {
+                  if (isset($hasOleo) && isset($isServIBAMA)) {
                     echo '
                       <div class="controls span12">
                         <label class="control-label span5" for="inputFuncaoNavio">Função navio ou instalação:
