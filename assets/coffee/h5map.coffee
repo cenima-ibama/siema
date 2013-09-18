@@ -157,6 +157,8 @@ new L.control.locate(
 
 # display somethings
 H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+H5.Data.shapesURL = "http://" + document.domain + "/siema/geoserve"r
+
 
 # display acidentes
 H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
