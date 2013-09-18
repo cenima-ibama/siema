@@ -8,13 +8,14 @@ class Home extends CI_Controller {
         $this->load->library('AuthLDAP');
 
         // Enable firebug
-        $this->load->library('Firephp');
+        // $this->load->library('Firephp');
         $this->firephp->setEnabled(TRUE);
     }
 
     public function index()
     {
-        //$this->firephp->log("Index");
+        // $this->firephp->log("Index");
+
         if($this->authldap->is_authenticated()) {
             $data['name'] = $this->session->userdata('name');
             $data['username'] = $this->session->userdata('username');
@@ -34,21 +35,16 @@ class Home extends CI_Controller {
 
         $this->load->model('form_model');
 
-        if ($form_data['typeOfForm'] == 'create') {
-
-            $this->form_model->save($form_data);
-
-        } else {
-
-            $this->form_model->update($form_data);
-
-        }
+        $this->form_model->save($form_data);
 
         $this->load->view('templates/form_success');
     }
 
     public function formSetRules ($form_data)
     {
+
+        // Validation message
+        // $this->form_validation->set_error_delimiters('<p class="error">', '</p>');
 
         $this->form_validation->set_message('required', 'O Campo %s é obrigatório');
 
@@ -106,11 +102,6 @@ class Home extends CI_Controller {
         } else {
             $this->form_validation->set_rules('semCausa', 'Causa Provavel do Acidente', 'required');
         }
-        // Validating the "Situação Atual da Descarga"
-        if (!isset($form_data['SituacaoDescarga'])) {
-            $this->form_validation->set_rules('SituacaoDescarga', 'Situação Atual da Descarga', 'required');
-        }
-
 
         // Validating the Damage Type
         if (!isset($form_data['semDanos'])) {
@@ -123,7 +114,7 @@ class Home extends CI_Controller {
         if (!isset($form_data['semResponsavel'])) {
             $this->form_validation->set_rules('inputResponsavel', 'Nome da Empresa/Orgão Responsavel', 'required');
             $this->form_validation->set_rules('slctLicenca', 'Licença Ambiental da Empresa/Orgão Responsavel', 'required');
-            // $this->form_validation->set_rules('inputCPFCNPJ', 'CPF/CNPJ da Empresa/Orgão Responsavel', 'required');
+            $this->form_validation->set_rules('inputCPFCNPJ', 'CPF/CNPJ da Empresa/Orgão Responsavel', 'required');
         } else {
             $this->form_validation->set_rules('semResponsavel', 'Responsavel', 'required');
         }
@@ -135,18 +126,12 @@ class Home extends CI_Controller {
             $this->form_validation->set_rules('semInstituicao', 'Instituição Atuando', 'required');
         }
 
-
-        // Validating the "Existencia de Plano de Emergencia ou Similar"
-        if (!isset($form_data['planoEmergencia'])) {
-            $this->form_validation->set_rules('planoEmergencia', 'Plano de Emergencia ou Similar', 'required');
-        }
-
         // Validating the oil form: ship identification
         if (!isset($form_data['semNavioInstalacao'])) {
-            // $this->form_validation->set_rules('inputNomeNavio', 'Nome do Navio', 'required');
-            // $this->form_validation->set_rules('inputNomeInstalacao', 'Nome da Instalação', 'required');
+            $this->form_validation->set_rules('inputNomeNavio', 'Nome do Navio', 'required');
+            $this->form_validation->set_rules('inputNomeInstalacao', 'Nome da Instalação', 'required');
         } else {
-            $this->form_validation->set_rules('semNavioInstalacao', 'Informações sobre o navio/instalação', 'required');
+            $this->form_validation->set_rules('semInstituicao', 'Informações sobre o navio/instalação', 'required');
         }
     }
 
@@ -159,23 +144,24 @@ class Home extends CI_Controller {
         // Set the rules for validating the form
         $this->formSetRules($form_data);
 
+        // $this->firephp->log($form_data);
+
         if ($this->form_validation->run() == FALSE) {
             $this->validateForm($form_data);
         } else {
             $this->insertDB($form_data);
             if($this->session->userdata('logged_in'))
                 $this->sendMail($form_data);
-
         }
     }
 
     public function createForm()
     {
-        $formLoad = $this->input->post();
+        $data = $this->input->post();
 
-        $formLoad['typeOfForm'] = 'create';
+        $data['typeOfForm'] = 'create';
 
-        $data = $this->dataForm($formLoad);
+        $data = $this->dataForm($data);
 
         $form['data'] = $data;
 
@@ -185,24 +171,26 @@ class Home extends CI_Controller {
 
     public function dataForm($formLoad)
     {
+        // 1. Localizacao
 
-        $data['typeOfForm'] = $formLoad['typeOfForm'];
-
-        // $this->firephp->log($formLoad);
-
-
-        // Value of the "Comunicado"
-        $data['comunicado'] = isset($formLoad['comunicado']) ? $formLoad['comunicado'] : '';
-
-
-        $data['typeOfForm'] = array (
-            'id'            => 'typeOfForm',
-            'name'          => 'typeOfForm',
-            'type'          => 'hidden',
-            'value'         => $formLoad['typeOfForm']
+        $data['typeOfForm'] = array(
+            'id'           => 'typeOfForm',
+            'name'         => 'typeOfForm',
+            'type'         => 'hidden',
+            'value'        => set_value('typeOfForm', $formLoad['typeOfForm'])
         );
 
-        // 1. Localizacao
+        $data['hasOleo']    = array(
+            'id'           => 'hasOleo',
+            'name'         => 'hasOleo',
+            'type'         => 'checkbox',
+            'style'        => 'display:none;',
+        );
+        if(isset($formLoad['hasOleo'])) {
+            $data['hasOleo'] += array (
+                "checked"   =>  'checked'
+            );
+        }
 
         $data['inputLat'] = array(
             'id'           => 'inputLat',
@@ -210,7 +198,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => 'Latitude',
-            'value'        => set_value('inputLat', isset($formLoad['inputLat']) ? $formLoad['inputLat'] : "")
+            'value'        => set_value('inputLat')
         );
         if(set_value('semLocalizacao') == "on"){
             $data['inputLat'] += array(
@@ -224,7 +212,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => 'Longitude',
-            'value'        => set_value('inputLng', isset($formLoad['inputLng']) ? $formLoad['inputLng'] : "")
+            'value'        => set_value('inputLng')
         );
         if(set_value('semLocalizacao') == "on"){
             $data['inputLng'] += array(
@@ -238,9 +226,6 @@ class Home extends CI_Controller {
             '4326'         => 'WGS84 [4326]',
             '4291'         => 'SAD69 [4291]'
         );
-        if(isset($formLoad['inputEPSG'])) {
-            $data['inputEPSG_Selected'] = $formLoad['inputEPSG'];
-        }
 
         $data['inputMunicipio'] = array(
             'id'           => 'inputMunicipio',
@@ -248,8 +233,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => 'Nome',
-            'maxlength'    => '128',
-            'value'        => set_value('inputMunicipio', isset($formLoad['inputMunicipio']) ? $formLoad['inputMunicipio'] : "")
+            'value'        => set_value('inputMunicipio')
         );
         if(set_value('semLocalizacao') == "on"){
             $data['inputMunicipio'] += array(
@@ -263,8 +247,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => 'UF',
-            'maxlength'    => '2',
-            'value'        => set_value('inputUF', isset($formLoad['inputUF']) ? $formLoad['inputUF'] : "")
+            'value'        => set_value('inputUF')
         );
         if(set_value('semLocalizacao') == "on"){
             $data['inputUF'] += array(
@@ -278,8 +261,7 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-large',
             'placeholder'  => '',
-            'maxlength'    => '512',
-            'value'        => set_value('inputEndereco', isset($formLoad['inputEndereco']) ? $formLoad['inputEndereco'] : "")
+            'value'        => set_value('inputEndereco')
         );
         if(set_value('semLocalizacao') == "on"){
             $data['inputEndereco'] += array(
@@ -306,9 +288,9 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-medium',
             'placeholder'  => 'DD/MM/AAAA',
-            'value'        => isset($formLoad['inputDataObs']) ? $formLoad['inputDataObs'] : set_value('inputDataObs')
+            'value'        => set_value('inputDataObs')
         );
-        if(isset($formLoad['semDataObs'])){
+        if(set_value('semDataObs') == "on"){
             $data['inputDataObs'] += array(
                 'disabled' => 'disabled'
             );
@@ -320,9 +302,9 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-medium',
             'placeholder'  => 'HH:MM',
-            'value'        => set_value('inputHoraObs', isset($formLoad['inputHoraObs']) ? $formLoad['inputHoraObs'] : "")
+            'value'        => set_value('inputHoraObs')
         );
-        if(isset($formLoad['semDataObs'])){
+        if(set_value('semDataObs') == "on"){
             $data['inputHoraObs'] += array(
                 'disabled' => 'disabled'
             );
@@ -334,11 +316,6 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => 'obsMatutino',
         );
-        if(isset($formLoad['semDataObs'])){
-            $data['PerObsMatu'] += array(
-                'disabled' => 'disabled'
-            );
-        }
 
         $data['PerObsVesper'] = array(
             'id'           => 'PerObsVesper',
@@ -346,11 +323,6 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => 'obsVespertino',
         );
-        if(isset($formLoad['semDataObs'])){
-            $data['PerObsVesper'] += array(
-                'disabled' => 'disabled'
-            );
-        }
 
         $data['PerObsNotu'] = array(
             'id'           => 'PerObsNotu',
@@ -358,11 +330,6 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => 'obsNoturno',
         );
-        if(isset($formLoad['semDataObs'])){
-            $data['PerObsNotu'] += array(
-                'disabled' => 'disabled'
-            );
-        }
 
         $data['PerObsMadru'] = array(
             'id'           => 'PerObsMadru',
@@ -370,21 +337,13 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => 'obsMadrugada',
         );
-        if(isset($formLoad['semDataObs'])){
-            $data['PerObsMadru'] += array(
-                'disabled' => 'disabled'
-            );
-        }
-
-        // Values of the Period
-        $data['PeriodoObs'] = isset($formLoad['PeriodoObs']) ? $formLoad['PeriodoObs'] : '' ;
 
         $data['semDataObs'] = array(
             'id'           => 'semDataObs',
             'name'         => 'semDataObs',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['semDataObs'])){
+        if(set_value('semDataObs') == "on"){
             $data['semDataObs'] += array(
                 'checked'  => 'checked'
             );
@@ -396,9 +355,9 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-medium',
             'placeholder'  => 'DD/MM/AAAA',
-            'value'        => isset($formLoad['inputDataInci']) ? $formLoad['inputDataInci'] : set_value('inputDataInci')
+            'value'        => set_value('inputDataInci')
         );
-        if(isset($formLoad['semDataInci'])){
+        if(set_value('semDataObs') == "on"){
             $data['inputDataInci'] += array(
                 'disabled' => 'disabled'
             );
@@ -410,9 +369,9 @@ class Home extends CI_Controller {
             'type'         => 'datetime',
             'class'        => 'input-medium',
             'placeholder'  => 'HH:MM',
-            'value'        => set_value('inputHoraInci', isset($formLoad['inputHoraInci']) ? $formLoad['inputHoraInci'] : "")
+            'value'        => set_value('inputHoraInci')
         );
-        if(isset($formLoad['semDataInci'])){
+        if(set_value('semDataInci') == "on"){
             $data['inputHoraInci'] += array(
                 'disabled' => 'disabled'
             );
@@ -424,11 +383,6 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => 'inciMatutino',
         );
-        if(isset($formLoad['semDataInci'])){
-            $data['PerInciMatu'] += array(
-                'disabled' => 'disabled'
-            );
-        }
 
         $data['PerInciVesper'] = array(
             'id'           => 'PerInciVesper',
@@ -436,11 +390,6 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => 'inciVespertino',
         );
-        if(isset($formLoad['semDataInci'])){
-            $data['PerInciVesper'] += array(
-                'disabled' => 'disabled'
-            );
-        }
 
         $data['PerInciNotu'] = array(
             'id'           => 'PerInciNotu',
@@ -448,11 +397,6 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => 'inciNoturno',
         );
-        if(isset($formLoad['semDataInci'])){
-            $data['PerInciNotu'] += array(
-                'disabled' => 'disabled'
-            );
-        }
 
         $data['PerInciMadru'] = array(
             'id'           => 'PerInciMadru',
@@ -460,21 +404,13 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => 'inciMadrugada',
         );
-        if(isset($formLoad['semDataInci'])){
-            $data['PerInciMadru'] += array(
-                'disabled' => 'disabled'
-            );
-        }
-
-        // Values of the Period
-        $data['PeriodoInci'] = isset($formLoad['PeriodoInci']) ? $formLoad['PeriodoInci'] : '' ;
 
         $data['semDataInci'] = array(
             'id'           => 'semDataInci',
             'name'         => 'semDataInci',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['semDataInci'])){
+        if(set_value('semDataInci') == "on"){
             $data['semDataInci'] += array(
                 'checked'  => 'checked'
             );
@@ -487,10 +423,9 @@ class Home extends CI_Controller {
             'name'         => 'inputCompOrigem',
             'rows'         => '2',
             'class'        => 'input-large',
-            'maxlength'    => '150',
             'value'        => set_value('inputCompOrigem')
         );
-        if(isset($formLoad['semOrigem'])){
+        if(set_value('semOrigem') == "on"){
             $data['inputCompOrigem'] += array(
                 'disabled' => 'disabled'
             );
@@ -501,14 +436,11 @@ class Home extends CI_Controller {
             'name'         => 'semOrigem',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['semOrigem'])){
+        if(set_value('semOrigem') == "on"){
             $data['semOrigem'] += array(
                 'checked'  => 'checked'
             );
         }
-
-        // Checkbox fields
-        $data['tipoLocalizacao'] = isset($formLoad['tipoLocalizacao']) ? $formLoad['tipoLocalizacao'] : '';
 
         // 4. Tipo do Evento
 
@@ -517,10 +449,9 @@ class Home extends CI_Controller {
             'name'         => 'inputNomeNavio',
             'type'         => 'text',
             'class'        => 'input-medium',
-            'maxlength'    => '150',
-            'value'        => set_value('inputNomeNavio', isset($formLoad['inputNomeNavio']) ? $formLoad['inputNomeNavio'] : '')
+            'value'        => set_value('inputNomeNavio')
         );
-        if(isset($formLoad['semNavioInstalacao'])){
+        if(set_value('semNavioInstalacao') == "on"){
             $data['inputNomeNavio'] += array(
                 'disabled' => 'disabled'
             );
@@ -531,10 +462,9 @@ class Home extends CI_Controller {
             'name'         => 'inputNomeInstalacao',
             'type'         => 'text',
             'class'        => 'input-medium',
-            'maxlength'    => '150',
-            'value'        => set_value('inputNomeInstalacao', isset($formLoad['inputNomeInstalacao']) ? $formLoad['inputNomeInstalacao'] : '')
+            'value'        => set_value('inputNomeInstalacao')
         );
-        if(isset($formLoad['semNavioInstalacao'])){
+        if(set_value('semNavioInstalacao') == "on"){
             $data['inputNomeInstalacao'] += array(
                 'disabled' => 'disabled'
             );
@@ -545,7 +475,7 @@ class Home extends CI_Controller {
             'name'         => 'semNavioInstalacao',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['semNavioInstalacao'])){
+        if(set_value('semNavioInstalacao') == "on"){
             $data['semNavioInstalacao'] += array(
                 'checked'  => 'checked'
             );
@@ -556,10 +486,9 @@ class Home extends CI_Controller {
             'name'         => 'inputCompEvento',
             'rows'         => '2',
             'class'        => 'input-large',
-            'maxlength'    => '150',
             'value'        => set_value('inputCompEvento')
         );
-        if(isset($formLoad['semEvento'])){
+        if(set_value('semEvento') == "on"){
             $data['inputCompEvento'] += array(
                 'disabled' => 'disabled'
             );
@@ -570,13 +499,11 @@ class Home extends CI_Controller {
             'name'         => 'semEvento',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['semEvento'])){
+        if(set_value('semEvento') == "on"){
             $data['semEvento'] += array(
                 'checked'  => 'checked'
             );
         }
-
-        $data['tipoEvento'] = isset($formLoad['tipoEvento']) ? $formLoad['tipoEvento'] : '';
 
         // 6. Detalhes do acidente
 
@@ -585,10 +512,9 @@ class Home extends CI_Controller {
             'name'         => 'inputCausaProvavel',
             'rows'         => '2',
             'class'        => 'input-large',
-            'maxlength'    => '2000',
-            'value'        => set_value('inputCausaProvavel', isset($formLoad['inputCausaProvavel']) ? $formLoad['inputCausaProvavel'] : '')
+            'value'        => set_value('inputCausaProvavel')
         );
-        if(isset($formLoad['semCausa'])){
+        if(set_value('semCausa') == "on"){
             $data['inputCausaProvavel'] += array(
                 'disabled' => 'disabled'
             );
@@ -599,7 +525,7 @@ class Home extends CI_Controller {
             'name'         => 'semCausa',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['semCausa'])){
+        if(set_value('semCausa') == "on"){
             $data['semCausa'] += array(
                 'checked'  => 'checked'
             );
@@ -611,11 +537,6 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => set_value('SitParal', 1)
         );
-        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '1'){
-            $data['SitParal'] += array(
-                'checked'  => 'checked'
-            );
-        }
 
         $data['SitNaoParal'] = array(
             'id'           => 'SitNaoParal',
@@ -623,11 +544,6 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => set_value('SitNaoParal', 2)
         );
-        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '2'){
-            $data['SitNaoParal'] += array(
-                'checked'  => 'checked'
-            );
-        }
 
         $data['SitSemCondi'] = array(
             'id'           => 'SitSemCondi',
@@ -635,23 +551,13 @@ class Home extends CI_Controller {
             'type'         => 'radio',
             'value'        => set_value('SitSemCondi', 3)
         );
-        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '3'){
-            $data['SitSemCondi'] += array(
-                'checked'  => 'checked'
-            );
-        }
 
         $data['SitNaoSeApl'] = array(
             'id'           => 'SitNaoSeApl',
             'name'         => 'SituacaoDescarga',
             'type'         => 'radio',
-            'value'        => set_value('SitNaoSeApl', 4)
+            'value'        => set_value('SitNaoSeApl', 2)
         );
-        if(isset($formLoad['SituacaoDescarga']) and $formLoad['SituacaoDescarga'] == '4'){
-            $data['SitNaoSeApl'] += array(
-                'checked'  => 'checked'
-            );
-        }
 
         // 7. Danos identificados
 
@@ -659,11 +565,10 @@ class Home extends CI_Controller {
             'id'           => 'inputCompDano',
             'name'         => 'inputCompDano',
             'rows'         => '2',
-            'maxlength'    => '1000',
             'class'        => 'input-large',
             'value'        => set_value('inputCompDano')
         );
-        if(isset($formLoad['semDanos'])){
+        if(set_value('semDanos') == "on"){
             $data['inputCompDano'] += array(
                 'disabled' => 'disabled'
             );
@@ -673,12 +578,11 @@ class Home extends CI_Controller {
             'id'           => 'inputDesDanos',
             'name'         => 'inputDesDanos',
             'rows'         => '2',
-            'maxlength'    => '2500',
             'class'        => 'input-large',
             'value'        => set_value('inputDesDanos')
         );
-        if(isset($formLoad['semDanos'])){
-            $data['inputDesDanos'] += array(
+        if(set_value('semDanos') == "on"){
+            $data['inputDesDano'] += array(
                 'disabled' => 'disabled'
             );
         }
@@ -688,13 +592,11 @@ class Home extends CI_Controller {
             'name'         => 'semDanos',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['semDanos'])){
+        if(set_value('semDanos') == "on"){
             $data['semDanos'] += array(
                 'checked'  => 'checked'
             );
         }
-
-        $data['tipoDanoIdentificado'] = isset($formLoad['tipoDanoIdentificado']) ? $formLoad['tipoDanoIdentificado'] : '';
 
         // 8. Indentificacao dos responsáveis
 
@@ -704,10 +606,9 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => '',
-            'maxlength'    => '150',
             'value'        => set_value('inputResponsavel')
         );
-        if(isset($formLoad['semResponsavel'])){
+        if(set_value('semResponsavel') == "on"){
             $data['inputResponsavel'] += array(
                 'disabled' => 'disabled'
             );
@@ -719,10 +620,9 @@ class Home extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => '',
-            'maxlength'    => '20',
             'value'        => set_value('inputCPFCNPJ')
         );
-        if(isset($formLoad['semResponsavel'])){
+        if(set_value('semResponsavel') == "on"){
             $data['inputCPFCNPJ'] += array(
                 'disabled' => 'disabled'
             );
@@ -741,7 +641,7 @@ class Home extends CI_Controller {
             'name'         => 'semResponsavel',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['semResponsavel'])){
+        if(set_value('semResponsavel') == "on"){
             $data['semResponsavel'] += array(
                 'checked'  => 'checked'
             );
@@ -754,10 +654,9 @@ class Home extends CI_Controller {
             'name'         => 'inputCompInstituicao',
             'rows'         => '2',
             'class'        => 'input-large',
-            'maxlength'    => '150',
             'value'        => set_value('inputCompInstituicao')
         );
-        if(isset($formLoad['semInstituicao'])){
+        if(set_value('semInstituicao') == "on"){
             $data['inputCompInstituicao'] += array(
                 'disabled' => 'disabled'
             );
@@ -768,47 +667,34 @@ class Home extends CI_Controller {
             'name'         => 'semInstituicao',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['semInstituicao'])){
+        if(set_value('semInstituicao') == "on"){
             $data['semInstituicao'] += array(
                 'checked'  => 'checked'
             );
         }
 
-        $data['instituicaoAtuandoLocal'] = isset($formLoad['instituicaoAtuandoLocal']) ? $formLoad['instituicaoAtuandoLocal'] : '';
-
         // 10. Procedimentos adotados
 
         $data['planoEmergSim'] = array(
-            'id'           => 'planoEmergSim',
-            'name'         => 'planoEmergencia',
+            'id'           => 'Sim',
+            'name'         => 'planoEmergincia',
             'type'         => 'radio',
             'value'        => set_value('planoEmergSim', 0)
         );
-        if(isset($formLoad['planoEmergencia']) && ($formLoad['planoEmergencia'] == '1')){
-            $data['planoEmergSim'] += array(
-                'checked'  => 'checked'
-            );
-        }
 
         $data['planoEmergNao'] = array(
-            'id'           => 'planoEmergNao',
-            'name'         => 'planoEmergencia',
+            'id'           => 'Nao',
+            'name'         => 'planoEmergincia',
             'type'         => 'radio',
             'value'        => set_value('planoEmergNao', 1)
         );
-        if(isset($formLoad['planoEmergencia']) && ($formLoad['planoEmergencia'] == '0')){
-            $data['planoEmergNao'] += array(
-                'checked'  => 'checked'
-            );
-        }
 
         $data['planoAcionado'] = array(
             'id'           => 'planoAcionado',
             'name'         => 'planoAcionado',
             'type'         => 'checkbox',
-            'value'        => 'on'
         );
-        if(isset($formLoad['planoAcionado'])){
+        if(set_value('planoAcionado') == "on"){
             $data['planoAcionado'] += array(
                 'checked'  => 'checked'
             );
@@ -819,7 +705,7 @@ class Home extends CI_Controller {
             'name'         => 'outrasMedidas',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['outrasMedidas'])){
+        if(set_value('outrasMedidas') == "on"){
             $data['outrasMedidas'] += array(
                 'checked'  => 'checked'
             );
@@ -830,7 +716,6 @@ class Home extends CI_Controller {
             'name'         => 'inputMedidasTomadas',
             'rows'         => '2',
             'class'        => 'input-large',
-            'maxlength'    => '1000',
             'value'        => set_value('inputMedidasTomadas')
         );
 
@@ -840,23 +725,20 @@ class Home extends CI_Controller {
             'id'           => 'inputNomeInformante',
             'name'         => 'inputNomeInformante',
             'class'        => 'input-large',
-            'maxlength'    => '150',
-            'value'        => set_value('inputNomeInformante', $this->session->userdata('name'))
+            'value'        => set_value('inputNomeInformante',  $this->session->userdata('name'))
         );
 
         $data['inputFuncaoNavio'] = array(
             'id'           => 'inputFuncaoNavio',
             'name'         => 'inputFuncaoNavio',
             'class'        => 'input-large',
-            'maxlength'    => '150',
-            'value'        => set_value('inputFuncaoNavio', isset($formLoad['inputFuncaoNavio']) ? $formLoad['inputFuncaoNavio'] : '')
+            'value'        => set_value('inputFuncaoNavio')
         );
 
         $data['inputEmailInformante'] = array(
             'id'           => 'inputEmailInformante',
             'name'         => 'inputEmailInformante',
             'class'        => 'input-large',
-            'maxlength'    => '150',
             'value'        => set_value('inputEmailInformante', $this->session->userdata('mail'))
         );
 
@@ -864,8 +746,7 @@ class Home extends CI_Controller {
             'id'           => 'inputTelInformante',
             'name'         => 'inputTelInformante',
             'class'        => 'input-large',
-            'maxlength'    => '13',
-            'value'        => set_value('inputTelInformante', isset($formLoad['inputTelInformante']) ? $formLoad['inputTelInformante'] : '')
+            'value'        => set_value('inputTelInformante')
         );
 
         // 12. Informacoes gerais
@@ -875,33 +756,37 @@ class Home extends CI_Controller {
             'name'         => 'inputDesOcorrencia',
             'rows'         => '2',
             'class'        => 'input-large',
-            'maxlength'    => '2500',
-            'value'        => set_value('inputDesOcorrencia', isset($formLoad['inputDesOcorrencia']) ? $formLoad['inputDesOcorrencia'] : '')
+            'value'        => set_value('inputDesOcorrencia')
         );
 
         $data['inputDesObs'] = array(
             'id'           => 'inputDesObs',
             'name'         => 'inputDesObs',
             'rows'         => '2',
-            'maxlength'    => '2000',
             'class'        => 'input-large',
-            'value'        => set_value('inputDesObs', isset($formLoad['inputDesObs']) ? $formLoad['inputDesObs'] : '')
+            'value'        => set_value('inputDesObs')
         );
 
-        // 13. Fonte da Informação.
+        // Values of the Period
+        $data['PeriodoObs'] = isset($formLoad['PeriodoObs']) ? $formLoad['PeriodoObs'] : '' ;
+
+        $data['PeriodoInci'] = isset($formLoad['PeriodoInci']) ? $formLoad['PeriodoInci'] : '' ;
+
+
+        // Value of the "Comunicado"
+        $data['comunicado'] = isset($formLoad['comunicado']) ? $formLoad['comunicado'] : '';
+
+
+        // Checkbox fields
+        $data['tipoLocalizacao'] = isset($formLoad['tipoLocalizacao']) ? $formLoad['tipoLocalizacao'] : '';
+
+        $data['tipoEvento'] = isset($formLoad['tipoEvento']) ? $formLoad['tipoEvento'] : '';
+
+        $data['tipoDanoIdentificado'] = isset($formLoad['tipoDanoIdentificado']) ? $formLoad['tipoDanoIdentificado'] : '';
+
+        $data['instituicaoAtuandoLocal'] = isset($formLoad['instituicaoAtuandoLocal']) ? $formLoad['instituicaoAtuandoLocal'] : '';
+
         $data['tipoFonteInformacao'] = isset($formLoad['tipoFonteInformacao']) ? $formLoad['tipoFonteInformacao'] : '';
-
-        $this->firephp->log($formLoad);
-        // $this->firephp->log($formLoad['hasOleo']);
-        // $this->firephp->log($formLoad['ocorrencia_oleo']);
-
-        // Variables that control the type or the form.
-        if(isset($formLoad['hasOleo']) and $formLoad['hasOleo'] != 'N')
-        {
-            $data['hasOleo'] = 'on';
-        }
-
-        $data['isServIBAMA'] = isset($formLoad['isServIBAMA']) ? $formLoad['isServIBAMA'] : '';
 
         return $data;
     }
@@ -912,19 +797,16 @@ class Home extends CI_Controller {
 
         $this->load->model('form_model');
 
-        $formLoad = $this->form_model->load($nro_ocorrencia);
+        $data = $this->form_model->load($nro_ocorrencia);
 
-        if ($formLoad != "") {
+        if ($data != "") {
+            $this->firephp->log($data);
 
-            // $this->firephp->log($formLoad);
-
-            $formLoad['typeOfForm'] = "load";
-
-            $data = $this->dataForm($formLoad);
+            $data['typeOfForm'] = "load";
 
             $form['data'] = $data;
 
-            // $this->firephp->log($data);
+            // $this->firephp->log($form);
 
             $this->load->view('templates/form',$form);
         } else {
@@ -940,16 +822,16 @@ class Home extends CI_Controller {
 
         // $this->firephp->log($form);
 
-        $form['data'] = $data;
+        $data['typeOfForm'] = "validate";
 
-        $this->firephp->log($form);
+        $form['data'] = $data;
 
         $this->load->view('templates/form', $form);
     }
 
     public function sendMail($form_data)
     {
-        $this->firephp->log("sendMail!!");
+
         $config = Array(
             'protocol' => "smtp",
             'smtp_host' => "mailrelay.ibama.gov.br",
@@ -959,12 +841,11 @@ class Home extends CI_Controller {
             'charset'   => "iso-8859-1"
             );
 
-
         $this->load->library("email", $config);
         $this->email->set_newline("\r\n");
 
         $this->email->from("ibama.siema@gmail.com", "SIEMA");
-        $this->email->to("ibama.siema@gmail.com");
+        $this->email->to($this->session->userdata('mail'));
 
         $this->email->subject($form_data['comunicado'] . ' - SIEMA');
         $this->email->message('Formuário número '. $form_data['comunicado'] . ' enviado com sucesso.');

@@ -8,6 +8,29 @@ $(document).ready ->
   _tipoFonteInformacao = null
   _tipoProduto = null
 
+  idOcorrencia = null
+
+  if !$("#comunicado").val()
+    date = new Date()
+
+    seconds = parseInt(date.getSeconds() + (date.getHours() * 60 * 60), 10)
+    nroComunicado = "" + parseInt(date.getFullYear(),10) + parseInt(date.getMonth() + 1,10) + parseInt(date.getDate(),10) + seconds
+
+    $("#comunicado").val(nroComunicado)
+    $("#nroComunicado").html(nroComunicado)
+
+  # Get the data from the database
+  rest = new H5.Rest (
+    url: H5.Data.restURL
+    table: "ocorrencia"
+    fields: "id_ocorrencia"
+    parameters: "nro_ocorrencia%3D'" + $("#comunicado").prop('value') + "'"
+  )
+
+  $.each rest.data, (e,prop)->
+    $.each prop, (nameField, nameValue)->
+      idOcorrencia = nameValue
+
   # Get the product name from the database, by ajax
   rest = new H5.Rest (
     url: H5.Data.restURL
@@ -41,15 +64,6 @@ $(document).ready ->
     $("#modalBtnCancel").prop 'style', 'display:none;'
     $("#btnClose").prop 'style', 'display:none;'
     $(".modal-footer").show()
-
-  if !$("#comunicado").val()
-    date = new Date()
-
-    seconds = parseInt(date.getSeconds() + (date.getHours() * 60 * 60), 10)
-    nroComunicado = "" + parseInt(date.getFullYear(),10) + parseInt(date.getMonth() + 1,10) + parseInt(date.getDate(),10) + seconds
-
-    $("#comunicado").val(nroComunicado)
-    $("#nroComunicado").html(nroComunicado)
 
   #hide footer o form when click on topbar
   $("#btn-form").click (event) ->
@@ -280,7 +294,7 @@ $(document).ready ->
     attribution: ""
     )
   # update size of the map container
-  $( '#minimap' ).css("height", "205px")
+  $( '#minimap' ).css("height", "371px")
   $( '#minimap' ).css("width", "100%")
   $( '#minimap' ).css("box-shadow", "0 0 0 1px rgba(0, 0, 0, 0.15)")
   $( '#minimap' ).css("border-radius", "4px")
@@ -304,8 +318,92 @@ $(document).ready ->
     zoom: 6
     layers: [binghybrid]
     zoomControl: true
-    )
+  )
 
+  # Add draw functionality to a map
+  drawnItems = new L.FeatureGroup()
+  minimapView.addLayer(drawnItems)
+
+  drawControl = new L.Control.Draw({
+      draw: {
+        marker: false
+      },
+      edit: {
+        featureGroup: drawnItems
+      }
+  })
+  minimapView.addControl(drawControl);
+
+  minimapView.on 'draw:created', (e)->
+    type = e.layerType
+
+    layer = e.layer
+
+    console.log (e.layer)
+
+    drawnItems.addLayer(layer);
+
+    if (type is 'polygon')
+      # Saves a polygon
+      firstPoint = ""
+
+      sql = "(id_tmp_pol, id_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + idOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
+
+      $.each layer._latlngs, ->
+        if firstPoint is ""
+          firstPoint = @
+
+        sql = sql + @.lat + " " + @.lng
+
+        sql = sql +  ","
+
+      sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + ")))"
+
+      console.log(sql)
+
+      # Insert the figure in a temporary table.
+      rest = new H5.Rest (
+       url: H5.Data.restURL
+       fields: sql
+       table: "tmp_pol"
+       restService: "ws_insertquery.php"
+      )
+
+    else if (type is 'polyline')
+      # Saves a polyline
+      firstPoint = ""
+
+      sql = "(id_tmp_lin, id_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + idOcorrencia + ",ST_GeomFromText('LINESTRING("
+
+      $.each layer._latlngs, ->
+        if firstPoint is ""
+          firstPoint = true
+          sql = sql + @.lat + " " + @.lng
+        else
+          sql = sql + "," + @.lat + " " + @.lng
+
+      sql = sql + ")', " + $("#inputEPSG").val() + "))"
+
+      console.log(sql)
+
+      # Insert the figure in a temporary table.
+      rest = new H5.Rest (
+       url: H5.Data.restURL
+       fields: sql
+       table: "tmp_lin"
+       restService: "ws_insertquery.php"
+      )
+
+      # Restoring from the db
+      # ST_X(
+      #   ST_PointN(
+      #     ST_SetSRID(ST_MakeLine(ST_GeomFromText('LINESTRING(-7.863381805309173 -59.74365234375,-9.838979375579331 -60.5126953125,-7.776308503776192 -56.00830078125,-6.839169626342808 -56.33789062499999)')), 4674)
+      #     ,2
+      #   )
+      # );
+
+  minimapView.on 'draw:deleted', (e)->
+    console.log e
 
   #add search for the address inputText
   GeoSearch =
@@ -947,20 +1045,6 @@ $(document).ready ->
     subjects.push(element)
 
     # subjects.push(@nome)
-
-  # Get the data from the database
-  rest = new H5.Rest (
-    url: H5.Data.restURL
-    table: "ocorrencia"
-    fields: "id_ocorrencia"
-    parameters: "nro_ocorrencia%3D'" + $("#comunicado").prop('value') + "'"
-  )
-
-  idOcorrencia = ""
-
-  $.each rest.data, (e,prop)->
-    $.each prop, (nameField, nameValue)->
-      idOcorrencia = nameValue
 
   if $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
     table = new H5.Table (

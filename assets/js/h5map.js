@@ -158,7 +158,7 @@
 
   H5.Map.layer.acidentes = new L.VectorLayer.Postgis({
     url: H5.Data.restURL,
-    geotable: "tmp_pon",
+    geotable: "ocorrencia_pon",
     fields: "id_ocorrencia",
     srid: 4326,
     geomFieldName: "shape",

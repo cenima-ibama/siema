@@ -161,11 +161,11 @@ H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 # display acidentes
 H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
   url: H5.Data.restURL
-  geotable: "tmp_pon"
+  geotable: "ocorrencia_pon"
   fields: "id_ocorrencia"
   srid: 4326
-  geomFieldName: "shape"
-  showAll: true
+  geomFieldName: "shape
+"  showAll: true
   cluster: true
   popupTemplate: null
   focus: false
@@ -214,4 +214,4 @@ new L.control.switch(
     layer: H5.Map.layer.acidentes.layer
 ).addTo(H5.Map.base)
 
-# }}}
+# }}}l

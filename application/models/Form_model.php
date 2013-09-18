@@ -268,7 +268,7 @@ class Form_model extends CI_Model {
 
     // Creating the Geographic point of the form
     if (isset($form["inputLat"]) and isset($form["inputLng"])) {
-      $subfields = "insert into tmp_pon (id_ocorrencia, shape) values (";
+      $subfields = "insert into ocorrencia_pon (id_ocorrencia, shape) values (";
       $subfields = $subfields . "" . $id . "," . "ST_SetSRID(ST_MakePoint(" . $form["inputLng"] . "," . $form["inputLat"] . "), ";
       $epsg = isset($form["inputEPSG"]) ? $form["inputEPSG"] : "4674";
       $subfields = $subfields . $epsg . "));";
@@ -667,7 +667,7 @@ class Form_model extends CI_Model {
 
     $id = $oldOcorrencia['id_ocorrencia'];
 
-    $fields = "select * from tmp_pon where id_ocorrencia='" . $oldOcorrencia['id_ocorrencia'] . "';";
+    $fields = "select * from ocorrencia_pon where id_ocorrencia='" . $oldOcorrencia['id_ocorrencia'] . "';";
 
     $oldPon = $ocorrenciasDatabase->query($fields);
 
@@ -677,7 +677,7 @@ class Form_model extends CI_Model {
 
         $epsg = isset($form["inputEPSG"]) ? $form["inputEPSG"] : "4674";
 
-        $subfields = " update tmp_pon set " .
+        $subfields = " update ocorrencia_pon set " .
                         " shape=ST_SetSRID(ST_MakePoint(" . $form["inputLng"] . "," . $form["inputLat"] . "), " . $epsg . ")" .
                      " where id_ocorrencia='" . $id . "';";
 
@@ -691,7 +691,7 @@ class Form_model extends CI_Model {
 
         $epsg = isset($form["inputEPSG"]) ? $form["inputEPSG"] : "4674";
 
-        $subfields = " insert into tmp_pon (id_ocorrencia, shape) " .
+        $subfields = " insert into ocorrencia_pon (id_ocorrencia, shape) " .
                      " values " .
                      "(" . $id . "," . "ST_SetSRID(ST_MakePoint(" . $form["inputLng"] . "," . $form["inputLat"] . "), " . $epsg . "));";
 
@@ -699,6 +699,40 @@ class Form_model extends CI_Model {
 
         $this->firephp->log($subfields);
       }
+    }
+
+    //Saving vectors on database, linking it to the "ocorrencia"
+    $fields = "select * from tmp_lin;";
+    $line = $ocorrenciasDatabase->query($fields);
+
+    $fields = "select * from tmp_pol;";
+    $polygon = $ocorrenciasDatabase->query($fields);
+
+    if($line->row_array() > 0 || $polygon->row_array() > 0){
+
+      $sql = " update ocorrencia_lin set id_ocorrencia='" . $id . "';";
+      $sql = $sql . "update ocorrencia_pol set id_ocorrencia='" . $id . "';";
+
+      $fields = " insert into ocorrencia_lin " .
+                  " (id_ocorrencia_lin, id_ocorrencia, descricao, shape)" .
+                  " select nextval('ocorrencia_lin_id_ocorrencia_lin_seq'), " .
+                          "id_ocorrencia, " .
+                          "descricao, " .
+                          "shape " .
+                  " from tmp_lin; ";
+      $fields = $fields . " insert into ocorrencia_pol " .
+                  " (id_ocorrencia_pol, id_ocorrencia, descricao, shape)" .
+                  " select nextval('ocorrencia_pol_id_ocorrencia_pol_seq'), " .
+                          "id_ocorrencia, " .
+                          "descricao, " .
+                          "shape " .
+                  " from tmp_pol; ";
+
+
+      $fields = $fields . " delete from tmp_lin; delete from tmp_pol;"
+
+      $ocorrenciasDatabase->query($sql);
+      $ocorrenciasDatabase->query($fields);
     }
 
     // Relation R1
@@ -1069,7 +1103,7 @@ class Form_model extends CI_Model {
                 " sigla as inputUF " .
              " from ocorrencia " .
                 " left join responsavel as res on (res.id_responsavel = ocorrencia.id_usuario) " .
-                " left join tmp_pon on (tmp_pon.id_ocorrencia = ocorrencia.id_ocorrencia) " .
+                " left join ocorrencia_pon on (ocorrencia_pon.id_ocorrencia = ocorrencia.id_ocorrencia) " .
                 " left join uf on (uf.id_uf = ocorrencia.id_uf) " .
              " where nro_ocorrencia='" . $nro_ocorrencia . "';";
 

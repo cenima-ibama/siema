@@ -9,6 +9,8 @@
 
     <!-- Leaflet -->
     <link href="//cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" rel="stylesheet" />
+    <link href="<?= base_url()?>assets/css/leaflet-fullscreen.css" rel="stylesheet">
+    <link href="<?= base_url()?>assets/css/leaflet-draw.css" rel="stylesheet">
 
     <!-- Bootstrap -->
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
