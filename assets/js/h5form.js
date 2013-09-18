@@ -87,6 +87,21 @@
         table: "tmp_ocorrencia_produto",
         restService: "ws_deletequery.php"
       });
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        table: "tmp_pol",
+        restService: "ws_deletequery.php"
+      });
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        table: "tmp_lin",
+        restService: "ws_deletequery.php"
+      });
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        table: "tmp_pon",
+        restService: "ws_deletequery.php"
+      });
       return $(this).tab('show');
     });
     $("#btnBeginForm").click(function(event) {

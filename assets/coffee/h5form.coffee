@@ -109,6 +109,27 @@ $(document).ready ->
      restService: "ws_deletequery.php"
     )
 
+    # Clean the temporary polygon table (tmp_pol)
+    rest = new H5.Rest (
+     url: H5.Data.restURL
+     table: "tmp_pol"
+     restService: "ws_deletequery.php"
+    )
+
+    # Clean the temporary polyline table (tmp_lin)
+    rest = new H5.Rest (
+     url: H5.Data.restURL
+     table: "tmp_lin"
+     restService: "ws_deletequery.php"
+    )
+
+    # Clean the temporary point table (tmp_pon)
+    rest = new H5.Rest (
+     url: H5.Data.restURL
+     table: "tmp_pon"
+     restService: "ws_deletequery.php"
+    )
+
     $(@).tab('show')
 
 
