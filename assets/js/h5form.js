@@ -3,7 +3,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, history, idOcorrencia, latlng, minimapView, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, drawControl, drawnItems, history, idOcorrencia, latlng, minimapView, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -255,16 +255,80 @@
       draggable: true
     });
     Marker.on("move", function(event) {
+      var latlng;
       $("#inputLat").val(event.latlng.lat);
       $("#inputLng").val(event.latlng.lng);
       $("#inputEPSG").val("4674");
-      return $("#inputEPSG").prop("disabled", "disabled");
+      $("#inputEPSG").prop("disabled", "disabled");
+      if (!window.parent.H5.isMobile.any()) {
+        latlng = new L.LatLng($("#inputLat").prop("value"), $("#inputLng").prop("value"));
+        return window.parent.H5.Map.base.setView(latlng, minimapView.getZoom(), false);
+      }
     });
     minimapView = new L.Map("minimap", {
       center: new L.LatLng(-10.0, -50.0),
       zoom: 3,
       layers: [binghybrid],
       zoomControl: true
+    });
+    drawnItems = new L.FeatureGroup();
+    minimapView.addLayer(drawnItems);
+    drawControl = new L.Control.Draw({
+      draw: {
+        marker: false
+      },
+      edit: {
+        featureGroup: drawnItems
+      }
+    });
+    minimapView.addControl(drawControl);
+    minimapView.on('draw:created', function(e) {
+      var firstPoint, layer, sql, type;
+      type = e.layerType;
+      layer = e.layer;
+      console.log(e.layer);
+      drawnItems.addLayer(layer);
+      if (type === 'polygon') {
+        firstPoint = "";
+        sql = "(id_tmp_pol, id_ocorrencia, shape) values ( " + layer._leaflet_id + "," + idOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
+        $.each(layer._latlngs, function() {
+          if (firstPoint === "") {
+            firstPoint = this;
+          }
+          sql = sql + this.lat + " " + this.lng;
+          return sql = sql + ",";
+        });
+        sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + ")))";
+        console.log(sql);
+        return rest = new H5.Rest({
+          url: H5.Data.restURL,
+          fields: sql,
+          table: "tmp_pol",
+          restService: "ws_insertquery.php"
+        });
+      } else if (type === 'polyline') {
+        firstPoint = "";
+        sql = "(id_tmp_lin, id_ocorrencia, shape) values ( " + layer._leaflet_id + "," + idOcorrencia + ",ST_GeomFromText('LINESTRING(";
+        $.each(layer._latlngs, function() {
+          if (firstPoint === "") {
+            firstPoint = true;
+            return sql = sql + this.lat + " " + this.lng;
+          } else {
+            return sql = sql + "," + this.lat + " " + this.lng;
+          }
+        });
+        sql = sql + ")', " + $("#inputEPSG").val() + "))";
+        console.log(sql);
+        return rest = new H5.Rest({
+          url: H5.Data.restURL,
+          fields: sql,
+          table: "tmp_lin",
+          restService: "ws_insertquery.php"
+        });
+      }
+    });
+    minimapView.on('draw:deleted', function(e) {
+      return console.log(e);
     });
     GeoSearch = {
       _provider: new L.GeoSearch.Provider.Google,
@@ -308,6 +372,9 @@
         }
         Marker.setLatLng(latlng).update();
         minimapView.setView(latlng, 15, false);
+        if (!window.parent.H5.isMobile.any()) {
+          window.parent.H5.Map.base.setView(latlng, 10, false);
+        }
         $("#inputLat").val(location.Y);
         return $("#inputLng").val(location.X);
       },
@@ -324,6 +391,9 @@
         }
         Marker.setLatLng(latlng).update();
         minimapView.setView(latlng, 8, false);
+      }
+      if (!window.parent.H5.isMobile.any()) {
+        window.parent.H5.Map.base.setView(latlng, 8, false);
       }
       $("#inputEPSG").val("");
       return $("#inputEPSG").removeAttr("disabled");

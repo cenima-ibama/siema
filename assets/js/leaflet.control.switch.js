@@ -5,20 +5,22 @@
       collapsed: true,
       position: "topright",
       autoZIndex: true,
-      tab: "outros"
+      enableTabs: false,
+      miscTabsName: "Outros"
     },
     initialize: function(baseLayers, overlayers, tabs, options) {
       var _this = this;
-      L.setOptions(this, options);
+      L.Util.setOptions(this, options);
       this._layers = {};
       this._lastZIndex = 0;
       this._handlingClick = false;
-      $.each(baseLayers, function(name, obj) {
-        return _this._addLayer(obj.layer, name, false, false);
-      });
-      if (typeof tabs !== "undefined") {
+      if (typeof tabs !== void 0) {
         this._tabs = tabs;
+        this.options.enableTabs = true;
       }
+      $.each(baseLayers, function(name, obj) {
+        return _this._addLayer(obj.layer, name, false, false, null);
+      });
       return $.each(overlayers, function(name, obj) {
         var control;
         control = typeof obj.overlayControl === "boolean" ? obj.overlayControl : false;
@@ -69,49 +71,49 @@
         link = this._layersLink = L.DomUtil.create("a", className + "-toggle", container);
         link.href = "#";
         link.title = "Layers";
-        L.DomEvent.on(link, "mouseover", this._activeTab, this);
         if (L.Browser.touch) {
-          L.DomEvent.on(link, "click", L.DomEvent.stop).on(link, "click", this._expand, this);
+          L.DomEvent.on(link, "click", L.DomEvent.stop).on(link, "click", this._expand, this).on(link, "click", this._activeTab, this);
         } else {
-          L.DomEvent.on(link, "focus", this._expand, this);
+          L.DomEvent.on(link, "mouseover", this._activeTab, this).on(link, "focus", this._expand, this);
         }
         this._map.on("click", this._collapse, this);
       } else {
         this._expand();
       }
       this._baseLayersList = L.DomUtil.create('div', className + '-base', form);
-      if (typeof this._tabs === "undefined") {
+      if (!this.options.enableTabs) {
         this._separator = L.DomUtil.create('div', className + '-separator', form);
       }
       this._overlayersList = L.DomUtil.create('div', className + '-overlayers', form);
-      if (typeof this._tabs !== "undefined") {
+      if (this.options.enableTabs) {
         this._tabsOverLayers = L.DomUtil.create('ul', 'nav nav-tabs', form);
         $(this._tabsOverLayers).attr('id', 'tabsOverLayers');
         this._tabsContentOverLayers = L.DomUtil.create('div', 'tab-content', form);
         $(this._tabsContentOverLayers).attr('id', 'tabsContent');
+        this._tabsList = {};
         $.each(this._tabs, function(tab, obj) {
           _this._createTab(tab, obj);
           if (obj.tabs === void 0) {
-            return _this._hasTabOutros = true;
+            return _this.options.miscTabs = true;
           }
         });
-        if (this._hasTabOutros) {
+        if (this.options.miscTabs) {
           obj = {
             icon: "http://" + document.domain + "/siema/assets/img/icons/world.png"
           };
-          this._createTab("outros", obj);
+          this._createTab(this.options.miscTabsName, obj);
         }
       }
       return $(container).append(form);
     },
     _createTab: function(tab, obj) {
-      var id, newTab, newTabContent, newTabName;
-      id = "tab" + tab;
+      var newTab, newTabContent, newTabName;
       newTab = L.DomUtil.create('li', '', this._tabsOverLayers);
       newTabContent = L.DomUtil.create('div', 'tab-pane', this._tabsContentOverLayers);
       $(newTabContent).attr('id', tab);
+      this._tabsList[tab] = newTabContent;
       newTabName = L.DomUtil.create('a', '', newTab);
-      $(newTabName).attr('id', id);
+      $(newTabName).attr('id', "tabLink" + tab);
       $(newTabName).attr('href', '#' + tab);
       $(newTabName).attr('data-toggle', 'tab');
       if (obj.name) {
@@ -161,7 +163,7 @@
         this._addItem(obj);
         overlayersPresent = overlayersPresent || obj.overlayer;
         baseLayersPresent = baseLayersPresent || !obj.overlayer;
-        if (typeof this._tabs === "undefined") {
+        if (!this.options.enableTabs) {
           _results.push(this._separator.style.display = (overlayersPresent && baseLayersPresent ? "" : "none"));
         } else {
           _results.push(void 0);
@@ -187,11 +189,11 @@
       var checked, container, control, controlgroup, input, label, name, slider, toggle,
         _this = this;
       if (obj.overlayer) {
-        if (this._tabs) {
+        if (this.options.enableTabs) {
           if (obj.tab) {
-            container = document.getElementById(obj.tab);
-          } else if (this._hasTabOutros) {
-            container = document.getElementById("outros");
+            container = this._tabsList[obj.tab];
+          } else if (this.options.miscTabs) {
+            container = this._tabsList[this.options.miscTabsName];
           }
         } else {
           container = this._overlayersList;
@@ -199,6 +201,7 @@
       } else {
         container = this._baseLayersList;
       }
+      console.log(container, obj);
       controlgroup = L.DomUtil.create("div", "control-group", container);
       checked = this._map.hasLayer(obj.layer);
       label = L.DomUtil.create("label", "control-label", controlgroup);
