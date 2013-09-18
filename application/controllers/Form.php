@@ -874,7 +874,7 @@ class Form extends CI_Controller {
         // 13. Fonte da Informação.
         $data['tipoFonteInformacao'] = isset($formLoad['tipoFonteInformacao']) ? $formLoad['tipoFonteInformacao'] : '';
 
-        $this->firephp->log($formLoad);
+        // $this->firephp->log($formLoad);
         // $this->firephp->log($formLoad['hasOleo']);
         // $this->firephp->log($formLoad['ocorrencia_oleo']);
 
@@ -925,7 +925,7 @@ class Form extends CI_Controller {
 
         $form['data'] = $data;
 
-        $this->firephp->log($form);
+        // $this->firephp->log($form);
 
         $this->load->view('templates/form', $form);
     }
@@ -957,7 +957,7 @@ class Form extends CI_Controller {
         $this->email->set_newline("\r\n");
 
         $this->email->from("ibama.siema@gmail.com", "SIEMA");
-        $this->email->to("carolsro@gmail.com");
+        $this->email->to("ibama.siema@gmail.com");
 
         $this->email->subject("Ibama – Comunicado de Acidente Ambiental");
 
