@@ -215,7 +215,13 @@
             </label>
           </div>
         </div>
-        <div id="inputLoadForm" class="media" style="display:none;">
+        <?php
+          if($this->session->userdata('logged_in'))
+            echo '<div id="inputLoadForm" class="media">';
+          else
+            echo '<div id="inputLoadForm" class="media" style="display:none;">';
+        ?>
+        <!-- <div id="inputLoadForm" class="media" style="display:none;"> -->
           <div class="media-body">
             <label class="radio">
               <input type="radio" name="optionsTipoAcidente" id="optionsAtualizarAcidente" value="-1">

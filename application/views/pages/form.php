@@ -832,8 +832,10 @@
       </div>
 
       <div class="checkbox" style="display:none;">
+
         <?php echo form_input($hasOleo);?>
-        <input type="checkbox" id="isServIBAMA" name="isServIBAMA" <?php if(isset($isServIBAMA)) {echo ' checked="checked"';} ?>>
+        <?php echo form_input($isServIBAMA); ?>
+
       </div>
 
     <?php echo form_close(); ?>

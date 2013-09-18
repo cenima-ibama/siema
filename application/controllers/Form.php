@@ -168,10 +168,7 @@ class Form extends CI_Controller {
 
     public function dataForm($formLoad)
     {
-
-        $data['typeOfForm'] = $formLoad['typeOfForm'];
-
-        // $this->firephp->log($formLoad);
+        $this->firephp->log($formLoad);
 
 
         // Value of the "Comunicado"
@@ -184,6 +181,24 @@ class Form extends CI_Controller {
             'type'          => 'hidden',
             'value'         => $formLoad['typeOfForm']
         );
+
+        if (isset($formLoad['hasOleo'])) {
+            $data['hasOleo'] = array (
+                'id'            => 'hasOleo',
+                'name'          => 'hasOleo',
+                'type'          => 'hidden',
+                'value'         => 'on'
+            );
+        }
+
+        if (isset($formLoad['isServIBAMA'])) {
+            $data['isServIBAMA'] = array (
+                'id'            => 'isServIBAMA',
+                'name'          => 'isServIBAMA',
+                'type'          => 'hidden',
+                'value'         => 'on'
+            );
+        }
 
         // 1. Localizacao
 
@@ -878,13 +893,7 @@ class Form extends CI_Controller {
         // $this->firephp->log($formLoad['hasOleo']);
         // $this->firephp->log($formLoad['ocorrencia_oleo']);
 
-        // Variables that control the type or the form.
-        if(isset($formLoad['hasOleo']) and $formLoad['hasOleo'] != 'N')
-        {
-            $data['hasOleo'] = 'on';
-        }
-
-        $data['isServIBAMA'] = isset($formLoad['isServIBAMA']) ? $formLoad['isServIBAMA'] : '';
+        // $data['isServIBAMA'] = isset($formLoad['isServIBAMA']) ? $formLoad['isServIBAMA'] : '';
 
         return $data;
     }
