@@ -190,6 +190,9 @@
         if (this._tabs) {
           if (obj.tab) {
             container = document.getElementById(obj.tab);
+            if (document.getElementById(obj.tab) === null) {
+              console.log("Element not found ", obj.tab);
+            }
           } else if (this._hasTabOutros) {
             container = document.getElementById("outros");
           }

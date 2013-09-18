@@ -288,6 +288,10 @@ $(document).ready ->
     $("#inputEPSG").val "4674"
     $("#inputEPSG").prop "disabled", "disabled"
 
+    if not window.parent.H5.isMobile.any()
+      latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
+      window.parent.H5.Map.base.setView(latlng, minimapView.getZoom(), false)
+
   minimapView = new L.Map("minimap",
     center: new L.LatLng(-10.0, -50.0)
     zoom: 3
@@ -333,6 +337,8 @@ $(document).ready ->
       Marker.setLatLng(latlng).update()
 
       minimapView.setView(latlng, 15, false)
+      if not window.parent.H5.isMobile.any()
+        window.parent.H5.Map.base.setView(latlng, 10, false)
       $("#inputLat").val location.Y
       $("#inputLng").val location.X
 
@@ -348,6 +354,10 @@ $(document).ready ->
 
       Marker.setLatLng(latlng).update()
       minimapView.setView(latlng, 8, false)
+
+    #link the big map with the form map
+    if not window.parent.H5.isMobile.any()
+      window.parent.H5.Map.base.setView(latlng, 8, false)
 
     $("#inputEPSG").val ""
     $("#inputEPSG").removeAttr("disabled")

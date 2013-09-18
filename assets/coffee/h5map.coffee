@@ -24,7 +24,7 @@ binghybrid = new L.BingLayer(bingKey,
 )
 
 bingMini = new L.BingLayer(bingKey,
-  type: "AerialWithLabels"
+  type: "Road"
   attribution: ""
   minZoom: 1
   maxZoom: 11
@@ -210,7 +210,6 @@ new L.control.switch(
     layer: biomaIBGE
   "Portos e Terminais":
     layer: portoTerminal
-
   "Acidentes Ambientais":
     layer: H5.Map.layer.acidentes.layer
     overlayControl: true

@@ -23,13 +23,10 @@ L.control.switch = L.Control.extend (
   onAdd: (map) ->
     @_initLayout()
     @_update()
-    # @_activeTab()
-    # $("#tabsOverLayers a:last").tab('show')
     map
       .on("layeradd", @_onLayerChange, this)
       .on("layerremove", @_onLayerChange, this)
 
-    # $("#tabsOverLayers a:last").trigger('click');
     return @_container
 
 
@@ -120,6 +117,7 @@ L.control.switch = L.Control.extend (
 
   _createTab: (tab, obj) ->
     #cria tab
+    # console.log "Create tab: ", tab
     id = "tab" + tab
     newTab = L.DomUtil.create('li', '', @_tabsOverLayers)
 
@@ -197,16 +195,23 @@ L.control.switch = L.Control.extend (
 
   _addItem: (obj) ->
     # console.log obj
+
     if obj.overlayer
       if @_tabs
         if obj.tab
           container = document.getElementById(obj.tab)
+          if(document.getElementById(obj.tab) is null)
+            console.log "Element not found ", obj.tab
         else if @_hasTabOutros
           container = document.getElementById("outros")
       else
         container = @_overlayersList
     else
       container = @_baseLayersList
+
+    # console.log container
+    # console.log @_tabsContentOverLayers
+
     # container = @_overlayersList
     controlgroup = L.DomUtil.create("div", "control-group", container)
     checked = @_map.hasLayer(obj.layer)

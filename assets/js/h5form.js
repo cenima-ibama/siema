@@ -228,10 +228,15 @@
       draggable: true
     });
     Marker.on("move", function(event) {
+      var latlng;
       $("#inputLat").val(event.latlng.lat);
       $("#inputLng").val(event.latlng.lng);
       $("#inputEPSG").val("4674");
-      return $("#inputEPSG").prop("disabled", "disabled");
+      $("#inputEPSG").prop("disabled", "disabled");
+      if (!window.parent.H5.isMobile.any()) {
+        latlng = new L.LatLng($("#inputLat").prop("value"), $("#inputLng").prop("value"));
+        return window.parent.H5.Map.base.setView(latlng, minimapView.getZoom(), false);
+      }
     });
     minimapView = new L.Map("minimap", {
       center: new L.LatLng(-10.0, -50.0),
@@ -281,6 +286,9 @@
         }
         Marker.setLatLng(latlng).update();
         minimapView.setView(latlng, 15, false);
+        if (!window.parent.H5.isMobile.any()) {
+          window.parent.H5.Map.base.setView(latlng, 10, false);
+        }
         $("#inputLat").val(location.Y);
         return $("#inputLng").val(location.X);
       },
@@ -297,6 +305,9 @@
         }
         Marker.setLatLng(latlng).update();
         minimapView.setView(latlng, 8, false);
+      }
+      if (!window.parent.H5.isMobile.any()) {
+        window.parent.H5.Map.base.setView(latlng, 8, false);
       }
       $("#inputEPSG").val("");
       return $("#inputEPSG").removeAttr("disabled");

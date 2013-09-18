@@ -28,7 +28,7 @@
   });
 
   bingMini = new L.BingLayer(bingKey, {
-    type: "AerialWithLabels",
+    type: "Road",
     attribution: "",
     minZoom: 1,
     maxZoom: 11
