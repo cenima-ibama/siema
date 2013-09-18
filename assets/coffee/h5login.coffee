@@ -10,12 +10,17 @@ $(document).ready ->
   tipoForm = window.parent.document.getElementById("tipoForm")
   btnLogout = window.parent.document.getElementById("btnLogout")
   inputLoadForm = window.parent.document.getElementById("inputLoadForm")
+  loggedList = window.parent.document.getElementsByName("isServIBAMA")
+
 
   $(tipoForm).hide()
   $(btnLogout).hide()
 
   $(divLogin).show()
   $(divLogout).hide()
+
+  $.each loggedList, ()->
+    @.checked = 'checked'
 
   i=0
   progressAnimetion = setInterval( ->
