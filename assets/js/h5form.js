@@ -45,11 +45,11 @@
       btnBack = document.getElementById("modalBtnBack");
       btnBack.href = '#tab1';
       $("#modalBtnBack").tab('show');
-      $("#modalBtnBack").prop('style', '');
-      $("#modalBtnNext").prop('style', '');
-      $("#submit").prop('style', 'display:none;');
-      $("#modalBtnCancel").prop('style', 'display:none;');
-      $("#btnClose").prop('style', 'display:none;');
+      $("#modalBtnBack").show();
+      $("#modalBtnNext").show();
+      $("#submit").hide();
+      $("#modalBtnCancel").hide();
+      $("#btnClose").hide();
       return $(".modal-footer").show();
     });
     $("#btn-form").click(function(event) {
@@ -78,10 +78,10 @@
         collapse = tab.collapse;
       }
       $(".modal-footer").show();
-      $(btnNext).prop('style', '');
-      $(btnBack).prop('style', '');
-      $("#submit").prop('style', 'display:none;');
-      $(this).prop('style', 'display:none;');
+      $(btnNext).show();
+      $(btnBack).show();
+      $("#submit").hide();
+      $(this).hide();
       rest = new H5.Rest({
         url: H5.Data.restURL,
         table: "tmp_ocorrencia_produto",
@@ -172,10 +172,10 @@
         }
       }
       if (("#tab" + collapse) === "#tab8") {
-        $("#submit").prop('style', '');
-        $("#modalBtnNext").prop('style', 'display:none;');
-        $("#modalBtnBack").prop('style', 'display:none;');
-        $("#modalBtnCancel").prop('style', '');
+        $("#submit").show();
+        $("#modalBtnNext").hide();
+        $("#modalBtnBack").hide();
+        $("#modalBtnCancel").show();
         if (isAtual) {
           if ($("#inputRegistro").prop("value") !== "") {
             defaultHtml = document.getElementById("defaultHtml");
@@ -240,14 +240,14 @@
       draggable: true
     });
     Marker.on("move", function(event) {
-      $("#inputLat").prop("value", event.latlng.lat);
-      $("#inputLng").prop("value", event.latlng.lng);
-      $("#inputEPSG").prop("value", "4674");
+      $("#inputLat").val(event.latlng.lat);
+      $("#inputLng").val(event.latlng.lng);
+      $("#inputEPSG").val("4674");
       return $("#inputEPSG").prop("disabled", "disabled");
     });
     minimapView = new L.Map("minimap", {
-      center: new L.LatLng(-10.0, -58.0),
-      zoom: 6,
+      center: new L.LatLng(-10.0, -50.0),
+      zoom: 3,
       layers: [binghybrid],
       zoomControl: true
     });
@@ -340,7 +340,9 @@
         }
       },
       _processResults: function(results) {
-        return this._showLocation(results[0]);
+        if (results) {
+          return this._showLocation(results[0]);
+        }
       },
       _showLocation: function(location) {
         var latlng;
@@ -350,8 +352,8 @@
         }
         Marker.setLatLng(latlng).update();
         minimapView.setView(latlng, 15, false);
-        $("#inputLat").prop("value", location.Y);
-        return $("#inputLng").prop("value", location.X);
+        $("#inputLat").val(location.Y);
+        return $("#inputLng").val(location.X);
       },
       _printError: function(error) {
         return alert("Erro na Busca: " + error);
@@ -366,10 +368,8 @@
         }
         Marker.setLatLng(latlng).update();
         minimapView.setView(latlng, 8, false);
-        $("#inputLat").prop("value", location.Y);
-        $("#inputLng").prop("value", location.X);
       }
-      $("#inputEPSG").prop("value", "");
+      $("#inputEPSG").val("");
       return $("#inputEPSG").removeAttr("disabled");
     });
     $("#inputEndereco").on('keyup', function(event) {
@@ -392,7 +392,7 @@
       Marker.setLatLng(event.latlng).update();
       $("#inputLat").prop("value", event.latlng.lat);
       $("#inputLng").prop("value", event.latlng.lng);
-      $("#inputEPSG").prop("value", "4674");
+      $("#inputEPSG").val("4674");
       return $("#inputEPSG").prop("disabled", "disabled");
     });
     if ((($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {

@@ -58,11 +58,11 @@ $(document).ready ->
 
     btnBack.href = '#tab1'
     $("#modalBtnBack").tab('show')
-    $("#modalBtnBack").prop 'style', ''
-    $("#modalBtnNext").prop 'style', ''
-    $("#submit").prop 'style', 'display:none;'
-    $("#modalBtnCancel").prop 'style', 'display:none;'
-    $("#btnClose").prop 'style', 'display:none;'
+    $("#modalBtnBack").show()
+    $("#modalBtnNext").show()
+    $("#submit").hide()
+    $("#modalBtnCancel").hide()
+    $("#btnClose").hide()
     $(".modal-footer").show()
 
   #hide footer o form when click on topbar
@@ -97,10 +97,10 @@ $(document).ready ->
       collapse = tab.collapse
 
     $(".modal-footer").show()
-    $(btnNext).prop 'style', ''
-    $(btnBack).prop 'style', ''
-    $("#submit").prop 'style', 'display:none;'
-    $(@).prop 'style', 'display:none;'
+    $(btnNext).show()
+    $(btnBack).show()
+    $("#submit").hide()
+    $(@).hide()
 
     # Clean the temporary produt table (tmp_ocorrencia_produto)
     rest = new H5.Rest (
@@ -198,25 +198,14 @@ $(document).ready ->
         hasOleo = document.getElementById("hasOleo")
         isServIBAMA = document.getElementById("isServIBAMA")
 
-        # if isAtual
-        #   # Get the accident data for atualization
-        #   rest = new H5.Rest (
-        #     url: H5.Data.restURL
-        #     table: "tipo_dano_identificado"
-        #     fields: "id_tipo_dano_identificado, nome"
-        #     order: "id_tipo_dano_identificado"
-        #   )
-
         hasOleo.checked = isAcidOleo
 
     if ("#tab" + collapse) is "#tab8"
 
-      $("#submit").prop 'style', ''
-      $("#modalBtnNext").prop 'style', 'display:none;'
-      $("#modalBtnBack").prop 'style', 'display:none;'
-      # $("#modalBtnBack").html('<i class="icon-trash"></i> Cancelar')
-      $("#modalBtnCancel").prop 'style', ''
-
+      $("#submit").show()
+      $("#modalBtnNext").hide()
+      $("#modalBtnBack").hide()
+      $("#modalBtnCancel").show()
 
       if isAtual
         if($("#inputRegistro").prop("value") isnt "")
@@ -307,103 +296,18 @@ $(document).ready ->
 
   # Add a move property to the marker
   Marker.on "move", (event) ->
-    $("#inputLat").prop "value", event.latlng.lat
-    $("#inputLng").prop "value", event.latlng.lng
+    $("#inputLat").val event.latlng.lat
+    $("#inputLng").val event.latlng.lng
 
-    $("#inputEPSG").prop "value", "4674"
+    $("#inputEPSG").val "4674"
     $("#inputEPSG").prop "disabled", "disabled"
 
   minimapView = new L.Map("minimap",
-    center: new L.LatLng(-10.0, -58.0)
-    zoom: 6
+    center: new L.LatLng(-10.0, -50.0)
+    zoom: 3
     layers: [binghybrid]
     zoomControl: true
-  )
-
-  # Add draw functionality to a map
-  drawnItems = new L.FeatureGroup()
-  minimapView.addLayer(drawnItems)
-
-  drawControl = new L.Control.Draw({
-      draw: {
-        marker: false
-      },
-      edit: {
-        featureGroup: drawnItems
-      }
-  })
-  minimapView.addControl(drawControl);
-
-  minimapView.on 'draw:created', (e)->
-    type = e.layerType
-
-    layer = e.layer
-
-    console.log (e.layer)
-
-    drawnItems.addLayer(layer);
-
-    if (type is 'polygon')
-      # Saves a polygon
-      firstPoint = ""
-
-      sql = "(id_tmp_pol, id_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + idOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
-
-      $.each layer._latlngs, ->
-        if firstPoint is ""
-          firstPoint = @
-
-        sql = sql + @.lat + " " + @.lng
-
-        sql = sql +  ","
-
-      sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + ")))"
-
-      console.log(sql)
-
-      # Insert the figure in a temporary table.
-      rest = new H5.Rest (
-       url: H5.Data.restURL
-       fields: sql
-       table: "tmp_pol"
-       restService: "ws_insertquery.php"
-      )
-
-    else if (type is 'polyline')
-      # Saves a polyline
-      firstPoint = ""
-
-      sql = "(id_tmp_lin, id_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + idOcorrencia + ",ST_GeomFromText('LINESTRING("
-
-      $.each layer._latlngs, ->
-        if firstPoint is ""
-          firstPoint = true
-          sql = sql + @.lat + " " + @.lng
-        else
-          sql = sql + "," + @.lat + " " + @.lng
-
-      sql = sql + ")', " + $("#inputEPSG").val() + "))"
-
-      console.log(sql)
-
-      # Insert the figure in a temporary table.
-      rest = new H5.Rest (
-       url: H5.Data.restURL
-       fields: sql
-       table: "tmp_lin"
-       restService: "ws_insertquery.php"
-      )
-
-      # Restoring from the db
-      # ST_X(
-      #   ST_PointN(
-      #     ST_SetSRID(ST_MakeLine(ST_GeomFromText('LINESTRING(-7.863381805309173 -59.74365234375,-9.838979375579331 -60.5126953125,-7.776308503776192 -56.00830078125,-6.839169626342808 -56.33789062499999)')), 4674)
-      #     ,2
-      #   )
-      # );
-
-  minimapView.on 'draw:deleted', (e)->
-    console.log e
+    )
 
   #add search for the address inputText
   GeoSearch =
@@ -432,11 +336,10 @@ $(document).ready ->
         @_printError error
 
     _processResults: (results) ->
-      # console.log "Process Results"
-      @_showLocation results[0]
+      if results
+        @_showLocation results[0]
 
     _showLocation: (location) ->
-      # console.log "Show Location"
       latlng = new L.LatLng(location.Y,location.X)
       if (!minimapView.hasLayer(Marker))
         minimapView.addLayer(Marker)
@@ -444,8 +347,8 @@ $(document).ready ->
       Marker.setLatLng(latlng).update()
 
       minimapView.setView(latlng, 15, false)
-      $("#inputLat").prop "value", location.Y
-      $("#inputLng").prop "value", location.X
+      $("#inputLat").val location.Y
+      $("#inputLng").val location.X
 
     _printError: (error) ->
       alert "Erro na Busca: " + error
@@ -459,10 +362,8 @@ $(document).ready ->
 
       Marker.setLatLng(latlng).update()
       minimapView.setView(latlng, 8, false)
-      $("#inputLat").prop "value", location.Y
-      $("#inputLng").prop "value", location.X
 
-    $("#inputEPSG").prop "value", ""
+    $("#inputEPSG").val ""
     $("#inputEPSG").removeAttr("disabled")
 
   #connect the GeoSearch to the inputAddress
@@ -488,7 +389,7 @@ $(document).ready ->
     $("#inputLat").prop("value", event.latlng.lat)
     $("#inputLng").prop("value", event.latlng.lng)
 
-    $("#inputEPSG").prop "value", "4674"
+    $("#inputEPSG").val "4674"
     $("#inputEPSG").prop "disabled", "disabled"
 
   # Create a marker from input values on the page's reload

@@ -3,10 +3,17 @@
   border-radius: 7px 7px 7px 7px;
   display: none;
   margin: -10% 0 0;
-  max-height: 320px;
   padding: 0 15px 10px;
   width: 280px;
   overflow: auto;
+  max-height: auto;
+}
+
+@media (max-width: 979px) {
+  .form-layer-list {
+    max-height: 320px;
+
+  }
 }
 .form-layer-list .control-group {
   padding: 15px 5px;
@@ -62,4 +69,12 @@
 }
 .switch-control-layers-expanded {
   display: block;
+}
+.form-layer-list ul {
+  margin-top: 15px;
+  margin-bottom: 0px;
+}
+.form-layer-list .nav-tabs > li > a {
+  padding-bottom: 0px;
+  outline: none;
 }
