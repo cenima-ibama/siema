@@ -1,4 +1,4 @@
-# CREATE OBJECTS {{{
+# INIT {{{
 H5.Map =
   base: null
   layer: {}
@@ -6,8 +6,9 @@ H5.Map =
 
 H5.Leaflet = {}
 # }}}
-# LAYERS {{{
-bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h"
+# BASE LAYERS {{{
+bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6
+s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h"
 bingaerial = new L.BingLayer(bingKey,
   type: "Aerial"
   attribution: ""
@@ -43,22 +44,6 @@ openmapquest = new L.TileLayer(openmapquestUrl,
   subdomains: openmapquestSub
 )
 # }}}
-# SCREEN SIZE {{{
-# update size of the map container
-$( '#map' ).width( $( window ).width() )
-$( '#map' ).height( $( window ).height() - $('#navbar').height())
-
-# Detect whether device supports orientationchange event,
-# otherwise fall back to the resize event.
-supportsOrientationChange = "onorientationchange" of window
-orientationEvent = (if supportsOrientationChange then "orientationchange" else "resize")
-
-# update chart if orientation or the size of the screen changed
-window.addEventListener orientationEvent, (->
-  $( '#map' ).width( $( window ).width() )
-  $( '#map' ).height( $( window ).height() - $('#navbar').height())
-), false
-# }}}
 # MAP LAYER {{{
 H5.Map.base = new L.Map("map",
   center: new L.LatLng(-10.0, -58.0)
@@ -74,49 +59,8 @@ H5.Map.minimap = new L.Control.MiniMap(bingMini,
 
 # add custom attribution
 H5.Map.base.attributionControl.setPrefix "Hexgis Hash5"
-
-# add scale
-new L.control.scale().addTo(H5.Map.base)
-
-# add fullscreen control
-new L.control.fullscreen(
-  position: 'topleft'
-  title: 'Fullscreen'
-).addTo(H5.Map.base)
-
-new L.control.GeoSearch(
-  provider: new L.GeoSearch.Provider.Google
-  searchLabel: "Endereço, Estado - UF"
-  notFoundMessage: "Endereço não encontrado."
-  showMarker: false
-).addTo(H5.Map.base)
-
-new L.control.locate(
-  position: "topleft"
-  drawCircle: true
-  follow: false
-  stopFollowingOnDrag: false
-  circleStyle: {}
-  markerStyle: {}
-  followCircleStyle: {}
-  followMarkerStyle: {}
-  metric: true
-  onLocationError: (err) ->
-    alert err.message
-
-  onLocationOutsideMapBounds: (context) ->
-    alert context.options.strings.outsideMapBoundsMsg
-
-  setView: true
-  strings:
-    title: "Localizar minha posição"
-    popup: "Você está a {distance} {unit} deste lugar"
-    outsideMapBoundsMsg: "Você está em um outra dimensão! o.O"
-
-  locateOptions: {}
-).addTo(H5.Map.base)
-
-
+# }}}
+# OVERLAYER {{{
 geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms"
 
 terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
@@ -180,6 +124,49 @@ H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
       opacity: 0.8
 )
 H5.Map.layer.acidentes.setMap H5.Map.base
+# }}}
+# CONTROLLERS {{{
+
+# add scale
+new L.control.scale().addTo(H5.Map.base)
+
+# add fullscreen control
+new L.control.fullscreen(
+  position: 'topleft'
+  title: 'Fullscreen'
+).addTo(H5.Map.base)
+
+new L.control.GeoSearch(
+  provider: new L.GeoSearch.Provider.Google
+  searchLabel: "Endereço, Estado - UF"
+  notFoundMessage: "Endereço não encontrado."
+  showMarker: false
+).addTo(H5.Map.base)
+
+new L.control.locate(
+  position: "topleft"
+  drawCircle: true
+  follow: false
+  stopFollowingOnDrag: false
+  circleStyle: {}
+  markerStyle: {}
+  followCircleStyle: {}
+  followMarkerStyle: {}
+  metric: true
+  onLocationError: (err) ->
+    alert err.message
+
+  onLocationOutsideMapBounds: (context) ->
+    alert context.options.strings.outsideMapBoundsMsg
+
+  setView: true
+  strings:
+    title: "Localizar minha posição"
+    popup: "Você está a {distance} {unit} deste lugar"
+    outsideMapBoundsMsg: "Você está em um outra dimensão! o.O"
+
+  locateOptions: {}
+).addTo(H5.Map.base)
 
 # icons
 H5.Data.icons = "http://" + document.domain + "/siema/assets/img/icons/"
@@ -194,6 +181,9 @@ new L.control.switch(
   "Bing Hybrid":
     layer: binghybrid
 ,
+  "Acidentes Ambientais":
+    layer: H5.Map.layer.acidentes.layer
+    overlayControl: true
   "Terras Indígenas":
     layer: terrasIndigenas
     tab: "chemicals"
@@ -209,9 +199,6 @@ new L.control.switch(
     layer: biomaIBGE
   "Portos e Terminais":
     layer: portoTerminal
-  "Acidentes Ambientais":
-    layer: H5.Map.layer.acidentes.layer
-    overlayControl: true
 ,
   water:
     icon: H5.Data.icons + "water.png"
@@ -222,4 +209,20 @@ new L.control.switch(
     icon: H5.Data.icons + "chemicals.png"
 ).addTo(H5.Map.base)
 
-# }}}l
+# }}}
+# SCREEN SIZE {{{
+# update size of the map container
+$( '#map' ).width( $( window ).width() )
+$( '#map' ).height( $( window ).height() - $('#navbar').height())
+
+# Detect whether device supports orientationchange event,
+# otherwise fall back to the resize event.
+supportsOrientationChange = "onorientationchange" of window
+orientationEvent = (if supportsOrientationChange then "orientationchange" else "resize")
+
+# update chart if orientation or the size of the screen changed
+window.addEventListener orientationEvent, (->
+  $( '#map' ).width( $( window ).width() )
+  $( '#map' ).height( $( window ).height() - $('#navbar').height())
+), false
+# }}}

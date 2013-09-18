@@ -50,19 +50,6 @@
     subdomains: openmapquestSub
   });
 
-  $('#map').width($(window).width());
-
-  $('#map').height($(window).height() - $('#navbar').height());
-
-  supportsOrientationChange = "onorientationchange" in window;
-
-  orientationEvent = (supportsOrientationChange ? "orientationchange" : "resize");
-
-  window.addEventListener(orientationEvent, (function() {
-    $('#map').width($(window).width());
-    return $('#map').height($(window).height() - $('#navbar').height());
-  }), false);
-
   H5.Map.base = new L.Map("map", {
     center: new L.LatLng(-10.0, -58.0),
     zoom: 6,
@@ -76,45 +63,6 @@
   }).addTo(H5.Map.base);
 
   H5.Map.base.attributionControl.setPrefix("Hexgis Hash5");
-
-  new L.control.scale().addTo(H5.Map.base);
-
-  new L.control.fullscreen({
-    position: 'topleft',
-    title: 'Fullscreen'
-  }).addTo(H5.Map.base);
-
-  new L.control.GeoSearch({
-    provider: new L.GeoSearch.Provider.Google,
-    searchLabel: "Endereço, Estado - UF",
-    notFoundMessage: "Endereço não encontrado.",
-    showMarker: false
-  }).addTo(H5.Map.base);
-
-  new L.control.locate({
-    position: "topleft",
-    drawCircle: true,
-    follow: false,
-    stopFollowingOnDrag: false,
-    circleStyle: {},
-    markerStyle: {},
-    followCircleStyle: {},
-    followMarkerStyle: {},
-    metric: true,
-    onLocationError: function(err) {
-      return alert(err.message);
-    },
-    onLocationOutsideMapBounds: function(context) {
-      return alert(context.options.strings.outsideMapBoundsMsg);
-    },
-    setView: true,
-    strings: {
-      title: "Localizar minha posição",
-      popup: "Você está a {distance} {unit} deste lugar",
-      outsideMapBoundsMsg: "Você está em um outra dimensão! o.O"
-    },
-    locateOptions: {}
-  }).addTo(H5.Map.base);
 
   geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms";
 
@@ -182,6 +130,45 @@
 
   H5.Map.layer.acidentes.setMap(H5.Map.base);
 
+  new L.control.scale().addTo(H5.Map.base);
+
+  new L.control.fullscreen({
+    position: 'topleft',
+    title: 'Fullscreen'
+  }).addTo(H5.Map.base);
+
+  new L.control.GeoSearch({
+    provider: new L.GeoSearch.Provider.Google,
+    searchLabel: "Endereço, Estado - UF",
+    notFoundMessage: "Endereço não encontrado.",
+    showMarker: false
+  }).addTo(H5.Map.base);
+
+  new L.control.locate({
+    position: "topleft",
+    drawCircle: true,
+    follow: false,
+    stopFollowingOnDrag: false,
+    circleStyle: {},
+    markerStyle: {},
+    followCircleStyle: {},
+    followMarkerStyle: {},
+    metric: true,
+    onLocationError: function(err) {
+      return alert(err.message);
+    },
+    onLocationOutsideMapBounds: function(context) {
+      return alert(context.options.strings.outsideMapBoundsMsg);
+    },
+    setView: true,
+    strings: {
+      title: "Localizar minha posição",
+      popup: "Você está a {distance} {unit} deste lugar",
+      outsideMapBoundsMsg: "Você está em um outra dimensão! o.O"
+    },
+    locateOptions: {}
+  }).addTo(H5.Map.base);
+
   H5.Data.icons = "http://" + document.domain + "/siema/assets/img/icons/";
 
   new L.control["switch"]({
@@ -198,6 +185,10 @@
       layer: binghybrid
     }
   }, {
+    "Acidentes Ambientais": {
+      layer: H5.Map.layer.acidentes.layer,
+      overlayControl: true
+    },
     "Terras Indígenas": {
       layer: terrasIndigenas,
       tab: "chemicals"
@@ -218,10 +209,6 @@
     },
     "Portos e Terminais": {
       layer: portoTerminal
-    },
-    "Acidentes Ambientais": {
-      layer: H5.Map.layer.acidentes.layer,
-      overlayControl: true
     }
   }, {
     water: {
@@ -234,5 +221,18 @@
       icon: H5.Data.icons + "chemicals.png"
     }
   }).addTo(H5.Map.base);
+
+  $('#map').width($(window).width());
+
+  $('#map').height($(window).height() - $('#navbar').height());
+
+  supportsOrientationChange = "onorientationchange" in window;
+
+  orientationEvent = (supportsOrientationChange ? "orientationchange" : "resize");
+
+  window.addEventListener(orientationEvent, (function() {
+    $('#map').width($(window).width());
+    return $('#map').height($(window).height() - $('#navbar').height());
+  }), false);
 
 }).call(this);
