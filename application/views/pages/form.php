@@ -12,7 +12,7 @@
   <div class="box-header"> </div>
   <div class="box-content">
 
-    <?php echo form_open('home/validate', array('id' => 'formAcidentes', 'name' => 'formAcidentes')); ?>
+    <?php echo form_open('form/validate', array('id' => 'formAcidentes', 'name' => 'formAcidentes')); ?>
 
       <div class="accordion" id="accordion2">
         <div class="alert alert-block alert-error fade in" style="display:none;" id="error_box"></div>
