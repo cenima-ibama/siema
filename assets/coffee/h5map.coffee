@@ -1,4 +1,4 @@
-# CREATE OBJECTS {{{
+# INIT {{{
 H5.Map =
   base: null
   layer: {}
@@ -6,8 +6,9 @@ H5.Map =
 
 H5.Leaflet = {}
 # }}}
-# LAYERS {{{
-bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h"
+# BASE LAYERS {{{
+bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6
+s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h"
 bingaerial = new L.BingLayer(bingKey,
   type: "Aerial"
   attribution: ""
@@ -24,7 +25,7 @@ binghybrid = new L.BingLayer(bingKey,
 )
 
 bingMini = new L.BingLayer(bingKey,
-  type: "Road"
+  type: "AerialWithLabels"
   attribution: ""
   minZoom: 1
   maxZoom: 11
@@ -42,7 +43,24 @@ openmapquest = new L.TileLayer(openmapquestUrl,
   maxZoom: 18
   subdomains: openmapquestSub
 )
+# }}}
+# MAP LAYER {{{
+H5.Map.base = new L.Map("map",
+  center: new L.LatLng(-10.0, -58.0)
+  zoom: 6
+  layers: [binghybrid]
+)
 
+H5.Map.minimap = new L.Control.MiniMap(bingMini,
+  toggleDisplay: true
+  zoomLevelOffset: -4
+  autoToggleDisplay: false
+).addTo(H5.Map.base)
+
+# add custom attribution
+H5.Map.base.attributionControl.setPrefix "Hexgis Hash5"
+# }}}
+# OVERLAYER {{{
 geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms"
 
 terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
@@ -81,38 +99,33 @@ portoTerminal = new L.TileLayer.WMS(geoserverUrl,
   transparent: true
 )
 
-# }}}
-# SCREEN SIZE {{{
-# update size of the map container
-$( '#map' ).width( $( window ).width() )
-$( '#map' ).height( $( window ).height() - $('#navbar').height())
+restURL = "http://" + document.domain + "/siema/rest"
 
-# Detect whether device supports orientationchange event,
-# otherwise fall back to the resize event.
-supportsOrientationChange = "onorientationchange" of window
-orientationEvent = (if supportsOrientationChange then "orientationchange" else "resize")
-
-# update chart if orientation or the size of the screen changed
-window.addEventListener orientationEvent, (->
-  $( '#map' ).width( $( window ).width() )
-  $( '#map' ).height( $( window ).height() - $('#navbar').height())
-), false
-# }}}
-# MAP LAYER {{{
-H5.Map.base = new L.Map("map",
-  center: new L.LatLng(-10.0, -58.0)
-  zoom: 6
-  layers: [binghybrid]
+# display acidentes
+H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
+  url: restURL
+  geotable: "ocorrencia_pon"
+  fields: "id_ocorrencia"
+  srid: 4326
+  geomFieldName: "shape"
+  showAll: true
+  cluster: true
+  popupTemplate: null
+  focus: false
+  symbology:
+    type: "single"
+    vectorStyle:
+      circleMarker: true
+      radius: 6
+      fillColor: "#ff0000"
+      fillOpacity: 0.8
+      weight: 4.0
+      color: "#ff0000"
+      opacity: 0.8
 )
-
-H5.Map.minimap = new L.Control.MiniMap(bingMini,
-  toggleDisplay: true
-  zoomLevelOffset: -4
-  autoToggleDisplay: false
-).addTo(H5.Map.base)
-
-# add custom attribution
-H5.Map.base.attributionControl.setPrefix "Hexgis Hash5"
+H5.Map.layer.acidentes.setMap H5.Map.base
+# }}}
+# CONTROLLERS {{{
 
 # add scale
 new L.control.scale().addTo(H5.Map.base)
@@ -155,33 +168,6 @@ new L.control.locate(
   locateOptions: {}
 ).addTo(H5.Map.base)
 
-# display somethings
-H5.Data.restURL = "http://" + document.domain + "/siema/rest"
-
-# display acidentes
-H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
-  url: H5.Data.restURL
-  geotable: "tmp_pon"
-  fields: "id_ocorrencia"
-  srid: 4326
-  geomFieldName: "shape"
-  showAll: true
-  cluster: true
-  popupTemplate: null
-  focus: false
-  symbology:
-    type: "single"
-    vectorStyle:
-      circleMarker: true
-      radius: 6
-      fillColor: "#ff0000"
-      fillOpacity: 0.8
-      weight: 4.0
-      color: "#ff0000"
-      opacity: 0.8
-)
-H5.Map.layer.acidentes.setMap H5.Map.base
-
 # icons
 H5.Data.icons = "http://" + document.domain + "/siema/assets/img/icons/"
 
@@ -195,6 +181,9 @@ new L.control.switch(
   "Bing Hybrid":
     layer: binghybrid
 ,
+  "Acidentes Ambientais":
+    layer: H5.Map.layer.acidentes.layer
+    overlayControl: true
   "Terras Indígenas":
     layer: terrasIndigenas
     tab: "chemicals"
@@ -210,6 +199,7 @@ new L.control.switch(
     layer: biomaIBGE
   "Portos e Terminais":
     layer: portoTerminal
+
   "Acidentes Ambientais":
     layer: H5.Map.layer.acidentes.layer
     overlayControl: true
@@ -223,4 +213,20 @@ new L.control.switch(
     icon: H5.Data.icons + "chemicals.png"
 ).addTo(H5.Map.base)
 
+# }}}
+# SCREEN SIZE {{{
+# update size of the map container
+$( '#map' ).width( $( window ).width() )
+$( '#map' ).height( $( window ).height() - $('#navbar').height())
+
+# Detect whether device supports orientationchange event,
+# otherwise fall back to the resize event.
+supportsOrientationChange = "onorientationchange" of window
+orientationEvent = (if supportsOrientationChange then "orientationchange" else "resize")
+
+# update chart if orientation or the size of the screen changed
+window.addEventListener orientationEvent, (->
+  $( '#map' ).width( $( window ).width() )
+  $( '#map' ).height( $( window ).height() - $('#navbar').height())
+), false
 # }}}

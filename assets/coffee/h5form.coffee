@@ -8,6 +8,29 @@ $(document).ready ->
   _tipoFonteInformacao = null
   _tipoProduto = null
 
+  idOcorrencia = null
+
+  if !$("#comunicado").val()
+    date = new Date()
+
+    seconds = parseInt(date.getSeconds() + (date.getHours() * 60 * 60), 10)
+    nroComunicado = "" + parseInt(date.getFullYear(),10) + parseInt(date.getMonth() + 1,10) + parseInt(date.getDate(),10) + seconds
+
+    $("#comunicado").val(nroComunicado)
+    $("#nroComunicado").html(nroComunicado)
+
+  # Get the data from the database
+  rest = new H5.Rest (
+    url: H5.Data.restURL
+    table: "ocorrencia"
+    fields: "id_ocorrencia"
+    parameters: "nro_ocorrencia%3D'" + $("#comunicado").prop('value') + "'"
+  )
+
+  $.each rest.data, (e,prop)->
+    $.each prop, (nameField, nameValue)->
+      idOcorrencia = nameValue
+
   # Get the product name from the database, by ajax
   rest = new H5.Rest (
     url: H5.Data.restURL
@@ -41,15 +64,6 @@ $(document).ready ->
     $("#modalBtnCancel").hide()
     $("#btnClose").hide()
     $(".modal-footer").show()
-
-  if !$("#comunicado").val()
-    date = new Date()
-
-    seconds = parseInt(date.getSeconds() + (date.getHours() * 60 * 60), 10)
-    nroComunicado = "" + parseInt(date.getFullYear(),10) + parseInt(date.getMonth() + 1,10) + parseInt(date.getDate(),10) + seconds
-
-    $("#comunicado").val(nroComunicado)
-    $("#nroComunicado").html(nroComunicado)
 
   #hide footer o form when click on topbar
   $("#btn-form").click (event) ->
@@ -92,6 +106,27 @@ $(document).ready ->
     rest = new H5.Rest (
      url: H5.Data.restURL
      table: "tmp_ocorrencia_produto"
+     restService: "ws_deletequery.php"
+    )
+
+    # Clean the temporary polygon table (tmp_pol)
+    rest = new H5.Rest (
+     url: H5.Data.restURL
+     table: "tmp_pol"
+     restService: "ws_deletequery.php"
+    )
+
+    # Clean the temporary polyline table (tmp_lin)
+    rest = new H5.Rest (
+     url: H5.Data.restURL
+     table: "tmp_lin"
+     restService: "ws_deletequery.php"
+    )
+
+    # Clean the temporary point table (tmp_pon)
+    rest = new H5.Rest (
+     url: H5.Data.restURL
+     table: "tmp_pon"
      restService: "ws_deletequery.php"
     )
 
@@ -269,7 +304,7 @@ $(document).ready ->
     attribution: ""
     )
   # update size of the map container
-  $( '#minimap' ).css("height", "205px")
+  $( '#minimap' ).css("height", "371px")
   $( '#minimap' ).css("width", "100%")
   $( '#minimap' ).css("box-shadow", "0 0 0 1px rgba(0, 0, 0, 0.15)")
   $( '#minimap' ).css("border-radius", "4px")
@@ -298,6 +333,83 @@ $(document).ready ->
     layers: [binghybrid]
     zoomControl: true
     )
+
+  # Add draw functionality to a map
+  drawnItems = new L.FeatureGroup()
+  minimapView.addLayer(drawnItems)
+
+  drawControl = new L.Control.Draw({
+      draw: {
+        marker: false
+      },
+      edit: {
+        featureGroup: drawnItems
+      }
+  })
+  minimapView.addControl(drawControl);
+
+  minimapView.on 'draw:created', (e)->
+    type = e.layerType
+
+    layer = e.layer
+
+    console.log (e.layer)
+
+    drawnItems.addLayer(layer);
+
+    if (type is 'polygon')
+      # Saves a polygon
+      firstPoint = ""
+
+      sql = "(id_tmp_pol, id_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + idOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
+
+      $.each layer._latlngs, ->
+        if firstPoint is ""
+          firstPoint = @
+
+        sql = sql + @.lat + " " + @.lng
+
+        sql = sql +  ","
+
+      sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + ")))"
+
+      console.log(sql)
+
+      # Insert the figure in a temporary table.
+      rest = new H5.Rest (
+       url: H5.Data.restURL
+       fields: sql
+       table: "tmp_pol"
+       restService: "ws_insertquery.php"
+      )
+
+    else if (type is 'polyline')
+      # Saves a polyline
+      firstPoint = ""
+
+      sql = "(id_tmp_lin, id_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + idOcorrencia + ",ST_GeomFromText('LINESTRING("
+
+      $.each layer._latlngs, ->
+        if firstPoint is ""
+          firstPoint = true
+          sql = sql + @.lat + " " + @.lng
+        else
+          sql = sql + "," + @.lat + " " + @.lng
+
+      sql = sql + ")', " + $("#inputEPSG").val() + "))"
+
+      console.log(sql)
+
+      # Insert the figure in a temporary table.
+      rest = new H5.Rest (
+       url: H5.Data.restURL
+       fields: sql
+       table: "tmp_lin"
+       restService: "ws_insertquery.php"
+      )
+
+  minimapView.on 'draw:deleted', (e)->
+    console.log e
 
   #add search for the address inputText
   GeoSearch =
@@ -942,20 +1054,6 @@ $(document).ready ->
     subjects.push(element)
 
     # subjects.push(@nome)
-
-  # Get the data from the database
-  rest = new H5.Rest (
-    url: H5.Data.restURL
-    table: "ocorrencia"
-    fields: "id_ocorrencia"
-    parameters: "nro_ocorrencia%3D'" + $("#comunicado").prop('value') + "'"
-  )
-
-  idOcorrencia = ""
-
-  $.each rest.data, (e,prop)->
-    $.each prop, (nameField, nameValue)->
-      idOcorrencia = nameValue
 
   if $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
     table = new H5.Table (

@@ -68,10 +68,10 @@
                         <label class="control-label" for="inputEPSG">EPSG</label>
                         <div class="controls">
                           <?php
-                          if (isset($semLocalizacao['checked']))
+                          // if (isset($semLocalizacao['checked']))
                             echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small" disabled="disabled"');
-                          else
-                            echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small"');                           ?>
+                          // else
+                            // echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small"');                           ?>
                         </div>
                       </div>
                     </div>
@@ -832,8 +832,10 @@
       </div>
 
       <div class="checkbox" style="display:none;">
-        <input type="checkbox" id="hasOleo" name="hasOleo" <?php if(isset($hasOleo) and $hasOleo == 'on') {echo ' checked="checked"';} ?>>
-        <input type="checkbox" id="isServIBAMA" name="isServIBAMA" <?php if(isset($isServIBAMA)) {echo ' checked="checked"';} ?>>
+
+        <?php echo form_input($hasOleo);?>
+        <?php echo form_input($isServIBAMA); ?>
+
       </div>
 
     <?php echo form_close(); ?>

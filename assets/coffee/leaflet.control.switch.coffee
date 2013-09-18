@@ -3,18 +3,21 @@ L.control.switch = L.Control.extend (
     collapsed: true
     position: "topright"
     autoZIndex: true
-    tab: "outros"
+    enableTabs: false
+    miscTabsName: "Outros"
 
   initialize: (baseLayers, overlayers, tabs, options) ->
-    L.setOptions this, options
+    L.Util.setOptions this, options
     @_layers = {}
     @_lastZIndex = 0
     @_handlingClick = false
+
+    if typeof tabs isnt undefined
+      @_tabs = tabs
+      @options.enableTabs = true
+
     $.each baseLayers, (name, obj) =>
-      @_addLayer(obj.layer, name, false, false)
-
-
-    @_tabs = tabs unless typeof tabs is "undefined"
+      @_addLayer(obj.layer, name, false, false, null)
 
     $.each overlayers, (name, obj) =>
       control = if (typeof obj.overlayControl is "boolean") then obj.overlayControl else false
@@ -23,12 +26,12 @@ L.control.switch = L.Control.extend (
   onAdd: (map) ->
     @_initLayout()
     @_update()
+
     map
       .on("layeradd", @_onLayerChange, this)
       .on("layerremove", @_onLayerChange, this)
 
     return @_container
-
 
   onRemove: (map) ->
     map
@@ -76,57 +79,57 @@ L.control.switch = L.Control.extend (
       link.href = "#"
       link.title = "Layers"
 
-      L.DomEvent
-        .on(link, "mouseover", @_activeTab, this)
-
       if L.Browser.touch
         L.DomEvent
           .on(link, "click", L.DomEvent.stop)
           .on(link, "click", @_expand, this)
+          .on(link, "click", @_activeTab, this)
       else
-        L.DomEvent.on(link, "focus", @_expand, this)
+        L.DomEvent
+          .on(link, "mouseover", @_activeTab, this)
+          .on(link, "focus", @_expand, this)
 
       @_map.on("click", @_collapse, this)
     else
       @_expand()
 
     @_baseLayersList = L.DomUtil.create('div', className + '-base', form)
-    if typeof @_tabs is "undefined"
+    unless @options.enableTabs
       @_separator = L.DomUtil.create('div', className + '-separator', form)
     @_overlayersList = L.DomUtil.create('div', className + '-overlayers', form)
 
-    if typeof @_tabs isnt "undefined"
+    if @options.enableTabs
       @_tabsOverLayers = L.DomUtil.create('ul', 'nav nav-tabs', form)
       $(@_tabsOverLayers).attr 'id', 'tabsOverLayers'
       @_tabsContentOverLayers = L.DomUtil.create('div', 'tab-content', form)
       $(@_tabsContentOverLayers).attr 'id', 'tabsContent'
+      @_tabsList = {}
 
       $.each @_tabs, (tab, obj) =>
         @_createTab(tab, obj)
         if obj.tabs is undefined
-          @_hasTabOutros = true
+          @options.miscTabs = true
 
-      if @_hasTabOutros
+      if @options.miscTabs
         obj = {
           icon: "http://" + document.domain + "/siema/assets/img/icons/world.png"
-          # name: "Outros"
+          # name: @options.miscTabsName
         }
-        @_createTab("outros", obj )
+        @_createTab(@options.miscTabsName, obj)
 
     $(container).append form
 
   _createTab: (tab, obj) ->
     #cria tab
-    # console.log "Create tab: ", tab
-    id = "tab" + tab
     newTab = L.DomUtil.create('li', '', @_tabsOverLayers)
 
     #cria tab content :)
     newTabContent = L.DomUtil.create('div', 'tab-pane', @_tabsContentOverLayers)
     $(newTabContent).attr 'id', tab
+    @_tabsList[tab] = newTabContent
 
     newTabName = L.DomUtil.create('a', '', newTab)
-    $(newTabName).attr 'id', id
+    $(newTabName).attr 'id', "tabLink" + tab
     $(newTabName).attr 'href', '#' + tab
     $(newTabName).attr 'data-toggle', 'tab'
 
@@ -179,7 +182,7 @@ L.control.switch = L.Control.extend (
       overlayersPresent = overlayersPresent or obj.overlayer
       baseLayersPresent = baseLayersPresent or not obj.overlayer
 
-      if typeof @_tabs is "undefined"
+      unless @options.enableTabs
         @_separator.style.display = (if overlayersPresent and baseLayersPresent then "" else "none")
 
   _onLayerChange: (e) ->
@@ -194,25 +197,18 @@ L.control.switch = L.Control.extend (
     @_map.fire(type, obj) if type
 
   _addItem: (obj) ->
-    # console.log obj
-
     if obj.overlayer
-      if @_tabs
+      if @options.enableTabs
         if obj.tab
-          container = document.getElementById(obj.tab)
-          if(document.getElementById(obj.tab) is null)
-            console.log "Element not found ", obj.tab
-        else if @_hasTabOutros
-          container = document.getElementById("outros")
+          container = @_tabsList[obj.tab]
+        else if @options.miscTabs
+          container = @_tabsList[@options.miscTabsName]
       else
         container = @_overlayersList
     else
       container = @_baseLayersList
+    console.log container, obj
 
-    # console.log container
-    # console.log @_tabsContentOverLayers
-
-    # container = @_overlayersList
     controlgroup = L.DomUtil.create("div", "control-group", container)
     checked = @_map.hasLayer(obj.layer)
 
