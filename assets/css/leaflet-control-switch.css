@@ -6,6 +6,7 @@
   padding: 0 15px 10px;
   width: 280px;
   overflow: auto;
+  max-height: auto;
 }
 
 @media (max-width: 979px) {
@@ -69,19 +70,11 @@
 .switch-control-layers-expanded {
   display: block;
 }
-
-.form-layer-list .nav-tabs > ul {
-
+.form-layer-list ul {
+  margin-top: 15px;
+  margin-bottom: 0px;
 }
 .form-layer-list .nav-tabs > li > a {
-  padding-bottom: 2px;
-  margin-right: 2px;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-bottom: 0px;
   outline: none;
-}
-
-#tabsOverLayers{
-  padding-top: 8px;
-  margin-top: 15px;
 }

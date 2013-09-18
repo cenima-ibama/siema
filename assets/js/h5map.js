@@ -226,9 +226,11 @@
   }, {
     water: {
       icon: H5.Data.icons + "water.png",
+      name: null,
       selected: true
     },
     chemicals: {
+      name: null,
       icon: H5.Data.icons + "chemicals.png"
     }
   }).addTo(H5.Map.base);

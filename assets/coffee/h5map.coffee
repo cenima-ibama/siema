@@ -210,16 +210,17 @@ new L.control.switch(
     layer: biomaIBGE
   "Portos e Terminais":
     layer: portoTerminal
+
   "Acidentes Ambientais":
     layer: H5.Map.layer.acidentes.layer
     overlayControl: true
 ,
   water:
     icon: H5.Data.icons + "water.png"
-    # name: "Water"
+    name: null
     selected: true
   chemicals:
-    # name: "Chemicals"
+    name: null
     icon: H5.Data.icons + "chemicals.png"
 ).addTo(H5.Map.base)
 
