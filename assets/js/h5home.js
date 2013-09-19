@@ -59,11 +59,7 @@
       rndedNum = Math.round(number * multiple) / multiple;
       return rndedNum;
     };
-    $(".loading").fadeOut(700);
-    if (document.getElementById("login")) {
-      $("#login").load("http://" + document.domain + "/painel/index.php/login");
-      return $("#login").hide();
-    }
+    return $(".loading").fadeOut(700);
   });
 
 }).call(this);
