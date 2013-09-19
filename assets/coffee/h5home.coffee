@@ -72,10 +72,3 @@ $(document).ready ->
 
   # Animate load screen
   $(".loading").fadeOut 700
-  if document.getElementById("login")
-    $("#login").load("http://" + document.domain + "/painel/index.php/login")
-    $("#login").hide()
-
-
-  # Mask for the "comunicado" number
-  # $("#inputRegistro").mask("9999999999999", {placeholder:""})

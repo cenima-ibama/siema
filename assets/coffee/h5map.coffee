@@ -49,6 +49,7 @@ H5.Map.base = new L.Map("map",
   center: new L.LatLng(-10.0, -58.0)
   zoom: 6
   layers: [binghybrid]
+  crs: L.CRS.EPSG4326
 )
 
 H5.Map.minimap = new L.Control.MiniMap(bingMini,
@@ -102,7 +103,7 @@ portoTerminal = new L.TileLayer.WMS(geoserverUrl,
 restURL = "http://" + document.domain + "/siema/rest"
 
 # display acidentes
-H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
+acidentes = new L.VectorLayer.Postgis (
   url: restURL
   geotable: "ocorrencia_pon"
   fields: "id_ocorrencia"
@@ -123,7 +124,7 @@ H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
       color: "#ff0000"
       opacity: 0.8
 )
-H5.Map.layer.acidentes.setMap H5.Map.base
+acidentes.setMap H5.Map.base
 # }}}
 # CONTROLLERS {{{
 
@@ -181,9 +182,6 @@ new L.control.switch(
   "Bing Hybrid":
     layer: binghybrid
 ,
-  "Acidentes Ambientais":
-    layer: H5.Map.layer.acidentes.layer
-    overlayControl: true
   "Terras Indígenas":
     layer: terrasIndigenas
     tab: "chemicals"
@@ -199,9 +197,8 @@ new L.control.switch(
     layer: biomaIBGE
   "Portos e Terminais":
     layer: portoTerminal
-
   "Acidentes Ambientais":
-    layer: H5.Map.layer.acidentes.layer
+    layer: acidentes
     overlayControl: true
 ,
   water:
