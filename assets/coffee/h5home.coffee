@@ -10,6 +10,10 @@ $(document).ready ->
     show: false
   )
 
+  $("#addMeModal").draggable({
+    handle: ".modal-header"
+  });
+
   $('.selectpicker').selectpicker()
 
   #-------------------------------------------------------------------------

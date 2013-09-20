@@ -7,6 +7,9 @@
       backdrop: false,
       show: false
     });
+    $("#addMeModal").draggable({
+      handle: ".modal-header"
+    });
     $('.selectpicker').selectpicker();
     $(".dropdown-menu input, .dropdown-menu label").click(function(e) {
       return e.stopPropagation();

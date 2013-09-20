@@ -12,7 +12,7 @@ L.control.switch = L.Control.extend (
     @_lastZIndex = 0
     @_handlingClick = false
 
-    if typeof tabs isnt undefined
+    if tabs
       @_tabs = tabs
       @options.enableTabs = true
 

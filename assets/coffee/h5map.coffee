@@ -169,9 +169,9 @@ new L.control.locate(
 ).addTo(H5.Map.base)
 
 # icons
-H5.Data.icons = "http://" + document.domain + "/siema/assets/img/icons/"
+iconsURL = "http://" + document.domain + "/siema/assets/img/icons/"
 
-new L.control.switch(
+controlswitch = new L.control.switch(
   "OSM":
     layer: openstreet
   "Bing Aerial":
@@ -196,18 +196,22 @@ new L.control.switch(
     layer: biomaIBGE
   "Portos e Terminais":
     layer: portoTerminal
-  "Acidentes Ambientais":
-    layer: acidentes.layer
-    overlayControl: true
 ,
   water:
-    icon: H5.Data.icons + "water.png"
+    icon: iconsURL + "water.png"
     name: null
     selected: true
   chemicals:
     name: null
-    icon: H5.Data.icons + "chemicals.png"
+    icon: iconsURL + "chemicals.png"
 ).addTo(H5.Map.base)
+
+
+# controlswitch.addOverLayer(
+#   acidentes.layer,
+#   "Acidentes Ambientais",
+#   true
+# )
 
 # }}}
 # SCREEN SIZE {{{
