@@ -416,6 +416,33 @@ $(document).ready ->
     console.log 'deleteting..'
     console.log e
 
+    sql = "id_tmp_pol=0 "
+
+    $.each e.layers._layers, ()->
+      console.log @._leaflet_id
+
+      sql = sql + "or id_tmp_pol=" + @._leaflet_id + " "
+
+
+    sql = sql + "and nro_ocorrencia='" + $("#comunicado").val() + "'"
+
+    # Remove lines
+    rest = new H5.Rest (
+      url: H5.Data.restURL
+      table: "tmp_pol"
+      parameters: sql
+      restService: "ws_deletequery.php"
+    )
+
+    # Remove lines
+    rest = new H5.Rest (
+      url: H5.Data.restURL
+      table: "tmp_lin"
+      parameters: sql
+      restService: "ws_deletequery.php"
+    )
+
+
 
 
   # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
@@ -451,7 +478,7 @@ $(document).ready ->
     if idPolygon is ''
       idPolygon = @.id_tmp_pol
 
-    if idPolygon == @id_tmp_pol
+    if idPolygon == @.id_tmp_pol
       pointVectors.push(new L.LatLng(@.x, @.y))
     else
       idPolygon = @.id_tmp_pol
@@ -459,6 +486,7 @@ $(document).ready ->
       console.log pointVectors
 
       polygon = new L.Polygon(pointVectors)
+      polygon._leaflet_id = idPolygon
       drawnItems.addLayer(polygon)
 
       pointVectors = []
@@ -466,6 +494,7 @@ $(document).ready ->
   console.log pointVectors
 
   polygon = new L.Polygon(pointVectors)
+  polygon._leaflet_id = idPolygon
   drawnItems.addLayer(polygon)
 
 
@@ -847,24 +876,7 @@ $(document).ready ->
 
     $("#nomeProduto").typeahead({source: subjects})
 
-    $("#btnAddProduto").on 'click', ()=>
-      $.each _tipoProduto, ()->
-        if @nome is $("#nomeProduto").prop('value')
-          newRow = document.getElementById('tblProdutos').insertRow()
 
-          td = newRow.insertCell()
-          td.innerHTML = '<input name="produtos[]" value=' + @id_produto + ' />' +
-                         '<input name=' + @id_produto + '[]" value=' + @id_produto + ' />' +
-          td.style = 'display:none;'
-
-          td = newRow.insertCell()
-          td.innerHTML = @nome
-
-          td = newRow.insertCell()
-          td.innerHTML = @num_onu
-
-          td = newRow.insertCell()
-          td.innerHTML = @classe_risco
 
   #-------------------------------------------------------------------------
   # DISABLE SELECTED INPUTS

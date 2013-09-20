@@ -332,8 +332,27 @@
       }
     });
     minimapView.on('draw:deleted', function(e) {
+      var sql;
       console.log('deleteting..');
-      return console.log(e);
+      console.log(e);
+      sql = "id_tmp_pol=0 ";
+      $.each(e.layers._layers, function() {
+        console.log(this._leaflet_id);
+        return sql = sql + "or id_tmp_pol=" + this._leaflet_id + " ";
+      });
+      sql = sql + "and nro_ocorrencia='" + $("#comunicado").val() + "'";
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        table: "tmp_pol",
+        parameters: sql,
+        restService: "ws_deletequery.php"
+      });
+      return rest = new H5.Rest({
+        url: H5.Data.restURL,
+        table: "tmp_lin",
+        parameters: sql,
+        restService: "ws_deletequery.php"
+      });
     });
     sql = 'id_tmp_pol,' + 'ST_X(%20' + 'ST_PointN(%20' + 'ST_ExteriorRing(shape),%20' + 'generate_series(1,ST_NPoints(ST_ExteriorRing(shape)))%20' + ')%20' + ')%20as%20x,' + 'ST_Y(%20' + 'ST_PointN(%20' + 'ST_ExteriorRing(shape),%20' + 'generate_series(1,ST_NPoints(ST_ExteriorRing(shape)))%20' + ')%20' + ')%20as%20y%20';
     rest = new H5.Rest({
@@ -357,12 +376,14 @@
         idPolygon = this.id_tmp_pol;
         console.log(pointVectors);
         polygon = new L.Polygon(pointVectors);
+        polygon._leaflet_id = idPolygon;
         drawnItems.addLayer(polygon);
         return pointVectors = [];
       }
     });
     console.log(pointVectors);
     polygon = new L.Polygon(pointVectors);
+    polygon._leaflet_id = idPolygon;
     drawnItems.addLayer(polygon);
     GeoSearch = {
       _provider: new L.GeoSearch.Provider.Google,
@@ -470,8 +491,7 @@
       return field.innerHTML = value;
     };
     $(function() {
-      var labelOutros, subjects, tipoDanoIdentificado, tipoEvento, tipoFonteInformacao, tipoInstituicaoAtuando, tipoLocalizacao, total,
-        _this = this;
+      var labelOutros, subjects, tipoDanoIdentificado, tipoEvento, tipoFonteInformacao, tipoInstituicaoAtuando, tipoLocalizacao, total;
       tipoLocalizacao = document.getElementById("tipoLocalizacao");
       rest = new H5.Rest({
         url: H5.Data.restURL,
@@ -686,22 +706,6 @@
       });
       $("#nomeProduto").typeahead({
         source: subjects
-      });
-      $("#btnAddProduto").on('click', function() {
-        return $.each(_tipoProduto, function() {
-          var newRow, td;
-          if (this.nome === $("#nomeProduto").prop('value')) {
-            newRow = document.getElementById('tblProdutos').insertRow();
-            td = newRow.insertCell();
-            td.innerHTML = '<input name="produtos[]" value=' + this.id_produto + ' />' + '<input name=' + this.id_produto + '[]" value=' + this.id_produto + ' />' + (td.style = 'display:none;');
-            td = newRow.insertCell();
-            td.innerHTML = this.nome;
-            td = newRow.insertCell();
-            td.innerHTML = this.num_onu;
-            td = newRow.insertCell();
-            return td.innerHTML = this.classe_risco;
-          }
-        });
       });
       $("#semLocalizacao").on('click', function() {
         if ($(this).is(":checked")) {
