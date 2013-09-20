@@ -3,7 +3,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, drawControl, drawnItems, history, idOcorrencia, latlng, minimapView, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, drawControl, drawnItems, history, idOcorrencia, idPolygon, latlng, minimapView, nroComunicado, pointVectors, polygon, polygonList, rest, seconds, sql, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -85,21 +85,25 @@
       rest = new H5.Rest({
         url: H5.Data.restURL,
         table: "tmp_ocorrencia_produto",
+        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
         restService: "ws_deletequery.php"
       });
       rest = new H5.Rest({
         url: H5.Data.restURL,
         table: "tmp_pol",
+        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
         restService: "ws_deletequery.php"
       });
       rest = new H5.Rest({
         url: H5.Data.restURL,
         table: "tmp_lin",
+        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
         restService: "ws_deletequery.php"
       });
       rest = new H5.Rest({
         url: H5.Data.restURL,
         table: "tmp_pon",
+        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
         restService: "ws_deletequery.php"
       });
       return $(this).tab('show');
@@ -290,7 +294,7 @@
       drawnItems.addLayer(layer);
       if (type === 'polygon') {
         firstPoint = "";
-        sql = "(id_tmp_pol, id_ocorrencia, shape) values ( " + layer._leaflet_id + "," + idOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
+        sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " + layer._leaflet_id + "," + $("#comunicado").val() + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
         $.each(layer._latlngs, function() {
           if (firstPoint === "") {
             firstPoint = this;
@@ -308,7 +312,7 @@
         });
       } else if (type === 'polyline') {
         firstPoint = "";
-        sql = "(id_tmp_lin, id_ocorrencia, shape) values ( " + layer._leaflet_id + "," + idOcorrencia + ",ST_GeomFromText('LINESTRING(";
+        sql = "(id_tmp_lin, nro_ocorrencia, shape) values ( " + layer._leaflet_id + "," + $("#comunicado").val() + ",ST_GeomFromText('LINESTRING(";
         $.each(layer._latlngs, function() {
           if (firstPoint === "") {
             firstPoint = true;
@@ -328,8 +332,38 @@
       }
     });
     minimapView.on('draw:deleted', function(e) {
+      console.log('deleteting..');
       return console.log(e);
     });
+    sql = 'id_tmp_pol,' + 'ST_X(%20' + 'ST_PointN(%20' + 'ST_ExteriorRing(shape),%20' + 'generate_series(1,ST_NPoints(ST_ExteriorRing(shape)))%20' + ')%20' + ')%20as%20x,' + 'ST_Y(%20' + 'ST_PointN(%20' + 'ST_ExteriorRing(shape),%20' + 'generate_series(1,ST_NPoints(ST_ExteriorRing(shape)))%20' + ')%20' + ')%20as%20y%20';
+    rest = new H5.Rest({
+      url: H5.Data.restURL,
+      fields: sql,
+      table: "tmp_pol",
+      parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'"
+    });
+    polygonList = rest.data;
+    console.log('LIST OF POLYGON');
+    idPolygon = '';
+    pointVectors = [];
+    $.each(polygonList, function() {
+      var polygon;
+      if (idPolygon === '') {
+        idPolygon = this.id_tmp_pol;
+      }
+      if (idPolygon === this.id_tmp_pol) {
+        return pointVectors.push(new L.LatLng(this.x, this.y));
+      } else {
+        idPolygon = this.id_tmp_pol;
+        console.log(pointVectors);
+        polygon = new L.Polygon(pointVectors);
+        drawnItems.addLayer(polygon);
+        return pointVectors = [];
+      }
+    });
+    console.log(pointVectors);
+    polygon = new L.Polygon(pointVectors);
+    drawnItems.addLayer(polygon);
     GeoSearch = {
       _provider: new L.GeoSearch.Provider.Google,
       _geosearch: function(qry) {
@@ -951,6 +985,13 @@
           id_ocorrencia_produto: {
             columnName: "Identificador",
             tableName: "id_ocorrencia_produto",
+            isVisible: false,
+            validation: null
+          },
+          nro_ocorrencia: {
+            columnName: " ",
+            tableName: "nro_ocorrencia",
+            defaultValue: $("#comunicado").val(),
             isVisible: false,
             validation: null
           },
