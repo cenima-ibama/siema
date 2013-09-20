@@ -22,11 +22,11 @@ class Login extends CI_Controller {
             redirect(base_url());
         }
         else {
-            $this->load->view('templates/login');
+            $this->load->view('pages/login');
         }
     }
 
     public function success() {
-        $this->load->view('templates/login_success');
+        $this->load->view('pages/login');
     }
 }

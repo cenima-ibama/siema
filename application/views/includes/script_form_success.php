@@ -1,5 +1,6 @@
  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
- <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+ <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
  <script>
 	var btnSubmit = window.parent.document.getElementById("submit");
 	var btnNext = window.parent.document.getElementById("modalBtnNext");

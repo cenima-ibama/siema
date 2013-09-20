@@ -54,17 +54,17 @@ class Auth extends CI_Controller {
                     if($this->session->flashdata('tried_to')) {
                         redirect($this->session->flashdata('tried_to'));
                     } else {
-                        $this->load->view('templates/login_success');
+                        $this->load->view('pages/login');
                     }
                 }
             else {
                 // Login FAIL
-                $this->load->view('templates/login', array('login_fail_msg'
+                $this->load->view('pages/login', array('login_fail_msg'
                     => 'Error with LDAP authentication.'));
             }
         } else {
             // Already logged in...
-            $this->load->view('templates/login_success');
+            $this->load->view('pages/login');
         }
     }
 

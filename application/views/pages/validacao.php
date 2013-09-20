@@ -1,3 +1,4 @@
+ <!-- from administrator -->
  <aside id="sidebar-nav">
    <ul id="dashboard-menu">
      <li><a href="../administrator"><i class="icon-user"></i><span>Usuários</span></a></li>

@@ -25,7 +25,7 @@ binghybrid = new L.BingLayer(bingKey,
 )
 
 bingMini = new L.BingLayer(bingKey,
-  type: "AerialWithLabels"
+  type: "Road"
   attribution: ""
   minZoom: 1
   maxZoom: 11
@@ -49,7 +49,6 @@ H5.Map.base = new L.Map("map",
   center: new L.LatLng(-10.0, -58.0)
   zoom: 6
   layers: [binghybrid]
-  crs: L.CRS.EPSG4326
 )
 
 H5.Map.minimap = new L.Control.MiniMap(bingMini,
@@ -103,7 +102,7 @@ portoTerminal = new L.TileLayer.WMS(geoserverUrl,
 restURL = "http://" + document.domain + "/siema/rest"
 
 # display acidentes
-acidentes = new L.VectorLayer.Postgis (
+H5.Map.layer.acidentes = new L.VectorLayer.Postgis (
   url: restURL
   geotable: "ocorrencia_pon"
   fields: "id_ocorrencia"
@@ -124,7 +123,7 @@ acidentes = new L.VectorLayer.Postgis (
       color: "#ff0000"
       opacity: 0.8
 )
-acidentes.setMap H5.Map.base
+H5.Map.layer.acidentes.setMap H5.Map.base
 # }}}
 # CONTROLLERS {{{
 
@@ -182,6 +181,9 @@ new L.control.switch(
   "Bing Hybrid":
     layer: binghybrid
 ,
+  "Acidentes Ambientais":
+    layer: H5.Map.layer.acidentes.layer
+    overlayControl: true
   "Terras Indígenas":
     layer: terrasIndigenas
     tab: "chemicals"
@@ -197,9 +199,12 @@ new L.control.switch(
     layer: biomaIBGE
   "Portos e Terminais":
     layer: portoTerminal
+<<<<<<< HEAD
   "Acidentes Ambientais":
-    layer: acidentes.layer
+    layer: H5.Map.layer.acidentes.layer
     overlayControl: true
+=======
+>>>>>>> 4d3370fbe614c18474886dcbf9cba0487f519280
 ,
   water:
     icon: H5.Data.icons + "water.png"

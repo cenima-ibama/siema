@@ -208,7 +208,7 @@
       layer: portoTerminal
     },
     "Acidentes Ambientais": {
-      layer: acidentes,
+      layer: acidentes.layer,
       overlayControl: true
     }
   }, {
