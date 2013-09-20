@@ -3,7 +3,11 @@
   window.parent.H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
+<<<<<<< HEAD
     var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, disabled, drawControl, drawnItems, idOcorrencia, latlng, minimapView, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+=======
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, drawControl, drawnItems, history, idOcorrencia, idPolygon, latlng, minimapView, nroComunicado, pointVectors, polygon, polygonList, rest, seconds, sql, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+>>>>>>> 9c667356b463afe091f13ecc5bdd4ddd790ce8e2
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -36,6 +40,219 @@
       order: "nome"
     });
     _tipoProduto = rest.data;
+<<<<<<< HEAD
+=======
+    history = [];
+    collapse = 2;
+    $('#addMeModal').on('hidden', function() {
+      var btnBack;
+      history = [];
+      collapse = 2;
+      btnBack = document.getElementById("modalBtnBack");
+      btnBack.href = '#tab1';
+      $("#modalBtnBack").tab('show');
+      $("#modalBtnBack").show();
+      $("#modalBtnNext").show();
+      $("#submit").hide();
+      $("#modalBtnCancel").hide();
+      $("#btnClose").hide();
+      return $(".modal-footer").show();
+    });
+    $("#btn-form").click(function(event) {
+      return $(".modal-footer").hide();
+    });
+    $("#modalBtnBack").click(function(event) {
+      var btnNext, tab;
+      event.preventDefault();
+      btnNext = document.getElementById("modalBtnNext");
+      if (history.length > 0) {
+        tab = history.pop();
+        this.href = tab.tab;
+        collapse = tab.collapse;
+      }
+      $(".modal-footer").hide();
+      return $(this).tab('show');
+    });
+    $("#modalBtnCancel").click(function(event) {
+      var btnBack, btnNext, tab;
+      event.preventDefault();
+      btnNext = document.getElementById("modalBtnNext");
+      btnBack = document.getElementById("modalBtnBack");
+      if (history.length > 0) {
+        tab = history.pop();
+        this.href = tab.tab;
+        collapse = tab.collapse;
+      }
+      $(".modal-footer").show();
+      $(btnNext).show();
+      $(btnBack).show();
+      $("#submit").hide();
+      $(this).hide();
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        table: "tmp_ocorrencia_produto",
+        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
+        restService: "ws_deletequery.php"
+      });
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        table: "tmp_pol",
+        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
+        restService: "ws_deletequery.php"
+      });
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        table: "tmp_lin",
+        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
+        restService: "ws_deletequery.php"
+      });
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        table: "tmp_pon",
+        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
+        restService: "ws_deletequery.php"
+      });
+      return $(this).tab('show');
+    });
+    $("#btnBeginForm").click(function(event) {
+      var btnLogout, checkedUser, containerProgress, i, progressAnimetion, progressBar, textProgress, tipoForm;
+      if ((document.getElementById('divLogin')) == null) {
+        progressBar = document.getElementById("authProgress");
+        textProgress = document.getElementById("textProgress");
+        containerProgress = document.getElementById("containerProgress");
+        checkedUser = document.getElementById("checkedUser");
+        tipoForm = document.getElementById("tipoForm");
+        btnLogout = document.getElementById("btnLogout");
+        $(tipoForm).hide();
+        $(btnLogout).hide();
+        i = 0;
+        progressAnimetion = setInterval(function() {
+          $(progressBar).width(i++ + "0%");
+          if (i === 15) {
+            $(containerProgress).hide();
+            $(textProgress).hide();
+            $(textProgress).html('Usuário registrado.');
+            $(textProgress).fadeToggle();
+            $(checkedUser).show();
+            $(tipoForm).show();
+            $(btnLogout).show();
+            return clearInterval(progressAnimetion);
+          }
+        }, 100);
+      }
+      if ($("#containerProgress").is(":hidden")) {
+        $(tipoForm).show();
+        return $(btnLogout).show();
+      }
+    });
+    $("#modalBtnNext").click(function(event) {
+      var action, btnLogout, checkedUser, containerProgress, defaultHtml, hasOleo, i, isAcidOleo, isAtual, isOutros, isPubExt, isServIBAMA, progressAnimetion, progressBar, textProgress, tipoForm;
+      event.preventDefault();
+      history.push({
+        tab: "#tab" + collapse,
+        collapse: collapse
+      });
+      this.href = "#tab" + ++collapse;
+      if (("#tab" + collapse) === "#tab2") {
+        if ((document.getElementById('divLogin')) == null) {
+          progressBar = document.getElementById("authProgress");
+          textProgress = document.getElementById("textProgress");
+          containerProgress = document.getElementById("containerProgress");
+          checkedUser = document.getElementById("checkedUser");
+          tipoForm = document.getElementById("tipoForm");
+          btnLogout = document.getElementById("btnLogout");
+          $(tipoForm).hide();
+          $(btnLogout).hide();
+          i = 0;
+          progressAnimetion = setInterval(function() {
+            $(progressBar).width(i++ + "0%");
+            if (i === 15) {
+              $(containerProgress).hide();
+              $(textProgress).hide();
+              $(textProgress).html('Usuário registrado.');
+              $(textProgress).fadeToggle();
+              $(checkedUser).show();
+              $(tipoForm).show();
+              $(btnLogout).show();
+              return clearInterval(progressAnimetion);
+            }
+          }, 100);
+        }
+        $(".modal-footer").hide();
+      } else {
+        $(".modal-footer").show();
+        if (("#tab" + collapse) === "#tab4") {
+          isPubExt = document.getElementById("radioPubExt").checked;
+          if (isPubExt) {
+            collapse = 5;
+            this.href = "#tab" + 5;
+          }
+        } else if (("#tab" + collapse) === "#tab8") {
+          isAcidOleo = document.getElementById("optionsAcidenteOleo").checked;
+          isOutros = document.getElementById("optionsAcidenteOutros").checked;
+          isAtual = document.getElementById("optionsAtualizarAcidente").checked;
+          hasOleo = document.getElementById("hasOleo");
+          isServIBAMA = document.getElementById("isServIBAMA");
+          hasOleo.checked = isAcidOleo;
+        }
+      }
+      if (("#tab" + collapse) === "#tab8") {
+        $("#submit").show();
+        $("#modalBtnNext").hide();
+        $("#modalBtnBack").hide();
+        $("#modalBtnCancel").show();
+        if (isAtual) {
+          if ($("#inputRegistro").prop("value") !== "") {
+            defaultHtml = document.getElementById("defaultHtml");
+            if (defaultHtml.innerHTML === "") {
+              defaultHtml.innerHTML = $("#formLoad").prop("action");
+            }
+            action = defaultHtml.innerHTML + "/" + $("#inputRegistro").prop("value");
+            $("#formLoad").prop("action", action);
+            $("#formLoad").submit();
+          } else {
+            $("#inputRegistro").focus();
+          }
+        } else {
+          $("#formCreate").submit();
+        }
+      }
+      return $(this).tab('show');
+    });
+    $("#tipoForm").click(function(event) {
+      event.preventDefault();
+      history.push({
+        tab: "#tab2",
+        collapse: collapse
+      });
+      this.href = "#tab7";
+      collapse = 7;
+      $(".modal-footer").show();
+      return $(this).tab('show');
+    });
+    $("#denunciaAnonima").click(function(event) {
+      event.preventDefault();
+      history.push({
+        tab: "#tab2",
+        collapse: collapse
+      });
+      this.href = "#tab7";
+      collapse = 7;
+      $(".modal-footer").show();
+      return $(this).tab('show');
+    });
+    $("#btnCadastrar").click(function(event) {
+      event.preventDefault();
+      history.push({
+        tab: "#tab2",
+        collapse: collapse
+      });
+      this.href = "#tab3";
+      collapse = 3;
+      $(".modal-footer").show();
+      return $(this).tab('show');
+    });
+>>>>>>> 9c667356b463afe091f13ecc5bdd4ddd790ce8e2
     bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h";
     binghybrid = new L.BingLayer(bingKey, {
       type: "AerialWithLabels",
@@ -84,7 +301,7 @@
       drawnItems.addLayer(layer);
       if (type === 'polygon') {
         firstPoint = "";
-        sql = "(id_tmp_pol, id_ocorrencia, shape) values ( " + layer._leaflet_id + "," + idOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
+        sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " + layer._leaflet_id + "," + $("#comunicado").val() + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
         $.each(layer._latlngs, function() {
           if (firstPoint === "") {
             firstPoint = this;
@@ -102,7 +319,7 @@
         });
       } else if (type === 'polyline') {
         firstPoint = "";
-        sql = "(id_tmp_lin, id_ocorrencia, shape) values ( " + layer._leaflet_id + "," + idOcorrencia + ",ST_GeomFromText('LINESTRING(";
+        sql = "(id_tmp_lin, nro_ocorrencia, shape) values ( " + layer._leaflet_id + "," + $("#comunicado").val() + ",ST_GeomFromText('LINESTRING(";
         $.each(layer._latlngs, function() {
           if (firstPoint === "") {
             firstPoint = true;
@@ -122,8 +339,38 @@
       }
     });
     minimapView.on('draw:deleted', function(e) {
+      console.log('deleteting..');
       return console.log(e);
     });
+    sql = 'id_tmp_pol,' + 'ST_X(%20' + 'ST_PointN(%20' + 'ST_ExteriorRing(shape),%20' + 'generate_series(1,ST_NPoints(ST_ExteriorRing(shape)))%20' + ')%20' + ')%20as%20x,' + 'ST_Y(%20' + 'ST_PointN(%20' + 'ST_ExteriorRing(shape),%20' + 'generate_series(1,ST_NPoints(ST_ExteriorRing(shape)))%20' + ')%20' + ')%20as%20y%20';
+    rest = new H5.Rest({
+      url: H5.Data.restURL,
+      fields: sql,
+      table: "tmp_pol",
+      parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'"
+    });
+    polygonList = rest.data;
+    console.log('LIST OF POLYGON');
+    idPolygon = '';
+    pointVectors = [];
+    $.each(polygonList, function() {
+      var polygon;
+      if (idPolygon === '') {
+        idPolygon = this.id_tmp_pol;
+      }
+      if (idPolygon === this.id_tmp_pol) {
+        return pointVectors.push(new L.LatLng(this.x, this.y));
+      } else {
+        idPolygon = this.id_tmp_pol;
+        console.log(pointVectors);
+        polygon = new L.Polygon(pointVectors);
+        drawnItems.addLayer(polygon);
+        return pointVectors = [];
+      }
+    });
+    console.log(pointVectors);
+    polygon = new L.Polygon(pointVectors);
+    drawnItems.addLayer(polygon);
     GeoSearch = {
       _provider: new L.GeoSearch.Provider.Google,
       _geosearch: function(qry) {
@@ -728,6 +975,13 @@
           id_ocorrencia_produto: {
             columnName: "Identificador",
             tableName: "id_ocorrencia_produto",
+            isVisible: false,
+            validation: null
+          },
+          nro_ocorrencia: {
+            columnName: " ",
+            tableName: "nro_ocorrencia",
+            defaultValue: $("#comunicado").val(),
             isVisible: false,
             validation: null
           },

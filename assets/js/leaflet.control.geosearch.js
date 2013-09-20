@@ -16,7 +16,7 @@
     return this.Label = label;
   };
 
-  L.control.GeoSearch = (function(_super) {
+  L.Control.GeoSearch = (function(_super) {
     __extends(GeoSearch, _super);
 
     GeoSearch.prototype.options = {
@@ -55,6 +55,7 @@
       input = L.DomUtil.create("input", null, form);
       input.placeholder = this.options.searchLabel;
       input.setAttribute("id", "inputGeosearch");
+      input.setAttribute("autocomplete", "off");
       this._searchInput = input;
       L.DomEvent.on(this._btnSearch, "click", L.DomEvent.stop).on(this._btnSearch, "click", function() {
         if (L.DomUtil.hasClass(form, "displayNone")) {
@@ -160,6 +161,9 @@
         this._printError(this.options.notFoundMessage);
       } else {
         this._show(results);
+        this._map.fireEvent('geosearch_foundlocations', {
+          Location: location
+        });
       }
       return results;
     };
@@ -174,6 +178,9 @@
         }
       }
       this._map.setView([location.Y, location.X], this.options.zoomLevel, false);
+      this._map.fireEvent('geosearch_showlocation', {
+        Location: location
+      });
       return this._cancelSearch();
     };
 
@@ -352,10 +359,9 @@
       var enterKey, escapeKey;
       enterKey = 13;
       escapeKey = 27;
-      switch (e.keyCode) {
-        case enterKey:
-          L.DomEvent.preventDefault(e);
-          return this._startSearch();
+      if (e.keyCode === enterKey) {
+        L.DomEvent.preventDefault(e);
+        return this._startSearch();
       }
     };
 

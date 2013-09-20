@@ -49,7 +49,6 @@ H5.Map.base = new L.Map("map",
   center: new L.LatLng(-10.0, -58.0)
   zoom: 6
   layers: [binghybrid]
-  crs: L.CRS.EPSG4326
 )
 
 H5.Map.minimap = new L.Control.MiniMap(bingMini,
@@ -137,7 +136,7 @@ new L.control.fullscreen(
   title: 'Fullscreen'
 ).addTo(H5.Map.base)
 
-new L.control.GeoSearch(
+new L.Control.GeoSearch(
   provider: new L.GeoSearch.Provider.Google
   searchLabel: "Endereço, Estado - UF"
   notFoundMessage: "Endereço não encontrado."
