@@ -26,6 +26,8 @@ class Sendmail_model extends CI_Model {
     }
     else {
       $this->firephp->log($hour);
+      $strHour = null;
+      $strDate = null;
       if(!is_null($hour))
         $strHour = " às " . $hour ;
 

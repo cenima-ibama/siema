@@ -35,6 +35,9 @@ class H5.Table
 
   _createContainer: ->
     @_container = document.getElementById(@options.container)
+    # console.log "Name: ", @options.container
+    # console.log document
+    # console.log "Container ", @_container
 
     boxHeader = document.createElement("div")
     boxHeader.className = "box-header"

@@ -1,4 +1,4 @@
-H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+window.parent.window.parent.H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 $(document).ready ->
 
   # Adding tables to the configuration panel on the administrator area
@@ -6,7 +6,7 @@ $(document).ready ->
   table = new H5.Table (
     container: "table1"
     title: "Tipo de Eventos"
-    url: H5.Data.restURL
+    url: window.parent.H5.Data.restURL
     table: "tipo_evento"
     fields:
       id_tipo_evento:
@@ -36,7 +36,7 @@ $(document).ready ->
   table = new H5.Table (
     container: "table2"
     title: "Tipo de Produtos"
-    url: H5.Data.restURL
+    url: window.parent.H5.Data.restURL
     table: "tipo_produto"
     fields:
       id_tipo_produto:
@@ -63,7 +63,7 @@ $(document).ready ->
   table = new H5.Table (
     container: "table3"
     title: "Fontes de Informação"
-    url: H5.Data.restURL
+    url: window.parent.H5.Data.restURL
     table: "tipo_fonte_informacao"
     fields:
       id_tipo_fonte_informacao:

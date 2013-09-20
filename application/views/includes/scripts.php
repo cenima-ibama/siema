@@ -46,5 +46,4 @@
   <script src="<?= base_url()?>assets/js/h5home.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/h5map.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/h5charts.js" type="text/javascript"></script>
-  <script src="<?= base_url()?>assets/js/h5form.js" type="text/javascript"></script>
-  <script src="<?= base_url()?>assets/js/h5table.js" type="text/javascript"></script>
+  <script src="<?= base_url()?>assets/js/h5wizard.js" type="text/javascript"></script>

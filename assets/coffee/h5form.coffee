@@ -1,4 +1,4 @@
-H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+window.parent.H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 $(document).ready ->
 
   _tipoLocalizacao = null
@@ -20,8 +20,8 @@ $(document).ready ->
     $("#nroComunicado").html(nroComunicado)
 
   # Get the data from the database
-  rest = new H5.Rest (
-    url: H5.Data.restURL
+  rest = new window.parent.H5.Rest (
+    url: window.parent.H5.Data.restURL
     table: "ocorrencia"
     fields: "id_ocorrencia"
     parameters: "nro_ocorrencia%3D'" + $("#comunicado").prop('value') + "'"
@@ -32,8 +32,8 @@ $(document).ready ->
       idOcorrencia = nameValue
 
   # Get the product name from the database, by ajax
-  rest = new H5.Rest (
-    url: H5.Data.restURL
+  rest = new window.parent.H5.Rest (
+    url: window.parent.H5.Data.restURL
     table: "produto"
     fields: "id_produto,nome,num_onu,classe_risco"
     order: "nome"
@@ -106,7 +106,6 @@ $(document).ready ->
     rest = new H5.Rest (
      url: H5.Data.restURL
      table: "tmp_ocorrencia_produto"
-     parameters:"nro_ocorrencia='" + $("#comunicado").val() + "'"
      restService: "ws_deletequery.php"
     )
 
@@ -114,7 +113,6 @@ $(document).ready ->
     rest = new H5.Rest (
      url: H5.Data.restURL
      table: "tmp_pol"
-     parameters:"nro_ocorrencia='" + $("#comunicado").val() + "'"
      restService: "ws_deletequery.php"
     )
 
@@ -122,7 +120,6 @@ $(document).ready ->
     rest = new H5.Rest (
      url: H5.Data.restURL
      table: "tmp_lin"
-     parameters:"nro_ocorrencia='" + $("#comunicado").val() + "'"
      restService: "ws_deletequery.php"
     )
 
@@ -130,7 +127,6 @@ $(document).ready ->
     rest = new H5.Rest (
      url: H5.Data.restURL
      table: "tmp_pon"
-     parameters:"nro_ocorrencia='" + $("#comunicado").val() + "'"
      restService: "ws_deletequery.php"
     )
 
@@ -365,7 +361,7 @@ $(document).ready ->
       # Saves a polygon
       firstPoint = ""
 
-      sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + $("#comunicado").val() + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
+      sql = "(id_tmp_pol, id_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + idOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
 
       $.each layer._latlngs, ->
         if firstPoint is ""
@@ -380,8 +376,8 @@ $(document).ready ->
       console.log(sql)
 
       # Insert the figure in a temporary table.
-      rest = new H5.Rest (
-       url: H5.Data.restURL
+      rest = new window.parent.H5.Rest (
+       url: window.parent.H5.Data.restURL
        fields: sql
        table: "tmp_pol"
        restService: "ws_insertquery.php"
@@ -405,8 +401,8 @@ $(document).ready ->
       console.log(sql)
 
       # Insert the figure in a temporary table.
-      rest = new H5.Rest (
-       url: H5.Data.restURL
+      rest = new window.parent.H5.Rest (
+       url: window.parent.H5.Data.restURL
        fields: sql
        table: "tmp_lin"
        restService: "ws_insertquery.php"
@@ -611,8 +607,8 @@ $(document).ready ->
     tipoLocalizacao = document.getElementById("tipoLocalizacao")
 
     # Get the data from the database
-    rest = new H5.Rest (
-      url: H5.Data.restURL
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
       table: "tipo_localizacao"
       fields: "id_tipo_localizacao, des_tipo_localizacao"
       order: "id_tipo_localizacao"
@@ -665,8 +661,8 @@ $(document).ready ->
     tipoEvento = document.getElementById("tipoEvento")
 
     # Get the data from the database
-    rest = new H5.Rest (
-      url: H5.Data.restURL
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
       table: "tipo_evento"
       fields: "id_tipo_evento, nome"
       order: "id_tipo_evento"
@@ -718,8 +714,8 @@ $(document).ready ->
     tipoDanoIdentificado = document.getElementById("tipoDanoIdentificado")
 
     # Get the data from the database
-    rest = new H5.Rest (
-      url: H5.Data.restURL
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
       table: "tipo_dano_identificado"
       fields: "id_tipo_dano_identificado, nome"
       order: "id_tipo_dano_identificado"
@@ -771,8 +767,8 @@ $(document).ready ->
     tipoInstituicaoAtuando = document.getElementById("tipoInstituicaoAtuando")
 
     # Get the data from the database
-    rest = new H5.Rest (
-      url: H5.Data.restURL
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
       table: "instituicao_atuando_local"
       fields: "id_instituicao_atuando_local, nome"
       order: "id_instituicao_atuando_local"
@@ -824,8 +820,8 @@ $(document).ready ->
     tipoFonteInformacao = document.getElementById("tipoFonteInformacao")
 
     # Get the data from the database
-    rest = new H5.Rest (
-      url: H5.Data.restURL
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
       table: "tipo_fonte_informacao"
       fields: "id_tipo_fonte_informacao, nome"
       order: "id_tipo_fonte_informacao"
@@ -1128,7 +1124,7 @@ $(document).ready ->
   if $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
     table = new H5.Table (
       container: "myTable"
-      url: H5.Data.restURL
+      url: window.parent.H5.Data.restURL
       table: "ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Docorrencia_produto.id_produto)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
       primaryTable: 'ocorrencia_produto'
       parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'"
@@ -1166,7 +1162,7 @@ $(document).ready ->
   else
     table = new H5.Table (
       container: "myTable"
-      url: H5.Data.restURL
+      url: window.parent.H5.Data.restURL
       table: "tmp_ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Dtmp_ocorrencia_produto.id_produto)"
       primaryTable: 'tmp_ocorrencia_produto'
       fields:

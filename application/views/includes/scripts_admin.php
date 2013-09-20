@@ -19,4 +19,4 @@
   <!-- <script src="<?= base_url()?>assets/js/less.min.js"></script> -->
   <script src="<?= base_url()?>assets/js/hash5.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/h5home.js" type="text/javascript"></script>
-  <script src="<?= base_url()?>assets/js/h5table.js" type="text/javascript"></script
+  <script src="<?= base_url()?>assets/js/h5table.js" type="text/javascript"></script>

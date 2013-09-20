@@ -146,7 +146,9 @@ class Form extends CI_Controller {
             $this->validateForm($form_data);
         } else {
             $this->insertDB($form_data);
-            // if($this->session->userdata('logged_in'))
+            // $this->firephp->log("DATA FORM");
+            // $this->firephp->log($form_data);
+            if($this->session->userdata('logged_in'))
                 $this->sendMail($form_data);
 
         }
@@ -168,7 +170,7 @@ class Form extends CI_Controller {
 
     public function dataForm($formLoad)
     {
-        $this->firephp->log($formLoad);
+        // $this->firephp->log($formLoad);
 
 
         // Value of the "Comunicado"
@@ -951,7 +953,7 @@ class Form extends CI_Controller {
         $this->load->model('sendmail_model');
 
         // debug
-        $this->firephp->log("sendMail!!");
+        // $this->firephp->log("sendMail!!");
 
         $config = Array(
             'protocol' => "smtp",
@@ -970,7 +972,10 @@ class Form extends CI_Controller {
 
         $this->email->subject("Ibama – Comunicado de Acidente Ambiental");
 
-        $message_body = $this->sendmail_model->getEmailBody(1,$form_data['comunicado'], $form_data["inputHoraObs"], $form_data["inputDataObs"]);
+        if(array_key_exists("inputHoraObs", $form_data) && array_key_exists("inputDataObs", $form_data))
+            $message_body = $this->sendmail_model->getEmailBody(1,$form_data['comunicado'], $form_data["inputHoraObs"], $form_data["inputDataObs"]);
+        else
+            $message_body = $this->sendmail_model->getEmailBody(1,$form_data['comunicado'], null, null);
 
 
         $this->email->message($message_body);
