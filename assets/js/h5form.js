@@ -3,11 +3,7 @@
   window.parent.H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-<<<<<<< HEAD
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, disabled, drawControl, drawnItems, idOcorrencia, latlng, minimapView, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
-=======
     var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, drawControl, drawnItems, history, idOcorrencia, idPolygon, latlng, minimapView, nroComunicado, pointVectors, polygon, polygonList, rest, seconds, sql, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
->>>>>>> 9c667356b463afe091f13ecc5bdd4ddd790ce8e2
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -40,8 +36,6 @@
       order: "nome"
     });
     _tipoProduto = rest.data;
-<<<<<<< HEAD
-=======
     history = [];
     collapse = 2;
     $('#addMeModal').on('hidden', function() {
@@ -91,25 +85,21 @@
       rest = new H5.Rest({
         url: H5.Data.restURL,
         table: "tmp_ocorrencia_produto",
-        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
         restService: "ws_deletequery.php"
       });
       rest = new H5.Rest({
         url: H5.Data.restURL,
         table: "tmp_pol",
-        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
         restService: "ws_deletequery.php"
       });
       rest = new H5.Rest({
         url: H5.Data.restURL,
         table: "tmp_lin",
-        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
         restService: "ws_deletequery.php"
       });
       rest = new H5.Rest({
         url: H5.Data.restURL,
         table: "tmp_pon",
-        parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'",
         restService: "ws_deletequery.php"
       });
       return $(this).tab('show');
@@ -252,7 +242,6 @@
       $(".modal-footer").show();
       return $(this).tab('show');
     });
->>>>>>> 9c667356b463afe091f13ecc5bdd4ddd790ce8e2
     bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h";
     binghybrid = new L.BingLayer(bingKey, {
       type: "AerialWithLabels",
@@ -301,7 +290,7 @@
       drawnItems.addLayer(layer);
       if (type === 'polygon') {
         firstPoint = "";
-        sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " + layer._leaflet_id + "," + $("#comunicado").val() + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
+        sql = "(id_tmp_pol, id_ocorrencia, shape) values ( " + layer._leaflet_id + "," + idOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
         $.each(layer._latlngs, function() {
           if (firstPoint === "") {
             firstPoint = this;
@@ -477,7 +466,8 @@
       return field.innerHTML = value;
     };
     $(function() {
-      var labelOutros, subjects, tipoDanoIdentificado, tipoEvento, tipoFonteInformacao, tipoInstituicaoAtuando, tipoLocalizacao, total;
+      var labelOutros, subjects, tipoDanoIdentificado, tipoEvento, tipoFonteInformacao, tipoInstituicaoAtuando, tipoLocalizacao, total,
+        _this = this;
       tipoLocalizacao = document.getElementById("tipoLocalizacao");
       rest = new window.parent.H5.Rest({
         url: window.parent.H5.Data.restURL,
@@ -692,6 +682,22 @@
       });
       $("#nomeProduto").typeahead({
         source: subjects
+      });
+      $("#btnAddProduto").on('click', function() {
+        return $.each(_tipoProduto, function() {
+          var newRow, td;
+          if (this.nome === $("#nomeProduto").prop('value')) {
+            newRow = document.getElementById('tblProdutos').insertRow();
+            td = newRow.insertCell();
+            td.innerHTML = '<input name="produtos[]" value=' + this.id_produto + ' />' + '<input name=' + this.id_produto + '[]" value=' + this.id_produto + ' />' + (td.style = 'display:none;');
+            td = newRow.insertCell();
+            td.innerHTML = this.nome;
+            td = newRow.insertCell();
+            td.innerHTML = this.num_onu;
+            td = newRow.insertCell();
+            return td.innerHTML = this.classe_risco;
+          }
+        });
       });
       $("#semLocalizacao").on('click', function() {
         if ($(this).is(":checked")) {
