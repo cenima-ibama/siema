@@ -1,4 +1,4 @@
-window.parent.H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+restURL = "http://" + document.domain + "/siema/rest"
 $(document).ready ->
 
   _tipoLocalizacao = null
@@ -21,7 +21,7 @@ $(document).ready ->
 
   # Get the data from the database
   rest = new window.parent.H5.Rest (
-    url: window.parent.H5.Data.restURL
+    url: restURL
     table: "ocorrencia"
     fields: "id_ocorrencia"
     parameters: "nro_ocorrencia%3D'" + $("#comunicado").prop('value') + "'"
@@ -33,7 +33,7 @@ $(document).ready ->
 
   # Get the product name from the database, by ajax
   rest = new window.parent.H5.Rest (
-    url: window.parent.H5.Data.restURL
+    url: restURL
     table: "produto"
     fields: "id_produto,nome,num_onu,classe_risco"
     order: "nome"
@@ -104,28 +104,28 @@ $(document).ready ->
 
     # Clean the temporary produt table (tmp_ocorrencia_produto)
     rest = new H5.Rest (
-     url: H5.Data.restURL
+     url: restURL
      table: "tmp_ocorrencia_produto"
      restService: "ws_deletequery.php"
     )
 
     # Clean the temporary polygon table (tmp_pol)
     rest = new H5.Rest (
-     url: H5.Data.restURL
+     url: restURL
      table: "tmp_pol"
      restService: "ws_deletequery.php"
     )
 
     # Clean the temporary polyline table (tmp_lin)
     rest = new H5.Rest (
-     url: H5.Data.restURL
+     url: restURL
      table: "tmp_lin"
      restService: "ws_deletequery.php"
     )
 
     # Clean the temporary point table (tmp_pon)
     rest = new H5.Rest (
-     url: H5.Data.restURL
+     url: restURL
      table: "tmp_pon"
      restService: "ws_deletequery.php"
     )
@@ -314,6 +314,7 @@ $(document).ready ->
   #-------------------------------------------------------------------------
 
   Marker = new L.Marker([0 ,0], {draggable:true})
+  nroOcorrencia = $("#comunicado").val()
 
   # Add a move property to the marker
   Marker.on "move", (event) ->
@@ -361,7 +362,7 @@ $(document).ready ->
       # Saves a polygon
       firstPoint = ""
 
-      sql = "(id_tmp_pol, id_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + idOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
+      sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + nroOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
 
       $.each layer._latlngs, ->
         if firstPoint is ""
@@ -376,8 +377,8 @@ $(document).ready ->
       console.log(sql)
 
       # Insert the figure in a temporary table.
-      rest = new window.parent.H5.Rest (
-       url: window.parent.H5.Data.restURL
+      rest = new H5.Rest (
+       url: restURL
        fields: sql
        table: "tmp_pol"
        restService: "ws_insertquery.php"
@@ -387,7 +388,7 @@ $(document).ready ->
       # Saves a polyline
       firstPoint = ""
 
-      sql = "(id_tmp_lin, nro_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + $("#comunicado").val() + ",ST_GeomFromText('LINESTRING("
+      sql = "(id_tmp_lin, nro_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + nroOcorrencia + ",ST_GeomFromText('LINESTRING("
 
       $.each layer._latlngs, ->
         if firstPoint is ""
@@ -401,8 +402,8 @@ $(document).ready ->
       console.log(sql)
 
       # Insert the figure in a temporary table.
-      rest = new window.parent.H5.Rest (
-       url: window.parent.H5.Data.restURL
+      rest = new H5.Rest (
+       url: restURL
        fields: sql
        table: "tmp_lin"
        restService: "ws_insertquery.php"
@@ -420,11 +421,11 @@ $(document).ready ->
       sql = sql + "or id_tmp_pol=" + @._leaflet_id + " "
 
 
-    sql = sql + "and nro_ocorrencia='" + $("#comunicado").val() + "'"
+    sql = sql + "and nro_ocorrencia='" + nroOcorrencia + "'"
 
     # Remove lines
     rest = new H5.Rest (
-      url: H5.Data.restURL
+      url: restURL
       table: "tmp_pol"
       parameters: sql
       restService: "ws_deletequery.php"
@@ -432,66 +433,48 @@ $(document).ready ->
 
     # Remove lines
     rest = new H5.Rest (
-      url: H5.Data.restURL
+      url: restURL
       table: "tmp_lin"
       parameters: sql
       restService: "ws_deletequery.php"
     )
 
 
+  # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
+  # Search on database vectors already on the tmp_pol table
+  rest = new H5.Rest (
+    url: restURL
+    fields: 'id_tmp_lin, ST_AsGeoJson(shape) as shape'
+    table: "tmp_lin"
+    parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
+  )
+  polylineList = rest.data
 
+  $.each polylineList, ()->
+
+    element = JSON.parse(@.shape)
+
+    polyline = new L.Polyline(element.coordinates)
+    polyline._leaflet_id = @.id_tmp_pol
+    drawnItems.addLayer(polyline)
 
   # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
   # Search on database vectors already on the tmp_pol table
-  sql = 'id_tmp_pol,' +
-        'ST_X(%20' +
-          'ST_PointN(%20' +
-            'ST_ExteriorRing(shape),%20' +
-            'generate_series(1,ST_NPoints(ST_ExteriorRing(shape)))%20' +
-          ')%20' +
-        ')%20as%20x,' +
-        'ST_Y(%20' +
-          'ST_PointN(%20' +
-            'ST_ExteriorRing(shape),%20' +
-            'generate_series(1,ST_NPoints(ST_ExteriorRing(shape)))%20' +
-          ')%20' +
-        ')%20as%20y%20'
-
   rest = new H5.Rest (
-    url: H5.Data.restURL
-    fields: sql
+    url: restURL
+    fields: 'id_tmp_pol, ST_AsGeoJson(shape) as shape'
     table: "tmp_pol"
-    parameters: "nro_ocorrencia='" + $("#comunicado").val() + "'"
+    parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
   )
-
   polygonList = rest.data
 
-  console.log 'LIST OF POLYGON'
-  idPolygon = ''
-  pointVectors = []
-
   $.each polygonList, ()->
-    if idPolygon is ''
-      idPolygon = @.id_tmp_pol
 
-    if idPolygon == @.id_tmp_pol
-      pointVectors.push(new L.LatLng(@.x, @.y))
-    else
-      idPolygon = @.id_tmp_pol
+    element = JSON.parse(@.shape)
 
-      console.log pointVectors
-
-      polygon = new L.Polygon(pointVectors)
-      polygon._leaflet_id = idPolygon
-      drawnItems.addLayer(polygon)
-
-      pointVectors = []
-
-  console.log pointVectors
-
-  polygon = new L.Polygon(pointVectors)
-  polygon._leaflet_id = idPolygon
-  drawnItems.addLayer(polygon)
+    polygon = new L.Polygon(element.coordinates)
+    polygon._leaflet_id = @.id_tmp_pol
+    drawnItems.addLayer(polygon)
 
 
   #add search for the address inputText
@@ -608,7 +591,7 @@ $(document).ready ->
 
     # Get the data from the database
     rest = new window.parent.H5.Rest (
-      url: window.parent.H5.Data.restURL
+      url: restURL
       table: "tipo_localizacao"
       fields: "id_tipo_localizacao, des_tipo_localizacao"
       order: "id_tipo_localizacao"
@@ -662,7 +645,7 @@ $(document).ready ->
 
     # Get the data from the database
     rest = new window.parent.H5.Rest (
-      url: window.parent.H5.Data.restURL
+      url: restURL
       table: "tipo_evento"
       fields: "id_tipo_evento, nome"
       order: "id_tipo_evento"
@@ -715,7 +698,7 @@ $(document).ready ->
 
     # Get the data from the database
     rest = new window.parent.H5.Rest (
-      url: window.parent.H5.Data.restURL
+      url: restURL
       table: "tipo_dano_identificado"
       fields: "id_tipo_dano_identificado, nome"
       order: "id_tipo_dano_identificado"
@@ -768,7 +751,7 @@ $(document).ready ->
 
     # Get the data from the database
     rest = new window.parent.H5.Rest (
-      url: window.parent.H5.Data.restURL
+      url: restURL
       table: "instituicao_atuando_local"
       fields: "id_instituicao_atuando_local, nome"
       order: "id_instituicao_atuando_local"
@@ -821,7 +804,7 @@ $(document).ready ->
 
     # Get the data from the database
     rest = new window.parent.H5.Rest (
-      url: window.parent.H5.Data.restURL
+      url: restURL
       table: "tipo_fonte_informacao"
       fields: "id_tipo_fonte_informacao, nome"
       order: "id_tipo_fonte_informacao"
@@ -1124,7 +1107,7 @@ $(document).ready ->
   if $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
     table = new H5.Table (
       container: "myTable"
-      url: window.parent.H5.Data.restURL
+      url: restURL
       table: "ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Docorrencia_produto.id_produto)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
       primaryTable: 'ocorrencia_produto'
       parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'"
@@ -1162,7 +1145,7 @@ $(document).ready ->
   else
     table = new H5.Table (
       container: "myTable"
-      url: window.parent.H5.Data.restURL
+      url: restURL
       table: "tmp_ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Dtmp_ocorrencia_produto.id_produto)"
       primaryTable: 'tmp_ocorrencia_produto'
       fields:
@@ -1174,7 +1157,7 @@ $(document).ready ->
         nro_ocorrencia:
           columnName: " "
           tableName: "nro_ocorrencia"
-          defaultValue: $("#comunicado").val()
+          defaultValue: nroOcorrencia
           isVisible: false
           validation: null
         nome:
