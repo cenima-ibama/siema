@@ -39,6 +39,8 @@ $(document).ready ->
     order: "nome"
   )
 
+  nroOcorrencia = $("#comunicado").val()
+
   _tipoProduto = rest.data
 
   #-------------------------------------------------------------------------
@@ -113,6 +115,7 @@ $(document).ready ->
     rest = new H5.Rest (
      url: H5.Data.restURL
      table: "tmp_pol"
+     parameters: "nro_ocorrencia%3D" + nroOcorrencia
      restService: "ws_deletequery.php"
     )
 
@@ -120,6 +123,7 @@ $(document).ready ->
     rest = new H5.Rest (
      url: H5.Data.restURL
      table: "tmp_lin"
+     parameters: "nro_ocorrencia%3D" + nroOcorrencia
      restService: "ws_deletequery.php"
     )
 
@@ -127,6 +131,7 @@ $(document).ready ->
     rest = new H5.Rest (
      url: H5.Data.restURL
      table: "tmp_pon"
+     parameters: "nro_ocorrencia%3D" + nroOcorrencia
      restService: "ws_deletequery.php"
     )
 
@@ -314,7 +319,6 @@ $(document).ready ->
   #-------------------------------------------------------------------------
 
   Marker = new L.Marker([0 ,0], {draggable:true})
-  nroOcorrencia = $("#comunicado").val()
 
   minimapView = new L.Map("minimap",
     center: new L.LatLng(-10.0, -50.0)
@@ -1185,7 +1189,7 @@ $(document).ready ->
   if $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
     table = new H5.Table (
       container: "myTable"
-      url: restURL
+      url: H5.Data.restURL
       table: "ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Docorrencia_produto.id_produto)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
       primaryTable: 'ocorrencia_produto'
       parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'"
@@ -1223,7 +1227,7 @@ $(document).ready ->
   else
     table = new H5.Table (
       container: "myTable"
-      url: restURL
+      url: H5.Data.restURL
       table: "tmp_ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Dtmp_ocorrencia_produto.id_produto)"
       primaryTable: 'tmp_ocorrencia_produto'
       fields:
