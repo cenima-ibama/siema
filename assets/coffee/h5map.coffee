@@ -206,12 +206,14 @@ controlswitch = new L.control.switch(
     icon: iconsURL + "chemicals.png"
 ).addTo(H5.Map.base)
 
+setTimeout(
+  controlswitch.addOverLayer(
+    acidentes.layer,
+    "Acidentes Ambientais",
+    true
+  )
+, 5000)
 
-# controlswitch.addOverLayer(
-#   acidentes.layer,
-#   "Acidentes Ambientais",
-#   true
-# )
 
 # }}}
 # SCREEN SIZE {{{

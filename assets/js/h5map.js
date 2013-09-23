@@ -218,6 +218,8 @@
     }
   }).addTo(H5.Map.base);
 
+  setTimeout(controlswitch.addOverLayer(acidentes.layer, "Acidentes Ambientais", true), 5000);
+
   $('#map').width($(window).width());
 
   $('#map').height($(window).height() - $('#navbar').height());
