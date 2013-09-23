@@ -12,7 +12,7 @@ L.control.switch = L.Control.extend (
     @_lastZIndex = 0
     @_handlingClick = false
 
-    if typeof tabs isnt undefined
+    if tabs
       @_tabs = tabs
       @options.enableTabs = true
 
@@ -59,7 +59,7 @@ L.control.switch = L.Control.extend (
     className = "switch-control-layers"
     container = @_container = L.DomUtil.create("div", "leaflet-bar " + className)
 
-		# Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
+	# Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
     container.setAttribute('aria-haspopup', true)
 
     unless L.Browser.touch
@@ -172,6 +172,9 @@ L.control.switch = L.Control.extend (
 
     @_baseLayersList.innerHTML = ""
     @_overlayersList.innerHTML = ""
+
+    if @options.enableTabs
+      $('.tab-pane').html("")
 
     baseLayersPresent = false
     overlayersPresent = false

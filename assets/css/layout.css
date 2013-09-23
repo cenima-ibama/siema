@@ -566,3 +566,20 @@ input.search{
   }
 }
 
+.modal.fade.ui-draggable-dragging {
+    -moz-transition: none;
+    -o-transition: none;
+    -webkit-transition: none;
+    transition: none;
+}
+
+.modal
+{
+    overflow: hidden;
+    bottom: auto;
+    right: auto;
+}
+.modal-dialog{
+    margin-right: 0;
+    margin-left: 0;
+}
