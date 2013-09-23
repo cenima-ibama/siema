@@ -328,29 +328,87 @@
           table: "tmp_lin",
           restService: "ws_insertquery.php"
         });
+      } else if (type === 'rectangle') {
+        console.log(layer);
+        sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " + layer._leaflet_id + "," + nroOcorrencia + ",ST_Envelope(ST_GeomFromText('LINESTRING(";
+        sql = sql + layer._latlngs[0].lat + " " + layer._latlngs[0].lng + ", " + layer._latlngs[2].lat + " " + layer._latlngs[2].lng;
+        sql = sql + ")', " + $("#inputEPSG").val() + ")))";
+        console.log(sql);
+        return rest = new H5.Rest({
+          url: restURL,
+          fields: sql,
+          table: "tmp_pol",
+          restService: "ws_insertquery.php"
+        });
       }
     });
     minimapView.on('draw:deleted', function(e) {
-      var sql;
+      var sqlLin, sqlPon, type;
       console.log('deleteting..');
       console.log(e);
-      sql = "id_tmp_pol=0 ";
+      type = "";
+      sqlPon = "id_tmp_pol=0 ";
+      sqlLin = "id_tmp_lin=0 ";
       $.each(e.layers._layers, function() {
-        console.log(this._leaflet_id);
-        return sql = sql + "or id_tmp_pol=" + this._leaflet_id + " ";
+        type = this.toGeoJSON().geometry.type;
+        if (type === 'Polygon') {
+          return sqlPon = sqlPon + "or id_tmp_pol=" + this._leaflet_id + " ";
+        } else if (type === 'LineString') {
+          return sqlLin = sqlLin + "or id_tmp_lin=" + this._leaflet_id + " ";
+        }
       });
-      sql = sql + "and nro_ocorrencia='" + nroOcorrencia + "'";
-      rest = new H5.Rest({
-        url: restURL,
-        table: "tmp_pol",
-        parameters: sql,
-        restService: "ws_deletequery.php"
-      });
-      return rest = new H5.Rest({
-        url: restURL,
-        table: "tmp_lin",
-        parameters: sql,
-        restService: "ws_deletequery.php"
+      if (type === 'Polygon') {
+        sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'";
+        return rest = new H5.Rest({
+          url: restURL,
+          table: "tmp_pol",
+          parameters: sqlPon,
+          restService: "ws_deletequery.php"
+        });
+      } else if (type === 'LineString') {
+        sqlLin = sqlLin + "and nro_ocorrencia='" + nroOcorrencia + "'";
+        return rest = new H5.Rest({
+          url: restURL,
+          table: "tmp_lin",
+          parameters: sqlLin,
+          restService: "ws_deletequery.php"
+        });
+      }
+    });
+    minimapView.on('draw:edited', function(e) {
+      var sqlLin, sqlPon, type;
+      console.log('editing..');
+      console.log(e);
+      type = "";
+      sqlPon = "";
+      sqlLin = "";
+      return $.each(e.layers._layers, function() {
+        var firstPoint, sql;
+        firstPoint = "";
+        type = this.toGeoJSON().geometry.type;
+        if (type === 'Polygon') {
+          sql = "shape%3DST_MakePolygon(ST_GeomFromText('LINESTRING(";
+          $.each(this._latlngs, function() {
+            if (firstPoint === '') {
+              firstPoint = this;
+            }
+            sql = sql + "" + this.lat + " " + this.lng;
+            return sql = sql + ",";
+          });
+          sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + "))";
+          return rest = new H5.Rest({
+            url: restURL,
+            table: "tmp_pol",
+            fields: sql,
+            parameters: "id_tmp_pol%3D" + this._leaflet_id,
+            restService: "ws_updatequery.php"
+          });
+        } else if (type === 'LineString') {
+          sqlLin = sqlLin + "or id_tmp_lin=" + this._leaflet_id + " ";
+          sql = "shape%3DST_Envelope(ST_GeomFromText('LINESTRING(";
+          sql = sql + layer._latlngs[0].lat + " " + layer._latlngs[0].lng + ", " + layer._latlngs[2].lat + " " + layer._latlngs[2].lng;
+          return sql = sql + ")', " + $("#inputEPSG").val() + ")))";
+        }
       });
     });
     rest = new H5.Rest({
@@ -364,7 +422,7 @@
       var element, polyline;
       element = JSON.parse(this.shape);
       polyline = new L.Polyline(element.coordinates);
-      polyline._leaflet_id = this.id_tmp_pol;
+      polyline._leaflet_id = this.id_tmp_lin;
       return drawnItems.addLayer(polyline);
     });
     rest = new H5.Rest({

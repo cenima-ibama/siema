@@ -408,37 +408,127 @@ $(document).ready ->
        table: "tmp_lin"
        restService: "ws_insertquery.php"
       )
+    else if (type is 'rectangle')
+      console.log layer
+
+      sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + nroOcorrencia + ",ST_Envelope(ST_GeomFromText('LINESTRING("
+
+      sql = sql +
+            layer._latlngs[0].lat + " " + layer._latlngs[0].lng + ", " +
+            layer._latlngs[2].lat + " " + layer._latlngs[2].lng
+
+      sql = sql + ")', " + $("#inputEPSG").val() + ")))"
+
+      console.log sql
+
+      # Insert the figure in a temporary table.
+      rest = new H5.Rest (
+        url: restURL
+        fields: sql
+        table: "tmp_pol"
+        restService: "ws_insertquery.php"
+      )
+
 
   minimapView.on 'draw:deleted', (e)->
     console.log 'deleteting..'
     console.log e
 
-    sql = "id_tmp_pol=0 "
+    type = ""
+    sqlPon = "id_tmp_pol=0 "
+    sqlLin = "id_tmp_lin=0 "
 
-    $.each e.layers._layers, ()->
-      console.log @._leaflet_id
+    $.each e.layers._layers, ->
 
-      sql = sql + "or id_tmp_pol=" + @._leaflet_id + " "
+      type = @.toGeoJSON().geometry.type
+
+      if type is 'Polygon'
+        sqlPon = sqlPon + "or id_tmp_pol=" + @._leaflet_id + " "
+      else if type is 'LineString'
+        sqlLin = sqlLin + "or id_tmp_lin=" + @._leaflet_id + " "
+
+    if type is 'Polygon'
+      sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'"
+
+      # Remove lines
+      rest = new H5.Rest (
+        url: restURL
+        table: "tmp_pol"
+        parameters: sqlPon
+        restService: "ws_deletequery.php"
+      )
+
+    else if type is 'LineString'
+      sqlLin = sqlLin + "and nro_ocorrencia='" + nroOcorrencia + "'"
+
+      # Remove lines
+      rest = new H5.Rest (
+        url: restURL
+        table: "tmp_lin"
+        parameters: sqlLin
+        restService: "ws_deletequery.php"
+      )
 
 
-    sql = sql + "and nro_ocorrencia='" + nroOcorrencia + "'"
+  minimapView.on 'draw:edited', (e)->
+    console.log 'editing..'
+    console.log e
 
-    # Remove lines
-    rest = new H5.Rest (
-      url: restURL
-      table: "tmp_pol"
-      parameters: sql
-      restService: "ws_deletequery.php"
-    )
+    type = ""
+    sqlPon = ""
+    sqlLin = ""
 
-    # Remove lines
-    rest = new H5.Rest (
-      url: restURL
-      table: "tmp_lin"
-      parameters: sql
-      restService: "ws_deletequery.php"
-    )
+    $.each e.layers._layers, ->
 
+      firstPoint = ""
+
+      type = @.toGeoJSON().geometry.type
+
+      if type is 'Polygon'
+        sql = "shape%3DST_MakePolygon(ST_GeomFromText('LINESTRING("
+
+        $.each @._latlngs, ->
+          if firstPoint is ''
+            firstPoint = @
+
+          sql = sql + "" + @.lat + " " + @.lng
+
+          sql = sql + ","
+
+        sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + "))"
+
+        # # Remove lines
+        rest = new H5.Rest (
+          url: restURL
+          table: "tmp_pol"
+          fields: sql
+          parameters: "id_tmp_pol%3D" + @._leaflet_id
+          restService: "ws_updatequery.php"
+        )
+      else if type is 'LineString'
+        sqlLin = sqlLin + "or id_tmp_lin=" + @._leaflet_id + " "
+        sql = "shape%3DST_Envelope(ST_GeomFromText('LINESTRING("
+
+        sql = sql +
+              layer._latlngs[0].lat + " " + layer._latlngs[0].lng + ", " +
+              layer._latlngs[2].lat + " " + layer._latlngs[2].lng
+
+        sql = sql + ")', " + $("#inputEPSG").val() + ")))"
+        # # Remove lines
+        # rest = new H5.Rest (
+        #   url: restURL
+        #   table: "tmp_lin"
+        #   parameters: sqlLin
+        #   restService: "ws_deletequery.php"
+        # )
+
+
+    # if type is 'Polygon'
+    #   sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'"
+
+
+    # else if type is 'LineString'
+    #   sqlLin = sqlLin + "and nro_ocorrencia='" + nroOcorrencia + "'"
 
   # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
   # Search on database vectors already on the tmp_pol table
@@ -455,7 +545,7 @@ $(document).ready ->
     element = JSON.parse(@.shape)
 
     polyline = new L.Polyline(element.coordinates)
-    polyline._leaflet_id = @.id_tmp_pol
+    polyline._leaflet_id = @.id_tmp_lin
     drawnItems.addLayer(polyline)
 
   # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
