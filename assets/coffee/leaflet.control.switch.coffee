@@ -174,7 +174,8 @@ L.control.switch = L.Control.extend (
     @_overlayersList.innerHTML = ""
 
     if @options.enableTabs
-      $('.tab-pane').html("")
+      $.each @_tabsList, ->
+        $(this).html("")
 
     baseLayersPresent = false
     overlayersPresent = false
@@ -210,7 +211,6 @@ L.control.switch = L.Control.extend (
         container = @_overlayersList
     else
       container = @_baseLayersList
-    console.log container, obj
 
     controlgroup = L.DomUtil.create("div", "control-group", container)
     checked = @_map.hasLayer(obj.layer)

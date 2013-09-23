@@ -316,18 +316,6 @@ $(document).ready ->
   Marker = new L.Marker([0 ,0], {draggable:true})
   nroOcorrencia = $("#comunicado").val()
 
-  # Add a move property to the marker
-  Marker.on "move", (event) ->
-    $("#inputLat").val event.latlng.lat
-    $("#inputLng").val event.latlng.lng
-
-    $("#inputEPSG").val "4674"
-    $("#inputEPSG").prop "disabled", "disabled"
-
-    if not window.parent.H5.isMobile.any()
-      latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
-      window.parent.H5.Map.base.setView(latlng, minimapView.getZoom(), false)
-
   minimapView = new L.Map("minimap",
     center: new L.LatLng(-10.0, -50.0)
     zoom: 3
@@ -347,7 +335,7 @@ $(document).ready ->
         featureGroup: drawnItems
       }
   })
-  minimapView.addControl(drawControl);
+  minimapView.addControl(drawControl)
 
   minimapView.on 'draw:created', (e)->
     type = e.layerType
@@ -356,7 +344,7 @@ $(document).ready ->
 
     console.log (e.layer)
 
-    drawnItems.addLayer(layer);
+    drawnItems.addLayer(layer)
 
     if (type is 'polygon')
       # Saves a polygon
@@ -411,13 +399,13 @@ $(document).ready ->
     else if (type is 'rectangle')
       console.log layer
 
-      sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + nroOcorrencia + ",ST_Envelope(ST_GeomFromText('LINESTRING("
+      sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + nroOcorrencia + ",ST_MakeEnvelope("
 
       sql = sql +
-            layer._latlngs[0].lat + " " + layer._latlngs[0].lng + ", " +
-            layer._latlngs[2].lat + " " + layer._latlngs[2].lng
+            layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " +
+            layer._latlngs[2].lat + "," + layer._latlngs[2].lng
 
-      sql = sql + ")', " + $("#inputEPSG").val() + ")))"
+      sql = sql + ", " + $("#inputEPSG").val() + "))"
 
       console.log sql
 
@@ -513,21 +501,6 @@ $(document).ready ->
               layer._latlngs[2].lat + " " + layer._latlngs[2].lng
 
         sql = sql + ")', " + $("#inputEPSG").val() + ")))"
-        # # Remove lines
-        # rest = new H5.Rest (
-        #   url: H5.Data.restURL
-        #   table: "tmp_lin"
-        #   parameters: sqlLin
-        #   restService: "ws_deletequery.php"
-        # )
-
-
-    # if type is 'Polygon'
-    #   sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'"
-
-
-    # else if type is 'LineString'
-    #   sqlLin = sqlLin + "and nro_ocorrencia='" + nroOcorrencia + "'"
 
   # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
   # Search on database vectors already on the tmp_pol table
@@ -641,7 +614,6 @@ $(document).ready ->
         GeoSearch._geosearch(this.value)
       else
         GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf)
-
 
   # Add a move property to the marker
   Marker.on "move", (event) ->
