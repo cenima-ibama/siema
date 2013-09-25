@@ -59,6 +59,8 @@
     $("#submit").hide()
     $(@).hide()
 
+    nroOcorrencia = $(window.top.form_frame.document.getElementById("comunicado")).val()
+
     # Clean the temporary produt table (tmp_ocorrencia_produto)
     rest = new window.parent.H5.Rest (
      url: window.parent.H5.Data.restURL
@@ -70,6 +72,7 @@
     rest = new window.parent.H5.Rest (
      url: window.parent.H5.Data.restURL
      table: "tmp_pol"
+     parameters: "nro_ocorrencia%3D" + nroOcorrencia
      restService: "ws_deletequery.php"
     )
 
@@ -77,6 +80,7 @@
     rest = new window.parent.H5.Rest (
      url: window.parent.H5.Data.restURL
      table: "tmp_lin"
+     parameters: "nro_ocorrencia%3D" + nroOcorrencia
      restService: "ws_deletequery.php"
     )
 
@@ -84,6 +88,7 @@
     rest = new window.parent.H5.Rest (
      url: window.parent.H5.Data.restURL
      table: "tmp_pon"
+     parameters: "nro_ocorrencia%3D" + nroOcorrencia
      restService: "ws_deletequery.php"
     )
 

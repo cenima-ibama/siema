@@ -7,8 +7,8 @@ H5.Map =
 H5.Leaflet = {}
 # }}}
 # BASE LAYERS {{{
-bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6
-s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h"
+bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h"
+
 bingaerial = new L.BingLayer(bingKey,
   type: "Aerial"
   attribution: ""
@@ -205,14 +205,6 @@ controlswitch = new L.control.switch(
     name: null
     icon: iconsURL + "chemicals.png"
 ).addTo(H5.Map.base)
-
-
-# controlswitch.addOverLayer(
-#   acidentes.layer,
-#   "Acidentes Ambientais",
-#   true
-# )
-
 # }}}
 # SCREEN SIZE {{{
 # update size of the map container

@@ -29,7 +29,8 @@
       enableAutocomplete: true,
       autocompleteMinQueryLen: 3,
       autocompleteQueryDelay_ms: 800,
-      maxResultCount: 10
+      maxResultCount: 10,
+      open: false
     };
 
     function GeoSearch(options) {
@@ -43,13 +44,18 @@
     }
 
     GeoSearch.prototype.onAdd = function(map) {
-      var form, input,
+      var clickElement, form, formClass, input,
         _this = this;
       this._container = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-geosearch");
       this._btnSearch = L.DomUtil.create("a", "", this._container);
       this._btnSearch.href = "#";
       this._btnSearch.title = this.options.searchLabel;
       this._changeIcon("glass");
+      if (this.options.open) {
+        formClass = "displayNone";
+      } else {
+        formClass = "";
+      }
       form = L.DomUtil.create("form", "displayNone", this._container);
       form.setAttribute("autocomplete", "off");
       input = L.DomUtil.create("input", null, form);
@@ -57,14 +63,21 @@
       input.setAttribute("id", "inputGeosearch");
       input.setAttribute("autocomplete", "off");
       this._searchInput = input;
-      L.DomEvent.on(this._btnSearch, "click", L.DomEvent.stop).on(this._btnSearch, "click", function() {
+      if (this.options.open) {
+        clickElement = this._container;
+      } else {
+        clickElement = this._btnSearch;
+      }
+      L.DomEvent.on(clickElement, "click", L.DomEvent.stop).on(clickElement, "click", function() {
         if (L.DomUtil.hasClass(form, "displayNone")) {
           L.DomUtil.removeClass(form, "displayNone");
           $(input).select();
           $(input).focus();
           return $(input).trigger("click");
         } else {
-          return _this._hide();
+          if (!_this.options.open) {
+            return _this._hide();
+          }
         }
       });
       L.DomEvent.on(input, "keyup", this._onKeyUp, this).on(input, "keypress", this._onKeyPress, this).on(input, "input", this._onInput, this);
@@ -79,7 +92,7 @@
         this._recordLastUserInput("");
         $(this._container).append(this._suggestionBox);
       }
-      this._message = L.DomUtil.create("div", "leaflet-bar message displayNone", this._container);
+      this._message = L.DomUtil.create("div", "leaflet-bar leaflet-geosearch-message displayNone", this._container);
       L.DomEvent.on(this._map, "click", (function() {
         return _this._hide();
       }));
@@ -105,7 +118,7 @@
 
     GeoSearch.prototype._changeIcon = function(icon) {
       this._btnSearch = this._container.querySelector("a");
-      return this._btnSearch.className = "leaflet-bar-part leaflet-bar-part-single" + " " + icon;
+      return this._btnSearch.className = "leaflet-bar-part leaflet-bar-part-single" + " leaflet-geosearch-" + icon;
     };
 
     GeoSearch.prototype._geosearch = function(qry) {
@@ -246,7 +259,7 @@
         this._hideAutocomplete;
       }
       form = this._container.querySelector("form");
-      if (!L.DomUtil.hasClass(form, "displayNone")) {
+      if (!(L.DomUtil.hasClass(form, "displayNone") || this.options.open)) {
         L.DomUtil.addClass(form, "displayNone");
       }
       if (!L.DomUtil.hasClass(this._message, "displayNone")) {
@@ -267,7 +280,7 @@
       var tip,
         _this = this;
       tip = L.DomUtil.create("li", "leaflet-geosearch-suggestion");
-      tip.innerHTML = '<i class="leaflet-control-geosearch marker"></i>' + this.options.onMakeSuggestionHTML(result);
+      tip.innerHTML = '<i class="leaflet-control-geosearch leaflet-geosearch-marker"></i>' + this.options.onMakeSuggestionHTML(result);
       tip._text = result.Label;
       L.DomEvent.disableClickPropagation(tip).on(tip, "click", function(e) {
         _this._onSelection(tip._text);
@@ -359,9 +372,10 @@
       var enterKey, escapeKey;
       enterKey = 13;
       escapeKey = 27;
-      if (e.keyCode === enterKey) {
-        L.DomEvent.preventDefault(e);
-        return this._startSearch();
+      switch (e.keyCode) {
+        case enterKey:
+          L.DomEvent.preventDefault(e);
+          return this._startSearch();
       }
     };
 

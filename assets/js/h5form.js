@@ -3,7 +3,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, drawControl, drawnItems, history, idOcorrencia, latlng, minimapView, nroComunicado, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, disabled, drawControl, drawnItems, idLin, idOcorrencia, idPol, latlng, minimapView, nroComunicado, nroOcorrencia, polygonList, polylineList, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -11,6 +11,20 @@
     _tipoFonteInformacao = null;
     _tipoProduto = null;
     idOcorrencia = null;
+    rest = new H5.Rest({
+      url: H5.Data.restURL,
+      fields: "nextval('tmp_pol_id_tmp_pol_seq') as lastval",
+      table: "tipo_fonte_informacao",
+      limit: "1"
+    });
+    idPol = rest.data[0].lastval;
+    rest = new H5.Rest({
+      url: H5.Data.restURL,
+      fields: "nextval('tmp_lin_id_tmp_lin_seq') as lastval",
+      table: "tipo_fonte_informacao",
+      limit: "1"
+    });
+    idLin = rest.data[0].lastval;
     if (!$("#comunicado").val()) {
       date = new Date();
       seconds = parseInt(date.getSeconds() + (date.getHours() * 60 * 60), 10);
@@ -35,212 +49,16 @@
       fields: "id_produto,nome,num_onu,classe_risco",
       order: "nome"
     });
+    nroOcorrencia = $("#comunicado").val();
     _tipoProduto = rest.data;
-    history = [];
-    collapse = 2;
-    $('#addMeModal').on('hidden', function() {
-      var btnBack;
-      history = [];
-      collapse = 2;
-      btnBack = document.getElementById("modalBtnBack");
-      btnBack.href = '#tab1';
-      $("#modalBtnBack").tab('show');
-      $("#modalBtnBack").show();
-      $("#modalBtnNext").show();
-      $("#submit").hide();
-      $("#modalBtnCancel").hide();
-      $("#btnClose").hide();
-      return $(".modal-footer").show();
-    });
-    $("#btn-form").click(function(event) {
-      return $(".modal-footer").hide();
-    });
-    $("#modalBtnBack").click(function(event) {
-      var btnNext, tab;
-      event.preventDefault();
-      btnNext = document.getElementById("modalBtnNext");
-      if (history.length > 0) {
-        tab = history.pop();
-        this.href = tab.tab;
-        collapse = tab.collapse;
-      }
-      $(".modal-footer").hide();
-      return $(this).tab('show');
-    });
-    $("#modalBtnCancel").click(function(event) {
-      var btnBack, btnNext, tab;
-      event.preventDefault();
-      btnNext = document.getElementById("modalBtnNext");
-      btnBack = document.getElementById("modalBtnBack");
-      if (history.length > 0) {
-        tab = history.pop();
-        this.href = tab.tab;
-        collapse = tab.collapse;
-      }
-      $(".modal-footer").show();
-      $(btnNext).show();
-      $(btnBack).show();
-      $("#submit").hide();
-      $(this).hide();
-      rest = new H5.Rest({
-        url: H5.Data.restURL,
-        table: "tmp_ocorrencia_produto",
-        restService: "ws_deletequery.php"
-      });
-      rest = new H5.Rest({
-        url: H5.Data.restURL,
-        table: "tmp_pol",
-        restService: "ws_deletequery.php"
-      });
-      rest = new H5.Rest({
-        url: H5.Data.restURL,
-        table: "tmp_lin",
-        restService: "ws_deletequery.php"
-      });
-      rest = new H5.Rest({
-        url: H5.Data.restURL,
-        table: "tmp_pon",
-        restService: "ws_deletequery.php"
-      });
-      return $(this).tab('show');
-    });
-    $("#btnBeginForm").click(function(event) {
-      var btnLogout, checkedUser, containerProgress, i, progressAnimetion, progressBar, textProgress, tipoForm;
-      if ((document.getElementById('divLogin')) == null) {
-        progressBar = document.getElementById("authProgress");
-        textProgress = document.getElementById("textProgress");
-        containerProgress = document.getElementById("containerProgress");
-        checkedUser = document.getElementById("checkedUser");
-        tipoForm = document.getElementById("tipoForm");
-        btnLogout = document.getElementById("btnLogout");
-        $(tipoForm).hide();
-        $(btnLogout).hide();
-        i = 0;
-        progressAnimetion = setInterval(function() {
-          $(progressBar).width(i++ + "0%");
-          if (i === 15) {
-            $(containerProgress).hide();
-            $(textProgress).hide();
-            $(textProgress).html('Usuário registrado.');
-            $(textProgress).fadeToggle();
-            $(checkedUser).show();
-            $(tipoForm).show();
-            $(btnLogout).show();
-            return clearInterval(progressAnimetion);
-          }
-        }, 100);
-      }
-      if ($("#containerProgress").is(":hidden")) {
-        $(tipoForm).show();
-        return $(btnLogout).show();
-      }
-    });
-    $("#modalBtnNext").click(function(event) {
-      var action, btnLogout, checkedUser, containerProgress, defaultHtml, hasOleo, i, isAcidOleo, isAtual, isOutros, isPubExt, isServIBAMA, progressAnimetion, progressBar, textProgress, tipoForm;
-      event.preventDefault();
-      history.push({
-        tab: "#tab" + collapse,
-        collapse: collapse
-      });
-      this.href = "#tab" + ++collapse;
-      if (("#tab" + collapse) === "#tab2") {
-        if ((document.getElementById('divLogin')) == null) {
-          progressBar = document.getElementById("authProgress");
-          textProgress = document.getElementById("textProgress");
-          containerProgress = document.getElementById("containerProgress");
-          checkedUser = document.getElementById("checkedUser");
-          tipoForm = document.getElementById("tipoForm");
-          btnLogout = document.getElementById("btnLogout");
-          $(tipoForm).hide();
-          $(btnLogout).hide();
-          i = 0;
-          progressAnimetion = setInterval(function() {
-            $(progressBar).width(i++ + "0%");
-            if (i === 15) {
-              $(containerProgress).hide();
-              $(textProgress).hide();
-              $(textProgress).html('Usuário registrado.');
-              $(textProgress).fadeToggle();
-              $(checkedUser).show();
-              $(tipoForm).show();
-              $(btnLogout).show();
-              return clearInterval(progressAnimetion);
-            }
-          }, 100);
-        }
-        $(".modal-footer").hide();
-      } else {
-        $(".modal-footer").show();
-        if (("#tab" + collapse) === "#tab4") {
-          isPubExt = document.getElementById("radioPubExt").checked;
-          if (isPubExt) {
-            collapse = 5;
-            this.href = "#tab" + 5;
-          }
-        } else if (("#tab" + collapse) === "#tab8") {
-          isAcidOleo = document.getElementById("optionsAcidenteOleo").checked;
-          isOutros = document.getElementById("optionsAcidenteOutros").checked;
-          isAtual = document.getElementById("optionsAtualizarAcidente").checked;
-          hasOleo = document.getElementById("hasOleo");
-          isServIBAMA = document.getElementById("isServIBAMA");
-          hasOleo.checked = isAcidOleo;
-        }
-      }
-      if (("#tab" + collapse) === "#tab8") {
-        $("#submit").show();
-        $("#modalBtnNext").hide();
-        $("#modalBtnBack").hide();
-        $("#modalBtnCancel").show();
-        if (isAtual) {
-          if ($("#inputRegistro").prop("value") !== "") {
-            defaultHtml = document.getElementById("defaultHtml");
-            if (defaultHtml.innerHTML === "") {
-              defaultHtml.innerHTML = $("#formLoad").prop("action");
-            }
-            action = defaultHtml.innerHTML + "/" + $("#inputRegistro").prop("value");
-            $("#formLoad").prop("action", action);
-            $("#formLoad").submit();
-          } else {
-            $("#inputRegistro").focus();
-          }
-        } else {
-          $("#formCreate").submit();
-        }
-      }
-      return $(this).tab('show');
-    });
-    $("#tipoForm").click(function(event) {
-      event.preventDefault();
-      history.push({
-        tab: "#tab2",
-        collapse: collapse
-      });
-      this.href = "#tab7";
-      collapse = 7;
-      $(".modal-footer").show();
-      return $(this).tab('show');
-    });
-    $("#denunciaAnonima").click(function(event) {
-      event.preventDefault();
-      history.push({
-        tab: "#tab2",
-        collapse: collapse
-      });
-      this.href = "#tab7";
-      collapse = 7;
-      $(".modal-footer").show();
-      return $(this).tab('show');
-    });
-    $("#btnCadastrar").click(function(event) {
-      event.preventDefault();
-      history.push({
-        tab: "#tab2",
-        collapse: collapse
-      });
-      this.href = "#tab3";
-      collapse = 3;
-      $(".modal-footer").show();
-      return $(this).tab('show');
+    $(".accordion-body").on("shown", function() {
+      var delay, stop;
+      stop = $(this).offset().top - 55;
+      delay = 300;
+      $("body, html").animate({
+        scrollTop: stop
+      }, delay);
+      return false;
     });
     bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h";
     binghybrid = new L.BingLayer(bingKey, {
@@ -267,7 +85,8 @@
         marker: false
       },
       edit: {
-        featureGroup: drawnItems
+        featureGroup: drawnItems,
+        edit: false
       }
     });
     minimapView.addControl(drawControl);
@@ -275,11 +94,10 @@
       var firstPoint, layer, sql, type;
       type = e.layerType;
       layer = e.layer;
-      console.log(e.layer);
-      drawnItems.addLayer(layer);
       if (type === 'polygon') {
         firstPoint = "";
-        sql = "(id_tmp_pol, id_ocorrencia, shape) values ( " + layer._leaflet_id + "," + idOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
+        layer._leaflet_id = ++idPol;
+        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
         $.each(layer._latlngs, function() {
           if (firstPoint === "") {
             firstPoint = this;
@@ -289,7 +107,7 @@
         });
         sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + ")))";
         console.log(sql);
-        return rest = new H5.Rest({
+        rest = new H5.Rest({
           url: H5.Data.restURL,
           fields: sql,
           table: "tmp_pol",
@@ -297,7 +115,8 @@
         });
       } else if (type === 'polyline') {
         firstPoint = "";
-        sql = "(id_tmp_lin, id_ocorrencia, shape) values ( " + layer._leaflet_id + "," + idOcorrencia + ",ST_GeomFromText('LINESTRING(";
+        layer._leaflet_id = ++idLin;
+        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_GeomFromText('LINESTRING(";
         $.each(layer._latlngs, function() {
           if (firstPoint === "") {
             firstPoint = true;
@@ -308,16 +127,142 @@
         });
         sql = sql + ")', " + $("#inputEPSG").val() + "))";
         console.log(sql);
-        return rest = new H5.Rest({
+        rest = new H5.Rest({
           url: H5.Data.restURL,
           fields: sql,
           table: "tmp_lin",
           restService: "ws_insertquery.php"
         });
+      } else if (type === 'rectangle') {
+        layer._leaflet_id = ++idPol;
+        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakeEnvelope(";
+        sql = sql + layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " + layer._latlngs[2].lat + "," + layer._latlngs[2].lng;
+        sql = sql + ", " + $("#inputEPSG").val() + "))";
+        console.log(sql);
+        rest = new H5.Rest({
+          url: H5.Data.restURL,
+          fields: sql,
+          table: "tmp_pol",
+          restService: "ws_insertquery.php"
+        });
+      } else if (type === 'circle') {
+        console.log(layer);
+        layer._leaflet_id = ++idPol;
+        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ", ST_Buffer(ST_GeomFromText('POINT(" + layer._latlng.lat + " " + layer._latlng.lng + ")'," + $("#inputEPSG").val() + "),";
+        sql = sql + layer._mRadius / 100010 + "))";
+        console.log(sql);
+        rest = new H5.Rest({
+          url: H5.Data.restURL,
+          fields: sql,
+          table: "tmp_pol",
+          restService: "ws_insertquery.php"
+        });
       }
+      return drawnItems.addLayer(layer);
     });
     minimapView.on('draw:deleted', function(e) {
-      return console.log(e);
+      var sqlLin, sqlPon, type;
+      type = "";
+      sqlPon = "id_tmp_pol=0 ";
+      sqlLin = "id_tmp_lin=0 ";
+      $.each(e.layers._layers, function() {
+        type = this.toGeoJSON().geometry.type;
+        if (type === 'Polygon') {
+          return sqlPon = sqlPon + "or id_tmp_pol=" + this._leaflet_id + " ";
+        } else if (type === 'LineString') {
+          return sqlLin = sqlLin + "or id_tmp_lin=" + this._leaflet_id + " ";
+        } else if (type === 'Point') {
+          return sqlPon = sqlPon + "or id_tmp_pol=" + this._leaflet_id + " ";
+        }
+      });
+      if (type === 'Polygon') {
+        sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'";
+        return rest = new H5.Rest({
+          url: H5.Data.restURL,
+          table: "tmp_pol",
+          parameters: sqlPon,
+          restService: "ws_deletequery.php"
+        });
+      } else if (type === 'LineString') {
+        sqlLin = sqlLin + "and nro_ocorrencia='" + nroOcorrencia + "'";
+        return rest = new H5.Rest({
+          url: H5.Data.restURL,
+          table: "tmp_lin",
+          parameters: sqlLin,
+          restService: "ws_deletequery.php"
+        });
+      } else if (type === 'Point') {
+        sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'";
+        return rest = new H5.Rest({
+          url: H5.Data.restURL,
+          table: "tmp_pol",
+          parameters: sqlPon,
+          restService: "ws_deletequery.php"
+        });
+      }
+    });
+    minimapView.on('draw:edited', function(e) {
+      var sqlLin, sqlPon, type;
+      type = "";
+      sqlPon = "";
+      sqlLin = "";
+      this._map = minimapView;
+      return $.each(e.layers._layers, function() {
+        var firstPoint, sql;
+        firstPoint = "";
+        type = this.toGeoJSON().geometry.type;
+        if (type === 'Polygon') {
+          sql = "shape%3DST_MakePolygon(ST_GeomFromText('LINESTRING(";
+          $.each(this._latlngs, function() {
+            if (firstPoint === '') {
+              firstPoint = this;
+            }
+            sql = sql + "" + this.lat + " " + this.lng;
+            return sql = sql + ",";
+          });
+          sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + "))";
+          return rest = new H5.Rest({
+            url: H5.Data.restURL,
+            table: "tmp_pol",
+            fields: sql,
+            parameters: "id_tmp_pol%3D" + this._leaflet_id,
+            restService: "ws_updatequery.php"
+          });
+        } else if (type === 'LineString') {
+          sqlLin = sqlLin + "or id_tmp_lin=" + this._leaflet_id + " ";
+          sql = "shape%3DST_Envelope(ST_GeomFromText('LINESTRING(";
+          sql = sql + layer._latlngs[0].lat + " " + layer._latlngs[0].lng + ", " + layer._latlngs[2].lat + " " + layer._latlngs[2].lng;
+          return sql = sql + ")', " + $("#inputEPSG").val() + ")))";
+        }
+      });
+    });
+    rest = new H5.Rest({
+      url: H5.Data.restURL,
+      fields: 'id_tmp_lin, ST_AsGeoJson(shape) as shape',
+      table: "tmp_lin",
+      parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
+    });
+    polylineList = rest.data;
+    $.each(polylineList, function() {
+      var element, polyline;
+      element = JSON.parse(this.shape);
+      polyline = new L.Polyline(element.coordinates);
+      polyline._leaflet_id = this.id_tmp_lin;
+      return drawnItems.addLayer(polyline);
+    });
+    rest = new H5.Rest({
+      url: H5.Data.restURL,
+      fields: 'id_tmp_pol, ST_AsGeoJson(shape) as shape',
+      table: "tmp_pol",
+      parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
+    });
+    polygonList = rest.data;
+    $.each(polygonList, function() {
+      var element, polygon;
+      element = JSON.parse(this.shape);
+      polygon = new L.Polygon(element.coordinates);
+      polygon._leaflet_id = this.id_tmp_pol;
+      return drawnItems.addLayer(polygon);
     });
     GeoSearch = {
       _provider: new L.GeoSearch.Provider.Google,
@@ -439,8 +384,7 @@
       return field.innerHTML = value;
     };
     $(function() {
-      var labelOutros, subjects, tipoDanoIdentificado, tipoEvento, tipoFonteInformacao, tipoInstituicaoAtuando, tipoLocalizacao, total,
-        _this = this;
+      var labelOutros, subjects, tipoDanoIdentificado, tipoEvento, tipoFonteInformacao, tipoInstituicaoAtuando, tipoLocalizacao, total;
       tipoLocalizacao = document.getElementById("tipoLocalizacao");
       rest = new H5.Rest({
         url: H5.Data.restURL,
@@ -510,11 +454,6 @@
             return $(this).remove();
           }
         });
-        $(input).click(function() {
-          if ($(this).is(":checked")) {
-            return addSelection('labelInputCompEvento', value.nome);
-          }
-        });
         span = document.createElement("span");
         span.innerHTML = value.nome;
         label = document.createElement("label");
@@ -553,11 +492,6 @@
             return $(this).remove();
           }
         });
-        $(input).click(function() {
-          if ($(this).is(":checked")) {
-            return addSelection('labelInputCompDano', value.nome);
-          }
-        });
         span = document.createElement("span");
         span.innerHTML = value.nome;
         label = document.createElement("label");
@@ -594,11 +528,6 @@
           if (this.innerHTML === input.value) {
             input.checked = "checked";
             return $(this).remove();
-          }
-        });
-        $(input).click(function() {
-          if ($(this).is(":checked")) {
-            return addSelection('labelInputCompInstituicao', value.nome);
           }
         });
         span = document.createElement("span");
@@ -655,22 +584,6 @@
       });
       $("#nomeProduto").typeahead({
         source: subjects
-      });
-      $("#btnAddProduto").on('click', function() {
-        return $.each(_tipoProduto, function() {
-          var newRow, td;
-          if (this.nome === $("#nomeProduto").prop('value')) {
-            newRow = document.getElementById('tblProdutos').insertRow();
-            td = newRow.insertCell();
-            td.innerHTML = '<input name="produtos[]" value=' + this.id_produto + ' />' + '<input name=' + this.id_produto + '[]" value=' + this.id_produto + ' />' + (td.style = 'display:none;');
-            td = newRow.insertCell();
-            td.innerHTML = this.nome;
-            td = newRow.insertCell();
-            td.innerHTML = this.num_onu;
-            td = newRow.insertCell();
-            return td.innerHTML = this.classe_risco;
-          }
-        });
       });
       $("#semLocalizacao").on('click', function() {
         if ($(this).is(":checked")) {
@@ -915,7 +828,7 @@
             validation: null
           },
           nome: {
-            columnName: "Nome da Substância - Nro. da Onu - Classe de Risco",
+            columnName: "Substância - Nº Onu - CR",
             tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome",
             primaryField: "id_produto",
             validation: null,
@@ -957,8 +870,15 @@
             isVisible: false,
             validation: null
           },
+          nro_ocorrencia: {
+            columnName: " ",
+            tableName: "nro_ocorrencia",
+            defaultValue: nroOcorrencia,
+            isVisible: false,
+            validation: null
+          },
           nome: {
-            columnName: "Nome da Substância - Nro. da Onu - Classe de Risco",
+            columnName: "Substância - Nº Onu - CR",
             tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome",
             primaryField: "id_produto",
             validation: null,

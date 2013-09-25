@@ -155,6 +155,11 @@
       }
       this._baseLayersList.innerHTML = "";
       this._overlayersList.innerHTML = "";
+      if (this.options.enableTabs) {
+        $.each(this._tabsList, function() {
+          return $(this).html("");
+        });
+      }
       baseLayersPresent = false;
       overlayersPresent = false;
       _results = [];
@@ -201,7 +206,6 @@
       } else {
         container = this._baseLayersList;
       }
-      console.log(container, obj);
       controlgroup = L.DomUtil.create("div", "control-group", container);
       checked = this._map.hasLayer(obj.layer);
       label = L.DomUtil.create("label", "control-label", controlgroup);

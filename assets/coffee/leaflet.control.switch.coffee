@@ -59,7 +59,7 @@ L.control.switch = L.Control.extend (
     className = "switch-control-layers"
     container = @_container = L.DomUtil.create("div", "leaflet-bar " + className)
 
-		# Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
+	# Makes this work on IE10 Touch devices by stopping it from firing a mouseout event when the touch is released
     container.setAttribute('aria-haspopup', true)
 
     unless L.Browser.touch
@@ -173,6 +173,10 @@ L.control.switch = L.Control.extend (
     @_baseLayersList.innerHTML = ""
     @_overlayersList.innerHTML = ""
 
+    if @options.enableTabs
+      $.each @_tabsList, ->
+        $(this).html("")
+
     baseLayersPresent = false
     overlayersPresent = false
 
@@ -207,7 +211,6 @@ L.control.switch = L.Control.extend (
         container = @_overlayersList
     else
       container = @_baseLayersList
-    console.log container, obj
 
     controlgroup = L.DomUtil.create("div", "control-group", container)
     checked = @_map.hasLayer(obj.layer)
