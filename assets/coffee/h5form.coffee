@@ -895,12 +895,16 @@ $(document).ready ->
 
         $("#inputInstituicaoOutro").attr("disabled","disabled")
         $("#inputCompInstituicao").attr("disabled","disabled")
+        $("#inputInfoInstituicaoNome").attr("disabled","disabled")
+        $("#inputInfoInstituicaoTelefone").attr("disabled","disabled")
       else
         $("input[name='instituicaoAtuandoLocal[]']").each ()->
           $(this).removeAttr("disabled")
 
         $("#inputInstituicaoOutro").removeAttr("disabled")
         $("#inputCompInstituicao").removeAttr("disabled")
+        $("#inputInfoInstituicaoNome").removeAttr("disabled")
+        $("#inputInfoInstituicaoTelefone").removeAttr("disabled")
 
     $("#semResponsavel").on 'click', ()->
       if $(this).is(":checked")
