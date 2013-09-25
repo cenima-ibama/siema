@@ -51,6 +51,15 @@
     });
     nroOcorrencia = $("#comunicado").val();
     _tipoProduto = rest.data;
+    $(".accordion-body").on("shown", function() {
+      var delay, stop;
+      stop = $(this).offset().top - 55;
+      delay = 300;
+      $("body, html").animate({
+        scrollTop: stop
+      }, delay);
+      return false;
+    });
     bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h";
     binghybrid = new L.BingLayer(bingKey, {
       type: "AerialWithLabels",
@@ -445,11 +454,6 @@
             return $(this).remove();
           }
         });
-        $(input).click(function() {
-          if ($(this).is(":checked")) {
-            return addSelection('labelInputCompEvento', value.nome);
-          }
-        });
         span = document.createElement("span");
         span.innerHTML = value.nome;
         label = document.createElement("label");
@@ -488,11 +492,6 @@
             return $(this).remove();
           }
         });
-        $(input).click(function() {
-          if ($(this).is(":checked")) {
-            return addSelection('labelInputCompDano', value.nome);
-          }
-        });
         span = document.createElement("span");
         span.innerHTML = value.nome;
         label = document.createElement("label");
@@ -529,11 +528,6 @@
           if (this.innerHTML === input.value) {
             input.checked = "checked";
             return $(this).remove();
-          }
-        });
-        $(input).click(function() {
-          if ($(this).is(":checked")) {
-            return addSelection('labelInputCompInstituicao', value.nome);
           }
         });
         span = document.createElement("span");
@@ -849,7 +843,7 @@
             validation: null
           },
           nome: {
-            columnName: "Nome da Substância - Nro. da Onu - Classe de Risco",
+            columnName: "Substância - Nº Onu - CR",
             tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome",
             primaryField: "id_produto",
             validation: null,
@@ -899,7 +893,7 @@
             validation: null
           },
           nome: {
-            columnName: "Nome da Substância - Nro. da Onu - Classe de Risco",
+            columnName: "Substância - Nº Onu - CR",
             tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome",
             primaryField: "id_produto",
             validation: null,

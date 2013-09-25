@@ -19,7 +19,7 @@
         <div class="accordion-heading">
           <br />
           <h4 class="text-right" style="color:#0088cc;padding: 0 10px 0 0;">
-            <strong>Número do Comunicado:</strong>
+            <strong>Número de registro:</strong>
             <span id="nroComunicado" name="nroComunicado"><?php
               if (isset($comunicado)) {
                 echo $comunicado;
@@ -108,6 +108,10 @@
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse2">
               2. Data e Hora do Acidente*
+              <?php
+                if (isset($hasOleo))
+                  echo "</br><i style=\"font-size: 9px\">(Itens II e III do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)</i>"
+              ?>
             </a>
           </div>
           <div id="collapse2" class="accordion-body collapse">
@@ -237,6 +241,10 @@
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse3">
               3. Origem do Acidente*
+              <?php
+                if (isset($hasOleo))
+                  echo "</br><i style=\"font-size: 9px\">(Item I do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)</i>"
+              ?>
             </a>
           </div>
           <div id="collapse3" class="accordion-body collapse">
@@ -257,9 +265,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompOrigem">
-                      Informação complementar sobre o(a)
-                      <span id="labelInputCompOrigem" class="control-label" for="inputCompOrigem">
-                      </span>
+                      Informação complementares:
                     </label>
                   </div>
                   <div class="controls">
@@ -342,9 +348,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompEvento">
-                      Informação complementar sobre o(a)
-                      <span id="labelInputCompEvento" class="control-label" for="labelInputCompEvento">
-                      </span>
+                      Informação complementares:
                     </label>
                   </div>
                   <div class="controls">
@@ -458,6 +462,10 @@
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse6">
               6. Detalhes do Acidente*
+              <?php
+                if (isset($hasOleo))
+                  echo "</br><i style=\"font-size: 9px\">(Itens VI e VII do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)</i>"
+              ?>
             </a>
           </div>
           <div id="collapse6" class="accordion-body collapse">
@@ -534,9 +542,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompDano">
-                      Informação complementar sobre o(a)
-                      <span id="labelInputCompDano" class="control-label" for="inputCompDano">
-                      </span>
+                      Informação complementares:
                     </label>
                   </div>
                   <div class="controls">
@@ -646,9 +652,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompInstituicao">
-                      Informação complementar sobre o(a)
-                      <span id="labelInputCompInstituicao" class="control-label" for="inputCompInstituicao">
-                      </span>
+                      Informação complementares:
                     </label>
                   </div>
                   <div class="controls">
@@ -670,7 +674,11 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse10">
-              10. Procedimentos de Atendimento Adotados
+              10. Ações Iniciais Tomadas
+              <?php
+                if (isset($hasOleo))
+                  echo "</br><i style=\"font-size: 9px\">(Item VIII do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)</i>"
+              ?>
             </a>
           </div>
           <div id="collapse10" class="accordion-body collapse">
@@ -728,8 +736,47 @@
         </div>
         <div class="accordion-group">
           <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse12">
+              11. Outras Informações Julgadas Úteis
+            </a>
+          </div>
+          <div id="collapse12" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <div class="row-fluid">
+                <div class="control-group">
+                  <div class="span12">
+                    <label class="control-label" for="inputDesOcorrencia">
+                      Descrição geral da Ocorrência
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <?php echo form_textarea($inputDesOcorrencia); ?>
+                  </div>
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="control-group">
+                  <div class="span12">
+                    <label class="control-label" for="inputDesObs">
+                      Informações Adicionais sobre a Ocorrência
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <?php echo form_textarea($inputDesObs); ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-group">
+          <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse11">
-              11. Informações sobre o Informante
+              12. Identificação do Comunicante
+              <?php
+                if (isset($hasOleo))
+                  echo "</br><i style=\"font-size: 9px\">(Item X do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)</i>"
+              ?>
             </a>
           </div>
           <div id="collapse11" class="accordion-body collapse">
@@ -774,41 +821,7 @@
             </div>
           </div>
         </div>
-        <div class="accordion-group">
-          <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse12">
-              12. Informações gerais sobre a Ocorrência
-            </a>
-          </div>
-          <div id="collapse12" class="accordion-body collapse">
-            <div class="accordion-inner">
-              <div class="row-fluid">
-                <div class="control-group">
-                  <div class="span12">
-                    <label class="control-label" for="inputDesOcorrencia">
-                      Descrição geral da Ocorrência
-                    </label>
-                  </div>
-                  <div class="controls">
-                    <?php echo form_textarea($inputDesOcorrencia); ?>
-                  </div>
-                </div>
-              </div>
-              <div class="row-fluid">
-                <div class="control-group">
-                  <div class="span12">
-                    <label class="control-label" for="inputDesObs">
-                      Informações Adicionais sobre a Ocorrência
-                    </label>
-                  </div>
-                  <div class="controls">
-                    <?php echo form_textarea($inputDesObs); ?>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
         <?php
           if($this->authldap->is_authenticated()) {
             echo '

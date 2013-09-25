@@ -10,9 +10,9 @@ $(document).ready ->
     show: false
   )
 
-  $("#addMeModal").draggable({
+  $("#addMeModal").draggable(
     handle: ".modal-header"
-  });
+  )
 
   $('.selectpicker').selectpicker()
 
@@ -75,4 +75,4 @@ $(document).ready ->
     rndedNum
 
   # Animate load screen
-  $(".loading").fadeOut 700
+  $(".loading").hide()

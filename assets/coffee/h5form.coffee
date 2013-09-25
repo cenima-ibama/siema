@@ -63,6 +63,18 @@ $(document).ready ->
   _tipoProduto = rest.data
 
   #-------------------------------------------------------------------------
+  # COLAPSE BOOTSTRAP
+  #-------------------------------------------------------------------------
+
+  $(".accordion-body").on "shown", ->
+    stop = $(this).offset().top - 55
+    delay = 300
+    $("body, html").animate
+      scrollTop: stop
+    , delay
+    return false
+
+  #-------------------------------------------------------------------------
   # MINIMAP
   #-------------------------------------------------------------------------
 
@@ -570,10 +582,6 @@ $(document).ready ->
           input.checked = "checked"
           $(@).remove()
 
-      $(input).click ()->
-        if $(this).is(":checked")
-          addSelection('labelInputCompEvento',value.nome)
-
       span = document.createElement("span")
       span.innerHTML = value.nome
 
@@ -623,10 +631,6 @@ $(document).ready ->
           input.checked = "checked"
           $(@).remove()
 
-      $(input).click ()->
-        if $(this).is(":checked")
-          addSelection('labelInputCompDano',value.nome)
-
       span = document.createElement("span")
       span.innerHTML = value.nome
 
@@ -675,10 +679,6 @@ $(document).ready ->
         if (@.innerHTML is input.value)
           input.checked = "checked"
           $(@).remove()
-
-      $(input).click ()->
-        if $(this).is(":checked")
-          addSelection('labelInputCompInstituicao',value.nome)
 
       span = document.createElement("span")
       span.innerHTML = value.nome
@@ -1031,7 +1031,7 @@ $(document).ready ->
           isVisible: false
           validation: null
         nome:
-          columnName: "Nome da Substância - Nro. da Onu - Classe de Risco"
+          columnName: "Substância - Nº Onu - CR"
           tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
           primaryField: "id_produto"
           validation: null
@@ -1074,7 +1074,7 @@ $(document).ready ->
           isVisible: false
           validation: null
         nome:
-          columnName: "Nome da Substância - Nro. da Onu - Classe de Risco"
+          columnName: "Substância - Nº Onu - CR"
           tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
           primaryField: "id_produto"
           validation: null

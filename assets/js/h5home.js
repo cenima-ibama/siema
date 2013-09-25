@@ -62,7 +62,7 @@
       rndedNum = Math.round(number * multiple) / multiple;
       return rndedNum;
     };
-    return $(".loading").fadeOut(700);
+    return $(".loading").hide();
   });
 
 }).call(this);
