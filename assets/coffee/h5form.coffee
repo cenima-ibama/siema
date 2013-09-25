@@ -66,21 +66,13 @@ $(document).ready ->
   # COLAPSE BOOTSTRAP
   #-------------------------------------------------------------------------
 
-  # Do something if you want to do on click  else ignore this handler.
-  scrollhere = (destination) ->
-    stop = $(destination).offset().top - 100
-    delay = 1000
+  $(".accordion-body").on "shown", ->
+    stop = $(this).offset().top - 60
+    delay = 300
     $("body, html").animate
       scrollTop: stop
     , delay
     return false
-
-  $("#accordion2").bind "shown", ->
-    active = $("#accordion_univlist .in").attr("id")
-    scrollhere "#" + active
-    $(".closebutton-right").hide()
-
-  $(".accordion-heading").click ->
 
   #-------------------------------------------------------------------------
   # MINIMAP

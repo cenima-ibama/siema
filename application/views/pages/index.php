@@ -199,7 +199,10 @@
               <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOleo" value="1" checked>
               <h4 class="media-heading">Acidente envolvendo óleo</h4>
               <div class="media">
-                <p style="text-align:justify">Qualquer incidente ocorrido em portos organizados, instalações portuárias, dutos, navios, plataformas e suas instalações de apoio, que possa provocar poluição das águas sob jurisdição nacional.</p>
+                <p style="text-align:justify">
+                    Qualquer incidente ocorrido em portos organizados, instalações portuárias, dutos, navios, plataformas e suas instalações de apoio, que possa provocar poluição das águas sob jurisdição nacional.
+                    </br><i style="font-size: 9px">(Lei nº. 9.966/2000 e Decreto nº. 4.136/2002)</i>
+                </p>
               </div>
             </label>
           </div>

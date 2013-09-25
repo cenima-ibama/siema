@@ -53,7 +53,7 @@
           </div>
           <div id="collapse1" class="accordion-body collapse in">
             <div class="accordion-inner">
-              <label class="label label-info">Indique no mapa o local do acidente ou informe as coordenadas</label>
+              <p style="font-size: 11px; text-align:center; color: #068ACD">Indique no mapa o local do acidente ou informe as coordenadas</p>
               <div class="row-fluid text-left">
                 <div class="span12">
                   <div id="minimap"></div>
