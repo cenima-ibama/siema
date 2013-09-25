@@ -8,14 +8,14 @@
       <div class="tab-pane active" id="tab1">
         <div class="row-fluid">
           <div class="span6" style="text-align:center;">
-            <p style="text-align:left; margin-top: 10px">
+            <p style="text-align:justify; margin-top: 10px">
             <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0">
             Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental.
             <a class="btn btn-block" href="http://www.ibama.gov.br/servicos/a-linha-verde" style="margin-top: 10px" target="_blank">Linha Verde</a>
             </p>
           </div><!--/span-->
           <div class="span6" style="text-align:center;">
-            <p style="text-align:left; margin-top: 10px">
+            <p style="text-align:justify; margin-top: 10px">
             <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0">
             Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.
             <a id="btnBeginForm" class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 10px">Acidente Ambiental</a>
@@ -56,7 +56,7 @@
                   <div id="divDenuncia" class="span6">
                     <h4>Denúncia anônima</h4>
                     <p>Esta opção não permite a revisão ou alteração do comunicado enviado.</p>
-                    <p>Ao optar pela denúncia anônima, o IBAMA não conseguirá entrar em contato para solicitar informações precisas sobre o acidente. Favor inserir o máximo e informações possíveis e completas.</p>
+                    <p>Ao optar pela denúncia anônima, o IBAMA não conseguirá entrar em contato para solicitar informações precisas sobre o acidente. Favor inserir o máximo de informações possíveis e completas.</p>
                     <p><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
                   </div>
                 </div>
@@ -199,7 +199,7 @@
               <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOleo" value="1" checked>
               <h4 class="media-heading">Acidente envolvendo óleo</h4>
               <div class="media">
-                <p>Qualquer incidente ocorrido em portos organizados, instalações portuárias, dutos, navios, plataformas e suas instalações de apoio, que possa provocar poluição das águas sob jurisdição nacional.</p>
+                <p style="text-align:justify">Qualquer incidente ocorrido em portos organizados, instalações portuárias, dutos, navios, plataformas e suas instalações de apoio, que possa provocar poluição das águas sob jurisdição nacional.</p>
               </div>
             </label>
           </div>
@@ -210,7 +210,7 @@
               <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOutros" value="0">
               <h4 class="media-heading">Demais acidentes ambientais</h4>
               <div class="media">
-                <p>Acidente envolvendo produto(s) perigoso(s) (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.</p>
+                <p style="text-align:justify">Acidente envolvendo produto(s) perigoso(s) (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.</p>
               </div>
             </label>
           </div>

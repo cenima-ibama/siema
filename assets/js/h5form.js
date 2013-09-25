@@ -3,7 +3,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, drawControl, drawnItems, history, idOcorrencia, latlng, minimapView, nroComunicado, nroOcorrencia, polygonList, polylineList, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, drawControl, drawnItems, history, idOcorrencia, latlng, minimapView, nroComunicado, nroOcorrencia, polygonList, polylineList, rest, scrollhere, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -242,6 +242,22 @@
       $(".modal-footer").show();
       return $(this).tab('show');
     });
+    scrollhere = function(destination) {
+      var delay, stop;
+      stop = $(destination).offset().top - 100;
+      delay = 1000;
+      $("body, html").animate({
+        scrollTop: stop
+      }, delay);
+      return false;
+    };
+    $("#accordion2").bind("shown", function() {
+      var active;
+      active = $("#accordion_univlist .in").attr("id");
+      scrollhere("#" + active);
+      return $(".closebutton-right").hide();
+    });
+    $(".accordion-heading").click(function() {});
     bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h";
     binghybrid = new L.BingLayer(bingKey, {
       type: "AerialWithLabels",
@@ -992,7 +1008,7 @@
     if ($(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")) {
       return table = new H5.Table({
         container: "myTable",
-        url: restURL,
+        url: H5.Data.restURL,
         table: "ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Docorrencia_produto.id_produto)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)",
         primaryTable: 'ocorrencia_produto',
         parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'",
@@ -1036,7 +1052,7 @@
     } else {
       return table = new H5.Table({
         container: "myTable",
-        url: restURL,
+        url: H5.Data.restURL,
         table: "tmp_ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Dtmp_ocorrencia_produto.id_produto)",
         primaryTable: 'tmp_ocorrencia_produto',
         fields: {

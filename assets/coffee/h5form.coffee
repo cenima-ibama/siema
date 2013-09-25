@@ -293,6 +293,26 @@ $(document).ready ->
     $(@).tab('show')
 
   #-------------------------------------------------------------------------
+  # COLAPSE BOOTSTRAP
+  #-------------------------------------------------------------------------
+
+  # Do something if you want to do on click  else ignore this handler.
+  scrollhere = (destination) ->
+    stop = $(destination).offset().top - 100
+    delay = 1000
+    $("body, html").animate
+      scrollTop: stop
+    , delay
+    return false
+
+  $("#accordion2").bind "shown", ->
+    active = $("#accordion_univlist .in").attr("id")
+    scrollhere "#" + active
+    $(".closebutton-right").hide()
+
+  $(".accordion-heading").click ->
+
+  #-------------------------------------------------------------------------
   # MINIMAP
   #-------------------------------------------------------------------------
 
@@ -1185,7 +1205,7 @@ $(document).ready ->
   if $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
     table = new H5.Table (
       container: "myTable"
-      url: restURL
+      url: H5.Data.restURL
       table: "ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Docorrencia_produto.id_produto)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
       primaryTable: 'ocorrencia_produto'
       parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'"
@@ -1223,7 +1243,7 @@ $(document).ready ->
   else
     table = new H5.Table (
       container: "myTable"
-      url: restURL
+      url: H5.Data.restURL
       table: "tmp_ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Dtmp_ocorrencia_produto.id_produto)"
       primaryTable: 'tmp_ocorrencia_produto'
       fields:
