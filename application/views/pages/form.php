@@ -45,12 +45,17 @@
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse1">
               1. Localização*
+                <?php
+                  if (isset($hasOleo))
+                      echo "</br><i style=\"font-size: 9px\">(Item IV do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)</i>"
+                ?>
             </a>
           </div>
           <div id="collapse1" class="accordion-body collapse in">
             <div class="accordion-inner">
+              <p style="font-size: 11px; text-align:center; color: #068ACD">Indique no mapa o local do acidente ou informe as coordenadas</p>
               <div class="row-fluid text-left">
-                <div class="span6">
+                <div class="span12">
                   <div id="minimap"></div>
                 </div>
                 <br />
