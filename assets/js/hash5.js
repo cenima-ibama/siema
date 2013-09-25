@@ -1287,4 +1287,81 @@
 
   })();
 
+  H5.Draw = (function() {
+    Draw.prototype.options = {
+      map: null,
+      url: null,
+      buttons: {
+        marker: true,
+        line: true,
+        polygon: true,
+        rectangle: true,
+        circle: true,
+        edit: true,
+        remove: true
+      },
+      tables: null
+    };
+
+    Draw.prototype.data = null;
+
+    Draw.prototype.idMarker = "";
+
+    Draw.prototype.idLine = "";
+
+    Draw.prototype.idPolygon = "";
+
+    Draw.prototype.idRectangle = "";
+
+    Draw.prototype.idCircle = "";
+
+    function Draw(options) {
+      this.options = $.extend({}, this.options, options);
+      this._addDrawFunction();
+    }
+
+    Draw.prototype._addDrawFunction = function() {
+      var drawControl, drawnItems;
+      drawnItems = new L.FeatureGroup();
+      this.options.map.addLayer(drawnItems);
+      drawControl = new L.Control.Draw({
+        draw: {
+          marker: this.options.buttons.marker,
+          polyline: this.options.buttons.line,
+          polygon: this.options.buttons.polygon,
+          rectangle: this.options.buttons.rectangle,
+          circle: this.options.buttons.circle
+        },
+        edit: {
+          featureGroup: drawnItems,
+          edit: this.options.buttons.edit,
+          remove: this.options.buttons.remove
+        }
+      });
+      this.options.map.addControl(drawControl);
+      return _getNextIdTable();
+    };
+
+    Draw.prototype._getNextIdTable = function() {
+      var idLine, idPolygon, rest;
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        fields: "nextval('tmp_pol_id_tmp_pol_seq') as lastval",
+        table: "tipo_fonte_informacao",
+        limit: "1"
+      });
+      idPolygon = rest.data[0].lastval;
+      rest = new H5.Rest({
+        url: H5.Data.restURL,
+        fields: "nextval('" + this.options.tables.Line + "_seq') as lastval",
+        table: "tipo_fonte_informacao",
+        limit: "1"
+      });
+      return idLine = rest.data[0].lastval;
+    };
+
+    return Draw;
+
+  })();
+
 }).call(this);

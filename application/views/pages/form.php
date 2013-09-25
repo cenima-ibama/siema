@@ -728,6 +728,14 @@
                   </div>
                 </div>
               </div>
+              <div class="row-fluid">
+                <div class="span12">
+                  <label class="checkbox text-left">
+                    <?php echo form_checkbox($semProcedimentos, 'on'); ?>
+                    Sem evidência de ação ou providência até o momento
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         </div>
