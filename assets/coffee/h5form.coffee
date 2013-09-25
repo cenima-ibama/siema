@@ -10,6 +10,25 @@ $(document).ready ->
 
   idOcorrencia = null
 
+
+  # Get the product name from the database, by ajax
+  rest = new H5.Rest (
+    url: H5.Data.restURL
+    fields: "nextval('tmp_pol_id_tmp_pol_seq') as lastval"
+    table: "tipo_fonte_informacao"
+    limit: "1"
+  )
+  idPol = rest.data[0].lastval
+
+
+  rest = new H5.Rest (
+    url: H5.Data.restURL
+    fields: "nextval('tmp_lin_id_tmp_lin_seq') as lastval"
+    table: "tipo_fonte_informacao"
+    limit: "1"
+  )
+  idLin = rest.data[0].lastval
+
   if !$("#comunicado").val()
     date = new Date()
 
@@ -39,258 +58,9 @@ $(document).ready ->
     order: "nome"
   )
 
+  nroOcorrencia = $("#comunicado").val()
+
   _tipoProduto = rest.data
-
-  #-------------------------------------------------------------------------
-  # FORM
-  #-------------------------------------------------------------------------
-
-  # List that stores the order on tabs to be accessed, going backwards
-  history = []
-  # Stores the next tab to be accessed
-  collapse=2
-
-  $('#addMeModal').on 'hidden', ->
-    history = []
-    collapse = 2
-
-    btnBack = document.getElementById("modalBtnBack")
-
-    btnBack.href = '#tab1'
-    $("#modalBtnBack").tab('show')
-    $("#modalBtnBack").show()
-    $("#modalBtnNext").show()
-    $("#submit").hide()
-    $("#modalBtnCancel").hide()
-    $("#btnClose").hide()
-    $(".modal-footer").show()
-
-  #hide footer o form when click on topbar
-  $("#btn-form").click (event) ->
-    $(".modal-footer").hide()
-
-  # Dealing with going backwards on the form and possibles jumps
-  $("#modalBtnBack").click (event) ->
-    event.preventDefault()
-
-    btnNext = document.getElementById("modalBtnNext")
-
-    if history.length > 0
-      tab = history.pop()
-      @.href = tab.tab
-      collapse = tab.collapse
-
-    $(".modal-footer").hide()
-
-    $(@).tab('show')
-
-  # Dealing with going backwards on the form and possibles jumps
-  $("#modalBtnCancel").click (event) ->
-    event.preventDefault()
-
-    btnNext = document.getElementById("modalBtnNext")
-    btnBack = document.getElementById("modalBtnBack")
-
-    if history.length > 0
-      tab = history.pop()
-      @.href = tab.tab
-      collapse = tab.collapse
-
-    $(".modal-footer").show()
-    $(btnNext).show()
-    $(btnBack).show()
-    $("#submit").hide()
-    $(@).hide()
-
-    # Clean the temporary produt table (tmp_ocorrencia_produto)
-    rest = new H5.Rest (
-     url: H5.Data.restURL
-     table: "tmp_ocorrencia_produto"
-     restService: "ws_deletequery.php"
-    )
-
-    # Clean the temporary polygon table (tmp_pol)
-    rest = new H5.Rest (
-     url: H5.Data.restURL
-     table: "tmp_pol"
-     restService: "ws_deletequery.php"
-    )
-
-    # Clean the temporary polyline table (tmp_lin)
-    rest = new H5.Rest (
-     url: H5.Data.restURL
-     table: "tmp_lin"
-     restService: "ws_deletequery.php"
-    )
-
-    # Clean the temporary point table (tmp_pon)
-    rest = new H5.Rest (
-     url: H5.Data.restURL
-     table: "tmp_pon"
-     restService: "ws_deletequery.php"
-    )
-
-    $(@).tab('show')
-
-
-  $("#btnBeginForm").click (event) ->
-    if !(document.getElementById('divLogin'))?
-      progressBar = document.getElementById("authProgress")
-      textProgress = document.getElementById("textProgress")
-      containerProgress = document.getElementById("containerProgress")
-      checkedUser = document.getElementById("checkedUser")
-      tipoForm = document.getElementById("tipoForm")
-      btnLogout = document.getElementById("btnLogout")
-
-      $(tipoForm).hide()
-      $(btnLogout).hide()
-      i=0
-      progressAnimetion = setInterval( ->
-        $(progressBar).width(i++ + "0%")
-        if i is 15
-          $(containerProgress).hide()
-          $(textProgress).hide()
-          $(textProgress).html('Usuário registrado.')
-          $(textProgress).fadeToggle()
-          $(checkedUser).show()
-          $(tipoForm).show()
-          $(btnLogout).show()
-          clearInterval(progressAnimetion)
-      , 100)
-    if $("#containerProgress").is(":hidden")
-      $(tipoForm).show()
-      $(btnLogout).show()
-
-
-  # Dealing with going foward on the form and possibles jumps
-  $("#modalBtnNext").click (event) ->
-    event.preventDefault()
-
-    # if ("#tab" + collapse) isnt "#tab8"
-    history.push(
-      tab: "#tab" + collapse
-      collapse: collapse
-    )
-
-    @.href = "#tab" + ++collapse
-
-    if ("#tab" + collapse) is "#tab2"
-      if !(document.getElementById('divLogin'))?
-        progressBar = document.getElementById("authProgress")
-        textProgress = document.getElementById("textProgress")
-        containerProgress = document.getElementById("containerProgress")
-        checkedUser = document.getElementById("checkedUser")
-        tipoForm = document.getElementById("tipoForm")
-        btnLogout = document.getElementById("btnLogout")
-
-        $(tipoForm).hide()
-        $(btnLogout).hide()
-        i=0
-        progressAnimetion = setInterval( ->
-          $(progressBar).width(i++ + "0%")
-          if i is 15
-            $(containerProgress).hide()
-            $(textProgress).hide()
-            $(textProgress).html('Usuário registrado.')
-            $(textProgress).fadeToggle()
-            $(checkedUser).show()
-            $(tipoForm).show()
-            $(btnLogout).show()
-            clearInterval(progressAnimetion)
-        , 100)
-      $(".modal-footer").hide()
-    else
-      $(".modal-footer").show()
-
-      # Point of division: selecting type of the accident
-      if ("#tab" + collapse) is "#tab4"
-        isPubExt = document.getElementById("radioPubExt").checked
-
-        # Verifies which type of accident was chosen
-        if isPubExt
-          collapse = 5
-          @.href = "#tab" + 5
-
-      else if ("#tab" + collapse) is "#tab8"
-        isAcidOleo = document.getElementById("optionsAcidenteOleo").checked
-        isOutros = document.getElementById("optionsAcidenteOutros").checked
-        isAtual = document.getElementById("optionsAtualizarAcidente").checked
-
-        hasOleo = document.getElementById("hasOleo")
-        isServIBAMA = document.getElementById("isServIBAMA")
-
-        hasOleo.checked = isAcidOleo
-
-    if ("#tab" + collapse) is "#tab8"
-
-      $("#submit").show()
-      $("#modalBtnNext").hide()
-      $("#modalBtnBack").hide()
-      $("#modalBtnCancel").show()
-
-      if isAtual
-        if($("#inputRegistro").prop("value") isnt "")
-          defaultHtml = document.getElementById("defaultHtml")
-          if(defaultHtml.innerHTML is "")
-            defaultHtml.innerHTML = $("#formLoad").prop("action")
-          action = defaultHtml.innerHTML + "/" + $("#inputRegistro").prop("value")
-          $("#formLoad").prop "action", action
-          $("#formLoad").submit()
-        else
-          $("#inputRegistro").focus()
-      else
-
-        $("#formCreate").submit()
-
-    $(@).tab('show')
-
- # Dealing with the jump on the register part on the accident form
-  $("#tipoForm").click (event) ->
-    event.preventDefault()
-
-    history.push(
-      tab: "#tab2"
-      collapse: collapse
-    )
-
-    this.href = "#tab7"
-    collapse = 7
-
-    $(".modal-footer").show()
-
-    $(@).tab('show')
-
-  # Dealing with the jump on the register part on the accident form
-  $("#denunciaAnonima").click (event) ->
-    event.preventDefault()
-
-    history.push(
-      tab: "#tab2"
-      collapse: collapse
-    )
-
-    this.href = "#tab7"
-    collapse = 7
-
-    $(".modal-footer").show()
-
-    $(@).tab('show')
-
-  # Dealing with the register part on the accident form
-  $("#btnCadastrar").click (event) ->
-    event.preventDefault()
-
-    history.push(
-      tab: "#tab2"
-      collapse: collapse
-    )
-
-    this.href = "#tab3"
-    collapse = 3
-
-    $(".modal-footer").show()
-
-    $(@).tab('show')
 
   #-------------------------------------------------------------------------
   # COLAPSE BOOTSTRAP
@@ -334,7 +104,6 @@ $(document).ready ->
   #-------------------------------------------------------------------------
 
   Marker = new L.Marker([0 ,0], {draggable:true})
-  nroOcorrencia = $("#comunicado").val()
 
   minimapView = new L.Map("minimap",
     center: new L.LatLng(-10.0, -50.0)
@@ -352,7 +121,8 @@ $(document).ready ->
         marker: false
       },
       edit: {
-        featureGroup: drawnItems
+        featureGroup: drawnItems,
+        edit: false
       }
   })
   minimapView.addControl(drawControl)
@@ -362,15 +132,13 @@ $(document).ready ->
 
     layer = e.layer
 
-    console.log (e.layer)
-
-    drawnItems.addLayer(layer)
-
     if (type is 'polygon')
       # Saves a polygon
       firstPoint = ""
 
-      sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + nroOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
+      layer._leaflet_id = ++idPol
+
+      sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
 
       $.each layer._latlngs, ->
         if firstPoint is ""
@@ -391,12 +159,13 @@ $(document).ready ->
        table: "tmp_pol"
        restService: "ws_insertquery.php"
       )
-
     else if (type is 'polyline')
       # Saves a polyline
       firstPoint = ""
 
-      sql = "(id_tmp_lin, nro_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + nroOcorrencia + ",ST_GeomFromText('LINESTRING("
+      layer._leaflet_id = ++idLin
+
+      sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_GeomFromText('LINESTRING("
 
       $.each layer._latlngs, ->
         if firstPoint is ""
@@ -417,9 +186,10 @@ $(document).ready ->
        restService: "ws_insertquery.php"
       )
     else if (type is 'rectangle')
-      console.log layer
 
-      sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " +  layer._leaflet_id + "," + nroOcorrencia + ",ST_MakeEnvelope("
+      layer._leaflet_id = ++idPol
+
+      sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakeEnvelope("
 
       sql = sql +
             layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " +
@@ -436,10 +206,29 @@ $(document).ready ->
         table: "tmp_pol"
         restService: "ws_insertquery.php"
       )
+    else if (type is 'circle')
 
+      console.log layer
+
+      layer._leaflet_id = ++idPol
+
+      sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ", ST_Buffer(ST_GeomFromText('POINT(" +
+            layer._latlng.lat + " " + layer._latlng.lng + ")'," + $("#inputEPSG").val() + "),"
+
+      sql = sql + layer._mRadius/100010 + "))"
+
+      console.log sql
+
+      rest = new H5.Rest (
+        url: H5.Data.restURL
+        fields: sql
+        table: "tmp_pol"
+        restService: "ws_insertquery.php"
+      )
+
+    drawnItems.addLayer(layer)
 
   minimapView.on 'draw:deleted', (e)->
-    console.log e
 
     type = ""
     sqlPon = "id_tmp_pol=0 "
@@ -453,6 +242,8 @@ $(document).ready ->
         sqlPon = sqlPon + "or id_tmp_pol=" + @._leaflet_id + " "
       else if type is 'LineString'
         sqlLin = sqlLin + "or id_tmp_lin=" + @._leaflet_id + " "
+      else if type is 'Point'
+        sqlPon = sqlPon + "or id_tmp_pol=" + @._leaflet_id + " "
 
     if type is 'Polygon'
       sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'"
@@ -475,15 +266,24 @@ $(document).ready ->
         parameters: sqlLin
         restService: "ws_deletequery.php"
       )
+    else if type is 'Point'
+      sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'"
+
+      # Remove lines
+      rest = new H5.Rest (
+        url: H5.Data.restURL
+        table: "tmp_pol"
+        parameters: sqlPon
+        restService: "ws_deletequery.php"
+      )
 
 
   minimapView.on 'draw:edited', (e)->
-    console.log 'editing..'
-    console.log e
 
     type = ""
     sqlPon = ""
     sqlLin = ""
+    this._map=minimapView
 
     $.each e.layers._layers, ->
 

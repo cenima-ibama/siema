@@ -3,7 +3,11 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
+<<<<<<< HEAD
     var GeoSearch, Marker, addSelection, bingKey, binghybrid, collapse, date, disabled, drawControl, drawnItems, history, idOcorrencia, latlng, minimapView, nroComunicado, nroOcorrencia, polygonList, polylineList, rest, scrollhere, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+=======
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, disabled, drawControl, drawnItems, idLin, idOcorrencia, idPol, latlng, minimapView, nroComunicado, nroOcorrencia, polygonList, polylineList, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+>>>>>>> 97b2503238e5156c897ad000f44908bb5e5d6c14
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -11,6 +15,20 @@
     _tipoFonteInformacao = null;
     _tipoProduto = null;
     idOcorrencia = null;
+    rest = new H5.Rest({
+      url: H5.Data.restURL,
+      fields: "nextval('tmp_pol_id_tmp_pol_seq') as lastval",
+      table: "tipo_fonte_informacao",
+      limit: "1"
+    });
+    idPol = rest.data[0].lastval;
+    rest = new H5.Rest({
+      url: H5.Data.restURL,
+      fields: "nextval('tmp_lin_id_tmp_lin_seq') as lastval",
+      table: "tipo_fonte_informacao",
+      limit: "1"
+    });
+    idLin = rest.data[0].lastval;
     if (!$("#comunicado").val()) {
       date = new Date();
       seconds = parseInt(date.getSeconds() + (date.getHours() * 60 * 60), 10);
@@ -35,7 +53,9 @@
       fields: "id_produto,nome,num_onu,classe_risco",
       order: "nome"
     });
+    nroOcorrencia = $("#comunicado").val();
     _tipoProduto = rest.data;
+<<<<<<< HEAD
     history = [];
     collapse = 2;
     $('#addMeModal').on('hidden', function() {
@@ -258,6 +278,8 @@
       return $(".closebutton-right").hide();
     });
     $(".accordion-heading").click(function() {});
+=======
+>>>>>>> 97b2503238e5156c897ad000f44908bb5e5d6c14
     bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h";
     binghybrid = new L.BingLayer(bingKey, {
       type: "AerialWithLabels",
@@ -270,7 +292,6 @@
     Marker = new L.Marker([0, 0], {
       draggable: true
     });
-    nroOcorrencia = $("#comunicado").val();
     minimapView = new L.Map("minimap", {
       center: new L.LatLng(-10.0, -50.0),
       zoom: 3,
@@ -284,7 +305,8 @@
         marker: false
       },
       edit: {
-        featureGroup: drawnItems
+        featureGroup: drawnItems,
+        edit: false
       }
     });
     minimapView.addControl(drawControl);
@@ -292,11 +314,10 @@
       var firstPoint, layer, sql, type;
       type = e.layerType;
       layer = e.layer;
-      console.log(e.layer);
-      drawnItems.addLayer(layer);
       if (type === 'polygon') {
         firstPoint = "";
-        sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " + layer._leaflet_id + "," + nroOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
+        layer._leaflet_id = ++idPol;
+        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
         $.each(layer._latlngs, function() {
           if (firstPoint === "") {
             firstPoint = this;
@@ -306,7 +327,7 @@
         });
         sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + ")))";
         console.log(sql);
-        return rest = new H5.Rest({
+        rest = new H5.Rest({
           url: H5.Data.restURL,
           fields: sql,
           table: "tmp_pol",
@@ -314,7 +335,8 @@
         });
       } else if (type === 'polyline') {
         firstPoint = "";
-        sql = "(id_tmp_lin, nro_ocorrencia, shape) values ( " + layer._leaflet_id + "," + nroOcorrencia + ",ST_GeomFromText('LINESTRING(";
+        layer._leaflet_id = ++idLin;
+        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_GeomFromText('LINESTRING(";
         $.each(layer._latlngs, function() {
           if (firstPoint === "") {
             firstPoint = true;
@@ -325,29 +347,41 @@
         });
         sql = sql + ")', " + $("#inputEPSG").val() + "))";
         console.log(sql);
-        return rest = new H5.Rest({
+        rest = new H5.Rest({
           url: H5.Data.restURL,
           fields: sql,
           table: "tmp_lin",
           restService: "ws_insertquery.php"
         });
       } else if (type === 'rectangle') {
-        console.log(layer);
-        sql = "(id_tmp_pol, nro_ocorrencia, shape) values ( " + layer._leaflet_id + "," + nroOcorrencia + ",ST_MakeEnvelope(";
+        layer._leaflet_id = ++idPol;
+        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakeEnvelope(";
         sql = sql + layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " + layer._latlngs[2].lat + "," + layer._latlngs[2].lng;
         sql = sql + ", " + $("#inputEPSG").val() + "))";
         console.log(sql);
-        return rest = new H5.Rest({
+        rest = new H5.Rest({
+          url: H5.Data.restURL,
+          fields: sql,
+          table: "tmp_pol",
+          restService: "ws_insertquery.php"
+        });
+      } else if (type === 'circle') {
+        console.log(layer);
+        layer._leaflet_id = ++idPol;
+        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ", ST_Buffer(ST_GeomFromText('POINT(" + layer._latlng.lat + " " + layer._latlng.lng + ")'," + $("#inputEPSG").val() + "),";
+        sql = sql + layer._mRadius / 100010 + "))";
+        console.log(sql);
+        rest = new H5.Rest({
           url: H5.Data.restURL,
           fields: sql,
           table: "tmp_pol",
           restService: "ws_insertquery.php"
         });
       }
+      return drawnItems.addLayer(layer);
     });
     minimapView.on('draw:deleted', function(e) {
       var sqlLin, sqlPon, type;
-      console.log(e);
       type = "";
       sqlPon = "id_tmp_pol=0 ";
       sqlLin = "id_tmp_lin=0 ";
@@ -357,6 +391,8 @@
           return sqlPon = sqlPon + "or id_tmp_pol=" + this._leaflet_id + " ";
         } else if (type === 'LineString') {
           return sqlLin = sqlLin + "or id_tmp_lin=" + this._leaflet_id + " ";
+        } else if (type === 'Point') {
+          return sqlPon = sqlPon + "or id_tmp_pol=" + this._leaflet_id + " ";
         }
       });
       if (type === 'Polygon') {
@@ -375,15 +411,22 @@
           parameters: sqlLin,
           restService: "ws_deletequery.php"
         });
+      } else if (type === 'Point') {
+        sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'";
+        return rest = new H5.Rest({
+          url: H5.Data.restURL,
+          table: "tmp_pol",
+          parameters: sqlPon,
+          restService: "ws_deletequery.php"
+        });
       }
     });
     minimapView.on('draw:edited', function(e) {
       var sqlLin, sqlPon, type;
-      console.log('editing..');
-      console.log(e);
       type = "";
       sqlPon = "";
       sqlLin = "";
+      this._map = minimapView;
       return $.each(e.layers._layers, function() {
         var firstPoint, sql;
         firstPoint = "";
