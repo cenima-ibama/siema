@@ -120,8 +120,10 @@ class Form extends CI_Controller {
 
 
         // Validating the "Existencia de Plano de Emergencia ou Similar"
-        if (!isset($form_data['planoEmergencia'])) {
+        if (!isset($form_data['semProcedimentos'])) {
             $this->form_validation->set_rules('planoEmergencia', 'Plano de Emergencia ou Similar', 'required');
+        } else {
+            $this->form_validation->set_rules('semProcedimentos', 'Plano de Emergencia', 'required');
         }
 
         // Validating the oil form: ship identification
@@ -789,6 +791,11 @@ class Form extends CI_Controller {
                 'checked'  => 'checked'
             );
         }
+        if (isset($formLoad['semProcedimentos'])) {
+            $data['planoEmergSim'] += array(
+                'disabled'  => 'disabled'
+            );
+        }
 
         $data['planoEmergNao'] = array(
             'id'           => 'planoEmergNao',
@@ -799,6 +806,11 @@ class Form extends CI_Controller {
         if(isset($formLoad['planoEmergencia']) && ($formLoad['planoEmergencia'] == '0')){
             $data['planoEmergNao'] += array(
                 'checked'  => 'checked'
+            );
+        }
+        if (isset($formLoad['semProcedimentos'])) {
+            $data['planoEmergNao'] += array(
+                'disabled'  => 'disabled'
             );
         }
 
@@ -813,6 +825,11 @@ class Form extends CI_Controller {
                 'checked'  => 'checked'
             );
         }
+        if (isset($formLoad['semProcedimentos'])) {
+            $data['planoAcionado'] += array(
+                'disabled'  => 'disabled'
+            );
+        }
 
         $data['outrasMedidas'] = array(
             'id'           => 'outrasMedidas',
@@ -824,6 +841,11 @@ class Form extends CI_Controller {
                 'checked'  => 'checked'
             );
         }
+        if (isset($formLoad['semProcedimentos'])) {
+            $data['outrasMedidas'] += array(
+                'disabled'  => 'disabled'
+            );
+        }
 
         $data['inputMedidasTomadas'] = array(
             'id'           => 'inputMedidasTomadas',
@@ -833,7 +855,22 @@ class Form extends CI_Controller {
             'maxlength'    => '1000',
             'value'        => set_value('inputMedidasTomadas')
         );
+        if (isset($formLoad['semProcedimentos'])) {
+            $data['inputMedidasTomadas'] += array(
+                'disabled'  => 'disabled'
+            );
+        }
 
+        $data['semProcedimentos'] = array(
+            'id'           => 'semProcedimentos',
+            'name'         => 'semProcedimentos',
+            'type'         => 'checkbox',
+        );
+        if(isset($formLoad['semProcedimentos'])){
+            $data['semProcedimentos'] += array(
+                'checked'  => 'checked'
+            );
+        }
         // 11. Informacoes do informante
 
         $data['inputNomeInformante'] = array(

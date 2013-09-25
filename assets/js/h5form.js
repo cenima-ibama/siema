@@ -742,7 +742,7 @@
           return $("#inputCompInstituicao").removeAttr("disabled");
         }
       });
-      return $("#semResponsavel").on('click', function() {
+      $("#semResponsavel").on('click', function() {
         if ($(this).is(":checked")) {
           $("#inputResponsavel").attr("disabled", "disabled");
           $("#inputCPFCNPJ").attr("disabled", "disabled");
@@ -751,6 +751,21 @@
           $("#inputResponsavel").removeAttr("disabled");
           $("#inputCPFCNPJ").removeAttr("disabled");
           return $("#slctLicenca").removeAttr("disabled");
+        }
+      });
+      return $("#semProcedimentos").on('click', function() {
+        if ($(this).is(":checked")) {
+          $("#planoEmergNao").attr("disabled", "disabled");
+          $("#planoEmergSim").attr("disabled", "disabled");
+          $("#planoAcionado").attr("disabled", "disabled");
+          $("#outrasMedidas").attr("disabled", "disabled");
+          return $("#inputMedidasTomadas").attr("disabled", "disabled");
+        } else {
+          $("#planoEmergNao").removeAttr("disabled");
+          $("#planoEmergSim").removeAttr("disabled");
+          $("#planoAcionado").removeAttr("disabled");
+          $("#outrasMedidas").removeAttr("disabled");
+          return $("#inputMedidasTomadas").removeAttr("disabled");
         }
       });
     });

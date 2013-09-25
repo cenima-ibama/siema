@@ -92,6 +92,27 @@ $(document).ready ->
     zoomControl: true
     )
 
+  # drawAPI = new H5.Draw(
+  #   map: minimapView
+  #   url: H5.Data.restURL
+  #   buttons:
+  #     marker: false
+  #     line: true
+  #     polygon: true
+  #     square: true
+  #     circle: true
+  #     edit: false
+  #     remove: true
+  #   tables:
+  #     point:
+  #       tmp_pon:
+  #         id_tmp_pon: ""
+  #         descricao: ""
+  #         shape: ""
+  #         nro_ocorrencia: nroOcorrencia
+  # )
+
+
   # Add draw functionality to a map
   drawnItems = new L.FeatureGroup()
   minimapView.addLayer(drawnItems)
@@ -892,6 +913,20 @@ $(document).ready ->
         $("#inputCPFCNPJ").removeAttr("disabled")
         $("#slctLicenca").removeAttr("disabled")
         # $("button[data-id='slctLicenca']").removeClass("disabled")
+
+    $("#semProcedimentos").on 'click', ()->
+      if $(this).is(":checked")
+        $("#planoEmergNao").attr("disabled","disabled")
+        $("#planoEmergSim").attr("disabled","disabled")
+        $("#planoAcionado").attr("disabled","disabled")
+        $("#outrasMedidas").attr("disabled","disabled")
+        $("#inputMedidasTomadas").attr("disabled","disabled")
+      else
+        $("#planoEmergNao").removeAttr("disabled")
+        $("#planoEmergSim").removeAttr("disabled")
+        $("#planoAcionado").removeAttr("disabled")
+        $("#outrasMedidas").removeAttr("disabled")
+        $("#inputMedidasTomadas").removeAttr("disabled")
 
     # if $("#semResponsavel").is(":checked")
     #   $("button[data-id='slctLicenca']").addClass("disabled")
