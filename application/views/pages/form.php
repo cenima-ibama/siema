@@ -51,6 +51,7 @@
             <div class="accordion-inner">
               <div class="row-fluid text-left">
                 <div class="span6">
+                  <label class="control-label" for="inputEndereco"><i>Indique no mapa o local do acidente ou informe as coordenadas nos campos abaixo.</i></label>
                   <div id="minimap"></div>
                 </div>
                 <br />
@@ -670,7 +671,7 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse10">
-              10. Procedimentos de Atendimento Adotados
+              10. Ações Iniciais Tomadas
             </a>
           </div>
           <div id="collapse10" class="accordion-body collapse">
@@ -720,8 +721,43 @@
         </div>
         <div class="accordion-group">
           <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse12">
+              11. Outras Informações Julgadas Úteis
+            </a>
+          </div>
+          <div id="collapse12" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <div class="row-fluid">
+                <div class="control-group">
+                  <div class="span12">
+                    <label class="control-label" for="inputDesOcorrencia">
+                      Descrição geral da Ocorrência
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <?php echo form_textarea($inputDesOcorrencia); ?>
+                  </div>
+                </div>
+              </div>
+              <div class="row-fluid">
+                <div class="control-group">
+                  <div class="span12">
+                    <label class="control-label" for="inputDesObs">
+                      Informações Adicionais sobre a Ocorrência
+                    </label>
+                  </div>
+                  <div class="controls">
+                    <?php echo form_textarea($inputDesObs); ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-group">
+          <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse11">
-              11. Informações sobre o Informante
+              12. Identificação do Comunicante
             </a>
           </div>
           <div id="collapse11" class="accordion-body collapse">
@@ -766,41 +802,7 @@
             </div>
           </div>
         </div>
-        <div class="accordion-group">
-          <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse12">
-              12. Informações gerais sobre a Ocorrência
-            </a>
-          </div>
-          <div id="collapse12" class="accordion-body collapse">
-            <div class="accordion-inner">
-              <div class="row-fluid">
-                <div class="control-group">
-                  <div class="span12">
-                    <label class="control-label" for="inputDesOcorrencia">
-                      Descrição geral da Ocorrência
-                    </label>
-                  </div>
-                  <div class="controls">
-                    <?php echo form_textarea($inputDesOcorrencia); ?>
-                  </div>
-                </div>
-              </div>
-              <div class="row-fluid">
-                <div class="control-group">
-                  <div class="span12">
-                    <label class="control-label" for="inputDesObs">
-                      Informações Adicionais sobre a Ocorrência
-                    </label>
-                  </div>
-                  <div class="controls">
-                    <?php echo form_textarea($inputDesObs); ?>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
         <?php
           if($this->authldap->is_authenticated()) {
             echo '

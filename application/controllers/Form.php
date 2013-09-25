@@ -729,11 +729,9 @@ class Form extends CI_Controller {
         }
 
         $data['slctLicenca'] = array(
-            '1'         => '1',
-            '2'         => '2',
-            '3'         => '3',
-            '4'         => '4',
-            '5'         => '5'
+            '1'         => 'Licença ambiental federal',
+            '2'         => 'Licença ambiental estadual',
+            '3'         => 'Licença ambiental municipal'
         );
 
         $data['semResponsavel'] = array(
