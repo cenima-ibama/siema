@@ -270,9 +270,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompOrigem">
-                      Informação complementar sobre o(a)
-                      <span id="labelInputCompOrigem" class="control-label" for="inputCompOrigem">
-                      </span>
+                      Informação complementares:
                     </label>
                   </div>
                   <div class="controls">
@@ -355,9 +353,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompEvento">
-                      Informação complementar sobre o(a)
-                      <span id="labelInputCompEvento" class="control-label" for="labelInputCompEvento">
-                      </span>
+                      Informação complementares:
                     </label>
                   </div>
                   <div class="controls">
@@ -555,9 +551,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompDano">
-                      Informação complementar sobre o(a)
-                      <span id="labelInputCompDano" class="control-label" for="inputCompDano">
-                      </span>
+                      Informação complementares:
                     </label>
                   </div>
                   <div class="controls">
@@ -667,9 +661,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompInstituicao">
-                      Informação complementar sobre o(a)
-                      <span id="labelInputCompInstituicao" class="control-label" for="inputCompInstituicao">
-                      </span>
+                      Informação complementares:
                     </label>
                   </div>
                   <div class="controls">

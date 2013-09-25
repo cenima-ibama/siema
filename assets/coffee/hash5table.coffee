@@ -432,6 +432,12 @@ class H5.Table
     iconBtn = document.createElement("i")
     iconBtn.className = "icon-plus"
     $(addBtn).append iconBtn
+
+    unless @options.buttons.minimize and
+      not @options.buttons.maximize and
+      not @options.buttons.close
+        $(addBtn).append " Adicionar"
+
     @_addBtn = addBtn
 
     # Add the button to the table, on top.

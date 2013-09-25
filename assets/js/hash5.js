@@ -1030,6 +1030,9 @@
       iconBtn = document.createElement("i");
       iconBtn.className = "icon-plus";
       $(addBtn).append(iconBtn);
+      if (!(this.options.buttons.minimize && !this.options.buttons.maximize && !this.options.buttons.close)) {
+        $(addBtn).append(" Adicionar");
+      }
       this._addBtn = addBtn;
       $(this._rightCtrl).append(addBtn);
       this._addFields();
