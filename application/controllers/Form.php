@@ -748,6 +748,35 @@ class Form extends CI_Controller {
         }
 
         // 9. Instituicao atuando no local
+        $data['inputInfoInstituicaoNome'] = array(
+            'id'           => 'inputInfoInstituicaoNome',
+            'name'         => 'inputInfoInstituicaoNome',
+            'type'         => 'text',
+            'class'        => 'input',
+            'placeholder'  => 'Nome da Empresa',
+            'maxlength'    => '128',
+            'value'        => set_value('inputInfoInstituicaoNome', isset($formLoad['inputInfoInstituicaoNome']) ? $formLoad['inputInfoInstituicaoNome'] : "")
+        );
+        if(set_value('semInstituicao') == "on"){
+            $data['inputInfoInstituicaoNome'] += array(
+                'disabled' => 'disabled'
+            );
+        }
+
+        $data['inputInfoInstituicaoTelefone'] = array(
+            'id'           => 'inputInfoInstituicaoTelefone',
+            'name'         => 'inputInfoInstituicaoTelefone',
+            'type'         => 'text',
+            'class'        => 'input-small',
+            'placeholder'  => 'Telefone da Empresa',
+            'maxlength'    => '12',
+            'value'        => set_value('inputInfoInstituicaoTelefone', isset($formLoad['inputInfoInstituicaoTelefone']) ? $formLoad['inputInfoInstituicaoTelefone'] : "")
+        );
+        if(set_value('semInstituicao') == "on"){
+            $data['inputInfoInstituicaoTelefone'] += array(
+                'disabled' => 'disabled'
+            );
+        }
 
         $data['inputCompInstituicao'] = array(
             'id'           => 'inputCompInstituicao',

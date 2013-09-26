@@ -217,6 +217,18 @@ class Form_model extends CI_Model {
 
     }
 
+    //Instituição atuando
+    if (isset($form["inputInfoInstituicaoNome"])) {
+      $fields = $fields . "nome_instituicao_atuando,";
+      $values = $values . "'" . $form["inputInfoInstituicaoNome"] . "',";
+    }
+
+    if (isset($form["inputInfoInstituicaoTelefone"])) {
+      $fields = $fields . "telefone_instituicao_atuando,";
+      $values = $values . "'" . $form["inputInfoInstituicaoTelefone"] . "',";
+    }
+
+
     // Identificação do comunicante
     if (isset($form["inputNomeInformante"])) {
       $fields = $fields . "nome_comunicante,";

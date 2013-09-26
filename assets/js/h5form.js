@@ -727,13 +727,17 @@
             return $(this).attr("disabled", "disabled");
           });
           $("#inputInstituicaoOutro").attr("disabled", "disabled");
-          return $("#inputCompInstituicao").attr("disabled", "disabled");
+          $("#inputCompInstituicao").attr("disabled", "disabled");
+          $("#inputInfoInstituicaoNome").attr("disabled", "disabled");
+          return $("#inputInfoInstituicaoTelefone").attr("disabled", "disabled");
         } else {
           $("input[name='instituicaoAtuandoLocal[]']").each(function() {
             return $(this).removeAttr("disabled");
           });
           $("#inputInstituicaoOutro").removeAttr("disabled");
-          return $("#inputCompInstituicao").removeAttr("disabled");
+          $("#inputCompInstituicao").removeAttr("disabled");
+          $("#inputInfoInstituicaoNome").removeAttr("disabled");
+          return $("#inputInfoInstituicaoTelefone").removeAttr("disabled");
         }
       });
       $("#semResponsavel").on('click', function() {

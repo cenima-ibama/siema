@@ -652,6 +652,23 @@
                     ?>
                   </div>
                 </div>
+              </div><div class="row-fluid">
+                <div id="tipoInstituicaoAtuando" class="span12">
+                  <div style="display:none;">
+                    <?php
+                        foreach ($instituicaoAtuandoLocal as $id) {
+                          echo '<span data-id="postIAL">' . $id . '</span>';
+                        }
+                    ?>
+                  </div>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="inputInfoInstituicaoNome">Nome da Empresa/Telefone:</label>
+                <div class="controls">
+                  <?php echo form_input($inputInfoInstituicaoNome); ?>
+                  <?php echo form_input($inputInfoInstituicaoTelefone); ?>
+                </div>
               </div>
               <div class="row-fluid">
                 <div class="control-group">
