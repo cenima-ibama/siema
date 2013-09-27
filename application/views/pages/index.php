@@ -29,7 +29,7 @@
               if( $this->session->userdata('logged_in') ) {
                   echo '
                 <center>
-                <img src="./assets/img/check_sign.png" id="checkedUser" style="display: none;" title=""><br/>
+                <img src="'.  base_url() . '/assets/img/check_sign.png" id="checkedUser" style="display: none;" title=""><br/>
                 <div id="containerProgress" class="progress progress-striped active" style="width: 50%;">
                     <div id="authProgress" class="bar"></div>
                 </div>
@@ -62,7 +62,7 @@
                 </div>
                 <div id="divLogin" style="display:none;">
                   <center>
-                    <img src="./assets/img/check_sign.png" id="checkedUser" style="display: none;" title=""><br/>
+                    <img src="'.  base_url() . '/assets/img/check_sign.png" id="checkedUser" style="display: none;" title=""><br/>
                     <div id="containerProgress" class="progress progress-striped active" style="width: 50%;">
                         <div id="authProgress" class="bar"></div>
                     </div>
@@ -285,7 +285,7 @@
   </div>
 </div>
 <div class="loading" id="loading">
-  <img src="./assets/img/logo.png" id="loading_logo" style="display: inline;" title="">
+  <img src="<?php echo base_url()?>/assets/img/logo.png" id="loading_logo" style="display: inline;" title="">
 </div>
 <div id="map" class="map"></div>
 <div id="dash" class="dash">

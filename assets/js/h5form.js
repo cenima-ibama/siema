@@ -366,9 +366,6 @@
       $("#inputEPSG").val("4674");
       return $("#inputEPSG").prop("disabled", "disabled");
     });
-    minimapView.on("move zoom", function(event) {
-      return window.parent.H5.Map.base.setView(minimapView.getCenter(), minimapView.getZoom(), false);
-    });
     if ((($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
       latlng = new L.LatLng($("#inputLat").prop("value"), $("#inputLng").prop("value"));
       disabled = $("#inputEPSG").prop("disabled");

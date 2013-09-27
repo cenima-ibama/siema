@@ -474,8 +474,8 @@ $(document).ready ->
     $("#inputEPSG").prop "disabled", "disabled"
 
   # Create marker from a click event
-  minimapView.on "move zoom", (event) ->
-    window.parent.H5.Map.base.setView(minimapView.getCenter(), minimapView.getZoom(), false)
+  # minimapView.on "move zoom", (event) ->
+    # window.parent.H5.Map.base.setView(minimapView.getCenter(), minimapView.getZoom(), false)
 
   # Create a marker from input values on the page's reload
   if (($("#inputLat").prop "value" ) isnt "" ) and (($("#inputLng").prop "value" ) isnt "")
