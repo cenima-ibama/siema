@@ -1531,7 +1531,7 @@
           }
           if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
             $("#inputLat").val(layer._latlng.lat);
-            $("#inputLng").val(layer._latlng.lng);
+            $("#inputLng").val(layer._latlng.lng).trigger('change');
           }
         }
         if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
@@ -1577,7 +1577,7 @@
               });
               if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
                 $("#inputLat").val('');
-                $("#inputLng").val('');
+                $("#inputLng").val('').trigger('change');
               }
               if (_this.options.uniquePoint != null) {
                 return _this.options.uniquePoint = true;
