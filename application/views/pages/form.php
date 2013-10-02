@@ -68,18 +68,20 @@
                         <?php echo form_input($inputLng); ?>
                       </div>
                     </div>
+                    <!--
                     <div class="span4">
                       <div class="control-group">
                         <label class="control-label" for="inputEPSG">EPSG</label>
                         <div class="controls">
                           <?php
                           // if (isset($semLocalizacao['checked']))
-                            echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small" disabled="disabled"');
+                          //   echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small" disabled="disabled"');
                           // else
                             // echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small"');                           ?>
                         </div>
                       </div>
                     </div>
+                    -->
                   </div>
                   <div class="control-group">
                     <label class="control-label" for="inputMunicipio">Município/UF:</label>

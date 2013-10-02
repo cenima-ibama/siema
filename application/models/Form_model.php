@@ -278,32 +278,35 @@ class Form_model extends CI_Model {
 
     $id = $ocorrenciasDatabase->insert_id();
 
+    // Points are also created now using the tmp's table. Code down below
+
     // Creating the Geographic point of the form
-    if (isset($form["inputLat"]) and isset($form["inputLng"])) {
-      $subfields = "insert into ocorrencia_pon (id_ocorrencia, shape) values (";
-      $subfields = $subfields . "" . $id . "," . "ST_SetSRID(ST_MakePoint(" . $form["inputLng"] . "," . $form["inputLat"] . "), ";
-      $epsg = isset($form["inputEPSG"]) ? $form["inputEPSG"] : "4674";
-      $subfields = $subfields . $epsg . "));";
+    // if (isset($form["inputLat"]) and isset($form["inputLng"])) {
+    //   $subfields = "insert into ocorrencia_pon (id_ocorrencia, shape) values (";
+    //   $subfields = $subfields . "" . $id . "," . "ST_SetSRID(ST_MakePoint(" . $form["inputLng"] . "," . $form["inputLat"] . "), ";
+    //   $epsg = isset($form["inputEPSG"]) ? $form["inputEPSG"] : "4674";
+    //   $subfields = $subfields . $epsg . "));";
 
-      $ocorrenciasDatabase->query($subfields);
+    //   $ocorrenciasDatabase->query($subfields);
 
-      $this->firephp->log($subfields);
-    }
+    //   $this->firephp->log($subfields);
+    // }
 
     //Saving vectors on database, linking it to the "ocorrencia"
+    $fields = "select * from tmp_pon;";
+    $point = $ocorrenciasDatabase->query($fields);
+
     $fields = "select * from tmp_lin;";
     $line = $ocorrenciasDatabase->query($fields);
 
     $fields = "select * from tmp_pol;";
     $polygon = $ocorrenciasDatabase->query($fields);
 
-    $this->firephp->log($polygon);
-    $this->firephp->log($polygon->num_rows());
-
-    if($line->num_rows() > 0 || $polygon->num_rows() > 0){
+    if($line->num_rows() > 0 || $polygon->num_rows() > 0 || $point->num_rows() > 0){
 
       $sql = " update tmp_lin set id_ocorrencia='" . $id . "';";
       $sql = $sql . "update tmp_pol set id_ocorrencia='" . $id . "';";
+      $sql = $sql . "update tmp_pon set id_ocorrencia='" . $id . "';";
 
       $fields = " insert into ocorrencia_lin " .
                   " (id_ocorrencia_lin, id_ocorrencia, descricao, shape)" .
@@ -319,16 +322,22 @@ class Form_model extends CI_Model {
                           "descricao, " .
                           "shape " .
                   " from tmp_pol; ";
+      $fields = $fields . " insert into ocorrencia_pon " .
+                  " (id_ocorrencia_pon, id_ocorrencia, descricao, shape)" .
+                  " select nextval('ocorrencia_pon_id_ocorrencia_pon_seq'), " .
+                          "id_ocorrencia, " .
+                          "descricao, " .
+                          "shape " .
+                  " from tmp_pon; ";
 
 
-      $fields = $fields . " delete from tmp_lin; delete from tmp_pol;";
+      // Deleted temporary information on tmp tables
+      $fields = $fields . " delete from tmp_lin; delete from tmp_pol; delete from tmp_pon;";
 
       $this->firephp->log($sql);
       $this->firephp->log($fields);
 
       $ocorrenciasDatabase->query($sql);
-      $teste = $ocorrenciasDatabase->query("select * from tmp_pol;");
-      $this->firephp->log($teste->row_array());
       $ocorrenciasDatabase->query($fields);
     }
 

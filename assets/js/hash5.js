@@ -1291,6 +1291,8 @@
     Draw.prototype.options = {
       map: null,
       url: null,
+      srid: null,
+      uniquePoint: null,
       buttons: {
         marker: true,
         line: true,
@@ -1307,13 +1309,11 @@
 
     Draw.prototype.idMarker = "";
 
-    Draw.prototype.idLine = "";
+    Draw.prototype.idPolyline = "";
 
     Draw.prototype.idPolygon = "";
 
-    Draw.prototype.idRectangle = "";
-
-    Draw.prototype.idCircle = "";
+    Draw.prototype.drawnItems = null;
 
     function Draw(options) {
       this.options = $.extend({}, this.options, options);
@@ -1321,43 +1321,382 @@
     }
 
     Draw.prototype._addDrawFunction = function() {
-      var drawControl, drawnItems;
-      drawnItems = new L.FeatureGroup();
-      this.options.map.addLayer(drawnItems);
+      var drawControl;
+      this.drawnItems = new L.FeatureGroup();
+      this.options.map.addLayer(this.drawnItems);
       drawControl = new L.Control.Draw({
         draw: {
           marker: this.options.buttons.marker,
-          polyline: this.options.buttons.line,
+          polyline: this.options.buttons.polyline,
           polygon: this.options.buttons.polygon,
           rectangle: this.options.buttons.rectangle,
           circle: this.options.buttons.circle
         },
         edit: {
-          featureGroup: drawnItems,
+          featureGroup: this.drawnItems,
           edit: this.options.buttons.edit,
           remove: this.options.buttons.remove
         }
       });
       this.options.map.addControl(drawControl);
-      return _getNextIdTable();
+      this.reloadShape();
+      this._getNextIdTable();
+      this._addDrawButtonActions();
+      return this._addRemoveButtonActions();
     };
 
     Draw.prototype._getNextIdTable = function() {
-      var idLine, idPolygon, rest;
-      rest = new H5.Rest({
-        url: H5.Data.restURL,
-        fields: "nextval('tmp_pol_id_tmp_pol_seq') as lastval",
-        table: "tipo_fonte_informacao",
-        limit: "1"
+      var _this = this;
+      return $.each(this.options.buttons, function(key, value) {
+        var rest;
+        if (value === true) {
+          if (key === 'polygon' || key === 'rectangle' || key === 'circle') {
+            if (_this.idPolygon === "") {
+              rest = new H5.Rest({
+                url: _this.options.url,
+                fields: "nextval('" + _this.options.tables['polygon'].table + "_" + _this.options.tables['polygon'].uniqueField + "_seq') as lastval",
+                table: "tipo_fonte_informacao",
+                limit: "1"
+              });
+              return _this.idPolygon = rest.data[0].lastval;
+            }
+          } else if (key === 'polyline') {
+            if (_this.idPolyline === "") {
+              rest = new H5.Rest({
+                url: _this.options.url,
+                fields: "nextval('" + _this.options.tables[key].table + "_" + _this.options.tables[key].uniqueField + "_seq') as lastval",
+                table: "tipo_fonte_informacao",
+                limit: "1"
+              });
+              return _this.idPolyline = rest.data[0].lastval;
+            }
+          } else if (key === 'marker') {
+            if (_this.idMarker === "") {
+              rest = new H5.Rest({
+                url: _this.options.url,
+                fields: "nextval('" + _this.options.tables[key].table + "_" + _this.options.tables[key].uniqueField + "_seq') as lastval",
+                table: "tipo_fonte_informacao",
+                limit: "1"
+              });
+              return _this.idMarker = rest.data[0].lastval;
+            }
+          }
+        }
       });
-      idPolygon = rest.data[0].lastval;
-      rest = new H5.Rest({
-        url: H5.Data.restURL,
-        fields: "nextval('" + this.options.tables.Line + "_seq') as lastval",
-        table: "tipo_fonte_informacao",
-        limit: "1"
+    };
+
+    Draw.prototype._addDrawButtonActions = function() {
+      var _this = this;
+      return this.options.map.on('draw:created', function(e) {
+        var columns, firstPoint, layer, rest, sql, type, values;
+        type = e.layerType;
+        layer = e.layer;
+        if (type === 'polygon') {
+          firstPoint = "";
+          layer._leaflet_id = ++_this.idPolygon;
+          columns = "";
+          values = "";
+          $.each(_this.options.tables[type].fields, function(key, field) {
+            if (_this.options.tables[type].defaultValues[field]) {
+              columns = columns + field + ",";
+              return values = values + _this.options.tables[type].defaultValues[field] + ",";
+            }
+          });
+          columns = columns + "shape";
+          values = values + "ST_MakePolygon(ST_GeomFromText('LINESTRING(";
+          $.each(layer._latlngs, function() {
+            if (firstPoint === "") {
+              firstPoint = this;
+            }
+            values = values + this.lat + " " + this.lng;
+            return values = values + ",";
+          });
+          values = values + firstPoint.lat + " " + firstPoint.lng + ")', " + _this.options.srid + "))";
+          sql = "(" + columns + ") values (" + values + ")";
+          console.log(sql);
+          rest = new H5.Rest({
+            url: H5.Data.restURL,
+            fields: sql,
+            table: "tmp_pol",
+            restService: "ws_insertquery.php"
+          });
+        } else if (type === 'polyline') {
+          firstPoint = "";
+          layer._leaflet_id = ++_this.idPolyline;
+          columns = "";
+          values = "";
+          $.each(_this.options.tables[type].fields, function(key, field) {
+            if (_this.options.tables[type].defaultValues[field]) {
+              columns = columns + field + ",";
+              return values = values + _this.options.tables[type].defaultValues[field] + ",";
+            }
+          });
+          columns = columns + "shape";
+          values = values + "ST_GeomFromText('LINESTRING(";
+          $.each(layer._latlngs, function() {
+            if (firstPoint === "") {
+              firstPoint = true;
+              return values = values + this.lat + " " + this.lng;
+            } else {
+              return values = values + "," + this.lat + " " + this.lng;
+            }
+          });
+          values = values + ")', " + _this.options.srid + ")";
+          sql = "(" + columns + ") values (" + values + ")";
+          console.log(sql);
+          rest = new H5.Rest({
+            url: H5.Data.restURL,
+            fields: sql,
+            table: "tmp_lin",
+            restService: "ws_insertquery.php"
+          });
+        } else if (type === 'rectangle') {
+          type = 'polygon';
+          layer._leaflet_id = ++_this.idPolygon;
+          columns = "";
+          values = "";
+          $.each(_this.options.tables[type].fields, function(key, field) {
+            if (_this.options.tables[type].defaultValues[field]) {
+              columns = columns + field + ",";
+              return values = values + _this.options.tables[type].defaultValues[field] + ",";
+            }
+          });
+          columns = columns + "shape";
+          values = values + "ST_MakeEnvelope(";
+          values = values + layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " + layer._latlngs[2].lat + "," + layer._latlngs[2].lng;
+          values = values + ", " + _this.options.srid + ")";
+          sql = "(" + columns + ") values (" + values + ")";
+          console.log(sql);
+          rest = new H5.Rest({
+            url: H5.Data.restURL,
+            fields: sql,
+            table: "tmp_pol",
+            restService: "ws_insertquery.php"
+          });
+        } else if (type === 'circle') {
+          type = 'polygon';
+          layer._leaflet_id = ++_this.idPolygon;
+          columns = "";
+          values = "";
+          $.each(_this.options.tables[type].fields, function(key, field) {
+            if (_this.options.tables[type].defaultValues[field]) {
+              columns = columns + field + ",";
+              return values = values + _this.options.tables[type].defaultValues[field] + ",";
+            }
+          });
+          columns = columns + "shape";
+          values = values + "ST_Buffer(ST_GeomFromText('POINT(";
+          values = values + layer._latlng.lat + " " + layer._latlng.lng + ")'," + _this.options.srid + "),";
+          values = values + layer._mRadius / 100010 + ")";
+          sql = "(" + columns + ") values (" + values + ")";
+          console.log(sql);
+          rest = new H5.Rest({
+            url: H5.Data.restURL,
+            fields: sql,
+            table: "tmp_pol",
+            restService: "ws_insertquery.php"
+          });
+        } else if (type === 'marker') {
+          if ((_this.options.uniquePoint == null) || (_this.options.uniquePoint === true)) {
+            layer._leaflet_id = ++_this.idMarker;
+            columns = "";
+            values = "";
+            $.each(_this.options.tables[type].fields, function(key, field) {
+              if (_this.options.tables[type].defaultValues[field]) {
+                columns = columns + field + ",";
+                return values = values + _this.options.tables[type].defaultValues[field] + ",";
+              }
+            });
+            columns = columns + "shape";
+            values = values + "ST_SetSRID(ST_MakePoint(";
+            values = values + layer._latlng.lat + "," + layer._latlng.lng + ")," + _this.options.srid + ")";
+            sql = "(" + columns + ") values (" + values + ")";
+            console.log(sql);
+            rest = new H5.Rest({
+              url: H5.Data.restURL,
+              fields: sql,
+              table: "tmp_pon",
+              restService: "ws_insertquery.php"
+            });
+            if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
+              $("#inputLat").val(layer._latlng.lat);
+              $("#inputLng").val(layer._latlng.lng);
+            }
+          } else {
+            layer._leaflet_id = _this.idMarker;
+            sql = "shape=ST_SetSRID(ST_MakePoint(" + layer._latlng.lat + "," + layer._latlng.lng + ")," + _this.options.srid + ")";
+            rest = new H5.Rest({
+              url: H5.Data.restURL,
+              fields: sql,
+              table: "tmp_pon",
+              parameters: "id_tmp_pon%3D" + layer._leaflet_id,
+              restService: "ws_updatequery.php"
+            });
+          }
+        }
+        if (_this.options.uniquePoint == null) {
+          return _this.drawnItems.addLayer(layer);
+        } else {
+          _this.drawnItems.removeLayer(_this.options.uniquePoint);
+          _this.options.uniquePoint = layer;
+          return _this.drawnItems.addLayer(layer);
+        }
       });
-      return idLine = rest.data[0].lastval;
+    };
+
+    Draw.prototype._addRemoveButtonActions = function() {
+      var _this = this;
+      return this.options.map.on('draw:deleted', function(e) {
+        var rest, sqlLin, sqlPol, sqlPon, type;
+        type = "";
+        sqlPol = "id_tmp_pol=0 ";
+        sqlLin = "id_tmp_lin=0 ";
+        sqlPon = "id_tmp_pon=0 ";
+        $.each(e.layers._layers, function(key, layer) {
+          type = layer.toGeoJSON().geometry.type;
+          if (type === 'Polygon') {
+            sqlPol = sqlPol + "or id_tmp_pol=" + key + " ";
+            return $.each(_this.options.tables['polygon'].defaultValues, function(key, field) {
+              return sqlPol = sqlPol + "and " + key + "='" + field + "'";
+            });
+          } else if (type === 'LineString') {
+            sqlLin = sqlLin + "or id_tmp_lin=" + key + " ";
+            return $.each(_this.options.tables['polyline'].defaultValues, function(key, field) {
+              return sqlLin = sqlLin + "and " + key + "='" + field + "'";
+            });
+          } else if (type === 'Point') {
+            if (layer._mRadius != null) {
+              sqlPol = sqlPol + "or id_tmp_pol=" + key + " ";
+              return $.each(_this.options.tables['polygon'].defaultValues, function(key, field) {
+                return sqlPol = sqlPol + "and " + key + "='" + field + "'";
+              });
+            } else {
+              sqlPon = sqlPon + "or id_tmp_pon=" + key + " ";
+              $.each(_this.options.tables['marker'].defaultValues, function(key, field) {
+                return sqlPon = sqlPon + "and " + key + "='" + field + "'";
+              });
+              if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
+                $("#inputLat").val('');
+                $("#inputLng").val('');
+              }
+              if (_this.options.uniquePoint != null) {
+                return _this.options.uniquePoint = true;
+              }
+            }
+          }
+        });
+        rest = new H5.Rest({
+          url: H5.Data.restURL,
+          table: "tmp_pon",
+          parameters: sqlPon,
+          restService: "ws_deletequery.php"
+        });
+        rest = new H5.Rest({
+          url: H5.Data.restURL,
+          table: "tmp_pol",
+          parameters: sqlPol,
+          restService: "ws_deletequery.php"
+        });
+        return rest = new H5.Rest({
+          url: H5.Data.restURL,
+          table: "tmp_lin",
+          parameters: sqlLin,
+          restService: "ws_deletequery.php"
+        });
+      });
+    };
+
+    Draw.prototype.setPoint = function(latlng) {
+      var columns, rest, sql, values,
+        _this = this;
+      this.drawnItems.removeLayer(this.options.uniquePoint);
+      if (this.options.uniquePoint == null) {
+        this.options.uniquePoint = new L.Marker([0, 0]);
+        this.options.uniquePoint._leaflet_id = ++this.idMarker;
+        columns = "";
+        values = "";
+        $.each(this.options.tables['marker'].fields, function(key, field) {
+          if (_this.options.tables['marker'].defaultValues[field]) {
+            columns = columns + field + ",";
+            return values = values + _this.options.tables['marker'].defaultValues[field] + ",";
+          }
+        });
+        columns = columns + "shape";
+        values = values + "ST_SetSRID(ST_MakePoint(";
+        values = values + latlng.lat + "," + latlng.lng + ")," + this.options.srid + ")";
+        sql = "(" + columns + ") values (" + values + ")";
+        console.log(sql);
+        rest = new H5.Rest({
+          url: H5.Data.restURL,
+          fields: sql,
+          table: "tmp_pon",
+          restService: "ws_insertquery.php"
+        });
+      }
+      this.options.uniquePoint._latlng.lat = latlng.lat;
+      this.options.uniquePoint._latlng.lng = latlng.lng;
+      return this.drawnItems.addLayer(this.options.uniquePoint);
+    };
+
+    Draw.prototype.getPoint = function() {
+      return this.options.uniquePoint;
+    };
+
+    Draw.prototype.setSRID = function(newSRID) {
+      return this.options.srid = newSRID;
+    };
+
+    Draw.prototype.reloadShape = function() {
+      var markerList, polygonList, polylineList, rest,
+        _this = this;
+      rest = new H5.Rest({
+        url: this.options.url,
+        fields: 'id_tmp_lin, ST_AsGeoJson(shape) as shape',
+        table: "tmp_lin",
+        parameters: "nro_ocorrencia='" + this.options.tables['polygon'].defaultValues.nro_ocorrencia + "'"
+      });
+      polylineList = rest.data;
+      $.each(polylineList, function(key, line) {
+        var element, polyline;
+        element = JSON.parse(line.shape);
+        polyline = new L.Polyline(element.coordinates);
+        polyline._leaflet_id = line.id_tmp_lin;
+        _this.drawnItems.addLayer(polyline);
+        return _this.idPolyline = line.id_tmp_lin;
+      });
+      rest = new H5.Rest({
+        url: this.options.url,
+        fields: 'id_tmp_pol, ST_AsGeoJson(shape) as shape',
+        table: "tmp_pol",
+        parameters: "nro_ocorrencia='" + this.options.tables['polygon'].defaultValues.nro_ocorrencia + "'"
+      });
+      polygonList = rest.data;
+      $.each(polygonList, function(key, pol) {
+        var element, polygon;
+        element = JSON.parse(pol.shape);
+        polygon = new L.Polygon(element.coordinates);
+        polygon._leaflet_id = pol.id_tmp_pol;
+        _this.drawnItems.addLayer(polygon);
+        return _this.idPolygon = pol.id_tmp_pol;
+      });
+      rest = new H5.Rest({
+        url: this.options.url,
+        fields: 'id_tmp_pon, ST_AsGeoJson(shape) as shape',
+        table: "tmp_pon",
+        parameters: "nro_ocorrencia='" + this.options.tables['marker'].defaultValues.nro_ocorrencia + "'"
+      });
+      markerList = rest.data;
+      return $.each(markerList, function(key, pon) {
+        var element, point;
+        element = JSON.parse(pon.shape);
+        point = new L.Marker(element.coordinates);
+        point._leaflet_id = pon.id_tmp_pon;
+        _this.drawnItems.addLayer(point);
+        _this.idMarker = pon.id_tmp_pon;
+        if ((_this.options.uniquePoint != null)) {
+          return _this.options.uniquePoint = point;
+        }
+      });
     };
 
     return Draw;

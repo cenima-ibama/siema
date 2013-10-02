@@ -3,7 +3,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, disabled, drawControl, drawnItems, idLin, idOcorrencia, idPol, latlng, minimapView, nroComunicado, nroOcorrencia, polygonList, polylineList, rest, seconds, subjects, table, value, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, minimapView, nroComunicado, nroOcorrencia, rest, seconds, subjects, table, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -78,191 +78,46 @@
       layers: [binghybrid],
       zoomControl: true
     });
-    drawnItems = new L.FeatureGroup();
-    minimapView.addLayer(drawnItems);
-    drawControl = new L.Control.Draw({
-      draw: {
-        marker: false
+    drawAPI = new H5.Draw({
+      map: minimapView,
+      url: H5.Data.restURL,
+      uniquePoint: true,
+      srid: '4674',
+      buttons: {
+        marker: true,
+        polyline: true,
+        polygon: true,
+        rectangle: true,
+        circle: true,
+        edit: false,
+        remove: true
       },
-      edit: {
-        featureGroup: drawnItems,
-        edit: false
-      }
-    });
-    minimapView.addControl(drawControl);
-    minimapView.on('draw:created', function(e) {
-      var firstPoint, layer, sql, type;
-      type = e.layerType;
-      layer = e.layer;
-      if (type === 'polygon') {
-        firstPoint = "";
-        layer._leaflet_id = ++idPol;
-        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING(";
-        $.each(layer._latlngs, function() {
-          if (firstPoint === "") {
-            firstPoint = this;
+      tables: {
+        marker: {
+          table: "tmp_pon",
+          fields: ["id_tmp_pon", "descricao", "shape", "nro_ocorrencia"],
+          uniqueField: "id_tmp_pon",
+          defaultValues: {
+            nro_ocorrencia: nroOcorrencia
           }
-          sql = sql + this.lat + " " + this.lng;
-          return sql = sql + ",";
-        });
-        sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + ")))";
-        console.log(sql);
-        rest = new H5.Rest({
-          url: H5.Data.restURL,
-          fields: sql,
-          table: "tmp_pol",
-          restService: "ws_insertquery.php"
-        });
-      } else if (type === 'polyline') {
-        firstPoint = "";
-        layer._leaflet_id = ++idLin;
-        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_GeomFromText('LINESTRING(";
-        $.each(layer._latlngs, function() {
-          if (firstPoint === "") {
-            firstPoint = true;
-            return sql = sql + this.lat + " " + this.lng;
-          } else {
-            return sql = sql + "," + this.lat + " " + this.lng;
+        },
+        polyline: {
+          table: "tmp_lin",
+          fields: ["id_tmp_lin", "descricao", "shape", "nro_ocorrencia"],
+          uniqueField: "id_tmp_lin",
+          defaultValues: {
+            nro_ocorrencia: nroOcorrencia
           }
-        });
-        sql = sql + ")', " + $("#inputEPSG").val() + "))";
-        console.log(sql);
-        rest = new H5.Rest({
-          url: H5.Data.restURL,
-          fields: sql,
-          table: "tmp_lin",
-          restService: "ws_insertquery.php"
-        });
-      } else if (type === 'rectangle') {
-        layer._leaflet_id = ++idPol;
-        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakeEnvelope(";
-        sql = sql + layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " + layer._latlngs[2].lat + "," + layer._latlngs[2].lng;
-        sql = sql + ", " + $("#inputEPSG").val() + "))";
-        console.log(sql);
-        rest = new H5.Rest({
-          url: H5.Data.restURL,
-          fields: sql,
+        },
+        polygon: {
           table: "tmp_pol",
-          restService: "ws_insertquery.php"
-        });
-      } else if (type === 'circle') {
-        console.log(layer);
-        layer._leaflet_id = ++idPol;
-        sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ", ST_Buffer(ST_GeomFromText('POINT(" + layer._latlng.lat + " " + layer._latlng.lng + ")'," + $("#inputEPSG").val() + "),";
-        sql = sql + layer._mRadius / 100010 + "))";
-        console.log(sql);
-        rest = new H5.Rest({
-          url: H5.Data.restURL,
-          fields: sql,
-          table: "tmp_pol",
-          restService: "ws_insertquery.php"
-        });
-      }
-      return drawnItems.addLayer(layer);
-    });
-    minimapView.on('draw:deleted', function(e) {
-      var sqlLin, sqlPon, type;
-      type = "";
-      sqlPon = "id_tmp_pol=0 ";
-      sqlLin = "id_tmp_lin=0 ";
-      $.each(e.layers._layers, function() {
-        type = this.toGeoJSON().geometry.type;
-        if (type === 'Polygon') {
-          return sqlPon = sqlPon + "or id_tmp_pol=" + this._leaflet_id + " ";
-        } else if (type === 'LineString') {
-          return sqlLin = sqlLin + "or id_tmp_lin=" + this._leaflet_id + " ";
-        } else if (type === 'Point') {
-          return sqlPon = sqlPon + "or id_tmp_pol=" + this._leaflet_id + " ";
+          fields: ["id_tmp_pol", "descricao", "shape", "nro_ocorrencia"],
+          uniqueField: "id_tmp_pol",
+          defaultValues: {
+            nro_ocorrencia: nroOcorrencia
+          }
         }
-      });
-      if (type === 'Polygon') {
-        sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'";
-        return rest = new H5.Rest({
-          url: H5.Data.restURL,
-          table: "tmp_pol",
-          parameters: sqlPon,
-          restService: "ws_deletequery.php"
-        });
-      } else if (type === 'LineString') {
-        sqlLin = sqlLin + "and nro_ocorrencia='" + nroOcorrencia + "'";
-        return rest = new H5.Rest({
-          url: H5.Data.restURL,
-          table: "tmp_lin",
-          parameters: sqlLin,
-          restService: "ws_deletequery.php"
-        });
-      } else if (type === 'Point') {
-        sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'";
-        return rest = new H5.Rest({
-          url: H5.Data.restURL,
-          table: "tmp_pol",
-          parameters: sqlPon,
-          restService: "ws_deletequery.php"
-        });
       }
-    });
-    minimapView.on('draw:edited', function(e) {
-      var sqlLin, sqlPon, type;
-      type = "";
-      sqlPon = "";
-      sqlLin = "";
-      this._map = minimapView;
-      return $.each(e.layers._layers, function() {
-        var firstPoint, sql;
-        firstPoint = "";
-        type = this.toGeoJSON().geometry.type;
-        if (type === 'Polygon') {
-          sql = "shape%3DST_MakePolygon(ST_GeomFromText('LINESTRING(";
-          $.each(this._latlngs, function() {
-            if (firstPoint === '') {
-              firstPoint = this;
-            }
-            sql = sql + "" + this.lat + " " + this.lng;
-            return sql = sql + ",";
-          });
-          sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + "))";
-          return rest = new H5.Rest({
-            url: H5.Data.restURL,
-            table: "tmp_pol",
-            fields: sql,
-            parameters: "id_tmp_pol%3D" + this._leaflet_id,
-            restService: "ws_updatequery.php"
-          });
-        } else if (type === 'LineString') {
-          sqlLin = sqlLin + "or id_tmp_lin=" + this._leaflet_id + " ";
-          sql = "shape%3DST_Envelope(ST_GeomFromText('LINESTRING(";
-          sql = sql + layer._latlngs[0].lat + " " + layer._latlngs[0].lng + ", " + layer._latlngs[2].lat + " " + layer._latlngs[2].lng;
-          return sql = sql + ")', " + $("#inputEPSG").val() + ")))";
-        }
-      });
-    });
-    rest = new H5.Rest({
-      url: H5.Data.restURL,
-      fields: 'id_tmp_lin, ST_AsGeoJson(shape) as shape',
-      table: "tmp_lin",
-      parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
-    });
-    polylineList = rest.data;
-    $.each(polylineList, function() {
-      var element, polyline;
-      element = JSON.parse(this.shape);
-      polyline = new L.Polyline(element.coordinates);
-      polyline._leaflet_id = this.id_tmp_lin;
-      return drawnItems.addLayer(polyline);
-    });
-    rest = new H5.Rest({
-      url: H5.Data.restURL,
-      fields: 'id_tmp_pol, ST_AsGeoJson(shape) as shape',
-      table: "tmp_pol",
-      parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
-    });
-    polygonList = rest.data;
-    $.each(polygonList, function() {
-      var element, polygon;
-      element = JSON.parse(this.shape);
-      polygon = new L.Polygon(element.coordinates);
-      polygon._leaflet_id = this.id_tmp_pol;
-      return drawnItems.addLayer(polygon);
     });
     GeoSearch = {
       _provider: new L.GeoSearch.Provider.Google,
@@ -301,10 +156,7 @@
       _showLocation: function(location) {
         var latlng;
         latlng = new L.LatLng(location.Y, location.X);
-        if (!minimapView.hasLayer(Marker)) {
-          minimapView.addLayer(Marker);
-        }
-        Marker.setLatLng(latlng).update();
+        drawAPI.setPoint(latlng);
         minimapView.setView(latlng, 15, false);
         if (!window.parent.H5.isMobile.any()) {
           window.parent.H5.Map.base.setView(latlng, 10, false);
@@ -316,22 +168,6 @@
         return alert("Erro na Busca: " + error);
       }
     };
-    $("#inputLat, #inputLng").on('change', function(event) {
-      var latlng;
-      if ((($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
-        latlng = new L.LatLng($("#inputLat").prop("value"), $("#inputLng").prop("value"));
-        if (!minimapView.hasLayer(Marker)) {
-          minimapView.addLayer(Marker);
-        }
-        Marker.setLatLng(latlng).update();
-        minimapView.setView(latlng, 8, false);
-      }
-      if (!window.parent.H5.isMobile.any()) {
-        window.parent.H5.Map.base.setView(latlng, 8, false);
-      }
-      $("#inputEPSG").val("");
-      return $("#inputEPSG").removeAttr("disabled");
-    });
     $("#inputEndereco").on('keyup', function(event) {
       var enterKey, municipio, uf;
       enterKey = 13;
@@ -345,39 +181,9 @@
         }
       }
     });
-    Marker.on("move", function(event) {
-      var latlng;
-      $("#inputLat").val(event.latlng.lat);
-      $("#inputLng").val(event.latlng.lng);
-      $("#inputEPSG").val("4674");
-      $("#inputEPSG").prop("disabled", "disabled");
-      if (!window.parent.H5.isMobile.any()) {
-        latlng = new L.LatLng($("#inputLat").prop("value"), $("#inputLng").prop("value"));
-        return window.parent.H5.Map.base.setView(latlng, minimapView.getZoom(), false);
-      }
-    });
-    minimapView.on("click", function(event) {
-      if (!minimapView.hasLayer(Marker)) {
-        minimapView.addLayer(Marker);
-      }
-      Marker.setLatLng(event.latlng).update();
-      $("#inputLat").prop("value", event.latlng.lat);
-      $("#inputLng").prop("value", event.latlng.lng);
-      $("#inputEPSG").val("4674");
-      return $("#inputEPSG").prop("disabled", "disabled");
-    });
     minimapView.on("move zoom", function(event) {
       return window.parent.H5.Map.base.setView(minimapView.getCenter(), minimapView.getZoom(), false);
     });
-    if ((($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
-      latlng = new L.LatLng($("#inputLat").prop("value"), $("#inputLng").prop("value"));
-      disabled = $("#inputEPSG").prop("disabled");
-      value = $("#inputEPSG").prop("value");
-      Marker.setLatLng(latlng).update();
-      $("#inputEPSG").prop("disabled", disabled);
-      $("#inputEPSG").prop("value", value);
-      minimapView.addLayer(Marker);
-    }
     addSelection = function(idField, value) {
       var field;
       field = document.getElementById(idField);
@@ -589,7 +395,6 @@
         if ($(this).is(":checked")) {
           $("#inputLat").attr("disabled", "disabled");
           $("#inputLng").attr("disabled", "disabled");
-          $("#inputEPSG").attr("disabled", "disabled");
           $("#inputMunicipio").attr("disabled", "disabled");
           $("#inputUF").attr("disabled", "disabled");
           $("#inputEndereco").attr("disabled", "disabled");
@@ -598,7 +403,6 @@
         } else {
           $("#inputLat").removeAttr("disabled");
           $("#inputLng").removeAttr("disabled");
-          $("#inputEPSG").removeAttr("disabled");
           $("#inputMunicipio").removeAttr("disabled");
           $("#inputUF").removeAttr("disabled");
           $("#inputEndereco").removeAttr("disabled");

@@ -212,6 +212,7 @@ class Form extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => 'Latitude',
+            'readonly'     => 'readonly',
             'value'        => set_value('inputLat', isset($formLoad['inputLat']) ? $formLoad['inputLat'] : "")
         );
         if(set_value('semLocalizacao') == "on"){
@@ -226,6 +227,7 @@ class Form extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => 'Longitude',
+            'readonly'     => 'readonly',
             'value'        => set_value('inputLng', isset($formLoad['inputLng']) ? $formLoad['inputLng'] : "")
         );
         if(set_value('semLocalizacao') == "on"){

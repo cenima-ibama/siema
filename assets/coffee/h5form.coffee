@@ -104,272 +104,289 @@ $(document).ready ->
     zoomControl: true
     )
 
-  # drawAPI = new H5.Draw(
-  #   map: minimapView
-  #   url: H5.Data.restURL
-  #   buttons:
-  #     marker: false
-  #     line: true
-  #     polygon: true
-  #     square: true
-  #     circle: true
-  #     edit: false
-  #     remove: true
-  #   tables:
-  #     point:
-  #       tmp_pon:
-  #         id_tmp_pon: ""
-  #         descricao: ""
-  #         shape: ""
-  #         nro_ocorrencia: nroOcorrencia
-  # )
+  drawAPI = new H5.Draw(
+    map: minimapView
+    url: H5.Data.restURL
+    uniquePoint: true
+    # srid: $("#inputEPSG").val()
+    srid: '4674'
+    buttons:
+      marker: true
+      polyline: true
+      polygon: true
+      rectangle: true
+      circle: true
+      edit: false
+      remove: true
+    tables:
+      marker:
+        table: "tmp_pon"
+        fields: ["id_tmp_pon","descricao","shape","nro_ocorrencia"]
+        uniqueField: "id_tmp_pon"
+        defaultValues:
+          nro_ocorrencia: nroOcorrencia
+      polyline:
+        table: "tmp_lin"
+        fields: ["id_tmp_lin","descricao","shape","nro_ocorrencia"]
+        uniqueField: "id_tmp_lin"
+        defaultValues:
+          nro_ocorrencia: nroOcorrencia
+      polygon:
+        table: "tmp_pol"
+        fields: ["id_tmp_pol","descricao","shape","nro_ocorrencia"]
+        uniqueField: "id_tmp_pol"
+        defaultValues:
+          nro_ocorrencia: nroOcorrencia
+  )
 
 
   # Add draw functionality to a map
-  drawnItems = new L.FeatureGroup()
-  minimapView.addLayer(drawnItems)
+  # drawnItems = new L.FeatureGroup()
+  # minimapView.addLayer(drawnItems)
 
-  drawControl = new L.Control.Draw({
-      draw: {
-        marker: false
-      },
-      edit: {
-        featureGroup: drawnItems,
-        edit: false
-      }
-  })
-  minimapView.addControl(drawControl)
+  # drawControl = new L.Control.Draw({
+  #     draw: {
+  #       marker: false
+  #     },
+  #     edit: {
+  #       featureGroup: drawnItems,
+  #       edit: false
+  #     }
+  # })
+  # minimapView.addControl(drawControl)
 
-  minimapView.on 'draw:created', (e)->
-    type = e.layerType
+  # minimapView.on 'draw:created', (e)->
+  #   type = e.layerType
 
-    layer = e.layer
+  #   layer = e.layer
 
-    if (type is 'polygon')
-      # Saves a polygon
-      firstPoint = ""
+  #   if (type is 'polygon')
+  #     # Saves a polygon
+  #     firstPoint = ""
 
-      layer._leaflet_id = ++idPol
+  #     layer._leaflet_id = ++idPol
 
-      sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
+  #     sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
 
-      $.each layer._latlngs, ->
-        if firstPoint is ""
-          firstPoint = @
+  #     $.each layer._latlngs, ->
+  #       if firstPoint is ""
+  #         firstPoint = @
 
-        sql = sql + @.lat + " " + @.lng
+  #       sql = sql + @.lat + " " + @.lng
 
-        sql = sql +  ","
+  #       sql = sql +  ","
 
-      sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + ")))"
+  #     sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + ")))"
 
-      console.log(sql)
+  #     console.log(sql)
 
-      # Insert the figure in a temporary table.
-      rest = new H5.Rest (
-       url: H5.Data.restURL
-       fields: sql
-       table: "tmp_pol"
-       restService: "ws_insertquery.php"
-      )
-    else if (type is 'polyline')
-      # Saves a polyline
-      firstPoint = ""
+  #     # Insert the figure in a temporary table.
+  #     rest = new H5.Rest (
+  #      url: H5.Data.restURL
+  #      fields: sql
+  #      table: "tmp_pol"
+  #      restService: "ws_insertquery.php"
+  #     )
+  #   else if (type is 'polyline')
+  #     # Saves a polyline
+  #     firstPoint = ""
 
-      layer._leaflet_id = ++idLin
+  #     layer._leaflet_id = ++idLin
 
-      sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_GeomFromText('LINESTRING("
+  #     sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_GeomFromText('LINESTRING("
 
-      $.each layer._latlngs, ->
-        if firstPoint is ""
-          firstPoint = true
-          sql = sql + @.lat + " " + @.lng
-        else
-          sql = sql + "," + @.lat + " " + @.lng
+  #     $.each layer._latlngs, ->
+  #       if firstPoint is ""
+  #         firstPoint = true
+  #         sql = sql + @.lat + " " + @.lng
+  #       else
+  #         sql = sql + "," + @.lat + " " + @.lng
 
-      sql = sql + ")', " + $("#inputEPSG").val() + "))"
+  #     sql = sql + ")', " + $("#inputEPSG").val() + "))"
 
-      console.log(sql)
+  #     console.log(sql)
 
-      # Insert the figure in a temporary table.
-      rest = new H5.Rest (
-       url: H5.Data.restURL
-       fields: sql
-       table: "tmp_lin"
-       restService: "ws_insertquery.php"
-      )
-    else if (type is 'rectangle')
+  #     # Insert the figure in a temporary table.
+  #     rest = new H5.Rest (
+  #      url: H5.Data.restURL
+  #      fields: sql
+  #      table: "tmp_lin"
+  #      restService: "ws_insertquery.php"
+  #     )
+  #   else if (type is 'rectangle')
 
-      layer._leaflet_id = ++idPol
+  #     layer._leaflet_id = ++idPol
 
-      sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakeEnvelope("
+  #     sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakeEnvelope("
 
-      sql = sql +
-            layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " +
-            layer._latlngs[2].lat + "," + layer._latlngs[2].lng
+  #     sql = sql +
+  #           layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " +
+  #           layer._latlngs[2].lat + "," + layer._latlngs[2].lng
 
-      sql = sql + ", " + $("#inputEPSG").val() + "))"
+  #     sql = sql + ", " + $("#inputEPSG").val() + "))"
 
-      console.log sql
+  #     console.log sql
 
-      # Insert the figure in a temporary table.
-      rest = new H5.Rest (
-        url: H5.Data.restURL
-        fields: sql
-        table: "tmp_pol"
-        restService: "ws_insertquery.php"
-      )
-    else if (type is 'circle')
+  #     # Insert the figure in a temporary table.
+  #     rest = new H5.Rest (
+  #       url: H5.Data.restURL
+  #       fields: sql
+  #       table: "tmp_pol"
+  #       restService: "ws_insertquery.php"
+  #     )
+  #   else if (type is 'circle')
 
-      console.log layer
+  #     console.log layer
 
-      layer._leaflet_id = ++idPol
+  #     layer._leaflet_id = ++idPol
 
-      sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ", ST_Buffer(ST_GeomFromText('POINT(" +
-            layer._latlng.lat + " " + layer._latlng.lng + ")'," + $("#inputEPSG").val() + "),"
+  #     sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ", ST_Buffer(ST_GeomFromText('POINT(" +
+  #           layer._latlng.lat + " " + layer._latlng.lng + ")'," + $("#inputEPSG").val() + "),"
 
-      sql = sql + layer._mRadius/100010 + "))"
+  #     sql = sql + layer._mRadius/100010 + "))"
 
-      console.log sql
+  #     console.log sql
 
-      rest = new H5.Rest (
-        url: H5.Data.restURL
-        fields: sql
-        table: "tmp_pol"
-        restService: "ws_insertquery.php"
-      )
+  #     rest = new H5.Rest (
+  #       url: H5.Data.restURL
+  #       fields: sql
+  #       table: "tmp_pol"
+  #       restService: "ws_insertquery.php"
+  #     )
 
-    drawnItems.addLayer(layer)
+  #   drawnItems.addLayer(layer)
 
-  minimapView.on 'draw:deleted', (e)->
+  # minimapView.on 'draw:deleted', (e)->
 
-    type = ""
-    sqlPon = "id_tmp_pol=0 "
-    sqlLin = "id_tmp_lin=0 "
+  #   type = ""
+  #   sqlPon = "id_tmp_pol=0 "
+  #   sqlLin = "id_tmp_lin=0 "
 
-    $.each e.layers._layers, ->
+  #   $.each e.layers._layers, ->
 
-      type = @.toGeoJSON().geometry.type
+  #     type = @.toGeoJSON().geometry.type
 
-      if type is 'Polygon'
-        sqlPon = sqlPon + "or id_tmp_pol=" + @._leaflet_id + " "
-      else if type is 'LineString'
-        sqlLin = sqlLin + "or id_tmp_lin=" + @._leaflet_id + " "
-      else if type is 'Point'
-        sqlPon = sqlPon + "or id_tmp_pol=" + @._leaflet_id + " "
+  #     if type is 'Polygon'
+  #       sqlPon = sqlPon + "or id_tmp_pol=" + @._leaflet_id + " "
+  #     else if type is 'LineString'
+  #       sqlLin = sqlLin + "or id_tmp_lin=" + @._leaflet_id + " "
+  #     else if type is 'Point'
+  #       sqlPon = sqlPon + "or id_tmp_pol=" + @._leaflet_id + " "
 
-    if type is 'Polygon'
-      sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'"
+  #   if type is 'Polygon'
+  #     sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'"
 
-      # Remove lines
-      rest = new H5.Rest (
-        url: H5.Data.restURL
-        table: "tmp_pol"
-        parameters: sqlPon
-        restService: "ws_deletequery.php"
-      )
+  #     # Remove lines
+  #     rest = new H5.Rest (
+  #       url: H5.Data.restURL
+  #       table: "tmp_pol"
+  #       parameters: sqlPon
+  #       restService: "ws_deletequery.php"
+  #     )
 
-    else if type is 'LineString'
-      sqlLin = sqlLin + "and nro_ocorrencia='" + nroOcorrencia + "'"
+  #   else if type is 'LineString'
+  #     sqlLin = sqlLin + "and nro_ocorrencia='" + nroOcorrencia + "'"
 
-      # Remove lines
-      rest = new H5.Rest (
-        url: H5.Data.restURL
-        table: "tmp_lin"
-        parameters: sqlLin
-        restService: "ws_deletequery.php"
-      )
-    else if type is 'Point'
-      sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'"
+  #     # Remove lines
+  #     rest = new H5.Rest (
+  #       url: H5.Data.restURL
+  #       table: "tmp_lin"
+  #       parameters: sqlLin
+  #       restService: "ws_deletequery.php"
+  #     )
+  #   else if type is 'Point'
+  #     sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'"
 
-      # Remove lines
-      rest = new H5.Rest (
-        url: H5.Data.restURL
-        table: "tmp_pol"
-        parameters: sqlPon
-        restService: "ws_deletequery.php"
-      )
+  #     # Remove lines
+  #     rest = new H5.Rest (
+  #       url: H5.Data.restURL
+  #       table: "tmp_pol"
+  #       parameters: sqlPon
+  #       restService: "ws_deletequery.php"
+  #     )
 
 
-  minimapView.on 'draw:edited', (e)->
+  # minimapView.on 'draw:edited', (e)->
 
-    type = ""
-    sqlPon = ""
-    sqlLin = ""
-    this._map=minimapView
+  #   type = ""
+  #   sqlPon = ""
+  #   sqlLin = ""
+  #   this._map=minimapView
 
-    $.each e.layers._layers, ->
+  #   $.each e.layers._layers, ->
 
-      firstPoint = ""
+  #     firstPoint = ""
 
-      type = @.toGeoJSON().geometry.type
+  #     type = @.toGeoJSON().geometry.type
 
-      if type is 'Polygon'
-        sql = "shape%3DST_MakePolygon(ST_GeomFromText('LINESTRING("
+  #     if type is 'Polygon'
+  #       sql = "shape%3DST_MakePolygon(ST_GeomFromText('LINESTRING("
 
-        $.each @._latlngs, ->
-          if firstPoint is ''
-            firstPoint = @
+  #       $.each @._latlngs, ->
+  #         if firstPoint is ''
+  #           firstPoint = @
 
-          sql = sql + "" + @.lat + " " + @.lng
+  #         sql = sql + "" + @.lat + " " + @.lng
 
-          sql = sql + ","
+  #         sql = sql + ","
 
-        sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + "))"
+  #       sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + "))"
 
-        # # Remove lines
-        rest = new H5.Rest (
-          url: H5.Data.restURL
-          table: "tmp_pol"
-          fields: sql
-          parameters: "id_tmp_pol%3D" + @._leaflet_id
-          restService: "ws_updatequery.php"
-        )
-      else if type is 'LineString'
-        sqlLin = sqlLin + "or id_tmp_lin=" + @._leaflet_id + " "
-        sql = "shape%3DST_Envelope(ST_GeomFromText('LINESTRING("
+  #       # # Remove lines
+  #       rest = new H5.Rest (
+  #         url: H5.Data.restURL
+  #         table: "tmp_pol"
+  #         fields: sql
+  #         parameters: "id_tmp_pol%3D" + @._leaflet_id
+  #         restService: "ws_updatequery.php"
+  #       )
+  #     else if type is 'LineString'
+  #       sqlLin = sqlLin + "or id_tmp_lin=" + @._leaflet_id + " "
+  #       sql = "shape%3DST_Envelope(ST_GeomFromText('LINESTRING("
 
-        sql = sql +
-              layer._latlngs[0].lat + " " + layer._latlngs[0].lng + ", " +
-              layer._latlngs[2].lat + " " + layer._latlngs[2].lng
+  #       sql = sql +
+  #             layer._latlngs[0].lat + " " + layer._latlngs[0].lng + ", " +
+  #             layer._latlngs[2].lat + " " + layer._latlngs[2].lng
 
-        sql = sql + ")', " + $("#inputEPSG").val() + ")))"
-
-  # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
-  # Search on database vectors already on the tmp_pol table
-  rest = new H5.Rest (
-    url: H5.Data.restURL
-    fields: 'id_tmp_lin, ST_AsGeoJson(shape) as shape'
-    table: "tmp_lin"
-    parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
-  )
-  polylineList = rest.data
-
-  $.each polylineList, ()->
-
-    element = JSON.parse(@.shape)
-
-    polyline = new L.Polyline(element.coordinates)
-    polyline._leaflet_id = @.id_tmp_lin
-    drawnItems.addLayer(polyline)
+  #       sql = sql + ")', " + $("#inputEPSG").val() + ")))"
 
   # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
   # Search on database vectors already on the tmp_pol table
-  rest = new H5.Rest (
-    url: H5.Data.restURL
-    fields: 'id_tmp_pol, ST_AsGeoJson(shape) as shape'
-    table: "tmp_pol"
-    parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
-  )
-  polygonList = rest.data
+  # rest = new H5.Rest (
+  #   url: H5.Data.restURL
+  #   fields: 'id_tmp_lin, ST_AsGeoJson(shape) as shape'
+  #   table: "tmp_lin"
+  #   parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
+  # )
+  # polylineList = rest.data
 
-  $.each polygonList, ()->
+  # $.each polylineList, ()->
 
-    element = JSON.parse(@.shape)
+  #   element = JSON.parse(@.shape)
 
-    polygon = new L.Polygon(element.coordinates)
-    polygon._leaflet_id = @.id_tmp_pol
-    drawnItems.addLayer(polygon)
+  #   polyline = new L.Polyline(element.coordinates)
+  #   polyline._leaflet_id = @.id_tmp_lin
+  #   drawnItems.addLayer(polyline)
+
+  # # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
+  # # Search on database vectors already on the tmp_pol table
+  # rest = new H5.Rest (
+  #   url: H5.Data.restURL
+  #   fields: 'id_tmp_pol, ST_AsGeoJson(shape) as shape'
+  #   table: "tmp_pol"
+  #   parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
+  # )
+  # polygonList = rest.data
+
+  # $.each polygonList, ()->
+
+  #   element = JSON.parse(@.shape)
+
+  #   polygon = new L.Polygon(element.coordinates)
+  #   polygon._leaflet_id = @.id_tmp_pol
+  #   drawnItems.addLayer(polygon)
+
+  # drawAPI.reloadShape()
 
 
   #add search for the address inputText
@@ -404,10 +421,12 @@ $(document).ready ->
 
     _showLocation: (location) ->
       latlng = new L.LatLng(location.Y,location.X)
-      if (!minimapView.hasLayer(Marker))
-        minimapView.addLayer(Marker)
+      # if (!minimapView.hasLayer(Marker))
+      #   minimapView.addLayer(Marker)
 
-      Marker.setLatLng(latlng).update()
+      # Marker.setLatLng(latlng).update()
+
+      drawAPI.setPoint(latlng)
 
       minimapView.setView(latlng, 15, false)
       if not window.parent.H5.isMobile.any()
@@ -419,21 +438,23 @@ $(document).ready ->
       alert "Erro na Busca: " + error
 
   # Update marker from changed inputs
-  $("#inputLat, #inputLng").on 'change', (event) ->
-    if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
-      latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
-      if (!minimapView.hasLayer(Marker))
-        minimapView.addLayer(Marker)
+  # $("#inputLat, #inputLng").on 'change', (event) ->
+  #   # if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
+  #   #   latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
+  #   #   if (!minimapView.hasLayer(Marker))
+  #   #     minimapView.addLayer(Marker)
 
-      Marker.setLatLng(latlng).update()
-      minimapView.setView(latlng, 8, false)
+  #   #   Marker.setLatLng(latlng).update()
+  #   #   minimapView.setView(latlng, 8, false)
 
-    #link the big map with the form map
-    if not window.parent.H5.isMobile.any()
-      window.parent.H5.Map.base.setView(latlng, 8, false)
+  #   # #link the big map with the form map
+  #   # if not window.parent.H5.isMobile.any()
+  #   #   window.parent.H5.Map.base.setView(latlng, 8, false)
 
-    $("#inputEPSG").val ""
-    $("#inputEPSG").removeAttr("disabled")
+  #   drawAPI.setPoint($("#inputLat").val(), $("#inputLng").val())
+
+  #   # $("#inputEPSG").val ""
+  #   # $("#inputEPSG").removeAttr("disabled")
 
   #connect the GeoSearch to the inputAddress
   $("#inputEndereco").on 'keyup', (event) ->
@@ -449,43 +470,46 @@ $(document).ready ->
         GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf)
 
   # Add a move property to the marker
-  Marker.on "move", (event) ->
-    $("#inputLat").val event.latlng.lat
-    $("#inputLng").val event.latlng.lng
+  # Marker.on "move", (event) ->
+  #   $("#inputLat").val event.latlng.lat
+  #   $("#inputLng").val event.latlng.lng
 
-    $("#inputEPSG").val "4674"
-    $("#inputEPSG").prop "disabled", "disabled"
+  #   # $("#inputEPSG").val "4674"
+  #   # drawAPI.setSRID('4674')
+  #   # $("#inputEPSG").prop "disabled", "disabled"
 
-    if not window.parent.H5.isMobile.any()
-      latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
-      window.parent.H5.Map.base.setView(latlng, minimapView.getZoom(), false)
-
-  # Create marker from a click event
-  minimapView.on "click", (event) ->
-    if not minimapView.hasLayer(Marker)
-      minimapView.addLayer(Marker)
-
-    Marker.setLatLng(event.latlng).update()
-
-    $("#inputLat").prop("value", event.latlng.lat)
-    $("#inputLng").prop("value", event.latlng.lng)
-
-    $("#inputEPSG").val "4674"
-    $("#inputEPSG").prop "disabled", "disabled"
+  #   if not window.parent.H5.isMobile.any()
+  #     latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
+  #     window.parent.H5.Map.base.setView(latlng, minimapView.getZoom(), false)
 
   # Create marker from a click event
+  # minimapView.on "click", (event) ->
+  #   if not minimapView.hasLayer(Marker)
+  #     minimapView.addLayer(Marker)
+
+  #   Marker.setLatLng(event.latlng).update()
+
+  #   $("#inputLat").prop("value", event.latlng.lat)
+  #   $("#inputLng").prop("value", event.latlng.lng)
+
+  #   # $("#inputEPSG").val "4674"
+  #   # drawAPI.setSRID('4674')
+  #   # $("#inputEPSG").prop "disabled", "disabled"
+
+  # Sets the zoom on the big map accordingly to the minimap
   minimapView.on "move zoom", (event) ->
     window.parent.H5.Map.base.setView(minimapView.getCenter(), minimapView.getZoom(), false)
 
   # Create a marker from input values on the page's reload
-  if (($("#inputLat").prop "value" ) isnt "" ) and (($("#inputLng").prop "value" ) isnt "")
-    latlng = new L.LatLng(($("#inputLat").prop "value" ),($("#inputLng").prop "value" ))
-    disabled = $("#inputEPSG").prop("disabled")
-    value = $("#inputEPSG").prop("value")
-    Marker.setLatLng(latlng).update()
-    $("#inputEPSG").prop("disabled", disabled)
-    $("#inputEPSG").prop("value", value)
-    minimapView.addLayer(Marker)
+  # if (($("#inputLat").prop "value" ) isnt "" ) and (($("#inputLng").prop "value" ) isnt "")
+  #   latlng = new L.LatLng(($("#inputLat").prop "value" ),($("#inputLng").prop "value" ))
+  #   # disabled = $("#inputEPSG").prop("disabled")
+  #   # value = $("#inputEPSG").prop("value")
+  #   Marker.setLatLng(latlng).update()
+  #   # $("#inputEPSG").prop("disabled", disabled)
+  #   # $("#inputEPSG").prop("value", value)
+  #   # drawAPI.setSRID(value)
+  #   minimapView.addLayer(Marker)
 
   #-------------------------------------------------------------------------
   # FORM VALIDATION
@@ -755,6 +779,9 @@ $(document).ready ->
     $("#nomeProduto").typeahead({source: subjects})
 
 
+    # $("#inputEPSG").on 'change', ()->
+      # drawAPI.setSRID($("#inputEPSG").val())
+
 
   #-------------------------------------------------------------------------
   # DISABLE SELECTED INPUTS
@@ -764,7 +791,7 @@ $(document).ready ->
       if $(this).is(":checked")
         $("#inputLat").attr("disabled","disabled")
         $("#inputLng").attr("disabled","disabled")
-        $("#inputEPSG").attr("disabled","disabled")
+        # $("#inputEPSG").attr("disabled","disabled")
         $("#inputMunicipio").attr("disabled","disabled")
         $("#inputUF").attr("disabled","disabled")
         $("#inputEndereco").attr("disabled","disabled")
@@ -773,7 +800,7 @@ $(document).ready ->
       else
         $("#inputLat").removeAttr("disabled")
         $("#inputLng").removeAttr("disabled")
-        $("#inputEPSG").removeAttr("disabled")
+        # $("#inputEPSG").removeAttr("disabled")
         $("#inputMunicipio").removeAttr("disabled")
         $("#inputUF").removeAttr("disabled")
         $("#inputEndereco").removeAttr("disabled")
