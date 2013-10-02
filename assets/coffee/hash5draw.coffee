@@ -471,9 +471,9 @@ class H5.Draw
         table: "tmp_pon"
         restService: "ws_insertquery.php"
       )
-    @.options.uniquePoint._latlng = new L.LatLng(latlng.lat, latlng.lng)
-    # @.options.uniquePoint._latlng.lat = latlng.lat
-    # @.options.uniquePoint._latlng.lng = latlng.lng
+    # @.options.uniquePoint._latlng = new L.LatLng(latlng.lat, latlng.lng)
+    @.options.uniquePoint._latlng.lat = latlng.lat
+    @.options.uniquePoint._latlng.lng = latlng.lng
 
     @drawnItems.addLayer(@.options.uniquePoint)
 

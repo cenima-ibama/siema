@@ -1633,7 +1633,8 @@
           restService: "ws_insertquery.php"
         });
       }
-      this.options.uniquePoint._latlng = new L.LatLng(latlng.lat, latlng.lng);
+      this.options.uniquePoint._latlng.lat = latlng.lat;
+      this.options.uniquePoint._latlng.lng = latlng.lng;
       return this.drawnItems.addLayer(this.options.uniquePoint);
     };
 
