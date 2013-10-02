@@ -1610,7 +1610,7 @@
       var columns, rest, sql, values,
         _this = this;
       this.drawnItems.removeLayer(this.options.uniquePoint);
-      if (this.options.uniquePoint == null) {
+      if ((this.options.uniquePoint == null) || (this.options.uniquePoint === true)) {
         this.options.uniquePoint = new L.Marker([0, 0]);
         this.options.uniquePoint._leaflet_id = ++this.idMarker;
         columns = "";

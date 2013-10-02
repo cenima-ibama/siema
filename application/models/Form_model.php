@@ -212,7 +212,7 @@ class Form_model extends CI_Model {
 
       $ocorrenciasDatabase->query($subfields);
 
-      $fields = $fields . "id_usuario,";
+      $fields = $fields . "id_responsavel,";
       $values = $values . "'" . $ocorrenciasDatabase->insert_id() . "',";
 
     }
@@ -304,28 +304,28 @@ class Form_model extends CI_Model {
 
     if($line->num_rows() > 0 || $polygon->num_rows() > 0 || $point->num_rows() > 0){
 
-      $sql = " update tmp_lin set id_ocorrencia='" . $id . "';";
-      $sql = $sql . "update tmp_pol set id_ocorrencia='" . $id . "';";
-      $sql = $sql . "update tmp_pon set id_ocorrencia='" . $id . "';";
+      // $sql = " update tmp_lin set id_ocorrencia='" . $id . "';";
+      // $sql = $sql . "update tmp_pol set id_ocorrencia='" . $id . "';";
+      // $sql = $sql . "update tmp_pon set id_ocorrencia='" . $id . "';";
 
       $fields = " insert into ocorrencia_lin " .
                   " (id_ocorrencia_lin, id_ocorrencia, descricao, shape)" .
                   " select nextval('ocorrencia_lin_id_ocorrencia_lin_seq'), " .
-                          "id_ocorrencia, " .
+                          $id . " as id_ocorrencia," .
                           "descricao, " .
                           "shape " .
                   " from tmp_lin; ";
       $fields = $fields . " insert into ocorrencia_pol " .
                   " (id_ocorrencia_pol, id_ocorrencia, descricao, shape)" .
                   " select nextval('ocorrencia_pol_id_ocorrencia_pol_seq'), " .
-                          "id_ocorrencia, " .
+                          $id . " as id_ocorrencia, " .
                           "descricao, " .
                           "shape " .
                   " from tmp_pol; ";
       $fields = $fields . " insert into ocorrencia_pon " .
                   " (id_ocorrencia_pon, id_ocorrencia, descricao, shape)" .
                   " select nextval('ocorrencia_pon_id_ocorrencia_pon_seq'), " .
-                          "id_ocorrencia, " .
+                          $id . " as id_ocorrencia, " .
                           "descricao, " .
                           "shape " .
                   " from tmp_pon; ";
@@ -334,18 +334,18 @@ class Form_model extends CI_Model {
       // Deleted temporary information on tmp tables
       $fields = $fields . " delete from tmp_lin; delete from tmp_pol; delete from tmp_pon;";
 
-      $this->firephp->log($sql);
+      // $this->firephp->log($sql);
       $this->firephp->log($fields);
 
-      $ocorrenciasDatabase->query($sql);
+      // $ocorrenciasDatabase->query($sql);
       $ocorrenciasDatabase->query($fields);
     }
 
-    // Relation R1
+    // Relation ocorrencia_tipo_localizacao
     // $this->firephp->log("tipoLocalizacao");
     if(isset($form['tipoLocalizacao'])) {
       foreach($form['tipoLocalizacao'] as $tipoLocalizacao) {
-        $sql = "insert into r1 (id_ocorrencia, id_tipo_localizacao) VALUES (" .
+        $sql = "insert into ocorrencia_tipo_localizacao (id_ocorrencia, id_tipo_localizacao) VALUES (" .
                 $id . "," .  $tipoLocalizacao .
                 ");";
 
@@ -357,11 +357,11 @@ class Form_model extends CI_Model {
 
 
 
-    // Relation R2
+    // Relation ocorrencia_tipo_evento
     // $this->firephp->log("tipoEvento");
     if(isset($form['tipoEvento'])) {
       foreach($form['tipoEvento'] as $tipoEvento) {
-        $sql = "insert into r2 (id_ocorrencia, id_tipo_evento ) VALUES (" .
+        $sql = "insert into ocorrencia_tipo_evento (id_ocorrencia, id_tipo_evento ) VALUES (" .
                 $id . "," .  $tipoEvento .
                 ");";
 
@@ -373,11 +373,11 @@ class Form_model extends CI_Model {
 
 
 
-    // Relation R3
+    // Relation ocorrencia_instituicao_atuando_local
     // $this->firephp->log("instituicaoAtuandoLocal");
     if(isset($form['instituicaoAtuandoLocal'])) {
       foreach($form['instituicaoAtuandoLocal'] as $instituicaoAtuandoLocal) {
-        $sql = "insert into r3 (id_ocorrencia, id_instituicao_atuando_local ) VALUES (" .
+        $sql = "insert into ocorrencia_instituicao_atuando_local (id_ocorrencia, id_instituicao_atuando_local ) VALUES (" .
                 $id . "," .  $instituicaoAtuandoLocal .
                 ");";
 
@@ -389,11 +389,11 @@ class Form_model extends CI_Model {
 
 
 
-    // Relation R4
+    // Relation ocorrencia_tipo_dano_identificado
     // $this->firephp->log("tipoDanoIdentificado");
     if(isset($form['tipoDanoIdentificado'])) {
       foreach($form['tipoDanoIdentificado'] as $tipoDanoIdentificado) {
-        $sql = "insert into r4 (id_ocorrencia, id_tipo_dano_identificado ) VALUES (" .
+        $sql = "insert into ocorrencia_tipo_dano_identificado (id_ocorrencia, id_tipo_dano_identificado ) VALUES (" .
                 $id . "," .  $tipoDanoIdentificado .
                 ");";
 
@@ -405,11 +405,11 @@ class Form_model extends CI_Model {
 
 
 
-    // Relation R5
+    // Relation ocorrencia_tipo_fonte_informacao
     // $this->firephp->log("tipoFonteInformacao");
     if(isset($form['tipoFonteInformacao'])) {
       foreach($form['tipoFonteInformacao'] as $tipoFonteInformacao) {
-        $sql = "insert into r5 (id_ocorrencia, id_tipo_fonte_informacao ) VALUES (" .
+        $sql = "insert into ocorrencia_tipo_fonte_informacao (id_ocorrencia, id_tipo_fonte_informacao ) VALUES (" .
                 $id . "," .  $tipoFonteInformacao .
                 ");";
 
@@ -467,8 +467,9 @@ class Form_model extends CI_Model {
 
     // Inserting informations about the shipment, related to the oil form
     if(isset($form['inputNomeNavio'])) {
+      $funcNavio = isset($form['inputFuncaoNavio']) ? $form['inputFuncaoNavio'] :  "";
       $sql = "insert into detalhamento_ocorrencia (id_ocorrencia, des_navio, des_instalacao, des_funcao_comunicante ) VALUES ('" .
-              $id . "','" . $form['inputNomeNavio'] . "','" . $form['inputNomeInstalacao'] . "','"  . $form['inputFuncaoNavio'] . "');";
+              $id . "','" . $form['inputNomeNavio'] . "','" . $form['inputNomeInstalacao'] . "','"  . $funcNavio . "');";
 
       $ocorrenciasDatabase->query($sql);
 
@@ -644,7 +645,7 @@ class Form_model extends CI_Model {
     } else {
       $fields = $fields . "'T'";
 
-      if (!empty($oldOcorrencia['id_usuario'])) {
+      if (!empty($oldOcorrencia['id_responsavel'])) {
 
         $subfields = "update responsavel set ";
 
@@ -661,7 +662,7 @@ class Form_model extends CI_Model {
         }
 
 
-        $subfields = $subfields . " where id_responsavel='" . $oldOcorrencia['id_usuario'] . "'";
+        $subfields = $subfields . " where id_responsavel='" . $oldOcorrencia['id_responsavel'] . "'";
 
         $ocorrenciasDatabase->query($subfields);
 
@@ -685,7 +686,7 @@ class Form_model extends CI_Model {
 
         $ocorrenciasDatabase->query($subfields);
 
-        $fields = $fields . ",id_usuario='" . $ocorrenciasDatabase->insert_id() . "'";
+        $fields = $fields . ",id_responsavel='" . $ocorrenciasDatabase->insert_id() . "'";
       }
 
     }
@@ -763,15 +764,15 @@ class Form_model extends CI_Model {
       }
     }
 
-    // Relation R1
+    // Relation ocorrencia_tipo_localizacao
     // Clean all relations before insert the new ones
-    $fields = "delete from r1 where id_ocorrencia='" . $id . "';";
+    $fields = "delete from ocorrencia_tipo_localizacao where id_ocorrencia='" . $id . "';";
     $ocorrenciasDatabase->query($fields);
 
     // Insert new relations
     if(isset($form['tipoLocalizacao'])) {
       foreach($form['tipoLocalizacao'] as $tipoLocalizacao) {
-        $sql = "insert into r1 (id_ocorrencia, id_tipo_localizacao) VALUES (" .
+        $sql = "insert into ocorrencia_tipo_localizacao (id_ocorrencia, id_tipo_localizacao) VALUES (" .
                 $id . "," .  $tipoLocalizacao .
                 ");";
 
@@ -783,15 +784,15 @@ class Form_model extends CI_Model {
 
 
 
-    // Relation R2
+    // Relation ocorrencia_tipo_evento
     // Clean all relations before insert the new ones
-    $fields = "delete from r2 where id_ocorrencia='" . $id . "';";
+    $fields = "delete from ocorrencia_tipo_evento where id_ocorrencia='" . $id . "';";
     $ocorrenciasDatabase->query($fields);
 
     // Insert new relations
     if(isset($form['tipoEvento'])) {
       foreach($form['tipoEvento'] as $tipoEvento) {
-        $sql = "insert into r2 (id_ocorrencia, id_tipo_evento ) VALUES (" .
+        $sql = "insert into ocorrencia_tipo_evento (id_ocorrencia, id_tipo_evento ) VALUES (" .
                 $id . "," .  $tipoEvento .
                 ");";
 
@@ -803,15 +804,15 @@ class Form_model extends CI_Model {
 
 
 
-    // Relation R3
+    // Relation ocorrencia_instituicao_atuando_local
     // Clean all relations before insert the new ones
-    $fields = "delete from r3 where id_ocorrencia='" . $id . "';";
+    $fields = "delete from ocorrencia_instituicao_atuando_local where id_ocorrencia='" . $id . "';";
     $ocorrenciasDatabase->query($fields);
 
     // Insert new relations
     if(isset($form['instituicaoAtuandoLocal'])) {
       foreach($form['instituicaoAtuandoLocal'] as $instituicaoAtuandoLocal) {
-        $sql = "insert into r3 (id_ocorrencia, id_instituicao_atuando_local ) VALUES (" .
+        $sql = "insert into ocorrencia_instituicao_atuando_local (id_ocorrencia, id_instituicao_atuando_local ) VALUES (" .
                 $id . "," .  $instituicaoAtuandoLocal .
                 ");";
 
@@ -823,15 +824,15 @@ class Form_model extends CI_Model {
 
 
 
-    // Relation R4
+    // Relation ocorrencia_tipo_dano_identificado
     // Clean all relations before insert the new ones
-    $fields = "delete from r4 where id_ocorrencia='" . $id . "';";
+    $fields = "delete from ocorrencia_tipo_dano_identificado where id_ocorrencia='" . $id . "';";
     $ocorrenciasDatabase->query($fields);
 
     // Insert new relations
     if(isset($form['tipoDanoIdentificado'])) {
       foreach($form['tipoDanoIdentificado'] as $tipoDanoIdentificado) {
-        $sql = "insert into r4 (id_ocorrencia, id_tipo_dano_identificado ) VALUES (" .
+        $sql = "insert into ocorrencia_tipo_dano_identificado (id_ocorrencia, id_tipo_dano_identificado ) VALUES (" .
                 $id . "," .  $tipoDanoIdentificado .
                 ");";
 
@@ -843,15 +844,15 @@ class Form_model extends CI_Model {
 
 
 
-    // Relation R5
+    // Relation ocorrencia_tipo_fonte_informacao
     // Clean all relations before insert the new ones
-    $fields = "delete from r5 where id_ocorrencia='" . $id . "';";
+    $fields = "delete from ocorrencia_tipo_fonte_informacao where id_ocorrencia='" . $id . "';";
     $ocorrenciasDatabase->query($fields);
 
     // Insert new relations
     if(isset($form['tipoFonteInformacao'])) {
       foreach($form['tipoFonteInformacao'] as $tipoFonteInformacao) {
-        $sql = "insert into r5 (id_ocorrencia, id_tipo_fonte_informacao ) VALUES (" .
+        $sql = "insert into ocorrencia_tipo_fonte_informacao (id_ocorrencia, id_tipo_fonte_informacao ) VALUES (" .
                 $id . "," .  $tipoFonteInformacao .
                 ");";
 
@@ -1008,7 +1009,7 @@ class Form_model extends CI_Model {
     }
 
     // Origem do Acidente
-    $query = "select r1.id_tipo_localizacao from r1 where r1.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
+    $query = "select ocorrencia_tipo_localizacao.id_tipo_localizacao from ocorrencia_tipo_localizacao where ocorrencia_tipo_localizacao.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
     $form['tipoLocalizacao'] = array();
     foreach ($ocorrenciasDatabase->query($query)->result_array() as $row) {
       array_push($form['tipoLocalizacao'], $row['id_tipo_localizacao']);
@@ -1019,7 +1020,7 @@ class Form_model extends CI_Model {
     $form['inputNomeInstalacao'] = $infoOil['des_instalacao'];
 
     // Tipo de Evento
-    $query = "select r2.id_tipo_evento from r2 where r2.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
+    $query = "select ocorrencia_tipo_evento.id_tipo_evento from ocorrencia_tipo_evento where ocorrencia_tipo_evento.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
     $form['tipoEvento'] = array();
     foreach ($ocorrenciasDatabase->query($query)->result_array() as $row) {
       array_push($form['tipoEvento'], $row['id_tipo_evento']);
@@ -1050,7 +1051,7 @@ class Form_model extends CI_Model {
     // $form['SituacaoDescarga'] = $dbResult['situacao_atual_descarga'];
 
     // Danos Identificados
-    $query = "select r4.id_tipo_dano_identificado from r4 where r4.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
+    $query = "select ocorrencia_tipo_dano_identificado.id_tipo_dano_identificado from ocorrencia_tipo_dano_identificado where ocorrencia_tipo_dano_identificado.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
     $form['tipoDanoIdentificado'] = array();
     foreach ($ocorrenciasDatabase->query($query)->result_array() as $row) {
       array_push($form['tipoDanoIdentificado'], $row['id_tipo_dano_identificado']);
@@ -1063,7 +1064,7 @@ class Form_model extends CI_Model {
     $form['slctLicen'] = $dbResult['des_licenca_ambiental'];
 
     // Instituição/Empresa Atuando no Local
-    $query = "select r3.id_instituicao_atuando_local from r3 where r3.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
+    $query = "select ocorrencia_instituicao_atuando_local.id_instituicao_atuando_local from ocorrencia_instituicao_atuando_local where ocorrencia_instituicao_atuando_local.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
     $form['tipoInstituicaoAtuando'] = array();
     foreach ($ocorrenciasDatabase->query($query)->result_array() as $row) {
       array_push($form['tipoInstituicaoAtuando'], $row['id_instituicao_atuando_local']);
@@ -1111,7 +1112,7 @@ class Form_model extends CI_Model {
     }
 
     // Fonte de Informação
-    $query = "select r5.id_tipo_fonte_informacao from r5 where r5.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
+    $query = "select ocorrencia_tipo_fonte_informacao.id_tipo_fonte_informacao from ocorrencia_tipo_fonte_informacao where ocorrencia_tipo_fonte_informacao.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
     $form['tipoFonteInformacao'] = array();
     foreach ($ocorrenciasDatabase->query($query)->result_array() as $row) {
       array_push($form['tipoFonteInformacao'], $row['id_tipo_fonte_informacao']);
@@ -1131,7 +1132,7 @@ class Form_model extends CI_Model {
                 " estado as inputMunicipio, " .
                 " sigla as inputUF " .
              " from ocorrencia " .
-                " left join responsavel as res on (res.id_responsavel = ocorrencia.id_usuario) " .
+                " left join responsavel as res on (res.id_responsavel = ocorrencia.id_responsavel) " .
                 " left join ocorrencia_pon on (ocorrencia_pon.id_ocorrencia = ocorrencia.id_ocorrencia) " .
                 " left join uf on (uf.id_uf = ocorrencia.id_uf) " .
              " where nro_ocorrencia='" . $nro_ocorrencia . "';";
