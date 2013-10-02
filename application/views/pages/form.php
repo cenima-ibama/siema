@@ -793,58 +793,62 @@
             </div>
           </div>
         </div>
-        <div class="accordion-group">
-          <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse11">
-              12. Identificação do Comunicante
-              <?php
-                if (isset($hasOleo))
-                  echo "</br><i style=\"font-size: 9px\">(Item X do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)</i>"
-              ?>
-            </a>
-          </div>
-          <div id="collapse11" class="accordion-body collapse">
-            <div class="accordion-inner">
-              <div class="row-fluid">
-                <div class="controls span12">
-                  <label class="control-label span5" for="inputNomeInformante">Nome Completo:
-                  </label>
-                  <div class="span6">
-                    <?php echo form_input($inputNomeInformante); ?>
-                  </div>
-                </div>
-                <?php
-                  if (isset($hasOleo) && isset($isServIBAMA)) {
-                    echo '
-                      <div class="controls span12">
-                        <label class="control-label span5" for="inputFuncaoNavio">Função navio ou instalação:
-                        </label>
-                        <div class="span6">';
-                    echo form_input($inputFuncaoNavio);
-                    echo '
-                        </div>
+        <?php
+          if($this->authldap->is_authenticated()) {
+            echo '
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse11">
+                  12. Identificação do Comunicante';
+                    if (isset($hasOleo))
+                      echo "</br><i style=\"font-size: 9px\">(Item X do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)</i>";
+            echo '
+                </a>
+              </div>
+              <div id="collapse11" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <div class="row-fluid">
+                    <div class="controls span12">
+                      <label class="control-label span5" for="inputNomeInformante">Nome Completo:
+                      </label>
+                      <div class="span6">
+                        <?php echo form_input($inputNomeInformante); ?>
                       </div>
-                    ';
-                  }
-                ?>
-                <div class="controls span12">
-                  <label class="control-label span5" for="inputTelInformante">Telefone de Contato:
-                  </label>
-                  <div class="span6">
-                    <?php echo form_input($inputTelInformante); ?>
-                  </div>
-                </div>
-                <div class="controls span12">
-                  <label class="control-label span5" for="inputEmailInformante">Email de Contato:
-                  </label>
-                  <div class="span6">
-                    <?php echo form_input($inputEmailInformante); ?>
+                    </div>';
+                      if (isset($hasOleo) && isset($isServIBAMA)) {
+                        echo '
+                          <div class="controls span12">
+                            <label class="control-label span5" for="inputFuncaoNavio">Função navio ou instalação:
+                            </label>
+                            <div class="span6">';
+                        echo form_input($inputFuncaoNavio);
+                        echo '
+                            </div>
+                          </div>
+                        ';
+                      }
+              echo '
+                    <div class="controls span12">
+                      <label class="control-label span5" for="inputTelInformante">Telefone de Contato:
+                      </label>
+                      <div class="span6">';
+                      echo form_input($inputTelInformante);
+              echo ';
+                      </div>
+                    </div>
+                    <div class="controls span12">
+                      <label class="control-label span5" for="inputEmailInformante">Email de Contato:
+                      </label>
+                      <div class="span6">
+                        <?php echo form_input($inputEmailInformante); ?>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </div>';
+          }
+        ?>
         <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
         <?php
           if($this->authldap->is_authenticated()) {
@@ -852,7 +856,7 @@
               <div id="servIBAMA" class="accordion-group">
                 <div class="accordion-heading">
                   <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse13">
-                    13. Fonte da Informação
+                    12. Fonte da Informação
                   </a>
                 </div>
                 <div id="collapse13" class="accordion-body collapse">

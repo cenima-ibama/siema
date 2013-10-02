@@ -181,9 +181,42 @@
         }
       }
     });
+<<<<<<< HEAD
     minimapView.on("move zoom", function(event) {
       return window.parent.H5.Map.base.setView(minimapView.getCenter(), minimapView.getZoom(), false);
     });
+=======
+    Marker.on("move", function(event) {
+      var latlng;
+      $("#inputLat").val(event.latlng.lat);
+      $("#inputLng").val(event.latlng.lng);
+      $("#inputEPSG").val("4674");
+      $("#inputEPSG").prop("disabled", "disabled");
+      if (!window.parent.H5.isMobile.any()) {
+        latlng = new L.LatLng($("#inputLat").prop("value"), $("#inputLng").prop("value"));
+        return window.parent.H5.Map.base.setView(latlng, minimapView.getZoom(), false);
+      }
+    });
+    minimapView.on("click", function(event) {
+      if (!minimapView.hasLayer(Marker)) {
+        minimapView.addLayer(Marker);
+      }
+      Marker.setLatLng(event.latlng).update();
+      $("#inputLat").prop("value", event.latlng.lat);
+      $("#inputLng").prop("value", event.latlng.lng);
+      $("#inputEPSG").val("4674");
+      return $("#inputEPSG").prop("disabled", "disabled");
+    });
+    if ((($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
+      latlng = new L.LatLng($("#inputLat").prop("value"), $("#inputLng").prop("value"));
+      disabled = $("#inputEPSG").prop("disabled");
+      value = $("#inputEPSG").prop("value");
+      Marker.setLatLng(latlng).update();
+      $("#inputEPSG").prop("disabled", disabled);
+      $("#inputEPSG").prop("value", value);
+      minimapView.addLayer(Marker);
+    }
+>>>>>>> ac8150c162494b5d7dfe1f009210c4aef9597e3d
     addSelection = function(idField, value) {
       var field;
       field = document.getElementById(idField);
