@@ -442,7 +442,7 @@ class H5.Draw
     @drawnItems.removeLayer(@.options.uniquePoint)
 
     # Create the uniquePoint in case it doesnt exists.
-    if !@.options.uniquePoint?
+    if (!@.options.uniquePoint?) or (@.options.uniquePoint is true)
       # Create the marker to put on the map
       @.options.uniquePoint = new L.Marker([0 ,0])
 
