@@ -292,11 +292,6 @@ class H5.Draw
             table: "tmp_pon"
             restService: "ws_insertquery.php"
           )
-
-          if document.getElementById('inputLat')? and document.getElementById('inputLng')?
-            $("#inputLat").val(layer._latlng.lat)
-            $("#inputLng").val(layer._latlng.lng)
-
         else
           layer._leaflet_id = @idMarker
           sql = "shape=ST_SetSRID(ST_MakePoint(" +
@@ -310,6 +305,11 @@ class H5.Draw
             parameters: "id_tmp_pon%3D" + layer._leaflet_id
             restService: "ws_updatequery.php"
           )
+
+
+        if document.getElementById('inputLat')? and document.getElementById('inputLng')?
+          $("#inputLat").val(layer._latlng.lat)
+          $("#inputLng").val(layer._latlng.lng)
 
       if (!@.options.uniquePoint? || (@.options.uniquePoint? and type isnt 'marker'))
         @drawnItems.addLayer(layer)

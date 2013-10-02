@@ -1518,10 +1518,6 @@
               table: "tmp_pon",
               restService: "ws_insertquery.php"
             });
-            if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
-              $("#inputLat").val(layer._latlng.lat);
-              $("#inputLng").val(layer._latlng.lng);
-            }
           } else {
             layer._leaflet_id = _this.idMarker;
             sql = "shape=ST_SetSRID(ST_MakePoint(" + layer._latlng.lat + "," + layer._latlng.lng + ")," + _this.options.srid + ")";
@@ -1532,6 +1528,10 @@
               parameters: "id_tmp_pon%3D" + layer._leaflet_id,
               restService: "ws_updatequery.php"
             });
+          }
+          if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
+            $("#inputLat").val(layer._latlng.lat);
+            $("#inputLng").val(layer._latlng.lng);
           }
         }
         if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
