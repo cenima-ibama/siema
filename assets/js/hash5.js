@@ -1534,7 +1534,7 @@
             });
           }
         }
-        if (_this.options.uniquePoint == null) {
+        if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
           return _this.drawnItems.addLayer(layer);
         } else {
           _this.drawnItems.removeLayer(_this.options.uniquePoint);

@@ -311,7 +311,7 @@ class H5.Draw
             restService: "ws_updatequery.php"
           )
 
-      if (!@.options.uniquePoint?)
+      if (!@.options.uniquePoint? || (@.options.uniquePoint? and type isnt 'marker'))
         @drawnItems.addLayer(layer)
       else
         @drawnItems.removeLayer(@.options.uniquePoint)
