@@ -1531,7 +1531,7 @@
           }
           if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
             $("#inputLat").val(layer._latlng.lat);
-            $("#inputLng").val(layer._latlng.lng);
+            $("#inputLng").val(layer._latlng.lng).trigger('change');
           }
         }
         if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
@@ -1577,7 +1577,7 @@
               });
               if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
                 $("#inputLat").val('');
-                $("#inputLng").val('');
+                $("#inputLng").val('').trigger('change');
               }
               if (_this.options.uniquePoint != null) {
                 return _this.options.uniquePoint = true;
@@ -1633,8 +1633,7 @@
           restService: "ws_insertquery.php"
         });
       }
-      this.options.uniquePoint._latlng.lat = latlng.lat;
-      this.options.uniquePoint._latlng.lng = latlng.lng;
+      this.options.uniquePoint._latlng = new L.LatLng(latlng.lat, latlng.lng);
       return this.drawnItems.addLayer(this.options.uniquePoint);
     };
 

@@ -392,7 +392,7 @@ $(document).ready ->
   #add search for the address inputText
   GeoSearch =
     _provider: new L.GeoSearch.Provider.Google
-    _geosearch: (qry) ->
+    _geosearch: (qry, showAddress) ->
       try
         # console.log @_provider
         console.log qry
@@ -400,7 +400,7 @@ $(document).ready ->
           # console.log "Is function"
           results = @_provider.GetLocations(qry, ((results) ->
             console.log results
-            @_processResults results
+            @_processResults results, showAddress
           ).bind(this))
         else
           # console.log "Not a Function"
@@ -415,17 +415,16 @@ $(document).ready ->
       catch error
         @_printError error
 
-    _processResults: (results) ->
+    _processResults: (results, showAddress) ->
       if results
-        @_showLocation results[0]
+        if showAddress
+          @_showAddres results[0].Label
+        else
+          @_showLocation results[0]
+
 
     _showLocation: (location) ->
       latlng = new L.LatLng(location.Y,location.X)
-      # if (!minimapView.hasLayer(Marker))
-      #   minimapView.addLayer(Marker)
-
-      # Marker.setLatLng(latlng).update()
-
       drawAPI.setPoint(latlng)
 
       minimapView.setView(latlng, 15, false)
@@ -434,14 +433,76 @@ $(document).ready ->
       $("#inputLat").val location.Y
       $("#inputLng").val location.X
 
+    _showAddres: (label) ->
+      console.log label
+      $("#inputMunicipio").val ""
+      $("#inputUF").val ""
+      $("#inputEndereco").val ""
+      address = @_parseLabel label
+      console.log address
+
+
+    _parseLabel: (label) ->
+      labelParts = label.split(", ")
+      address = {}
+
+      if labelParts.length <= 1
+        return null
+
+      #case that it has more than the continent or country
+      cepRegExp = new RegExp("[0-9]{1,}-[0-9]{1,}")
+      # cidadeEstado = new RegExp("[a-zA-Z]*[\s][-][\s][a-zA-Z]*")
+      result = cepRegExp.test(labelParts[labelParts.length - 2])
+      if result
+        #case that it has the CEP
+        console.log labelParts[labelParts.length - 2]
+        indexCity = labelParts.length - 3
+      else
+        indexCity = labelParts.length - 2
+
+      @_parseCidade labelParts[indexCity]
+      strAdd = ""
+      for i in [0...indexCity] by 1
+        strAdd += (labelParts[i] + " ")
+
+      $("#inputEndereco").val strAdd
+
+
+    _parseCidade: (string) ->
+      subCidade = string.split(" - ")
+      if subCidade.length > 1
+      #case with the city name
+        $("#inputMunicipio").val subCidade[0]
+        @_parseEstado subCidade[1]
+      else
+      #case with only the state name of abbreviation
+        $("#inputMunicipio").val ""
+        @_parseEstado string
+
+    _parseEstado: (string) ->
+        estados = ["Acre","Alagoas","Amapá","Amazonas","Bahia","Ceará","Distrito Federal","Espírito Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso do Sul","Minas Gerais","Pará","Paraíba","Paraná","Pernambuco","Piauí","Rio de Janeiro","Rio Grande do Norte","Rio Grande do Sul","Rondônia","Roraima","Santa Catarina","São Paulo","Sergipe","Tocantins"]
+        uf = ["AC","AL","AP","AM","BA","CE","DF","E","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]
+        if string in estados or string in uf
+          if string.length > 2
+            $("#inputUF").val uf[estados.indexOf(string)]
+          else
+            $("#inputUF").val string
+
     _printError: (error) ->
       alert "Erro na Busca: " + error
 
+
   # Update marker from changed inputs
-  # $("#inputLat, #inputLng").on 'change', (event) ->
-  #   # if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
-  #   #   latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
-  #   #   if (!minimapView.hasLayer(Marker))
+  $("#inputLat, #inputLng").on 'change', (event) ->
+    if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
+      qry = ($("#inputLat").prop "value" ) + "," + ($("#inputLng").prop "value")
+      GeoSearch._geosearch qry,true
+    else
+      $("#inputMunicipio").val ""
+      $("#inputUF").val ""
+      $("#inputEndereco").val ""
+    #   latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
+    #   if (!minimapView.hasLayer(Marker))
   #   #     minimapView.addLayer(Marker)
 
   #   #   Marker.setLatLng(latlng).update()

@@ -309,7 +309,7 @@ class H5.Draw
 
         if document.getElementById('inputLat')? and document.getElementById('inputLng')?
           $("#inputLat").val(layer._latlng.lat)
-          $("#inputLng").val(layer._latlng.lng)
+          $("#inputLng").val(layer._latlng.lng).trigger('change')
 
       if (!@.options.uniquePoint? || (@.options.uniquePoint? and type isnt 'marker'))
         @drawnItems.addLayer(layer)
@@ -411,7 +411,7 @@ class H5.Draw
 
             if document.getElementById('inputLat')? and document.getElementById('inputLng')?
               $("#inputLat").val('')
-              $("#inputLng").val('')
+              $("#inputLng").val('').trigger('change')
 
             if @.options.uniquePoint?
               @.options.uniquePoint = true
@@ -471,9 +471,9 @@ class H5.Draw
         table: "tmp_pon"
         restService: "ws_insertquery.php"
       )
-
-    @.options.uniquePoint._latlng.lat = latlng.lat
-    @.options.uniquePoint._latlng.lng = latlng.lng
+    @.options.uniquePoint._latlng = new L.LatLng(latlng.lat, latlng.lng)
+    # @.options.uniquePoint._latlng.lat = latlng.lat
+    # @.options.uniquePoint._latlng.lng = latlng.lng
 
     @drawnItems.addLayer(@.options.uniquePoint)
 
