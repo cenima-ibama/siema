@@ -1355,8 +1355,7 @@
               rest = new H5.Rest({
                 url: _this.options.url,
                 fields: "nextval('" + _this.options.tables['polygon'].table + "_" + _this.options.tables['polygon'].uniqueField + "_seq') as lastval",
-                table: "tipo_fonte_informacao",
-                limit: "1"
+                restService: "ws_selectonlyquery.php"
               });
               return _this.idPolygon = rest.data[0].lastval;
             }
@@ -1365,8 +1364,7 @@
               rest = new H5.Rest({
                 url: _this.options.url,
                 fields: "nextval('" + _this.options.tables[key].table + "_" + _this.options.tables[key].uniqueField + "_seq') as lastval",
-                table: "tipo_fonte_informacao",
-                limit: "1"
+                restService: "ws_selectonlyquery.php"
               });
               return _this.idPolyline = rest.data[0].lastval;
             }
@@ -1375,8 +1373,7 @@
               rest = new H5.Rest({
                 url: _this.options.url,
                 fields: "nextval('" + _this.options.tables[key].table + "_" + _this.options.tables[key].uniqueField + "_seq') as lastval",
-                table: "tipo_fonte_informacao",
-                limit: "1"
+                restService: "ws_selectonlyquery.php"
               });
               return _this.idMarker = rest.data[0].lastval;
             }
@@ -1413,7 +1410,6 @@
           });
           values = values + firstPoint.lat + " " + firstPoint.lng + ")', " + _this.options.srid + "))";
           sql = "(" + columns + ") values (" + values + ")";
-          console.log(sql);
           rest = new H5.Rest({
             url: H5.Data.restURL,
             fields: sql,
@@ -1443,7 +1439,6 @@
           });
           values = values + ")', " + _this.options.srid + ")";
           sql = "(" + columns + ") values (" + values + ")";
-          console.log(sql);
           rest = new H5.Rest({
             url: H5.Data.restURL,
             fields: sql,
@@ -1466,7 +1461,6 @@
           values = values + layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " + layer._latlngs[2].lat + "," + layer._latlngs[2].lng;
           values = values + ", " + _this.options.srid + ")";
           sql = "(" + columns + ") values (" + values + ")";
-          console.log(sql);
           rest = new H5.Rest({
             url: H5.Data.restURL,
             fields: sql,
@@ -1489,7 +1483,6 @@
           values = values + layer._latlng.lat + " " + layer._latlng.lng + ")'," + _this.options.srid + "),";
           values = values + layer._mRadius / 100010 + ")";
           sql = "(" + columns + ") values (" + values + ")";
-          console.log(sql);
           rest = new H5.Rest({
             url: H5.Data.restURL,
             fields: sql,
@@ -1511,7 +1504,6 @@
             values = values + "ST_SetSRID(ST_MakePoint(";
             values = values + layer._latlng.lat + "," + layer._latlng.lng + ")," + _this.options.srid + ")";
             sql = "(" + columns + ") values (" + values + ")";
-            console.log(sql);
             rest = new H5.Rest({
               url: H5.Data.restURL,
               fields: sql,
@@ -1625,7 +1617,6 @@
         values = values + "ST_SetSRID(ST_MakePoint(";
         values = values + latlng.lat + "," + latlng.lng + ")," + this.options.srid + ")";
         sql = "(" + columns + ") values (" + values + ")";
-        console.log(sql);
         rest = new H5.Rest({
           url: H5.Data.restURL,
           fields: sql,
@@ -1653,7 +1644,7 @@
         url: this.options.url,
         fields: 'id_tmp_lin, ST_AsGeoJson(shape) as shape',
         table: "tmp_lin",
-        parameters: "nro_ocorrencia='" + this.options.tables['polygon'].defaultValues.nro_ocorrencia + "'"
+        parameters: "nro_ocorrencia='" + this.options.tables['polyline'].defaultValues.nro_ocorrencia + "'"
       });
       polylineList = rest.data;
       $.each(polylineList, function(key, line) {

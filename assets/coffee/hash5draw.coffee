@@ -91,8 +91,7 @@ class H5.Draw
             rest = new H5.Rest (
               url: @.options.url
               fields: "nextval('" + @.options.tables['polygon'].table + "_" + @.options.tables['polygon'].uniqueField + "_seq') as lastval"
-              table: "tipo_fonte_informacao"
-              limit: "1"
+              restService: "ws_selectonlyquery.php"
             )
 
             @idPolygon = rest.data[0].lastval
@@ -101,8 +100,7 @@ class H5.Draw
             rest = new H5.Rest (
               url: @.options.url
               fields: "nextval('" + @.options.tables[key].table + "_" + @.options.tables[key].uniqueField + "_seq') as lastval"
-              table: "tipo_fonte_informacao"
-              limit: "1"
+              restService: "ws_selectonlyquery.php"
             )
 
             @idPolyline = rest.data[0].lastval
@@ -111,8 +109,7 @@ class H5.Draw
             rest = new H5.Rest (
               url: @.options.url
               fields: "nextval('" + @.options.tables[key].table + "_" + @.options.tables[key].uniqueField + "_seq') as lastval"
-              table: "tipo_fonte_informacao"
-              limit: "1"
+              restService: "ws_selectonlyquery.php"
             )
 
             @idMarker = rest.data[0].lastval
@@ -154,8 +151,6 @@ class H5.Draw
 
         sql = "(" + columns + ") values (" + values + ")"
 
-        console.log(sql)
-
         # Insert the figure in a temporary table.
         rest = new H5.Rest (
          url: H5.Data.restURL
@@ -191,8 +186,6 @@ class H5.Draw
 
         sql = "(" + columns + ") values (" + values + ")"
 
-        console.log(sql)
-
         # Insert the figure in a temporary table.
         rest = new H5.Rest (
          url: H5.Data.restURL
@@ -201,7 +194,6 @@ class H5.Draw
          restService: "ws_insertquery.php"
         )
       else if (type is 'rectangle')
-
         # Rectangles and Circles are all represented as Polygons, on the DB
         type = 'polygon'
 
@@ -226,8 +218,6 @@ class H5.Draw
 
 
         sql = "(" + columns + ") values (" + values + ")"
-
-        console.log sql
 
         # Insert the figure in a temporary table.
         rest = new H5.Rest (
@@ -258,8 +248,6 @@ class H5.Draw
 
         sql = "(" + columns + ") values (" + values + ")"
 
-        console.log sql
-
         rest = new H5.Rest (
           url: H5.Data.restURL
           fields: sql
@@ -283,8 +271,6 @@ class H5.Draw
           values = values + layer._latlng.lat + "," + layer._latlng.lng + ")," + @.options.srid + ")"
 
           sql = "(" + columns + ") values (" + values + ")"
-
-          console.log sql
 
           rest = new H5.Rest (
             url: H5.Data.restURL
@@ -393,21 +379,20 @@ class H5.Draw
           $.each @.options.tables['polyline'].defaultValues, (key,field)->
             sqlLin = sqlLin + "and " + key + "='" +
                      field + "'"
-        # In case it is deleting a circle right after inserting it.
         else if type is 'Point'
-
+          # In case it is a circle (post inserting)
           if layer._mRadius?
             sqlPol = sqlPol + "or id_tmp_pol=" + key + " "
 
             $.each @.options.tables['polygon'].defaultValues, (key,field)->
               sqlPol = sqlPol + "and " + key + "='" +
                        field + "'"
+          # In case it is a marker
           else
             sqlPon = sqlPon + "or id_tmp_pon=" + key + " "
 
             $.each @.options.tables['marker'].defaultValues, (key,field)->
-              sqlPon = sqlPon + "and " + key + "='" +
-                       field + "'"
+              sqlPon = sqlPon + "and " + key + "='" + field + "'"
 
             if document.getElementById('inputLat')? and document.getElementById('inputLng')?
               $("#inputLat").val('')
@@ -463,8 +448,6 @@ class H5.Draw
 
       sql = "(" + columns + ") values (" + values + ")"
 
-      console.log sql
-
       rest = new H5.Rest (
         url: H5.Data.restURL
         fields: sql
@@ -487,14 +470,13 @@ class H5.Draw
 
   # Reload the shape with the drawings inserted, in case the page is reloaded
   reloadShape: ()->
-
     # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
     # Search on database vectors already on the tmp_pol table
     rest = new H5.Rest (
       url: @.options.url
       fields: 'id_tmp_lin, ST_AsGeoJson(shape) as shape'
       table: "tmp_lin"
-      parameters: "nro_ocorrencia='" + @.options.tables['polygon'].defaultValues.nro_ocorrencia + "'"
+      parameters: "nro_ocorrencia='" + @.options.tables['polyline'].defaultValues.nro_ocorrencia + "'"
     )
     polylineList = rest.data
 
