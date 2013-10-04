@@ -75,4 +75,4 @@ $(document).ready ->
     rndedNum
 
   # Animate load screen
-  $(".loading").hide()
+  $(".loading").hide(700)
