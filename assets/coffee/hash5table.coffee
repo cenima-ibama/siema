@@ -1,18 +1,20 @@
 class H5.Table
 
   options:
-    container: null
-    fields: null
-    #   columnName: string
-    #   validation: function
-    #   tableName:  string
-    #   isVisible:  boolean
-    #   searchData:  array
-    #   primaryField:  string
-    #   defaultValue: string
+    container: null   # represents where the table will be created
+    fields: null      # object that holds the fields listed on the html table
+    # fields structure
+    #   columnName: string (name of the column on the database that the info will come)
+    #   validation: function (function to validate on inserting)
+    #   tableName:  string (name of the table that this field is related)
+    #   isVisible:  boolean (in case you want a field to be shown on the form but not be visible to the user)
+    #   searchData:  array (in case it is a typeahead field, you can pass the source for the search)
+    #   primaryField:  string (in case the field is a formated info, you can pass the principal source of the information, for example a id field)
+    #   defaultValue: string (in case you want to pass a default value for the field)
     uniqueField: null
-    #   field:      string
-    #   insertable: boolean
+    # uniqueField structure
+    #   field:      string (pass for the framework which field is the primary field (id) of the table, in cases of deletion or insertion)
+    #   insertable: boolean (represents if the field primary field is auto increment, or it accepts the user to define it)
     title: null
     table: null
     # table used on remotion when the html table is composed of 2 or more tables
