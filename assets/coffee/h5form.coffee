@@ -612,11 +612,11 @@ $(document).ready ->
         if (@.innerHTML is input.value)
           input.checked = "checked"
           $(@).remove()
-          addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
+          # addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
 
-      $(input).click ()->
-        if $(this).is(":checked")
-          addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
+      # $(input).click ()->
+      #   if $(this).is(":checked")
+      #     addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
 
       span = document.createElement("span")
       span.innerHTML = value.des_tipo_localizacao

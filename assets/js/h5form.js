@@ -284,13 +284,7 @@
         $("span[data-id='postTL']").each(function() {
           if (this.innerHTML === input.value) {
             input.checked = "checked";
-            $(this).remove();
-            return addSelection('labelInputCompOrigem', value.des_tipo_localizacao);
-          }
-        });
-        $(input).click(function() {
-          if ($(this).is(":checked")) {
-            return addSelection('labelInputCompOrigem', value.des_tipo_localizacao);
+            return $(this).remove();
           }
         });
         span = document.createElement("span");
