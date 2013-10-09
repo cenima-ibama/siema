@@ -43,6 +43,7 @@
     event.preventDefault();
     btnNext = document.getElementById("modalBtnNext");
     btnBack = document.getElementById("modalBtnBack");
+    nroOcorrencia = $(window.top.form_frame.document.getElementById("comunicado")).val();
     if (history.length > 0) {
       tab = history.pop();
       this.href = tab.tab;
@@ -53,10 +54,10 @@
     $(btnBack).show();
     $("#submit").hide();
     $(this).hide();
-    nroOcorrencia = $(window.top.form_frame.document.getElementById("comunicado")).val();
     rest = new window.parent.H5.Rest({
       url: window.parent.H5.Data.restURL,
       table: "tmp_ocorrencia_produto",
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia,
       restService: "ws_deletequery.php"
     });
     rest = new window.parent.H5.Rest({
@@ -113,7 +114,7 @@
   });
 
   $("#modalBtnNext").click(function(event) {
-    var action, btnLogout, checkedUser, containerProgress, defaultHtml, hasOleo, i, isAcidOleo, isAtual, isOutros, isPubExt, isServIBAMA, progressAnimetion, progressBar, textProgress, tipoForm;
+    var action, btnLogout, checkedUser, containerProgress, defaultHtml, hasOleo, i, isAcidOleo, isAtual, isOutros, isPubExt, isServIBAMA, progressAnimetion, progressBar, rest, textProgress, tipoForm;
     event.preventDefault();
     history.push({
       tab: "#tab" + collapse,
@@ -183,6 +184,30 @@
       } else {
         $("#formCreate").submit();
       }
+      rest = new window.parent.H5.Rest({
+        url: window.parent.H5.Data.restURL,
+        table: "tmp_ocorrencia_produto",
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0",
+        restService: "ws_deletequery.php"
+      });
+      rest = new window.parent.H5.Rest({
+        url: window.parent.H5.Data.restURL,
+        table: "tmp_pon",
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0",
+        restService: "ws_deletequery.php"
+      });
+      rest = new window.parent.H5.Rest({
+        url: window.parent.H5.Data.restURL,
+        table: "tmp_pol",
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0",
+        restService: "ws_deletequery.php"
+      });
+      rest = new window.parent.H5.Rest({
+        url: window.parent.H5.Data.restURL,
+        table: "tmp_lin",
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0",
+        restService: "ws_deletequery.php"
+      });
     }
     return $(this).tab('show');
   });

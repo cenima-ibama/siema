@@ -99,6 +99,60 @@ portoTerminal = new L.TileLayer.WMS(geoserverUrl,
   transparent: true
 )
 
+marisma = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:marisma"
+  format: "image/png"
+  transparent: true
+)
+
+restinga = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:restinga"
+  format: "image/png"
+  transparent: true
+)
+
+recifes = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:recife_total"
+  format: "image/png"
+  transparent: true
+)
+
+mangues = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:mangue_siema"
+  format: "image/png"
+  transparent: true
+)
+
+lagunas = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:laguna"
+  format: "image/png"
+  transparent: true
+)
+
+estuario = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:estuario"
+  format: "image/png"
+  transparent: true
+)
+
+duna = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:duna"
+  format: "image/png"
+  transparent: true
+)
+
+costao = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:costao"
+  format: "image/png"
+  transparent: true
+)
+
+banhado = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:banhado"
+  format: "image/png"
+  transparent: true
+)
+
 restURL = "http://" + document.domain + "/siema/rest"
 
 # display acidentes
@@ -184,13 +238,38 @@ controlswitch = new L.control.switch(
   "Terras Indígenas":
     layer: terrasIndigenas
     tab: "chemicals"
+  "Dunas":
+    layer: duna
+    tab: "chemicals"
+  "Costão":
+    layer: costao
+    tab: "chemicals"
+  "Banhado":
+    layer: banhado
+    tab: "chemicals"
   "Unidade de Convservação":
     layer: unidadeConservacao
+  "Marisma":
+    layer: marisma
+  "Restinga":
+    layer: restinga
   "Bloco R9":
     layer: blocoR9
     tab: "water"
   "Bloco Exploratório":
     layer: blocoExploratorio
+    tab: "water"
+  "Recifes":
+    layer: recifes
+    tab: "water"
+  "Mangues":
+    layer: mangues
+    tab: "water"
+  "Lagunas":
+    layer: lagunas
+    tab: "water"
+  "Estuário":
+    layer: estuario
     tab: "water"
   "Bioma IBGE":
     layer: biomaIBGE

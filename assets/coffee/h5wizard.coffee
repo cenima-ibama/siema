@@ -7,6 +7,8 @@
   # Stores the next tab to be accessed
   collapse=2
 
+
+
   $('#addMeModal').on 'hidden', ->
     history = []
     collapse = 2
@@ -48,6 +50,8 @@
     btnNext = document.getElementById("modalBtnNext")
     btnBack = document.getElementById("modalBtnBack")
 
+    nroOcorrencia = $(window.top.form_frame.document.getElementById("comunicado")).val()
+
     if history.length > 0
       tab = history.pop()
       @.href = tab.tab
@@ -59,37 +63,36 @@
     $("#submit").hide()
     $(@).hide()
 
-    nroOcorrencia = $(window.top.form_frame.document.getElementById("comunicado")).val()
-
     # Clean the temporary produt table (tmp_ocorrencia_produto)
     rest = new window.parent.H5.Rest (
-     url: window.parent.H5.Data.restURL
-     table: "tmp_ocorrencia_produto"
-     restService: "ws_deletequery.php"
+      url: window.parent.H5.Data.restURL
+      table: "tmp_ocorrencia_produto"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
     )
 
     # Clean the temporary polygon table (tmp_pol)
     rest = new window.parent.H5.Rest (
-     url: window.parent.H5.Data.restURL
-     table: "tmp_pol"
-     parameters: "nro_ocorrencia%3D" + nroOcorrencia
-     restService: "ws_deletequery.php"
+      url: window.parent.H5.Data.restURL
+      table: "tmp_pol"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
     )
 
     # Clean the temporary polyline table (tmp_lin)
     rest = new window.parent.H5.Rest (
-     url: window.parent.H5.Data.restURL
-     table: "tmp_lin"
-     parameters: "nro_ocorrencia%3D" + nroOcorrencia
-     restService: "ws_deletequery.php"
+      url: window.parent.H5.Data.restURL
+      table: "tmp_lin"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
     )
 
     # Clean the temporary point table (tmp_pon)
     rest = new window.parent.H5.Rest (
-     url: window.parent.H5.Data.restURL
-     table: "tmp_pon"
-     parameters: "nro_ocorrencia%3D" + nroOcorrencia
-     restService: "ws_deletequery.php"
+      url: window.parent.H5.Data.restURL
+      table: "tmp_pon"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
     )
 
     $(@).tab('show')
@@ -201,8 +204,39 @@
         else
           $("#inputRegistro").focus()
       else
-
         $("#formCreate").submit()
+
+      # Clean old cells on the temporary table (tmp_ocorrencia_produto)
+      rest = new window.parent.H5.Rest (
+        url: window.parent.H5.Data.restURL
+        table: "tmp_ocorrencia_produto"
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0"
+        restService: "ws_deletequery.php"
+      )
+
+      # Clean old cells on the temporary table (tmp_pon)
+      rest = new window.parent.H5.Rest (
+        url: window.parent.H5.Data.restURL
+        table: "tmp_pon"
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0"
+        restService: "ws_deletequery.php"
+      )
+
+      # Clean old cells on the temporary table (tmp_pol)
+      rest = new window.parent.H5.Rest (
+        url: window.parent.H5.Data.restURL
+        table: "tmp_pol"
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0"
+        restService: "ws_deletequery.php"
+      )
+      # Clean old cells on the temporary table (tmp_lin)
+      rest = new window.parent.H5.Rest (
+        url: window.parent.H5.Data.restURL
+        table: "tmp_lin"
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0"
+        restService: "ws_deletequery.php"
+      )
+
 
     $(@).tab('show')
 
