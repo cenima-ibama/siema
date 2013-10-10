@@ -10,6 +10,19 @@
 
   H5.Leaflet = {};
 
+  $('#map').width($(window).width());
+
+  $('#map').height($(window).height() - $('#navbar').height());
+
+  supportsOrientationChange = "onorientationchange" in window;
+
+  orientationEvent = (supportsOrientationChange ? "orientationchange" : "resize");
+
+  window.addEventListener(orientationEvent, (function() {
+    $('#map').width($(window).width());
+    return $('#map').height($(window).height() - $('#navbar').height());
+  }), false);
+
   bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h";
 
   bingaerial = new L.BingLayer(bingKey, {
@@ -307,18 +320,5 @@
       icon: iconsURL + "factory.png"
     }
   }).addTo(H5.Map.base);
-
-  $('#map').width($(window).width());
-
-  $('#map').height($(window).height() - $('#navbar').height());
-
-  supportsOrientationChange = "onorientationchange" in window;
-
-  orientationEvent = (supportsOrientationChange ? "orientationchange" : "resize");
-
-  window.addEventListener(orientationEvent, (function() {
-    $('#map').width($(window).width());
-    return $('#map').height($(window).height() - $('#navbar').height());
-  }), false);
 
 }).call(this);

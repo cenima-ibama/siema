@@ -1286,19 +1286,10 @@ $(document).ready ->
     # save the selected option
     H5.Data.region = $(@).prop("id")
 
-
     # reload charts
     H5.Charts.reloadCharts()
 
     H5.Data.changed = true
-
-  # MISC
-  # enable masonry plugin
-  $("#charts-content").masonry
-    # options
-    itemSelector: ".chart"
-    animationOptions:
-      duration: 1000
 
   H5.Charts.reloadCharts()
 # }}}
