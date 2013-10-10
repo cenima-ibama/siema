@@ -136,7 +136,7 @@ class H5.Draw
             columns = columns + field + ","
             values = values + @.options.tables[type].defaultValues[field] + ","
 
-        columns = columns + "shape"
+        columns = columns + "shape,dt_registro"
         values = values + "ST_MakePolygon(ST_GeomFromText('LINESTRING("
 
         $.each layer._latlngs, ->
@@ -148,6 +148,8 @@ class H5.Draw
           values = values +  ","
 
         values = values + firstPoint.lat + " " + firstPoint.lng + ")', " + @.options.srid + "))"
+
+        values = values + ",now()"
 
         sql = "(" + columns + ") values (" + values + ")"
 
@@ -172,7 +174,7 @@ class H5.Draw
             columns = columns + field + ","
             values = values + @.options.tables[type].defaultValues[field] + ","
 
-        columns = columns + "shape"
+        columns = columns + "shape,dt_registro"
         values = values + "ST_GeomFromText('LINESTRING("
 
         $.each layer._latlngs, ->
@@ -183,6 +185,8 @@ class H5.Draw
             values = values + "," + @.lat + " " + @.lng
 
         values = values + ")', " + @.options.srid + ")"
+
+        values = values + ",now()"
 
         sql = "(" + columns + ") values (" + values + ")"
 
@@ -207,7 +211,7 @@ class H5.Draw
             columns = columns + field + ","
             values = values + @.options.tables[type].defaultValues[field] + ","
 
-        columns = columns + "shape"
+        columns = columns + "shape,dt_registro"
         values = values + "ST_MakeEnvelope("
 
         values = values +
@@ -216,6 +220,7 @@ class H5.Draw
 
         values = values + ", " + @.options.srid + ")"
 
+        values = values + ",now()"
 
         sql = "(" + columns + ") values (" + values + ")"
 
@@ -241,10 +246,12 @@ class H5.Draw
             columns = columns + field + ","
             values = values + @.options.tables[type].defaultValues[field] + ","
 
-        columns = columns + "shape"
+        columns = columns + "shape,dt_registro"
         values = values + "ST_Buffer(ST_GeomFromText('POINT("
         values = values + layer._latlng.lat + " " + layer._latlng.lng + ")'," + @.options.srid + "),"
         values = values + layer._mRadius/100010 + ")"
+
+        values = values + ",now()"
 
         sql = "(" + columns + ") values (" + values + ")"
 
@@ -266,9 +273,11 @@ class H5.Draw
               columns = columns + field + ","
               values = values + @.options.tables[type].defaultValues[field] + ","
 
-          columns = columns + "shape"
+          columns = columns + "shape,dt_registro"
           values = values + "ST_SetSRID(ST_MakePoint("
           values = values + layer._latlng.lat + "," + layer._latlng.lng + ")," + @.options.srid + ")"
+
+          values = values + ",now()"
 
           sql = "(" + columns + ") values (" + values + ")"
 
@@ -283,6 +292,8 @@ class H5.Draw
           sql = "shape=ST_SetSRID(ST_MakePoint(" +
                 layer._latlng.lat + "," + layer._latlng.lng + ")," +
                 @.options.srid + ")"
+
+          sql = sql + ",dt_registro=now()"
 
           rest = new H5.Rest (
             url: H5.Data.restURL
@@ -442,9 +453,11 @@ class H5.Draw
           columns = columns + field + ","
           values = values + @.options.tables['marker'].defaultValues[field] + ","
 
-      columns = columns + "shape"
+      columns = columns + "shape,dt_registro"
       values = values + "ST_SetSRID(ST_MakePoint("
       values = values + latlng.lat + "," + latlng.lng + ")," + @.options.srid + ")"
+
+      values = values + ",now()"
 
       sql = "(" + columns + ") values (" + values + ")"
 
@@ -454,7 +467,6 @@ class H5.Draw
         table: "tmp_pon"
         restService: "ws_insertquery.php"
       )
-    # @.options.uniquePoint._latlng = new L.LatLng(latlng.lat, latlng.lng)
     @.options.uniquePoint._latlng.lat = latlng.lat
     @.options.uniquePoint._latlng.lng = latlng.lng
 

@@ -310,21 +310,21 @@ class Form_model extends CI_Model {
 
       $fields = " insert into ocorrencia_lin " .
                   " (id_ocorrencia_lin, id_ocorrencia, descricao, shape)" .
-                  " select nextval('ocorrencia_lin_id_ocorrencia_lin_seq'), " .
+                  " select nextval('ocorrencia_lin_id_ocorrencia_lin_seq') as id_ocorrencia_lin, " .
                           $id . " as id_ocorrencia," .
                           "descricao, " .
                           "shape " .
                   " from tmp_lin; ";
       $fields = $fields . " insert into ocorrencia_pol " .
                   " (id_ocorrencia_pol, id_ocorrencia, descricao, shape)" .
-                  " select nextval('ocorrencia_pol_id_ocorrencia_pol_seq'), " .
+                  " select nextval('ocorrencia_pol_id_ocorrencia_pol_seq') as id_ocorrencia_pol, " .
                           $id . " as id_ocorrencia, " .
                           "descricao, " .
                           "shape " .
                   " from tmp_pol; ";
       $fields = $fields . " insert into ocorrencia_pon " .
                   " (id_ocorrencia_pon, id_ocorrencia, descricao, shape)" .
-                  " select nextval('ocorrencia_pon_id_ocorrencia_pon_seq'), " .
+                  " select nextval('ocorrencia_pon_id_ocorrencia_pon_seq') as id_ocorrencia_pon, " .
                           $id . " as id_ocorrencia, " .
                           "descricao, " .
                           "shape " .

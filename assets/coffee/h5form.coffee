@@ -612,11 +612,11 @@ $(document).ready ->
         if (@.innerHTML is input.value)
           input.checked = "checked"
           $(@).remove()
-          addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
+          # addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
 
-      $(input).click ()->
-        if $(this).is(":checked")
-          addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
+      # $(input).click ()->
+      #   if $(this).is(":checked")
+      #     addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
 
       span = document.createElement("span")
       span.innerHTML = value.des_tipo_localizacao
@@ -1119,67 +1119,80 @@ $(document).ready ->
       fields:
         id_ocorrencia_produto:
           columnName: "Identificador"
-          tableName: "id_ocorrencia_produto"
           isVisible: false
-          validation: null
         nome:
           columnName: "Substância - Nº Onu - CR"
           tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
           primaryField: "id_produto"
-          validation: null
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
           searchData: subjects
         quantidade:
           columnName: "Qtd."
-          tableName: "quantidade"
-          validation: null
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
         unidade_medida:
           columnName: "Unidade"
-          tableName: "unidade_medida"
-          validation: null
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
         id_ocorrencia:
           columnName: "Nro. Ocorrencia"
           tableName: "ocorrencia_produto.id_ocorrencia"
           defaultValue: idOcorrencia
-          validation: null
           isVisible: false
 
       uniqueField:
         field: "id_ocorrencia_produto"
-        insertable: false
     )
   else
     table = new H5.Table (
       container: "myTable"
       url: H5.Data.restURL
+      registUpdate: true
       table: "tmp_ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Dtmp_ocorrencia_produto.id_produto)"
       primaryTable: 'tmp_ocorrencia_produto'
+      parameters: "nro_ocorrencia%3D'" + nroOcorrencia + "'"
       fields:
         id_ocorrencia_produto:
           columnName: "Identificador"
-          tableName: "id_ocorrencia_produto"
           isVisible: false
-          validation: null
         nro_ocorrencia:
           columnName: " "
-          tableName: "nro_ocorrencia"
           defaultValue: nroOcorrencia
           isVisible: false
-          validation: null
         nome:
           columnName: "Substância - Nº Onu - CR"
           tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
           primaryField: "id_produto"
-          validation: null
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
           searchData: subjects
         quantidade:
           columnName: "Qtd."
-          tableName: "quantidade"
-          validation: null
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
         unidade_medida:
           columnName: "Unidade"
-          tableName: "unidade_medida"
-          validation: null
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
       uniqueField:
         field: "id_ocorrencia_produto"
-        insertable: false
     )
