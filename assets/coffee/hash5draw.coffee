@@ -7,6 +7,7 @@ class H5.Draw
     url: null
     srid: null
     uniquePoint: null
+    loadDrawn: false
     buttons:
       marker: true
       line: true
@@ -68,6 +69,9 @@ class H5.Draw
     })
 
     @options.map.addControl(drawControl)
+
+    if @options.loadDrawn
+      console.log 'log!'
 
     @reloadShape()
 
@@ -544,4 +548,16 @@ class H5.Draw
 
       if (@.options.uniquePoint?)
         @.options.uniquePoint = point
+
+  editShapes: (tableFields, tableName, tableParameters)->
+    # Retrieve every draw from the table specified and copy it to the tmp table
+    rest = new H5.Rest (
+      url: @.options.url
+      fields: tableFields
+      table: tableName
+      parameters: tableParameters
+    )
+
+
+
 

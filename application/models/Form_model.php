@@ -1065,9 +1065,9 @@ class Form_model extends CI_Model {
 
     // Instituição/Empresa Atuando no Local
     $query = "select ocorrencia_instituicao_atuando_local.id_instituicao_atuando_local from ocorrencia_instituicao_atuando_local where ocorrencia_instituicao_atuando_local.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
-    $form['tipoInstituicaoAtuando'] = array();
+    $form['instituicaoAtuandoLocal'] = array();
     foreach ($ocorrenciasDatabase->query($query)->result_array() as $row) {
-      array_push($form['tipoInstituicaoAtuando'], $row['id_instituicao_atuando_local']);
+      array_push($form['instituicaoAtuandoLocal'], $row['id_instituicao_atuando_local']);
     }
     $form['inputCompInstituicao'] = $dbResult['des_complemento_instituicao_atu'];
 
@@ -1130,7 +1130,8 @@ class Form_model extends CI_Model {
                 " ST_Y(shape) as inputLat, " .
                 " ST_SRID(shape) as inputEPSG, " .
                 " estado as inputMunicipio, " .
-                " sigla as inputUF " .
+                " sigla as inputUF, " .
+                " res.* " .
              " from ocorrencia " .
                 " left join responsavel as res on (res.id_responsavel = ocorrencia.id_responsavel) " .
                 " left join ocorrencia_pon on (ocorrencia_pon.id_ocorrencia = ocorrencia.id_ocorrencia) " .

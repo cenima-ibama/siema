@@ -655,16 +655,6 @@
                     ?>
                   </div>
                 </div>
-              </div><div class="row-fluid">
-                <div id="tipoInstituicaoAtuando" class="span12">
-                  <div style="display:none;">
-                    <?php
-                        foreach ($instituicaoAtuandoLocal as $id) {
-                          echo '<span data-id="postIAL">' . $id . '</span>';
-                        }
-                    ?>
-                  </div>
-                </div>
               </div>
               <div class="control-group">
                 <label class="control-label" for="inputInfoInstituicaoNome">Nome da Empresa/Telefone:</label>
@@ -812,18 +802,19 @@
                     <div class="controls span12">
                       <label class="control-label span5" for="inputNomeInformante">Nome Completo:
                       </label>
-                      <div class="span6">
-                        <?php echo form_input($inputNomeInformante); ?>
+                      <div class="span6">';
+                        echo form_input($inputNomeInformante);
+            echo '
                       </div>
                     </div>';
                       if (isset($hasOleo) && isset($isServIBAMA)) {
-                        echo '
+            echo '
                           <div class="controls span12">
                             <label class="control-label span5" for="inputFuncaoNavio">Função navio ou instalação:
                             </label>
                             <div class="span6">';
                         echo form_input($inputFuncaoNavio);
-                        echo '
+              echo '
                             </div>
                           </div>
                         ';
@@ -833,15 +824,16 @@
                       <label class="control-label span5" for="inputTelInformante">Telefone de Contato:
                       </label>
                       <div class="span6">';
-                      echo form_input($inputTelInformante);
-              echo ';
+                        echo form_input($inputTelInformante);
+              echo '
                       </div>
                     </div>
                     <div class="controls span12">
                       <label class="control-label span5" for="inputEmailInformante">Email de Contato:
                       </label>
-                      <div class="span6">
-                        <?php echo form_input($inputEmailInformante); ?>
+                      <div class="span6">';
+                        echo form_input($inputEmailInformante);
+              echo '
                       </div>
                     </div>
                   </div>
@@ -850,14 +842,13 @@
             </div>';
           }
         ?>
-        <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
         <?php
           if($this->authldap->is_authenticated()) {
             echo '
               <div id="servIBAMA" class="accordion-group">
                 <div class="accordion-heading">
                   <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse13">
-                    12. Fonte da Informação
+                    13. Fonte da Informação
                   </a>
                 </div>
                 <div id="collapse13" class="accordion-body collapse">
@@ -879,6 +870,7 @@
             ';
           }
         ?>
+        <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
       </div>
 
       <div class="checkbox" style="display:none;">

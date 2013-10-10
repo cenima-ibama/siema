@@ -239,39 +239,6 @@
       layer: binghybrid
     }
   }, {
-    "Terras Indígenas": {
-      layer: terrasIndigenas,
-      tab: "chemicals"
-    },
-    "Dunas": {
-      layer: duna,
-      tab: "chemicals"
-    },
-    "Costão": {
-      layer: costao,
-      tab: "chemicals"
-    },
-    "Banhado": {
-      layer: banhado,
-      tab: "chemicals"
-    },
-    "Unidade de Convservação": {
-      layer: unidadeConservacao
-    },
-    "Marisma": {
-      layer: marisma
-    },
-    "Restinga": {
-      layer: restinga
-    },
-    "Bloco R9": {
-      layer: blocoR9,
-      tab: "water"
-    },
-    "Bloco Exploratório": {
-      layer: blocoExploratorio,
-      tab: "water"
-    },
     "Recifes": {
       layer: recifes,
       tab: "water"
@@ -288,11 +255,46 @@
       layer: estuario,
       tab: "water"
     },
-    "Bioma IBGE": {
-      layer: biomaIBGE
+    "Dunas": {
+      layer: duna,
+      tab: "water"
+    },
+    "Costão": {
+      layer: costao,
+      tab: "water"
+    },
+    "Banhado": {
+      layer: banhado,
+      tab: "water"
+    },
+    "Marisma": {
+      layer: marisma,
+      tab: "water"
+    },
+    "Restinga": {
+      layer: restinga,
+      tab: "water"
+    },
+    "Bloco R9": {
+      layer: blocoR9,
+      tab: "factory"
+    },
+    "Bloco Exploratório": {
+      layer: blocoExploratorio,
+      tab: "factory"
     },
     "Portos e Terminais": {
-      layer: portoTerminal
+      layer: portoTerminal,
+      tab: "factory"
+    },
+    "Terras Indígenas": {
+      layer: terrasIndigenas
+    },
+    "Unidade de Convservação": {
+      layer: unidadeConservacao
+    },
+    "Bioma IBGE": {
+      layer: biomaIBGE
     }
   }, {
     water: {
@@ -300,9 +302,9 @@
       name: null,
       selected: true
     },
-    chemicals: {
+    factory: {
       name: null,
-      icon: iconsURL + "chemicals.png"
+      icon: iconsURL + "factory.png"
     }
   }).addTo(H5.Map.base);
 

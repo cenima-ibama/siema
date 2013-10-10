@@ -709,7 +709,7 @@ class Form extends CI_Controller {
             'class'        => 'input-small',
             'placeholder'  => '',
             'maxlength'    => '150',
-            'value'        => set_value('inputResponsavel')
+            'value'        => set_value('inputResponsavel',isset($formLoad['inputResponsavel']) ? $formLoad['inputResponsavel'] : '')
         );
         if(isset($formLoad['semResponsavel'])){
             $data['inputResponsavel'] += array(
@@ -724,7 +724,7 @@ class Form extends CI_Controller {
             'class'        => 'input-small',
             'placeholder'  => '',
             'maxlength'    => '20',
-            'value'        => set_value('inputCPFCNPJ')
+            'value'        => set_value('inputCPFCNPJ',isset($formLoad['inputCPFCNPJ']) ? $formLoad['inputCPFCNPJ'] : '')
         );
         if(isset($formLoad['semResponsavel'])){
             $data['inputCPFCNPJ'] += array(
@@ -900,7 +900,7 @@ class Form extends CI_Controller {
                 'checked'  => 'checked'
             );
         }
-        // 11. Informacoes do informante
+        // 11. Identificação do Comunicante
 
         $data['inputNomeInformante'] = array(
             'id'           => 'inputNomeInformante',

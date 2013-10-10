@@ -1343,6 +1343,7 @@
       url: null,
       srid: null,
       uniquePoint: null,
+      loadDrawn: false,
       buttons: {
         marker: true,
         line: true,
@@ -1389,6 +1390,9 @@
         }
       });
       this.options.map.addControl(drawControl);
+      if (this.options.loadDrawn) {
+        console.log('log!');
+      }
       this.reloadShape();
       this._getNextIdTable();
       this._addDrawButtonActions();
@@ -1744,6 +1748,16 @@
         if ((_this.options.uniquePoint != null)) {
           return _this.options.uniquePoint = point;
         }
+      });
+    };
+
+    Draw.prototype.editShapes = function(tableFields, tableName, tableParameters) {
+      var rest;
+      return rest = new H5.Rest({
+        url: this.options.url,
+        fields: tableFields,
+        table: tableName,
+        parameters: tableParameters
       });
     };
 
