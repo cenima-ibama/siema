@@ -5,7 +5,7 @@
     $('#addMeModal').modal({
       keyboard: false,
       backdrop: false,
-      show: false
+      show: true
     });
     $("#addMeModal").draggable({
       handle: ".modal-header"

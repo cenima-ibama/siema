@@ -5,7 +5,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, minimapView, nroComunicado, nroOcorrencia, rest, seconds, subjects, table, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoad, minimapView, nroComunicado, nroOcorrencia, rest, seconds, subjects, table, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -80,6 +80,7 @@
       layers: [binghybrid],
       zoomControl: true
     });
+    isLoad = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked");
     drawAPI = new H5.Draw({
       map: minimapView,
       url: H5.Data.restURL,
@@ -228,17 +229,6 @@
         return alert("Erro na Busca: " + error);
       }
     };
-    $("#inputLat, #inputLng").on('change', function(event) {
-      var qry;
-      if ((($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
-        qry = ($("#inputLat").prop("value")) + "," + ($("#inputLng").prop("value"));
-        return GeoSearch._geosearch(qry, true);
-      } else {
-        $("#inputMunicipio").val("");
-        $("#inputUF").val("");
-        return $("#inputEndereco").val("");
-      }
-    });
     $("#inputEndereco").on('keyup', function(event) {
       var enterKey, municipio, uf;
       enterKey = 13;
@@ -251,9 +241,6 @@
           return GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf);
         }
       }
-    });
-    minimapView.on("move zoom", function(event) {
-      return window.parent.H5.Map.base.setView(minimapView.getCenter(), minimapView.getZoom(), false);
     });
     addSelection = function(idField, value) {
       var field;
@@ -456,6 +443,13 @@
       $("#nomeProduto").typeahead({
         source: subjects
       });
+      $("#oceano").on('click', function() {
+        if ($(this).is(":checked")) {
+          return $("#spanBaciaSed").removeAttr("style");
+        } else {
+          return $("#spanBaciaSed").attr("style", "display:none;");
+        }
+      });
       $("#semLocalizacao").on('click', function() {
         if ($(this).is(":checked")) {
           $("#inputLat").attr("disabled", "disabled");
@@ -508,14 +502,16 @@
           $("#PerInciMatu").attr("disabled", "disabled");
           $("#PerInciVesper").attr("disabled", "disabled");
           $("#PerInciNotu").attr("disabled", "disabled");
-          return $("#PerInciMadru").attr("disabled", "disabled");
+          $("#PerInciMadru").attr("disabled", "disabled");
+          return $("#dtFeriado").attr("disabled", "disabled");
         } else {
           $("#inputDataInci").removeAttr("disabled");
           $("#inputHoraInci").removeAttr("disabled");
           $("#PerInciMatu").removeAttr("disabled");
           $("#PerInciVesper").removeAttr("disabled");
           $("#PerInciNotu").removeAttr("disabled");
-          return $("#PerInciMadru").removeAttr("disabled");
+          $("#PerInciMadru").removeAttr("disabled");
+          return $("#dtFeriado").removeAttr("disabled");
         }
       });
       $("#semOrigem").on('click', function() {
@@ -701,7 +697,7 @@
       };
       return subjects.push(element);
     });
-    if ($(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")) {
+    if (isLoad) {
       return table = new H5.Table({
         container: "myTable",
         url: H5.Data.restURL,
@@ -740,6 +736,21 @@
           },
           unidade_medida: {
             columnName: "Unidade",
+            selectArray: [
+              {
+                value: "m3",
+                text: "Metro Cúbico (m3)"
+              }, {
+                value: "l",
+                text: "Litro (L)"
+              }, {
+                value: "t",
+                text: "Tonelada (T)"
+              }, {
+                value: "kg",
+                text: "Quilograma (Kg)"
+              }
+            ],
             validation: function(value) {
               var text;
               text = '';
@@ -805,6 +816,21 @@
           },
           unidade_medida: {
             columnName: "Unidade",
+            selectArray: [
+              {
+                value: "m3",
+                text: "Metro Cúbico (m3)"
+              }, {
+                value: "l",
+                text: "Litro (L)"
+              }, {
+                value: "t",
+                text: "Tonelada (T)"
+              }, {
+                value: "kg",
+                text: "Quilograma (Kg)"
+              }
+            ],
             validation: function(value) {
               var text;
               text = '';

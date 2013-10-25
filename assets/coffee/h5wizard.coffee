@@ -8,6 +8,9 @@
   collapse=2
 
 
+  $('#addMeModal').on 'showed', ->
+    $(".modal-footer").hide()
+
 
   $('#addMeModal').on 'hidden', ->
     history = []

@@ -246,6 +246,39 @@ class Form extends CI_Controller {
             $data['inputEPSG_Selected'] = $formLoad['inputEPSG'];
         }
 
+        $data['oceano'] = array(
+            'id'           => 'oceano',
+            'name'         => 'oceano',
+            'type'         => 'checkbox',
+            'value'         => 'on',
+        );
+        if(set_value('oceano') == "on"){
+            $data['oceano'] += array(
+                'checked'  => 'checked'
+            );
+        }
+        if(set_value('semLocalizacao') == "on"){
+            $data['oceano'] += array(
+                'disabled' => 'disabled'
+            );
+        }
+
+        $this->firephp->log($formLoad);
+
+        $data['inputBaciaSed'] = array(
+            'id'           => 'inputBaciaSed',
+            'name'         => 'inputBaciaSed',
+            'type'         => 'text',
+            'class'        => 'input-medium-large',
+            'placeholder'  => 'Nome da Bacia Sedimentar',
+            'value'        => set_value('inputBaciaSed', isset($formLoad['inputBaciaSed']) ? $formLoad['inputBaciaSed'] : "")
+        );
+        if(set_value('semLocalizacao') == "on"){
+            $data['inputBaciaSed'] += array(
+                'disabled' => 'disabled'
+            );
+        }
+
         $data['inputMunicipio'] = array(
             'id'           => 'inputMunicipio',
             'name'         => 'inputMunicipio',
@@ -473,6 +506,23 @@ class Form extends CI_Controller {
         // Values of the Period
         $data['PeriodoInci'] = isset($formLoad['PeriodoInci']) ? $formLoad['PeriodoInci'] : '' ;
 
+        $data['dtFeriado'] = array(
+            'id'           => 'dtFeriado',
+            'name'         => 'dtFeriado',
+            'type'         => 'checkbox',
+        );
+        if(isset($formLoad['dtFeriado'])){
+            $data['dtFeriado'] += array(
+                'checked'  => 'checked'
+            );
+        }
+        if(isset($formLoad['semDataInci'])){
+            $data['dtFeriado'] += array(
+                'disabled' => 'disabled'
+            );
+        }
+
+
         $data['semDataInci'] = array(
             'id'           => 'semDataInci',
             'name'         => 'semDataInci',
@@ -581,6 +631,56 @@ class Form extends CI_Controller {
         }
 
         $data['tipoEvento'] = isset($formLoad['tipoEvento']) ? $formLoad['tipoEvento'] : '';
+
+        // 5. Tipo de Produto
+
+        $data['produtoNaoPerigoso'] = array(
+            'id'           => 'produtoNaoPerigoso',
+            'name'         => 'produtoNaoPerigoso',
+            'type'         => 'checkbox',
+        );
+        if(isset($formLoad['produtoNaoPerigoso'])){
+            $data['produtoNaoPerigoso'] += array(
+                'checked'  => 'checked'
+            );
+        }
+        if(isset($formLoad['semDataInci'])){
+            $data['produtoNaoPerigoso'] += array(
+                'disabled' => 'disabled'
+            );
+        }
+
+        $data['produtoNaoAplica'] = array(
+            'id'           => 'produtoNaoAplica',
+            'name'         => 'produtoNaoAplica',
+            'type'         => 'checkbox',
+        );
+        if(isset($formLoad['produtoNaoAplica'])){
+            $data['produtoNaoAplica'] += array(
+                'checked'  => 'checked'
+            );
+        }
+        if(isset($formLoad['semDataInci'])){
+            $data['produtoNaoAplica'] += array(
+                'disabled' => 'disabled'
+            );
+        }
+
+        $data['produtoNaoEspecificado'] = array(
+            'id'           => 'produtoNaoEspecificado',
+            'name'         => 'produtoNaoEspecificado',
+            'type'         => 'checkbox',
+        );
+        if(isset($formLoad['produtoNaoEspecificado'])){
+            $data['produtoNaoEspecificado'] += array(
+                'checked'  => 'checked'
+            );
+        }
+        if(isset($formLoad['semDataInci'])){
+            $data['produtoNaoEspecificado'] += array(
+                'disabled' => 'disabled'
+            );
+        }
 
         // 6. Detalhes do acidente
 
@@ -755,7 +855,7 @@ class Form extends CI_Controller {
             'name'         => 'inputInfoInstituicaoNome',
             'type'         => 'text',
             'class'        => 'input',
-            'placeholder'  => 'Nome da Empresa',
+            'placeholder'  => 'Nome do Responsável',
             'maxlength'    => '128',
             'value'        => set_value('inputInfoInstituicaoNome', isset($formLoad['inputInfoInstituicaoNome']) ? $formLoad['inputInfoInstituicaoNome'] : "")
         );
@@ -770,7 +870,7 @@ class Form extends CI_Controller {
             'name'         => 'inputInfoInstituicaoTelefone',
             'type'         => 'text',
             'class'        => 'input-small',
-            'placeholder'  => 'Telefone da Empresa',
+            'placeholder'  => '(99)99999999',
             'maxlength'    => '12',
             'value'        => set_value('inputInfoInstituicaoTelefone', isset($formLoad['inputInfoInstituicaoTelefone']) ? $formLoad['inputInfoInstituicaoTelefone'] : "")
         );

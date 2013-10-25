@@ -104,10 +104,13 @@ $(document).ready ->
     zoomControl: true
     )
 
+  isLoad = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
+
   drawAPI = new H5.Draw(
     map: minimapView
     url: H5.Data.restURL
     uniquePoint: true
+    # editShapes: true
     # srid: $("#inputEPSG").val()
     srid: '4674'
     buttons:
@@ -138,6 +141,30 @@ $(document).ready ->
         defaultValues:
           nro_ocorrencia: nroOcorrencia
   )
+
+  # if isLoad
+  #   drawAPI.editShapes(
+  #     field: 'nro_ocorrencia'
+  #     value: nroOcorrencia
+  #   ,
+  #     fields: ['id_ocorrencia_pon as id_tmp_pon','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
+  #     name: 'ocorrencia_pon'
+  #     parameters:
+  #       field: 'id_ocorrencia'
+  #       value: idOcorrencia
+  #   ,
+  #     fields: ['id_ocorrencia_pol as id_tmp_pol','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
+  #     name: 'ocorrencia_pol'
+  #     parameters:
+  #       field: 'id_ocorrencia'
+  #       value: idOcorrencia
+  #   ,
+  #     fields: ['id_ocorrencia_lin as id_tmp_lin','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
+  #     name: 'ocorrencia_lin'
+  #     parameters:
+  #       field: 'id_ocorrencia'
+  #       value: idOcorrencia
+  #   )
 
 
   # Add draw functionality to a map
@@ -493,24 +520,24 @@ $(document).ready ->
 
 
   # Update marker from changed inputs
-  $("#inputLat, #inputLng").on 'change', (event) ->
-    if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
-      qry = ($("#inputLat").prop "value" ) + "," + ($("#inputLng").prop "value")
-      GeoSearch._geosearch qry,true
-    else
-      $("#inputMunicipio").val ""
-      $("#inputUF").val ""
-      $("#inputEndereco").val ""
-    #   latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
-    #   if (!minimapView.hasLayer(Marker))
-  #   #     minimapView.addLayer(Marker)
+  # $("#inputLat, #inputLng").on 'change', (event) ->
+  #   if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
+  #     qry = ($("#inputLat").prop "value" ) + "," + ($("#inputLng").prop "value")
+  #     GeoSearch._geosearch qry,true
+  #   else
+  #     $("#inputMunicipio").val ""
+  #     $("#inputUF").val ""
+  #     $("#inputEndereco").val ""
+  #     latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
+  #     if (!minimapView.hasLayer(Marker))
+  #       minimapView.addLayer(Marker)
 
-  #   #   Marker.setLatLng(latlng).update()
-  #   #   minimapView.setView(latlng, 8, false)
+  #     Marker.setLatLng(latlng).update()
+  #     minimapView.setView(latlng, 8, false)
 
-  #   # #link the big map with the form map
-  #   # if not window.parent.H5.isMobile.any()
-  #   #   window.parent.H5.Map.base.setView(latlng, 8, false)
+  #   #link the big map with the form map
+  #   if not window.parent.H5.isMobile.any()
+  #     window.parent.H5.Map.base.setView(latlng, 8, false)
 
   #   drawAPI.setPoint($("#inputLat").val(), $("#inputLng").val())
 
@@ -558,8 +585,8 @@ $(document).ready ->
   #   # $("#inputEPSG").prop "disabled", "disabled"
 
   # Sets the zoom on the big map accordingly to the minimap
-  minimapView.on "move zoom", (event) ->
-    window.parent.H5.Map.base.setView(minimapView.getCenter(), minimapView.getZoom(), false)
+  # minimapView.on "move zoom", (event) ->
+  #   window.parent.H5.Map.base.setView(minimapView.getCenter(), minimapView.getZoom(), false)
 
   # Create a marker from input values on the page's reload
   # if (($("#inputLat").prop "value" ) isnt "" ) and (($("#inputLng").prop "value" ) isnt "")
@@ -847,6 +874,11 @@ $(document).ready ->
   #-------------------------------------------------------------------------
   # DISABLE SELECTED INPUTS
   #-------------------------------------------------------------------------
+    $("#oceano").on 'click', () ->
+      if $(@).is ":checked"
+        $("#spanBaciaSed").removeAttr("style")
+      else
+        $("#spanBaciaSed").attr("style","display:none;")
 
     $("#semLocalizacao").on 'click', ()->
       if $(this).is(":checked")
@@ -900,6 +932,7 @@ $(document).ready ->
         $("#PerInciVesper").attr("disabled","disabled")
         $("#PerInciNotu").attr("disabled","disabled")
         $("#PerInciMadru").attr("disabled","disabled")
+        $("#dtFeriado").attr("disabled","disabled")
       else
         $("#inputDataInci").removeAttr("disabled")
         $("#inputHoraInci").removeAttr("disabled")
@@ -907,6 +940,7 @@ $(document).ready ->
         $("#PerInciVesper").removeAttr("disabled")
         $("#PerInciNotu").removeAttr("disabled")
         $("#PerInciMadru").removeAttr("disabled")
+        $("#dtFeriado").removeAttr("disabled")
 
 
     $("#semOrigem").on 'click', ()->
@@ -1109,7 +1143,7 @@ $(document).ready ->
 
     # subjects.push(@nome)
 
-  if $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
+  if isLoad
     table = new H5.Table (
       container: "myTable"
       url: H5.Data.restURL
@@ -1139,6 +1173,19 @@ $(document).ready ->
             return text
         unidade_medida:
           columnName: "Unidade"
+          selectArray:[
+            value :"m3"
+            text: "Metro Cúbico (m3)"
+          ,
+            value : "l"
+            text : "Litro (L)"
+          ,
+            value: "t"
+            text: "Tonelada (T)"
+          ,
+            value:"kg"
+            text: "Quilograma (Kg)"
+          ]
           validation: (value)->
             text = ''
             if value is '' or value is 'Empty'
@@ -1188,6 +1235,19 @@ $(document).ready ->
             return text
         unidade_medida:
           columnName: "Unidade"
+          selectArray:[
+            value :"m3"
+            text: "Metro Cúbico (m3)"
+          ,
+            value : "l"
+            text : "Litro (L)"
+          ,
+            value: "t"
+            text: "Tonelada (T)"
+          ,
+            value:"kg"
+            text: "Quilograma (Kg)"
+          ]
           validation: (value)->
             text = ''
             if value is '' or value is 'Empty'

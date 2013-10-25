@@ -6,12 +6,14 @@ H5.Data.changed = false
 H5.Data.region = "Todos"
 H5.Data.regions = ["NO", "NE", "CO", "SE", "SU"]
 H5.Data.typesOfEvents = ["Derramamento de líquidos", "Desastre natural", "Explosão/incêndio", "Lançamento de sólidos", "Mortandade de peixes", "Produtos químicos/embalagens abandonadas", "Rompimento de barragem", "Vazamento de gases", "Outros", "Todos"]
+H5.Data.originOfAccident = ["Rodovia", "Ferrovia", "Terminal/portos/ancoradouros/etc", "Embarcação", "Refinaria", "Plataforma", "Indústria", "Duto", "Barragem", "Armazenamento/depósito", "Posto de combustível", "Outros", "Todos"]
 
 H5.Data.thisDate = new Date()
 H5.Data.thisYear = H5.Data.thisDate.getFullYear()
 H5.Data.thisMonth = H5.Data.thisDate.getMonth()
 H5.Data.thisDay = H5.Data.thisDate.getDate()
 H5.Data.thisType = 0
+H5.Data.thisOrigin = 0
 
 H5.Data.months =
   0: "Jan"
@@ -48,7 +50,7 @@ H5.DB.occurence.data =
       @regions[region] = {}
     @regions["Todos"] = {}
 
-  populate: (id_ocorrencia, region, date, state, type) ->
+  populate: (id_ocorrencia, region, date, state, type, origin) ->
     # convert string into date
     convertDate = (dateStr) ->
       dateStr = String(dateStr)
@@ -56,7 +58,10 @@ H5.DB.occurence.data =
       return new Date(dArr[0], (dArr[1]) - 1, dArr[2])
 
     # populate object
-    newType = (type.replace /[{}"]/g, "").split ","
+    newType = (type.replace /[{}"]/g, "".split ",")
+
+    # populate object
+    newOrigin = (origin.replace /[{}"]/g, "".split ",")
 
     #recover the register belonging to the current region
     if region not in H5.Data.regions
@@ -64,6 +69,7 @@ H5.DB.occurence.data =
     self = @regions[region]
     self[id_ocorrencia] = {}
     self[id_ocorrencia].type = newType #type of the event
+    self[id_ocorrencia].origin = newOrigin #type of the event
     self[id_ocorrencia].state = state #state UF
     self[id_ocorrencia].date = convertDate(date) #date of ocurrence of the event
     self[id_ocorrencia].year = convertDate(date).getFullYear()
@@ -78,7 +84,6 @@ H5.DB.occurence.data =
       @lastValue = self[id_ocorrencia]
     return
 
-
 rest = new H5.Rest (
   url: H5.Data.restURL
   table: H5.DB.occurence.table
@@ -87,8 +92,9 @@ rest = new H5.Rest (
 H5.DB.occurence.data.init()
 $.each rest.data, (i, properties) ->
   H5.DB.occurence.data.populate(
-    properties.id_ocorrencia, properties.regiao, properties.dt_registro, properties.sigla, properties.eventos
+    properties.id_ocorrencia, properties.regiao, properties.dt_registro, properties.sigla, properties.eventos, properties.origem
     )
+
 #}}}
 # RELOAD DATE {{{
 # reload date based on database
@@ -100,6 +106,7 @@ H5.Data.thisYear = H5.DB.occurence.data.lastValue.year
 H5.Data.selectedYear = H5.Data.thisYear
 H5.Data.selectedMonth = H5.Data.thisMonth
 H5.Data.selectedType = 0 #first item of the list
+H5.Data.selectedOrigin = 0 #first item of the list
 
 #}}}
 # CHART1 {{{
@@ -117,9 +124,10 @@ chart1 = new H5.Charts.GoogleCharts (
 chart1._yearsSlct = document.getElementById('yearsSlct')
 chart1._monthsSlct = document.getElementById('monthsSlct')
 chart1._typesSlct = document.getElementById('typesSlct')
+chart1._originsSlct = document.getElementById('originsSlct')
 
 # make those options selected
-chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true
+# chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true
 chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
 
 $(chart1._monthsSlct).on "change", (event) ->
@@ -159,18 +167,33 @@ $(chart1._typesSlct).on "change", (event) ->
   spark1.drawChart()
   spark2.drawChart()
 
+$(chart1._originsSlct).on "change", (event) ->
+  H5.Data.selectedOrigin = parseInt chart1._originsSlct.value
+  chart1.drawChart()
+  chart2.drawChart()
+  chart3.drawChart()
+  chart4.drawChart()
+  chart7.drawChart()
+  chart8.drawChart()
+  knob1.drawChart()
+  knob2.drawChart()
+  knob3.drawChart()
+  spark1.drawChart()
+  spark2.drawChart()
+
 chart1.drawChart = ->
-  createTable = (region, type) =>
+  createTable = (region, type, origin) =>
     sum = 0 #number of acidentes of H5.Data.selectedType
     for day in [1..daysInMonth]
       $.each H5.DB.occurence.data.regions[region], (key, reg) -> #keý is the name of the register, reg is de data
         #if the date of the register is between the first day of the month and last day of the month
         #verify if the day is the day we want
         #verify if the type of the event is of the type we want
-        if type is "Todos"
+        #verify if the origin of the event is of the origin we want
+        if type is "Todos" and origin is "Todos"
           if firstPeriod <= reg.date <= secondPeriod and reg.day is day
             sum++
-        else if firstPeriod <= reg.date <= secondPeriod and reg.day is day and (reg.type.indexOf(type) >= 0)
+        else if firstPeriod <= reg.date <= secondPeriod and reg.day is day and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
           sum++
       #setValue e getValue: apiGoogle - (row, collumn, value) sum with the value of the past day
       @data.setValue (day - 1), 1, @data.getValue((day - 1), 1) + sum #Math.round((@data.getValue((day - 1), 1) + sum) * 100) / 100
@@ -200,9 +223,9 @@ chart1.drawChart = ->
   # populate table with real values
   if H5.Data.region is "Todos"
     $.each H5.DB.occurence.data.regions, (region, value) ->
-      createTable region, H5.Data.typesOfEvents[H5.Data.selectedType]
+      createTable region, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]
   else
-    createTable H5.Data.region, H5.Data.typesOfEvents[H5.Data.selectedType]
+    createTable H5.Data.region, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]
 
   months =
     0: "Janeiro"
@@ -266,7 +289,7 @@ chart2._delBtn.onclick = ->
 
 chart2.drawChart = ->
   # sum values
-  sumValues = (year, month, type) ->
+  sumValues = (year, month, type, origin) ->
     sum = 0 #counter of occurences
     #first period = 1, Jan
     firstPeriod = new Date(year, 1, 1)
@@ -276,18 +299,18 @@ chart2.drawChart = ->
       $.each H5.DB.occurence.data.regions, (key, region) ->
         $.each region, (key, reg) ->
           #for each region, if the date belongs to the select year, the select month and the select type of event
-          if type is "Todos"
+          if type is "Todos" and origin is "Todos"
             if firstPeriod <= reg.date <= secondPeriod and reg.month == month #and (reg.type.indexOf(type) >= 0)
               sum++
-          else if firstPeriod <= reg.date <= secondPeriod and reg.month == month and (reg.type.indexOf(type) >= 0)
+          else if firstPeriod <= reg.date <= secondPeriod and reg.month == month  and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
             #counter of occurences
             sum++
     else
       $.each H5.DB.occurence.data.regions[H5.Data.region], (key, reg) ->
-        if type is "Todos"
+        if type is "Todos" and origin is "Todos"
           if firstPeriod <= reg.date <= secondPeriod and reg.month == month #and (reg.type.indexOf(type) >= 0)
             sum++
-        else if firstPeriod <= reg.date <= secondPeriod and reg.month == month and (reg.type.indexOf(type) >= 0)
+        else if firstPeriod <= reg.date <= secondPeriod and reg.month == month  and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
           #counter of occurences
           sum++
 
@@ -312,7 +335,7 @@ chart2.drawChart = ->
     for i in [1..@options.period]
       #for all the years, the selected type and all the months of the year
       #not the same data from above
-      data[i] = sumValues(H5.Data.thisYear - i + 1, month, H5.Data.typesOfEvents[H5.Data.selectedType])
+      data[i] = sumValues(H5.Data.thisYear - i + 1, month, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
     @data.addRow data
 
   options =
@@ -486,15 +509,15 @@ chart4._delBtn.onclick = ->
 
 chart4.drawChart = ->
   # sum values
-  sumValues = (region, year, type) ->
+  sumValues = (region, year, type, origin) ->
     sum = 0 #counter of occuresce
     firstPeriod = new Date(year, 1, 1)
     secondPeriod = new Date(year , 12, 31)
     $.each H5.DB.occurence.data.regions[region], (key, reg) ->
-      if type is "Todos"
+      if type is "Todos" and origin is "Todos"
         if firstPeriod <= reg.date <= secondPeriod
           sum++
-      else if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0)
+      else if firstPeriod <= reg.date <= secondPeriod  and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
         #counter of the number of occurences
         sum++
     Math.round(sum * 100) / 100
@@ -515,12 +538,12 @@ chart4.drawChart = ->
     $.each H5.DB.occurence.data.regions, (region, reg) =>
       data = [region]
       for j in [1..@options.period] #gets the value of the years fo every region
-        data[j] = sumValues(region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType])
+        data[j] = sumValues(region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
       @data.addRow data
   else
     data = [H5.Data.region] #gets the value of every period for only one region
     for j in [1..@options.period]
-      data[j] = sumValues(H5.Data.region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType])
+      data[j] = sumValues(H5.Data.region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
     @data.addRow data
 
   options =
@@ -753,15 +776,15 @@ chart7._rightBtn.onclick = ->
 
 chart7.drawChart = ->
   # sum values
-  sumValues = (region, year, type) ->
+  sumValues = (region, year, type, origin) ->
     sum = 0
     firstPeriod = new Date(year, 1, 1)
     secondPeriod = new Date(year , 12, 31)
     $.each H5.DB.occurence.data.regions[region], (key, reg) ->
-      if type is "Todos"
+      if type is "Todos" and origin is "Todos"
         if firstPeriod <= reg.date <= secondPeriod
           sum++
-      else if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0)
+      else if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
         sum++ #counter of ocurrences
     Math.round(sum * 100) / 100
 
@@ -779,13 +802,13 @@ chart7.drawChart = ->
   for i in [0...H5.Data.regions.length] #for every region
     region = H5.Data.regions[i]
     data = [region]
-    data[1] = sumValues(H5.Data.regions[i], H5.Data.thisYear - @options.period, H5.Data.typesOfEvents[H5.Data.selectedType])
+    data[1] = sumValues(H5.Data.regions[i], H5.Data.thisYear - @options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
     @data.addRow data
 
   #Handles the registers without a region defined
   region = H5.Data.regions[H5.Data.regions.length + 1] #for the data that doesnt have a region
   data = ["Sem Região Cadastrada"]
-  data[1] = sumValues("Todos", H5.Data.thisYear - @options.period, H5.Data.typesOfEvents[H5.Data.selectedType])
+  data[1] = sumValues("Todos", H5.Data.thisYear - @options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
   @data.addRow data
 
   options =
@@ -802,10 +825,12 @@ chart7.drawChart = ->
     backgroundColor: "transparent"
 
   # @changeTitle H5.Data.periods[@options.period]
+  originTitle = if H5.Data.selectedOrigin is 12 then "Todos Tipos de Origens" else H5.Data.originOfAccident[H5.Data.selectedOrigin]
+
   if (H5.Data.selectedType == 9)
-    @changeTitle H5.Data.thisYear - @options.period + " : Todos Tipos de Eventos"
+    @changeTitle H5.Data.thisYear - @options.period + " : Todos Tipos de Eventos" + " : " + originTitle
   else
-    @changeTitle H5.Data.thisYear - @options.period + " : " +  H5.Data.typesOfEvents[H5.Data.selectedType]
+    @changeTitle H5.Data.thisYear - @options.period + " : " +  H5.Data.typesOfEvents[H5.Data.selectedType] + " : " + originTitle
 
   # Disabling the buttons while the chart is drawing.
   @_rightBtn.disabled = true
@@ -832,13 +857,13 @@ chart8 = new H5.Charts.GoogleCharts(
 
 chart8.drawChart = ->
   # sum values
-  sumValues = (region, type) ->
+  sumValues = (region, type, origin) ->
     sum = 0
     $.each H5.DB.occurence.data.regions[region], (key, reg) ->
-      if type is "Todos"
+      if type is "Todos" and origin is "Todos"
         if firstPeriod <= reg.date <= secondPeriod
           sum++
-      else if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0)
+      else if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
         #counter of ocurrences
         sum++
     if firstPeriod > H5.Data.thisDate
@@ -872,19 +897,21 @@ chart8.drawChart = ->
   for i in [0...H5.Data.regions.length]
     region = H5.Data.regions[i] #for every region
     data = [region]
-    data[1] = sumValues(H5.Data.regions[i], H5.Data.typesOfEvents[H5.Data.selectedType])
+    data[1] = sumValues(H5.Data.regions[i], H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
     @data.addRow data
 
   #Handles the registers without a region defined
   region = H5.Data.regions[H5.Data.regions.length + 1] #for the data that doesnt have a region
   data = ["Sem Região Cadastrada"]
-  data[1] = sumValues("Todos", H5.Data.typesOfEvents[H5.Data.selectedType])
+  data[1] = sumValues("Todos", H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
   @data.addRow data
 
+  originTitle = if H5.Data.selectedOrigin is 12 then "Todos Tipos de Origens" else H5.Data.originOfAccident[H5.Data.selectedOrigin]
+
   if(H5.Data.selectedType == 9)
-    @changeTitle chart1._monthsSlct.options[H5.Data.selectedMonth].label + ", " + H5.Data.selectedYear + ": Todos Tipos de Eventos"
+    @changeTitle chart1._monthsSlct.options[H5.Data.selectedMonth].label + ", " + H5.Data.selectedYear + ": Todos Tipos de Eventos" + " : " + originTitle
   else
-    @changeTitle chart1._monthsSlct.options[H5.Data.selectedMonth].label + ", " + H5.Data.selectedYear + ": " + H5.Data.typesOfEvents[H5.Data.selectedType]
+    @changeTitle chart1._monthsSlct.options[H5.Data.selectedMonth].label + ", " + H5.Data.selectedYear + ": " + H5.Data.typesOfEvents[H5.Data.selectedType] + " : " + originTitle
 
   options =
     title: ""
@@ -1000,14 +1027,14 @@ spark1 = new H5.Charts.Sparks(
 
 spark1.drawChart = ->
   #Create array with values
-  createTable = (region, type) =>
+  createTable = (region, type, origin) =>
     dayValue = 0
     for day in [1..daysInMonth]
       $.each H5.DB.occurence.data.regions[region], (key, reg) ->
-        if type is "Todos"
+        if type is "Todos" and origin is "Todos"
           if firstPeriod <= reg.date <= secondPeriod and reg.day is day
             dayValue++ #counter of occurences per day
-        else if firstPeriod <= reg.date <= secondPeriod and reg.day is day and (reg.type.indexOf(type) >= 0)
+        else if firstPeriod <= reg.date <= secondPeriod and reg.day is day and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
           dayValue++ #counter of occurences per day
       data[(day-1)] = Math.round((data[(day-1)] + dayValue) * 100)/100
 
@@ -1024,9 +1051,9 @@ spark1.drawChart = ->
   # populate table with real values
   if H5.Data.region is "Todos"
     $.each H5.DB.occurence.data.regions, (region, value) ->
-      createTable region, H5.Data.typesOfEvents[H5.Data.selectedType]
+      createTable region, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]
   else
-    createTable H5.Data.region, H5.Data.typesOfEvents[H5.Data.selectedType]
+    createTable H5.Data.region, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]
 
   value = data[daysInMonth-1]
   @updateInfo data, value
@@ -1040,7 +1067,7 @@ spark2 = new H5.Charts.Sparks(
 spark2.drawChart = ->
   #Create array with values
   # sum values
-  sumValues = (year, month, type) ->
+  sumValues = (year, month, type, origin) ->
     sum = 0
     firstPeriod = new Date(year, 1, 1)
     if month != H5.Data.thisMonth
@@ -1050,14 +1077,14 @@ spark2.drawChart = ->
     if H5.Data.region is "Todos"
       $.each H5.DB.occurence.data.regions, (key, region) ->
         $.each region, (key, reg) ->
-          if type is "Todos"
+          if type is "Todos" and origin is "Todos"
             if firstPeriod <= reg.date <= secondPeriod and reg.month == month
               sum++ #counter of occurences
-          else if firstPeriod <= reg.date <= secondPeriod and reg.month == month and (reg.type.indexOf(type) >= 0)
+          else if firstPeriod <= reg.date <= secondPeriod and reg.month == month and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
             sum++ #counter of occurences
     else
       $.each H5.DB.occurence.data.regions[H5.Data.region], (key, reg) ->
-        if firstPeriod <= reg.date <= secondPeriod and reg.month == month and (reg.type.indexOf(type) >= 0)
+        if firstPeriod <= reg.date <= secondPeriod and reg.month == month and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
           sum++
 
     return Math.round(sum * 100) / 100
@@ -1077,7 +1104,7 @@ spark2.drawChart = ->
 #     if month <= count
 #       if 7 <= (month + 7) <= 11 then month+= 7 else month-= 5
     if month <= H5.Data.selectedMonth
-      data.push sumValues(year, month, H5.Data.typesOfEvents[H5.Data.selectedType])
+      data.push sumValues(year, month, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
     else
       data.push 0
 
@@ -1097,25 +1124,25 @@ knob1 = new H5.Charts.Knobs(
 
 knob1.drawChart = ->
   # sum values
-  periodDeforestationRate = (year, month, type) ->
+  periodDeforestationRate = (year, month, type, origin) ->
     sumValues = (date) ->
       sum = 0
       if H5.Data.region is "Todos"
         for region of H5.DB.occurence.data.regions
           for reg of H5.DB.occurence.data.regions[region]
             reg = H5.DB.occurence.data.regions[region][reg]
-            if type is "Todos"
+            if type is "Todos" and origin is "Todos"
               if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
                 sum++
-            else if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth() and (reg.type.indexOf(type) >= 0)
+            else if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth() and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
               sum++ #counter of occurrences
       else
         for reg of H5.DB.occurence.data.regions[H5.Data.region]
           reg = H5.DB.occurence.data.regions[H5.Data.region][reg]
-          if type is "Todos"
+          if type is "Todos" and origin is "Todos"
             if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
               sum++
-          else if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth() and (reg.type.indexOf(type) >= 0)
+          else if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth() and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
             sum++ #counter of occurrences
       return sum
 
@@ -1136,7 +1163,7 @@ knob1.drawChart = ->
       return Math.round((curValue - preValue) / preValue) * 100
 
   value = periodDeforestationRate(
-    H5.Data.selectedYear, H5.Data.selectedMonth, H5.Data.typesOfEvents[H5.Data.selectedType]
+    H5.Data.selectedYear, H5.Data.selectedMonth, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]
   )
   @updateInfo value
 #}}}
@@ -1150,22 +1177,22 @@ knob2 = new H5.Charts.Knobs(
 
 knob2.drawChart = ->
   # sum values
-  periodDeforestationRate = (year, month, type) ->
+  periodDeforestationRate = (year, month, type, origin) ->
     sumValues = (date) ->
       sum = 0
       if H5.Data.region is "Todos"
         for region of H5.DB.occurence.data.regions
           for reg of H5.DB.occurence.data.regions[region]
             reg = H5.DB.occurence.data.regions[region][reg]
-            if type is "Todos"
+            if type is "Todos" and origin is "Todos"
               if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth()
                 sum++
-            else if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth() and (reg.type.indexOf(type) >= 0)
+            else if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth() and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
               sum++ #counter of occurences
       else
         for reg of H5.DB.occurence.data.regions[H5.Data.region]
           reg = H5.DB.occurence.data.regions[H5.Data.region][reg]
-          if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth() and (reg.type.indexOf(type) >= 0)
+          if date.getFullYear() <= reg.year <= date.getFullYear() and reg.month is date.getMonth() and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
             sum++
       return sum
 
@@ -1186,7 +1213,7 @@ knob2.drawChart = ->
       return Math.round (curValue - preValue) / preValue * 100
 
   value = periodDeforestationRate(
-    H5.Data.selectedYear, H5.Data.selectedMonth, H5.Data.typesOfEvents[H5.Data.selectedType]
+    H5.Data.selectedYear, H5.Data.selectedMonth, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]
   )
   @updateInfo value
 #}}}
@@ -1200,20 +1227,20 @@ knob3 = new H5.Charts.Knobs(
 
 knob3.drawChart = ->
   # sum values
-  periodDeforestationAvgRate = (year, month, type) ->
+  periodDeforestationAvgRate = (year, month, type, origin) ->
     sumValues = (firstPeriod, secondPeriod) ->
       sum = 0
       if H5.Data.region is "Todos"
         $.each H5.DB.occurence.data.regions, (key, region) ->
           $.each region, (key, reg) ->
-            if type is "Todos"
+            if type is "Todos" and origin is "Todos"
               if firstPeriod <= reg.date <= secondPeriod
                 sum++
-            else if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0)
+            else if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
               sum++
       else
         $.each H5.DB.occurence.data.regions[H5.Data.region], (key, reg) ->
-          if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0)
+          if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
             sum++
       return Math.round(sum * 100) / 100
 

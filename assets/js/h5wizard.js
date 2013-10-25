@@ -6,6 +6,10 @@
 
   collapse = 2;
 
+  $('#addMeModal').on('showed', function() {
+    return $(".modal-footer").hide();
+  });
+
   $('#addMeModal').on('hidden', function() {
     var btnBack;
     history = [];

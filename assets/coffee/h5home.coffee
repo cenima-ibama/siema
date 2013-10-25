@@ -7,7 +7,7 @@ $(document).ready ->
   $('#addMeModal').modal(
     keyboard: false
     backdrop: false
-    show: false
+    show: true
   )
 
   $("#addMeModal").draggable(

@@ -663,8 +663,8 @@
       table: null,
       primaryTable: null,
       url: "",
-      fields: null,
       registUpdate: false,
+      fields: null,
       uniqueField: {
         field: null,
         insertable: false
@@ -968,6 +968,65 @@
                   return _this._reloadTable();
                 }
               });
+            } else if (_this.options.fields[nameField].selectArray != null) {
+              value = '';
+              if (_this.options.fields[nameField].defaultValue != null) {
+                value = _this.options.fields[nameField].defaultValue;
+              } else {
+                $.grep(_this.options.fields[nameField].selectArray, function(e) {
+                  if (e.value === nameTable.trim()) {
+                    return value = e.value;
+                  }
+                });
+              }
+              $(span).editable({
+                type: 'select',
+                placement: 'left',
+                source: _this.options.fields[nameField].selectArray,
+                value: value,
+                validate: function(value) {
+                  if (_this.options.fields[nameField].validation != null) {
+                    return _this.options.fields[nameField].validation(value);
+                  }
+                },
+                url: function(params) {
+                  var fields, where;
+                  where = "";
+                  $.each(row.children, function(key, cell) {
+                    var tableCell;
+                    tableCell = cell.children[0];
+                    if ($(tableCell).attr("data-field") === _this.options.uniqueField.field) {
+                      return where = _this.options.uniqueField.field + "%3D" + tableCell.innerHTML;
+                    }
+                  });
+                  if (params.value != null) {
+                    fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
+                  } else {
+                    fields = $(span).attr("data-field") + "%3D'" + params.value + "'";
+                  }
+                  if (_this.options.primaryTable != null) {
+                    if (_this.options.registUpdate) {
+                      fields = fields + ",dt_registro%3Dnow\(\)";
+                    }
+                    rest = new H5.Rest({
+                      url: _this.options.url,
+                      table: _this.options.primaryTable,
+                      fields: fields,
+                      parameters: where,
+                      restService: "ws_updatequery.php"
+                    });
+                  } else {
+                    rest = new H5.Rest({
+                      url: _this.options.url,
+                      table: _this.options.table,
+                      fields: fields,
+                      parameters: where,
+                      restService: "ws_updatequery.php"
+                    });
+                  }
+                  return _this._reloadTable();
+                }
+              });
             } else {
               $(span).editable({
                 type: 'text',
@@ -1089,6 +1148,13 @@
                 source: properties.searchData,
                 placement: 'right'
               });
+            } else if (properties.selectArray != null) {
+              $(span).editable({
+                type: 'select',
+                value: value,
+                source: properties.selectArray,
+                placement: 'left'
+              });
             } else {
               $(span).editable({
                 type: 'text',
@@ -1209,11 +1275,17 @@
                   alert(properties.columnName + ": " + ret);
                 }
               }
-              console.log(save);
-              console.log(ret);
               if (!$.isEmptyObject(val)) {
                 values += "'" + val[0].value + "',";
               }
+            } else if (properties.selectArray != null) {
+              val = null;
+              val = $.grep(properties.selectArray, function(e) {
+                if (e.text === span.innerHTML) {
+                  return e.value;
+                }
+              });
+              values += "'" + val[0].value + "',";
             } else {
               if (properties.validation != null) {
                 ret = properties.validation(span.innerHTML);
@@ -1344,6 +1416,7 @@
       srid: null,
       uniquePoint: null,
       loadDrawn: false,
+      editShapes: false,
       buttons: {
         marker: true,
         line: true,
@@ -1390,10 +1463,9 @@
         }
       });
       this.options.map.addControl(drawControl);
-      if (this.options.loadDrawn) {
-        console.log('log!');
+      if (!this.options.editShapes) {
+        this.reloadShape();
       }
-      this.reloadShape();
       this._getNextIdTable();
       this._addDrawButtonActions();
       return this._addRemoveButtonActions();
@@ -1570,8 +1642,8 @@
               restService: "ws_insertquery.php"
             });
           } else {
-            layer._leaflet_id = _this.idMarker;
-            sql = "shape=ST_SetSRID(ST_MakePoint(" + layer._latlng.lat + "," + layer._latlng.lng + ")," + _this.options.srid + ")";
+            layer._leaflet_id = _this.options.uniquePoint._leaflet_id;
+            sql = "set shape=ST_SetSRID(ST_MakePoint(" + layer._latlng.lat + "," + layer._latlng.lng + ")," + _this.options.srid + ")";
             sql = sql + ",dt_registro=now()";
             rest = new H5.Rest({
               url: H5.Data.restURL,
@@ -1583,7 +1655,7 @@
           }
           if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
             $("#inputLat").val(layer._latlng.lat);
-            $("#inputLng").val(layer._latlng.lng).trigger('change');
+            $("#inputLng").val(layer._latlng.lng);
           }
         }
         if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
@@ -1591,7 +1663,7 @@
         } else {
           _this.drawnItems.removeLayer(_this.options.uniquePoint);
           _this.options.uniquePoint = layer;
-          return _this.drawnItems.addLayer(layer);
+          return _this.drawnItems.addLayer(_this.options.uniquePoint);
         }
       });
     };
@@ -1629,7 +1701,7 @@
               });
               if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
                 $("#inputLat").val('');
-                $("#inputLng").val('').trigger('change');
+                $("#inputLng").val('');
               }
               if (_this.options.uniquePoint != null) {
                 return _this.options.uniquePoint = true;
@@ -1744,21 +1816,72 @@
         point = new L.Marker(element.coordinates);
         point._leaflet_id = pon.id_tmp_pon;
         _this.drawnItems.addLayer(point);
-        _this.idMarker = pon.id_tmp_pon;
         if ((_this.options.uniquePoint != null)) {
           return _this.options.uniquePoint = point;
         }
       });
     };
 
-    Draw.prototype.editShapes = function(tableFields, tableName, tableParameters) {
-      var rest;
-      return rest = new H5.Rest({
-        url: this.options.url,
-        fields: tableFields,
-        table: tableName,
-        parameters: tableParameters
+    Draw.prototype.editShapes = function(element, pointTable, polygonTable, lineTable) {
+      var fields, line, marker, polygon, rest, sql, values;
+      marker = this.options.tables.marker;
+      fields = '';
+      values = '';
+      $.each(marker.fields, function(key, value) {
+        fields = fields + value + ",";
+        if (marker.defaultValues[value]) {
+          return values = values + marker.defaultValues[value] + " as " + value + ",";
+        } else {
+          return values = values + pointTable.fields[key] + ",";
+        }
       });
+      sql = "(" + fields + "dt_registro) select " + values + "now() as dt_registro from " + pointTable.name + " where " + pointTable.parameters.field + "%3D" + pointTable.parameters.value;
+      console.log(sql);
+      rest = new H5.Rest({
+        url: this.options.url,
+        fields: sql,
+        table: this.options.tables.marker.table,
+        restService: "ws_insertquery.php"
+      });
+      polygon = this.options.tables.polygon;
+      fields = '';
+      values = '';
+      $.each(polygon.fields, function(key, value) {
+        fields = fields + value + ",";
+        if (polygon.defaultValues[value]) {
+          return values = values + polygon.defaultValues[value] + " as " + value + ",";
+        } else {
+          return values = values + polygonTable.fields[key] + ",";
+        }
+      });
+      sql = "(" + fields + "dt_registro) select " + values + "now() as dt_registro from " + polygonTable.name + " where " + polygonTable.parameters.field + "%3D" + polygonTable.parameters.value;
+      console.log(sql);
+      rest = new H5.Rest({
+        url: this.options.url,
+        fields: sql,
+        table: polygon.table,
+        restService: "ws_insertquery.php"
+      });
+      line = this.options.tables.polyline;
+      fields = '';
+      values = '';
+      $.each(line.fields, function(key, value) {
+        fields = fields + value + ",";
+        if (line.defaultValues[value]) {
+          return values = values + line.defaultValues[value] + " as " + value + ",";
+        } else {
+          return values = values + lineTable.fields[key] + ",";
+        }
+      });
+      sql = "(" + fields + "dt_registro) select " + values + "now() as dt_registro from " + lineTable.name + " where " + lineTable.parameters.field + "%3D" + lineTable.parameters.value;
+      console.log(sql);
+      rest = new H5.Rest({
+        url: this.options.url,
+        fields: sql,
+        table: line.table,
+        restService: "ws_insertquery.php"
+      });
+      return this.reloadShape();
     };
 
     return Draw;

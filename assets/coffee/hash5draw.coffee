@@ -8,6 +8,7 @@ class H5.Draw
     srid: null
     uniquePoint: null
     loadDrawn: false
+    editShapes: false
     buttons:
       marker: true
       line: true
@@ -70,10 +71,7 @@ class H5.Draw
 
     @options.map.addControl(drawControl)
 
-    if @options.loadDrawn
-      console.log 'log!'
-
-    @reloadShape()
+    if !@.options.editShapes then @reloadShape()
 
     @_getNextIdTable()
 
@@ -292,8 +290,8 @@ class H5.Draw
             restService: "ws_insertquery.php"
           )
         else
-          layer._leaflet_id = @idMarker
-          sql = "shape=ST_SetSRID(ST_MakePoint(" +
+          layer._leaflet_id = @.options.uniquePoint._leaflet_id
+          sql = "set shape=ST_SetSRID(ST_MakePoint(" +
                 layer._latlng.lat + "," + layer._latlng.lng + ")," +
                 @.options.srid + ")"
 
@@ -310,14 +308,16 @@ class H5.Draw
 
         if document.getElementById('inputLat')? and document.getElementById('inputLng')?
           $("#inputLat").val(layer._latlng.lat)
-          $("#inputLng").val(layer._latlng.lng).trigger('change')
+          $("#inputLng").val(layer._latlng.lng)
+          # $("#inputLng").val(layer._latlng.lng).trigger('change')
 
       if (!@.options.uniquePoint? || (@.options.uniquePoint? and type isnt 'marker'))
         @drawnItems.addLayer(layer)
       else
         @drawnItems.removeLayer(@.options.uniquePoint)
         @.options.uniquePoint = layer
-        @drawnItems.addLayer(layer)
+        @drawnItems.addLayer(@.options.uniquePoint)
+
 
 
   # Not Functioning well!!!
@@ -411,7 +411,8 @@ class H5.Draw
 
             if document.getElementById('inputLat')? and document.getElementById('inputLng')?
               $("#inputLat").val('')
-              $("#inputLng").val('').trigger('change')
+              $("#inputLng").val('')
+              # $("#inputLng").val('').trigger('change')
 
             if @.options.uniquePoint?
               @.options.uniquePoint = true
@@ -544,20 +545,81 @@ class H5.Draw
       point._leaflet_id = pon.id_tmp_pon
       @drawnItems.addLayer(point)
 
-      @idMarker = pon.id_tmp_pon
+      # @idMarker = pon.id_tmp_pon
 
       if (@.options.uniquePoint?)
         @.options.uniquePoint = point
 
-  editShapes: (tableFields, tableName, tableParameters)->
-    # Retrieve every draw from the table specified and copy it to the tmp table
+  editShapes: (element, pointTable, polygonTable, lineTable)->
+  # Retrieve every draw from the table specified and copy it to the tmp table
+
+    marker = @.options.tables.marker
+    fields = ''
+    values = ''
+
+    $.each marker.fields, (key, value)->
+      fields = fields + value + ","
+      if marker.defaultValues[value]
+        values = values + marker.defaultValues[value] + " as " + value + ","
+      else
+        values = values + pointTable.fields[key] + ","
+
+    sql = "(" + fields + "dt_registro) select " + values + "now() as dt_registro from "  + pointTable.name + " where " + pointTable.parameters.field + "%3D" + pointTable.parameters.value
+
+    console.log sql
+
     rest = new H5.Rest (
       url: @.options.url
-      fields: tableFields
-      table: tableName
-      parameters: tableParameters
+      fields: sql
+      table: @.options.tables.marker.table
+      restService: "ws_insertquery.php"
     )
 
+    polygon = @.options.tables.polygon
+    fields = ''
+    values = ''
+
+    $.each polygon.fields, (key, value)->
+      fields = fields + value + ","
+      if polygon.defaultValues[value]
+        values = values + polygon.defaultValues[value] + " as " + value + ","
+      else
+        values = values + polygonTable.fields[key] + ","
+
+    sql = "(" + fields + "dt_registro) select " + values + "now() as dt_registro from "  + polygonTable.name + " where " + polygonTable.parameters.field + "%3D" + polygonTable.parameters.value
+
+    console.log sql
+
+    rest = new H5.Rest (
+      url: @.options.url
+      fields: sql
+      table: polygon.table
+      restService: "ws_insertquery.php"
+    )
+
+    line = @.options.tables.polyline
+    fields = ''
+    values = ''
+
+    $.each line.fields, (key, value)->
+      fields = fields + value + ","
+      if line.defaultValues[value]
+        values = values + line.defaultValues[value] + " as " + value + ","
+      else
+        values = values + lineTable.fields[key] + ","
+
+    sql = "(" + fields + "dt_registro) select " + values + "now() as dt_registro from "  + lineTable.name + " where " + lineTable.parameters.field + "%3D" + lineTable.parameters.value
+
+    console.log sql
+
+    rest = new H5.Rest (
+      url: @.options.url
+      fields: sql
+      table: line.table
+      restService: "ws_insertquery.php"
+    )
+
+    @reloadShape()
 
 
 

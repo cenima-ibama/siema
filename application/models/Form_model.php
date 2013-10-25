@@ -87,6 +87,14 @@ class Form_model extends CI_Model {
     	}
     }
 
+    if (isset($form['dtFeriado']) and $form['dtFeriado'] == 'on') {
+      $fields = $fields . "dt_ocorrencia_feriado,";
+      $values = $values . "1,";
+    } else {
+      $fields = $fields . "dt_ocorrencia_feriado,";
+      $values = $values . "0,";
+    }
+
     $fields = $fields ."plano_emergencia,";
   	if ($form["planoEmergencia"] == '1') {
   		$values = $values . "'S',";
@@ -151,11 +159,6 @@ class Form_model extends CI_Model {
     } else {
       $values = $values . "'N',";
     }
-
-  	// HARDCODED INFORMATION
-    // $fields = $fields . "des_ocorrencia,";
-    // $values = $values . "'teste',";
-  	// HARDCODED INFORMATION
 
     // Tipo do Produto
 
@@ -260,6 +263,41 @@ class Form_model extends CI_Model {
       $values = $values . "'" . $form["inputDesObs"] . "',";
     }
 
+
+    if (isset($form['inputTipoSubstancia'])) {
+      $fields = $fields . "tipo_substancia,";
+      $values = $values . "'" . $form['inputTipoSubstancia']) . "',";
+    }
+
+    if (isset($form['inputValorEstimado'])) {
+      $fields = $fields . "valor_estimado,";
+      $values = $values . "'" . $form['inputValorEstimado']) . "',";
+    }
+
+    if (isset($form['produtoNaoPerigoso']) and $form['produtoNaoPerigoso'] == 'on') {
+      $fields = $fields . "produto_perigoso,";
+      $values = $values . "1,";
+    } else {
+      $fields = $fields . "produto_perigoso,";
+      $values = $values . "0,";
+    }
+
+    if (isset($form['produtoNaoAplica']) and $form['produtoNaoAplica'] == 'on') {
+      $fields = $fields . "produto_nao_se_aplica,";
+      $values = $values . "1,";
+    } else {
+      $fields = $fields . "produto_nao_se_aplica,";
+      $values = $values . "0,";
+    }
+
+    if (isset($form['produtoNaoEspecificado']) and $form['produtoNaoEspecificado'] == 'on') {
+      $fields = $fields . "produto_nao_especificado,";
+      $values = $values . "1,";
+    } else {
+      $fields = $fields . "produto_nao_especificado,";
+      $values = $values . "0,";
+    }
+
     $fields = $fields . "dt_registro";
     $values = $values . "now()";
 
@@ -314,21 +352,21 @@ class Form_model extends CI_Model {
                           $id . " as id_ocorrencia," .
                           "descricao, " .
                           "shape " .
-                  " from tmp_lin; ";
+                  " from tmp_lin where nro_ocorrencia=" . $form['comunicado'] . "; ";
       $fields = $fields . " insert into ocorrencia_pol " .
                   " (id_ocorrencia_pol, id_ocorrencia, descricao, shape)" .
                   " select nextval('ocorrencia_pol_id_ocorrencia_pol_seq') as id_ocorrencia_pol, " .
                           $id . " as id_ocorrencia, " .
                           "descricao, " .
                           "shape " .
-                  " from tmp_pol; ";
+                  " from tmp_pol where nro_ocorrencia=" . $form['comunicado'] . "; ";
       $fields = $fields . " insert into ocorrencia_pon " .
                   " (id_ocorrencia_pon, id_ocorrencia, descricao, shape)" .
                   " select nextval('ocorrencia_pon_id_ocorrencia_pon_seq') as id_ocorrencia_pon, " .
                           $id . " as id_ocorrencia, " .
                           "descricao, " .
                           "shape " .
-                  " from tmp_pon; ";
+                  " from tmp_pon where nro_ocorrencia=" . $form['comunicado'] . "; ";
 
 
       // Deleted temporary information on tmp tables
@@ -463,7 +501,6 @@ class Form_model extends CI_Model {
 
       $this->firephp->log($sql);
     }
-
 
     // Inserting informations about the shipment, related to the oil form
     if(isset($form['inputNomeNavio'])) {
@@ -658,7 +695,7 @@ class Form_model extends CI_Model {
         }
 
         if(isset($form["slctLicenca"])) {
-          $subfields = $subfields . "des_licenca_ambiental='" . $form["slctLicenca"] . "'";
+          $subfields = $subfields . ",des_licenca_ambiental='" . $form["slctLicenca"] . "'";
         }
 
 
@@ -727,8 +764,70 @@ class Form_model extends CI_Model {
     $this->firephp->log($sqlOcorrencias);
 
     // Creating the relations on the Form
-
     $id = $oldOcorrencia['id_ocorrencia'];
+
+
+    //Saving vectors on database, linking it to the "ocorrencia"
+    $fields = "select * from tmp_pon where nro_ocorrencia=" . $form['comunicado'] . ";";
+    $point = $ocorrenciasDatabase->query($fields);
+
+    $fields = "select * from tmp_lin where nro_ocorrencia=" . $form['comunicado'] . ";";
+    $line = $ocorrenciasDatabase->query($fields);
+
+    $fields = "select * from tmp_pol where nro_ocorrencia=" . $form['comunicado'] . ";";
+    $polygon = $ocorrenciasDatabase->query($fields);
+
+    if($line->num_rows() > 0 || $polygon->num_rows() > 0 || $point->num_rows() > 0){
+
+      // delete the relations already done with the edited 'ocorrencia'
+      if ($line->num_rows() > 0) {
+        $fields = "delete from ocorrencia_lin where id_ocorrencia=" . $id .";";
+        $ocorrenciasDatabase->query($fields);
+      }
+      if ($polygon->num_rows() > 0) {
+        $fields = "delete from ocorrencia_pol where id_ocorrencia=" . $id .";";
+        $ocorrenciasDatabase->query($fields);
+      }
+      if ($point->num_rows() > 0) {
+        $fields = "delete from ocorrencia_pon where id_ocorrencia=" . $id .";";
+        $ocorrenciasDatabase->query($fields);
+      }
+
+      $this->firephp->log($line->num_rows() . " " . $polygon->num_rows() . " " . $point->num_rows() );
+
+      $fields = " insert into ocorrencia_lin " .
+                  " (id_ocorrencia_lin, id_ocorrencia, descricao, shape)" .
+                  " select nextval('ocorrencia_lin_id_ocorrencia_lin_seq') as id_ocorrencia_lin, " .
+                          $id . " as id_ocorrencia," .
+                          "descricao, " .
+                          "shape " .
+                  " from tmp_lin where nro_ocorrencia=" . $form['comunicado'] . "; ";
+      $fields = $fields . " insert into ocorrencia_pol " .
+                  " (id_ocorrencia_pol, id_ocorrencia, descricao, shape)" .
+                  " select nextval('ocorrencia_pol_id_ocorrencia_pol_seq') as id_ocorrencia_pol, " .
+                          $id . " as id_ocorrencia, " .
+                          "descricao, " .
+                          "shape " .
+                  " from tmp_pol where nro_ocorrencia=" . $form['comunicado'] . "; ";
+      $fields = $fields . " insert into ocorrencia_pon " .
+                  " (id_ocorrencia_pon, id_ocorrencia, descricao, shape)" .
+                  " select nextval('ocorrencia_pon_id_ocorrencia_pon_seq') as id_ocorrencia_pon, " .
+                          $id . " as id_ocorrencia, " .
+                          "descricao, " .
+                          "shape " .
+                  " from tmp_pon where nro_ocorrencia=" . $form['comunicado'] . "; ";
+
+
+      // Deleted temporary information on tmp tables
+      $fields = $fields . " delete from tmp_lin; delete from tmp_pol; delete from tmp_pon;";
+
+      // $this->firephp->log($sql);
+      $this->firephp->log($fields);
+
+      // $ocorrenciasDatabase->query($sql);
+      $ocorrenciasDatabase->query($fields);
+    }
+
 
     $fields = "select * from ocorrencia_pon where id_ocorrencia='" . $oldOcorrencia['id_ocorrencia'] . "';";
 
@@ -917,11 +1016,12 @@ class Form_model extends CI_Model {
       $oldShipment =  $ocorrenciasDatabase->query($fields);
 
       if ($oldShipment->num_rows() > 0) {
+        $funcNavio = isset($form['inputFuncaoNavio']) ? $form['inputFuncaoNavio'] : "";
         // Updating informations about the shipment, related to the oil form
         $sql = " update detalhamento_ocorrencia set " .
                   " des_navio='" . $form['inputNomeNavio'] . "'," .
                   " des_instalacao='" . $form['inputNomeInstalacao'] . "'," .
-                  " des_funcao_comunicante='" . $form['inputFuncaoNavio'] . "'" .
+                  " des_funcao_comunicante='" . $funcNavio  . "'" .
                " where id_ocorrencia='" . $id . "';";
 
         $ocorrenciasDatabase->query($sql);

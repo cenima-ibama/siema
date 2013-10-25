@@ -158,13 +158,22 @@ restURL = "http://" + document.domain + "/siema/rest"
 # display acidentes
 acidentes = new L.VectorLayer.Postgis (
   url: restURL
-  geotable: "ocorrencia_pon"
-  fields: "id_ocorrencia"
+  geotable: "vw_ocorrencia_shape"
+  fields: "id_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos"
   srid: 4326
   geomFieldName: "shape"
   showAll: true
   cluster: true
-  popupTemplate: null
+  popupTemplate: (properties) ->
+    html = '<div class="iw-content"><h4>' + properties.id_ocorrencia + '</h4>'
+    html += '<table class="condensed-table bordered-table zebra-striped"><tbody>'
+    html += '<tr><th>Municipio - Estado: </th><td>' + properties.municipio + ' - ' + properties.estado + '</td></tr>'
+    html += '<tr><th>Data: </th><td>' + properties.data_acidente + '</td></tr>'
+    html += '<tr><th>Origem do Acidente: </th><td>' + properties.origem_acidente.replace(/[{}]/g,"")  + '</td></tr>'
+    html += '<tr><th>Tipo de Evento: </th><td>' + properties.tipo_eventos.replace(/[{}]/g,"") + '</td></tr>'
+    html += '<tr><th>Produtos Envolvidos: </th><td>' + properties.produtos.replace(/[{}]/g,"") + '</td></tr>'
+    html += '</tbody></table></div>'
+    return html
   focus: false
   symbology:
     type: "single"
@@ -221,6 +230,39 @@ new L.control.locate(
 
   locateOptions: {}
 ).addTo(H5.Map.base)
+
+
+# H5.Map.layer.alerta = new L.VectorLayer.Postgis (
+#   url: restURL
+#   geotable: H5.DB.alert.table
+#   fields: "id_des, tipo, data_imagem, area_km2, dominio"
+#   srid: 4326
+#   geomFieldName: "shape"
+#   popupTemplate: (properties) ->
+#     html = '<div class="iw-content"><h4>' + properties.id_des + '</h4>'
+#     html += '<h5>' + properties.tipo + '</h5>'
+#     html += '<table class="condensed-table bordered-table zebra-striped"><tbody>'
+#     html += '<tr><th>Data: </th><td>' + properties.data_imagem.split(" ", 1) + '</td></tr>'
+#     html += '<tr><th>Área: </th><td>' + properties.area_km2+ '</td></tr>'
+#     if properties.dominio.length > 1
+#       html += '<tr><th>Domínio: </th><td>' + properties.dominio + '</td></tr>'
+#     html += '</tbody></table></div>'
+#     return html
+#   singlePopup: true
+#   where: "ano = '2013'"
+#   showAll: false
+#   limit: 200
+#   scaleRange: [9, 20]
+#   symbology:
+#     type: "single"
+#     vectorStyle:
+#       fillColor: "#ff0000"
+#       fillOpacity: 0.6
+#       weight: 4.0
+#       color: "#ff0000"
+#       opacity: 0.8
+# )
+# H5.Map.layer.alerta.setMap H5.Map.base
 
 # icons
 iconsURL = "http://" + document.domain + "/siema/assets/img/icons/"

@@ -6,8 +6,8 @@ class H5.Table
     table: null           # Table used to create the fields that will be show on the html table
     primaryTable: null    # table used on remotion when the html table is composed of 2 or more tables
     url: ""               # URL that the rest will send the insert, delete and update jsons.
-    fields: null          # object that holds the fields listed on the html table
     registUpdate: false   # Field for registering the update/create timestamp that the fields are altered/inserted.
+    fields: null          # object that holds the fields listed on the html table
     # fields structure
     #   columnName: string (name of the column on the database that the info will come)
     #   validation: function (function to validate on inserting)
@@ -16,6 +16,8 @@ class H5.Table
     #   searchData:  array (in case it is a typeahead field, you can pass the source for the search)
     #   primaryField:  string (in case the field is a formated info, you can pass the principal source of the information, for example a id field)
     #   defaultValue: string (in case you want to pass a default value for the field)
+    #   selectArray:  array (in case it is a select field, you can pass a object with the elements for the select field)
+    #     id: name_of_the_field   (the id and the name)
     uniqueField:
       field: null         # string (pass for the framework which field is the primary field (id) of the table, in cases of deletion or insertion)
       insertable: false   # boolean (represents if the field primary field is auto increment, or it accepts the user to define it. By the default, the id is created by the database)
@@ -359,6 +361,70 @@ class H5.Table
                 # Reload the table
                 @_reloadTable()
             )
+          else if @options.fields[nameField].selectArray?
+            value = ''
+
+            if @options.fields[nameField].defaultValue?
+              value = @options.fields[nameField].defaultValue
+            else
+              $.grep @options.fields[nameField].selectArray, (e) ->
+                  if e.value is nameTable.trim()
+                   value = e.value
+
+            # Add the source info for the typeahead input
+            $(span).editable(
+              type: 'select'
+              placement: 'left'
+              source: @options.fields[nameField].selectArray
+              value: value
+              validate: (value)=>
+                if @options.fields[nameField].validation?
+                  @options.fields[nameField].validation(value)
+              # Function to save the editted value on the database
+              url: (params)=>
+                where = ""
+
+                # Gets the key of the row, to update on the database
+                $.each row.children, (key,cell) =>
+                  tableCell = cell.children[0]
+                  if $(tableCell).attr("data-field") is @options.uniqueField.field
+                    where = @options.uniqueField.field + "%3D" + tableCell.innerHTML
+
+                # Construct the query on the database
+                if params.value?
+                  fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+                else
+                  fields = $(span).attr("data-field") + "%3D'" +  params.value + "'"
+
+                # Verifies if the there's a primaryTable for the CRUD action.
+                if @options.primaryTable?
+
+                  # Verifies if it's demanding to save the timestamp of the alteration
+                  if @options.registUpdate
+                    fields = fields + ",dt_registro%3Dnow\(\)"
+
+                  # Make the request
+                  rest = new H5.Rest (
+                    url: @options.url
+                    table: @options.primaryTable
+                    fields: fields
+                    parameters: where
+                    restService: "ws_updatequery.php"
+                  )
+                else
+                  # Make the request
+                  rest = new H5.Rest (
+                    url: @options.url
+                    table: @options.table
+                    fields: fields
+                    parameters: where
+                    restService: "ws_updatequery.php"
+                  )
+
+
+                # Reload the table
+                @_reloadTable()
+            )
           else
             $(span).editable(
               type: 'text'
@@ -512,6 +578,13 @@ class H5.Table
               source: properties.searchData
               placement: 'right'
             )
+          else if properties.selectArray?
+            $(span).editable(
+              type: 'select'
+              value: value
+              source: properties.selectArray
+              placement: 'left'
+            )
           else
             $(span).editable(
               type: 'text'
@@ -636,6 +709,7 @@ class H5.Table
 
         # Verifies if the field is a unique field and if it's editable. If it is, stores in the query string
         if @options.uniqueField.field isnt key or @options.uniqueField.insertable
+
           if properties.primaryField?
             fields +=  properties.primaryField + ","
           else
@@ -656,14 +730,18 @@ class H5.Table
                 save = false
                 alert properties.columnName + ": " + ret
 
-            console.log save
-            console.log ret
-
             if !$.isEmptyObject(val)
               values += "'" + val[0].value + "',"
+          else if properties.selectArray?
+
+            val = null
+            val = $.grep properties.selectArray, (e)=>
+              if e.text == span.innerHTML
+                return e.value
+
+            values += "'" + val[0].value + "',"
           else
             # Run the validation actions so that the values inserted can be saved
-
             if properties.validation?
               ret = properties.validation(span.innerHTML)
 

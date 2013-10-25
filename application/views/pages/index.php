@@ -297,7 +297,7 @@
         echo '<button class="close" data-dismiss="alert">&times;</button>
         <h4 style="text-align: left">Importante:</h4></br>
         <p style="text-align: left">
-        Esse sistema encontra-se em fase de teste, alguns recursos ou funcionalidades não foram totalmente testados ou não foram implementados.
+        O Ibama registra e analisa informações a respeito de acidentes ambientais que ocorrem em todo o território brasileiro, prioritariamente os que são causados pela liberação acidental de produtos nocivos ou perigosos ao meio ambiente, tais como óleos e demais produtos químicos. Utilize essa ferramenta e faça a sua busca em nosso Sistema.
         </p>';
         echo '</div>';
       }
@@ -323,19 +323,19 @@
         <div class="item">
           <label>Ano</label>
           <select id="yearsSlct" class="selectpicker" data-width="80px" data-size="6" name="years">
-            <option value="2004">2004</option>
-            <option value="2005">2005</option>
-            <option value="2006">2006</option>
-            <option value="2007">2007</option>
-            <option value="2008">2008</option>
-            <option value="2009">2009</option>
-            <option value="2010">2010</option>
-            <option value="2011">2011</option>
+            <option value="2013" selected="selected">2013</option>
             <option value="2012">2012</option>
-            <option value="2013">2013</option>
+            <option value="2011">2011</option>
+            <option value="2010">2010</option>
+            <option value="2009">2009</option>
+            <option value="2008">2008</option>
+            <option value="2007">2007</option>
+            <option value="2006">2006</option>
+            <option value="2005">2005</option>
+            <option value="2004">2004</option>
           </select>
         </div>
-      <div class="item">
+        <div class="item">
           <label>Tipo de Evento</label>
           <select id="typesSlct" class="selectpicker" data-width="140px" data-size="6" name="types">
             <option value="0">Derramamento de líquidos</option>
@@ -348,6 +348,24 @@
             <option value="7">Vazamento de gases</option>
             <option value="8">Outros</option>
             <option value="9">Todos</option>
+          </select>
+        </div>
+        <div class="item">
+          <label>Origem do Acidente</label>
+          <select id="originsSlct" class="selectpicker" data-width="140px" data-size="6" name="origins">
+            <option value="0">Rodovia</option>
+            <option value="1">Ferrovia</option>
+            <option value="2">Terminal/portos/ancoradouros/etc.</option>
+            <option value="3">Embarcação</option>
+            <option value="4">Refinaria</option>
+            <option value="5">Plataforma</option>
+            <option value="6">Indústria</option>
+            <option value="7">Duto</option>
+            <option value="8">Barragem</option>
+            <option value="9">Armazenamento/Depósito</option>
+            <option value="10">Posto de combustível</option>
+            <option value="11">Outros</option>
+            <option value="12">Todos</option>
           </select>
         </div>
       </div>

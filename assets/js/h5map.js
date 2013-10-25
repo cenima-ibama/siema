@@ -160,13 +160,24 @@
 
   acidentes = new L.VectorLayer.Postgis({
     url: restURL,
-    geotable: "ocorrencia_pon",
-    fields: "id_ocorrencia",
+    geotable: "vw_ocorrencia_shape",
+    fields: "id_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos",
     srid: 4326,
     geomFieldName: "shape",
     showAll: true,
     cluster: true,
-    popupTemplate: null,
+    popupTemplate: function(properties) {
+      var html;
+      html = '<div class="iw-content"><h4>' + properties.id_ocorrencia + '</h4>';
+      html += '<table class="condensed-table bordered-table zebra-striped"><tbody>';
+      html += '<tr><th>Municipio - Estado: </th><td>' + properties.municipio + ' - ' + properties.estado + '</td></tr>';
+      html += '<tr><th>Data: </th><td>' + properties.data_acidente + '</td></tr>';
+      html += '<tr><th>Origem do Acidente: </th><td>' + properties.origem_acidente.replace(/[{}]/g, "") + '</td></tr>';
+      html += '<tr><th>Tipo de Evento: </th><td>' + properties.tipo_eventos.replace(/[{}]/g, "") + '</td></tr>';
+      html += '<tr><th>Produtos Envolvidos: </th><td>' + properties.produtos.replace(/[{}]/g, "") + '</td></tr>';
+      html += '</tbody></table></div>';
+      return html;
+    },
     focus: false,
     symbology: {
       type: "single",

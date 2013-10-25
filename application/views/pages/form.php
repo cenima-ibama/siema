@@ -68,6 +68,21 @@
                         <?php echo form_input($inputLng); ?>
                       </div>
                     </div>
+<!--                     <div class="span12">
+                      <label class="checkbox" for="oceano">
+                        <?php echo form_checkbox($oceano); ?>
+                        &nbsp; Oceano
+                      </label>
+                      <label id="spanBaciaSed" class="checkbox" for="inputBaciaSed"
+                        <?php
+                          if (!isset($oceano['checked']))
+                            echo ' style="display:none;"';
+                        ?>
+                      >
+                        &nbsp; Bacia Sedimentar
+                        <?php echo form_input($inputBaciaSed); ?>
+                      </label>
+                    </div> -->
                     <!--
                     <div class="span4">
                       <div class="control-group">
@@ -203,6 +218,14 @@
                     </div>
                   </div>
                 </div>
+                <div class="row-fluid">
+                  <div class="span12">
+                    <label class="checkbox text-left">
+                      <?php echo form_checkbox($dtFeriado,'on'); ?>
+                      Feriado
+                    </label>
+                  </div>
+                </div>
                 <div id="divPeriodoInci" class="row-fluid">
                   <div class="span12">
                     <label class="control-label"> Período:* </label>
@@ -272,7 +295,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompOrigem">
-                      Informação complementares:
+                      Informações complementares:
                     </label>
                   </div>
                   <div class="controls">
@@ -355,7 +378,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompEvento">
-                      Informação complementares:
+                      Informações complementares:
                     </label>
                   </div>
                   <div class="controls">
@@ -380,6 +403,10 @@
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse5">
               5. Tipo de Produto*
+              <?php
+                if (isset($hasOleo))
+                  echo "</br><i style=\"font-size: 9px\">(Item V do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002.)</i>"
+              ?>
             </a>
           </div>
           <div id="collapse5" class="accordion-body collapse">
@@ -394,7 +421,17 @@
                     <label class="control-label">&nbsp;</label>
                     <div class="controls">
                       <label class="checkbox text-left">
-                        <input id="produtoNaoPerigoso" type="checkbox" name="produtoNaoPerigoso"> Não perigoso
+                      <?php echo form_checkbox($produtoNaoPerigoso, 'on'); ?> Não perigoso
+                      </label>
+                    </div>
+                    <div class="controls">
+                      <label class="checkbox text-left">
+                      <?php echo form_checkbox($produtoNaoAplica, 'on'); ?> Não se aplica
+                      </label>
+                    </div>
+                    <div class="controls">
+                      <label class="checkbox text-left">
+                      <?php echo form_checkbox($produtoNaoEspecificado, 'on'); ?> Não especificado na lista ONU
                       </label>
                     </div>
                   </div>
@@ -550,7 +587,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompDano">
-                      Informação complementares:
+                      Informações complementares:
                     </label>
                   </div>
                   <div class="controls">
@@ -657,7 +694,7 @@
                 </div>
               </div>
               <div class="control-group">
-                <label class="control-label" for="inputInfoInstituicaoNome">Nome da Empresa/Telefone:</label>
+                <label class="control-label" for="inputInfoInstituicaoNome">Nome do Responsável no Local/Telefone:</label>
                 <div class="controls">
                   <?php echo form_input($inputInfoInstituicaoNome); ?>
                   <?php echo form_input($inputInfoInstituicaoTelefone); ?>
@@ -667,7 +704,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputCompInstituicao">
-                      Informação complementares:
+                      Informações complementares:
                     </label>
                   </div>
                   <div class="controls">
@@ -752,7 +789,11 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse12">
-              11. Outras Informações Julgadas Úteis
+              11. Informações Gerais Sobre a Ocorrência
+              <?php
+                if (isset($hasOleo))
+                  echo "</br><i style=\"font-size: 9px\">(Item XI do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002.)</i>"
+              ?>
             </a>
           </div>
           <div id="collapse12" class="accordion-body collapse">
@@ -773,7 +814,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputDesObs">
-                      Informações Adicionais sobre a Ocorrência
+                      Outras Informações Julgadas Úteis
                     </label>
                   </div>
                   <div class="controls">
