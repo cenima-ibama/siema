@@ -6,6 +6,22 @@ H5.Map =
 
 H5.Leaflet = {}
 # }}}
+# SCREEN SIZE {{{
+# update size of the map container
+$( '#map' ).width( $( window ).width() )
+$( '#map' ).height( $( window ).height() - $('#navbar').height())
+
+# Detect whether device supports orientationchange event,
+# otherwise fall back to the resize event.
+supportsOrientationChange = "onorientationchange" of window
+orientationEvent = (if supportsOrientationChange then "orientationchange" else "resize")
+
+# update chart if orientation or the size of the screen changed
+window.addEventListener orientationEvent, (->
+  $( '#map' ).width( $( window ).width() )
+  $( '#map' ).height( $( window ).height() - $('#navbar').height())
+), false
+# }}}
 # BASE LAYERS {{{
 bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h"
 
@@ -328,20 +344,4 @@ controlswitch = new L.control.switch(
     name: null
     icon: iconsURL + "factory.png"
 ).addTo(H5.Map.base)
-# }}}
-# SCREEN SIZE {{{
-# update size of the map container
-$( '#map' ).width( $( window ).width() )
-$( '#map' ).height( $( window ).height() - $('#navbar').height())
-
-# Detect whether device supports orientationchange event,
-# otherwise fall back to the resize event.
-supportsOrientationChange = "onorientationchange" of window
-orientationEvent = (if supportsOrientationChange then "orientationchange" else "resize")
-
-# update chart if orientation or the size of the screen changed
-window.addEventListener orientationEvent, (->
-  $( '#map' ).width( $( window ).width() )
-  $( '#map' ).height( $( window ).height() - $('#navbar').height())
-), false
 # }}}

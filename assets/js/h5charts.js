@@ -1082,12 +1082,6 @@
       H5.Charts.reloadCharts();
       return H5.Data.changed = true;
     });
-    $("#charts-content").masonry({
-      itemSelector: ".chart",
-      animationOptions: {
-        duration: 1000
-      }
-    });
     return H5.Charts.reloadCharts();
   });
 
