@@ -272,7 +272,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer" style="display:none;">
     <a id="modalBtnBack" href="" class="btn" data-toggle="tab">Voltar</a>
     <a id="modalBtnNext" href="#tab1" class="btn" data-toggle="tab">Avançar</a>
     <a id="modalBtnCancel" href="#tab2" class="btn" data-toggle="tab" style="display:none;"><i class="icon-trash"></i> Cancelar</a>
