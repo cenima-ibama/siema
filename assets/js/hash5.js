@@ -1531,10 +1531,10 @@
             if (firstPoint === "") {
               firstPoint = this;
             }
-            values = values + this.lat + " " + this.lng;
+            values = values + this.lng + " " + this.lat;
             return values = values + ",";
           });
-          values = values + firstPoint.lat + " " + firstPoint.lng + ")', " + _this.options.srid + "))";
+          values = values + firstPoint.lng + " " + firstPoint.lat + ")', " + _this.options.srid + "))";
           values = values + ",now()";
           sql = "(" + columns + ") values (" + values + ")";
           rest = new H5.Rest({
@@ -1559,9 +1559,9 @@
           $.each(layer._latlngs, function() {
             if (firstPoint === "") {
               firstPoint = true;
-              return values = values + this.lat + " " + this.lng;
+              return values = values + this.lng + " " + this.lat;
             } else {
-              return values = values + "," + this.lat + " " + this.lng;
+              return values = values + "," + this.lng + " " + this.lat;
             }
           });
           values = values + ")', " + _this.options.srid + ")";
@@ -1586,7 +1586,7 @@
           });
           columns = columns + "shape,dt_registro";
           values = values + "ST_MakeEnvelope(";
-          values = values + layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " + layer._latlngs[2].lat + "," + layer._latlngs[2].lng;
+          values = values + layer._latlngs[0].lng + "," + layer._latlngs[0].lat + ", " + layer._latlngs[2].lng + "," + layer._latlngs[2].lat;
           values = values + ", " + _this.options.srid + ")";
           values = values + ",now()";
           sql = "(" + columns + ") values (" + values + ")";
@@ -1609,7 +1609,7 @@
           });
           columns = columns + "shape,dt_registro";
           values = values + "ST_Buffer(ST_GeomFromText('POINT(";
-          values = values + layer._latlng.lat + " " + layer._latlng.lng + ")'," + _this.options.srid + "),";
+          values = values + layer._latlng.lng + " " + layer._latlng.lat + ")'," + _this.options.srid + "),";
           values = values + layer._mRadius / 100010 + ")";
           values = values + ",now()";
           sql = "(" + columns + ") values (" + values + ")";
@@ -1632,7 +1632,7 @@
             });
             columns = columns + "shape,dt_registro";
             values = values + "ST_SetSRID(ST_MakePoint(";
-            values = values + layer._latlng.lat + "," + layer._latlng.lng + ")," + _this.options.srid + ")";
+            values = values + layer._latlng.lng + "," + layer._latlng.lat + ")," + _this.options.srid + ")";
             values = values + ",now()";
             sql = "(" + columns + ") values (" + values + ")";
             rest = new H5.Rest({
@@ -1643,7 +1643,7 @@
             });
           } else {
             layer._leaflet_id = _this.options.uniquePoint._leaflet_id;
-            sql = "set shape=ST_SetSRID(ST_MakePoint(" + layer._latlng.lat + "," + layer._latlng.lng + ")," + _this.options.srid + ")";
+            sql = "shape=ST_SetSRID(ST_MakePoint(" + layer._latlng.lng + "," + layer._latlng.lat + ")," + _this.options.srid + ")";
             sql = sql + ",dt_registro=now()";
             rest = new H5.Rest({
               url: H5.Data.restURL,
@@ -1775,7 +1775,7 @@
         _this = this;
       rest = new H5.Rest({
         url: this.options.url,
-        fields: 'id_tmp_lin, ST_AsGeoJson(shape) as shape',
+        fields: 'id_tmp_lin, ST_AsGeoJson(ST_FlipCoordinates(shape)) as shape',
         table: "tmp_lin",
         parameters: "nro_ocorrencia='" + this.options.tables['polyline'].defaultValues.nro_ocorrencia + "'"
       });
@@ -1790,7 +1790,7 @@
       });
       rest = new H5.Rest({
         url: this.options.url,
-        fields: 'id_tmp_pol, ST_AsGeoJson(shape) as shape',
+        fields: 'id_tmp_pol, ST_AsGeoJson(ST_FlipCoordinates(shape)) as shape',
         table: "tmp_pol",
         parameters: "nro_ocorrencia='" + this.options.tables['polygon'].defaultValues.nro_ocorrencia + "'"
       });
@@ -1805,7 +1805,7 @@
       });
       rest = new H5.Rest({
         url: this.options.url,
-        fields: 'id_tmp_pon, ST_AsGeoJson(shape) as shape',
+        fields: 'id_tmp_pon, ST_AsGeoJson(ST_FlipCoordinates(shape)) as shape',
         table: "tmp_pon",
         parameters: "nro_ocorrencia='" + this.options.tables['marker'].defaultValues.nro_ocorrencia + "'"
       });

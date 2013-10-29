@@ -145,11 +145,11 @@ class H5.Draw
           if firstPoint is ""
             firstPoint = @
 
-          values = values + @.lat + " " + @.lng
+          values = values + @.lng + " " + @.lat
 
           values = values +  ","
 
-        values = values + firstPoint.lat + " " + firstPoint.lng + ")', " + @.options.srid + "))"
+        values = values + firstPoint.lng + " " + firstPoint.lat + ")', " + @.options.srid + "))"
 
         values = values + ",now()"
 
@@ -182,9 +182,9 @@ class H5.Draw
         $.each layer._latlngs, ->
           if firstPoint is ""
             firstPoint = true
-            values = values + @.lat + " " + @.lng
+            values = values + @.lng + " " + @.lat
           else
-            values = values + "," + @.lat + " " + @.lng
+            values = values + "," + @.lng + " " + @.lat
 
         values = values + ")', " + @.options.srid + ")"
 
@@ -217,8 +217,8 @@ class H5.Draw
         values = values + "ST_MakeEnvelope("
 
         values = values +
-              layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " +
-              layer._latlngs[2].lat + "," + layer._latlngs[2].lng
+              layer._latlngs[0].lng + "," + layer._latlngs[0].lat + ", " +
+              layer._latlngs[2].lng + "," + layer._latlngs[2].lat
 
         values = values + ", " + @.options.srid + ")"
 
@@ -250,7 +250,7 @@ class H5.Draw
 
         columns = columns + "shape,dt_registro"
         values = values + "ST_Buffer(ST_GeomFromText('POINT("
-        values = values + layer._latlng.lat + " " + layer._latlng.lng + ")'," + @.options.srid + "),"
+        values = values + layer._latlng.lng + " " + layer._latlng.lat + ")'," + @.options.srid + "),"
         values = values + layer._mRadius/100010 + ")"
 
         values = values + ",now()"
@@ -277,7 +277,7 @@ class H5.Draw
 
           columns = columns + "shape,dt_registro"
           values = values + "ST_SetSRID(ST_MakePoint("
-          values = values + layer._latlng.lat + "," + layer._latlng.lng + ")," + @.options.srid + ")"
+          values = values + layer._latlng.lng + "," + layer._latlng.lat + ")," + @.options.srid + ")"
 
           values = values + ",now()"
 
@@ -291,8 +291,8 @@ class H5.Draw
           )
         else
           layer._leaflet_id = @.options.uniquePoint._leaflet_id
-          sql = "set shape=ST_SetSRID(ST_MakePoint(" +
-                layer._latlng.lat + "," + layer._latlng.lng + ")," +
+          sql = "shape=ST_SetSRID(ST_MakePoint(" +
+                layer._latlng.lng + "," + layer._latlng.lat + ")," +
                 @.options.srid + ")"
 
           sql = sql + ",dt_registro=now()"
@@ -491,7 +491,7 @@ class H5.Draw
     # Search on database vectors already on the tmp_pol table
     rest = new H5.Rest (
       url: @.options.url
-      fields: 'id_tmp_lin, ST_AsGeoJson(shape) as shape'
+      fields: 'id_tmp_lin, ST_AsGeoJson(ST_FlipCoordinates(shape)) as shape'
       table: "tmp_lin"
       parameters: "nro_ocorrencia='" + @.options.tables['polyline'].defaultValues.nro_ocorrencia + "'"
     )
@@ -511,7 +511,7 @@ class H5.Draw
     # Search on database vectors already on the tmp_pol table
     rest = new H5.Rest (
       url: @.options.url
-      fields: 'id_tmp_pol, ST_AsGeoJson(shape) as shape'
+      fields: 'id_tmp_pol, ST_AsGeoJson(ST_FlipCoordinates(shape)) as shape'
       table: "tmp_pol"
       parameters: "nro_ocorrencia='" + @.options.tables['polygon'].defaultValues.nro_ocorrencia + "'"
     )
@@ -531,7 +531,7 @@ class H5.Draw
     # Search on database vectors already on the tmp_pol table
     rest = new H5.Rest (
       url: @.options.url
-      fields: 'id_tmp_pon, ST_AsGeoJson(shape) as shape'
+      fields: 'id_tmp_pon, ST_AsGeoJson(ST_FlipCoordinates(shape)) as shape'
       table: "tmp_pon"
       parameters: "nro_ocorrencia='" + @.options.tables['marker'].defaultValues.nro_ocorrencia + "'"
     )

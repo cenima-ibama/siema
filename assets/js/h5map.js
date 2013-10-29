@@ -180,14 +180,53 @@
     showAll: true,
     cluster: true,
     popupTemplate: function(properties) {
-      var html;
+      var html, text;
       html = '<div class="iw-content"><h4>' + properties.id_ocorrencia + '</h4>';
       html += '<table class="condensed-table bordered-table zebra-striped"><tbody>';
-      html += '<tr><th>Municipio - Estado: </th><td>' + properties.municipio + ' - ' + properties.estado + '</td></tr>';
-      html += '<tr><th>Data: </th><td>' + properties.data_acidente + '</td></tr>';
-      html += '<tr><th>Origem do Acidente: </th><td>' + properties.origem_acidente.replace(/[{}]/g, "") + '</td></tr>';
-      html += '<tr><th>Tipo de Evento: </th><td>' + properties.tipo_eventos.replace(/[{}]/g, "") + '</td></tr>';
-      html += '<tr><th>Produtos Envolvidos: </th><td>' + properties.produtos.replace(/[{}]/g, "") + '</td></tr>';
+      text = "";
+      if (properties.municipio) {
+        text += properties.municipio;
+      }
+      text += " - ";
+      if (properties.estado) {
+        text += properties.estado;
+      }
+      if (!properties.municipio && !properties.estado) {
+        text = "Sem informação";
+      }
+      html += '<tr><th>Municipio - Estado: </th><td>' + text + '</td></tr>';
+      text = "";
+      if (properties.data_acidente) {
+        text += properties.data_acidente;
+      }
+      if (!properties.data_acidente) {
+        text = "Sem informação";
+      }
+      html += '<tr><th>Data: </th><td>' + text + '</td></tr>';
+      text = "";
+      if (properties.origem_acidente !== "{}") {
+        text += properties.origem_acidente.replace(/[{}]/g, "");
+      }
+      if (properties.origem_acidente === "{}") {
+        text = "Sem informação";
+      }
+      html += '<tr><th>Origem do Acidente: </th><td>' + text + '</td></tr>';
+      text = "";
+      if (properties.tipo_eventos !== "{}") {
+        text += properties.tipo_eventos.replace(/[{}]/g, "");
+      }
+      if (properties.tipo_eventos === "{}") {
+        text = "Sem informação";
+      }
+      html += '<tr><th>Tipo de Evento: </th><td>' + text + '</td></tr>';
+      text = "";
+      if (properties.produtos !== "{}") {
+        text += properties.produtos.replace(/[{}]/g, "");
+      }
+      if (properties.produtos === "{}") {
+        text = "Sem informação";
+      }
+      html += '<tr><th>Produtos Envolvidos: </th><td>' + text + '</td></tr>';
       html += '</tbody></table></div>';
       return html;
     },

@@ -95,7 +95,17 @@ class Form_model extends CI_Model {
       $values = $values . "0,";
     }
 
-    $fields = $fields ."plano_emergencia,";
+    if(isset($form['inputUF'])) {
+      $fields = $fields . "id_uf,";
+      $values = $values . $form['inputUF'] . ",";
+    }
+
+    if(isset($form['inputMunicipio'])) {
+      $fields = $fields . "id_municipio,";
+      $values = $values . $form['inputMunicipio'] . ",";
+    }
+
+    $fields = $fields . "plano_emergencia,";
   	if ($form["planoEmergencia"] == '1') {
   		$values = $values . "'S',";
   	} else {
