@@ -276,12 +276,12 @@ class Form_model extends CI_Model {
 
     if (isset($form['inputTipoSubstancia'])) {
       $fields = $fields . "tipo_substancia,";
-      $values = $values . "'" . $form['inputTipoSubstancia']) . "',";
+      $values = $values . "'" . $form['inputTipoSubstancia'] . "',";
     }
 
     if (isset($form['inputValorEstimado'])) {
       $fields = $fields . "valor_estimado,";
-      $values = $values . "'" . $form['inputValorEstimado']) . "',";
+      $values = $values . "'" . $form['inputValorEstimado'] . "',";
     }
 
     if (isset($form['produtoNaoPerigoso']) and $form['produtoNaoPerigoso'] == 'on') {
@@ -763,9 +763,6 @@ class Form_model extends CI_Model {
       $fields = $fields . ",des_obs='" . $form["inputDesObs"] . "'";
     }
 
-    // DEVERIA???
-    // $fields = $fields . ",dt_registro=now()";
-
     $sqlOcorrencias =  "update ocorrencia set " . $fields . " where nro_ocorrencia='" . $form['comunicado'] . "';";
 
     // Saves on the Database the new entry
@@ -790,18 +787,21 @@ class Form_model extends CI_Model {
     if($line->num_rows() > 0 || $polygon->num_rows() > 0 || $point->num_rows() > 0){
 
       // delete the relations already done with the edited 'ocorrencia'
-      if ($line->num_rows() > 0) {
-        $fields = "delete from ocorrencia_lin where id_ocorrencia=" . $id .";";
-        $ocorrenciasDatabase->query($fields);
-      }
-      if ($polygon->num_rows() > 0) {
-        $fields = "delete from ocorrencia_pol where id_ocorrencia=" . $id .";";
-        $ocorrenciasDatabase->query($fields);
-      }
-      if ($point->num_rows() > 0) {
-        $fields = "delete from ocorrencia_pon where id_ocorrencia=" . $id .";";
-        $ocorrenciasDatabase->query($fields);
-      }
+      // if ($line->num_rows() > 0) {
+      $fields = "delete from ocorrencia_lin where id_ocorrencia=" . $id .";";
+      $this->firephp->log($fields);
+      $ocorrenciasDatabase->query($fields);
+      // }
+      // if ($polygon->num_rows() > 0) {
+      $fields = "delete from ocorrencia_pol where id_ocorrencia=" . $id .";";
+      $this->firephp->log($fields);
+      $ocorrenciasDatabase->query($fields);
+      // }
+      // if ($point->num_rows() > 0) {
+      $fields = "delete from ocorrencia_pon where id_ocorrencia=" . $id .";";
+      $this->firephp->log($fields);
+      $ocorrenciasDatabase->query($fields);
+      // }
 
       $this->firephp->log($line->num_rows() . " " . $polygon->num_rows() . " " . $point->num_rows() );
 
@@ -1059,7 +1059,8 @@ class Form_model extends CI_Model {
 
   }
 
-  public function convertDBtoForm($dbResult) {
+  public function convertDBtoForm($dbResult)
+  {
 
     $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
 
@@ -1231,7 +1232,8 @@ class Form_model extends CI_Model {
     return $form;
   }
 
-  public function load($nro_ocorrencia) {
+  public function load($nro_ocorrencia)
+  {
 
     $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
 

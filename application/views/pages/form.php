@@ -37,6 +37,7 @@
           <!-- <input type="hidden" id="typeOfForm" name="typeOfForm" -->
             <?php
               echo form_input($typeOfForm);
+              echo form_input($shapeLoaded);
             ?>
           <!-- /> -->
           <br />

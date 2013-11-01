@@ -5,7 +5,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoad, minimapView, nroComunicado, nroOcorrencia, rest, seconds, subjects, table, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, pointTable, polygonTable, rest, seconds, shapeLoadedFromDB, subjects, table, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -80,11 +80,13 @@
       layers: [binghybrid],
       zoomControl: true
     });
-    isLoad = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked");
+    isLoadForm = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked");
+    shapeLoadedFromDB = $("#shapeLoaded").prop("checked");
     drawAPI = new H5.Draw({
       map: minimapView,
       url: H5.Data.restURL,
       uniquePoint: true,
+      reloadShape: shapeLoadedFromDB,
       srid: '4674',
       buttons: {
         marker: true,
@@ -122,6 +124,33 @@
         }
       }
     });
+    if (isLoadForm && !shapeLoadedFromDB) {
+      pointTable = {
+        fields: ['id_ocorrencia_pon as id_tmp_pon', 'descricao', 'shape', nroOcorrencia + ' as nro_ocorrencia'],
+        name: 'ocorrencia_pon',
+        parameters: {
+          field: 'id_ocorrencia',
+          value: idOcorrencia
+        }
+      };
+      polygonTable = {
+        fields: ['id_ocorrencia_pol as id_tmp_pol', 'descricao', 'shape', nroOcorrencia + ' as nro_ocorrencia'],
+        name: 'ocorrencia_pol',
+        parameters: {
+          field: 'id_ocorrencia',
+          value: idOcorrencia
+        }
+      };
+      lineTable = {
+        fields: ['id_ocorrencia_lin as id_tmp_lin', 'descricao', 'shape', nroOcorrencia + ' as nro_ocorrencia'],
+        name: 'ocorrencia_lin',
+        parameters: {
+          field: 'id_ocorrencia',
+          value: idOcorrencia
+        }
+      };
+      drawAPI.editShapes(pointTable, polygonTable, lineTable);
+    }
     GeoSearch = {
       _provider: new L.GeoSearch.Provider.Google,
       _geosearch: function(qry, showAddress) {
@@ -697,7 +726,7 @@
       };
       return subjects.push(element);
     });
-    if (isLoad) {
+    if (isLoadForm) {
       return table = new H5.Table({
         container: "myTable",
         url: H5.Data.restURL,

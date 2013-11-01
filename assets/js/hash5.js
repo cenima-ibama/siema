@@ -1416,7 +1416,7 @@
       srid: null,
       uniquePoint: null,
       loadDrawn: false,
-      editShapes: false,
+      reloadShape: true,
       buttons: {
         marker: true,
         line: true,
@@ -1463,7 +1463,7 @@
         }
       });
       this.options.map.addControl(drawControl);
-      if (!this.options.editShapes) {
+      if (this.options.reloadShape) {
         this.reloadShape();
       }
       this._getNextIdTable();
@@ -1822,7 +1822,7 @@
       });
     };
 
-    Draw.prototype.editShapes = function(element, pointTable, polygonTable, lineTable) {
+    Draw.prototype.editShapes = function(pointTable, polygonTable, lineTable) {
       var fields, line, marker, polygon, rest, sql, values;
       marker = this.options.tables.marker;
       fields = '';

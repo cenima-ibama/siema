@@ -353,7 +353,7 @@
     "Terras Indígenas": {
       layer: terrasIndigenas
     },
-    "Unidade de Convservação": {
+    "Unidade de Conservação": {
       layer: unidadeConservacao
     },
     "Bioma IBGE": {
