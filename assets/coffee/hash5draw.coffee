@@ -8,7 +8,7 @@ class H5.Draw
     srid: null
     uniquePoint: null
     loadDrawn: false
-    editShapes: false
+    reloadShape: true
     buttons:
       marker: true
       line: true
@@ -42,6 +42,8 @@ class H5.Draw
   # Stores the shape where the drawing are inserted
   drawnItems: null
 
+  # Variable that determines if the framework already loaded the shapes to be edited. It controls when to pull from the database and when to pull from the html.
+
   constructor: (options) ->
     # configure object with the options
     @options = $.extend({}, @options, options)
@@ -71,7 +73,7 @@ class H5.Draw
 
     @options.map.addControl(drawControl)
 
-    if !@.options.editShapes then @reloadShape()
+    if @.options.reloadShape then @reloadShape()
 
     @_getNextIdTable()
 
@@ -550,7 +552,7 @@ class H5.Draw
       if (@.options.uniquePoint?)
         @.options.uniquePoint = point
 
-  editShapes: (element, pointTable, polygonTable, lineTable)->
+  editShapes: (pointTable, polygonTable, lineTable)->
   # Retrieve every draw from the table specified and copy it to the tmp table
 
     marker = @.options.tables.marker

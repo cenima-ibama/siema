@@ -186,6 +186,13 @@ class Form extends CI_Controller {
             'value'         => $formLoad['typeOfForm']
         );
 
+        $data['shapeLoaded'] = array (
+            'id'            => 'shapeLoaded',
+            'name'          => 'shapeLoaded',
+            'type'          => 'hidden',
+            'value'         => 'on'
+        );
+
         if (isset($formLoad['hasOleo'])) {
             $data['hasOleo'] = array (
                 'id'            => 'hasOleo',
@@ -1076,7 +1083,7 @@ class Form extends CI_Controller {
 
         if ($formLoad != "") {
 
-            // $this->firephp->log($formLoad);
+            $this->firephp->log($formLoad);
 
             $formLoad['typeOfForm'] = "load";
 
@@ -1084,7 +1091,7 @@ class Form extends CI_Controller {
 
             $form['data'] = $data;
 
-            // $this->firephp->log($data);
+            $this->firephp->log($data);
 
             $this->load->view('templates/form',$form);
         } else {
@@ -1097,6 +1104,12 @@ class Form extends CI_Controller {
         $this->load->helper('form');
 
         $data = $this->dataForm($form_data);
+
+        if (isset($data['shapeLoaded'])) {
+            $data['shapeLoaded'] += array (
+                'checked'       => 'checked'
+            );
+        }
 
         // $this->firephp->log($form);
 

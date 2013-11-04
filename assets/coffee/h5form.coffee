@@ -104,13 +104,14 @@ $(document).ready ->
     zoomControl: true
     )
 
-  isLoad = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
+  isLoadForm = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
+  shapeLoadedFromDB = $("#shapeLoaded").prop "checked"
 
   drawAPI = new H5.Draw(
     map: minimapView
     url: H5.Data.restURL
     uniquePoint: true
-    # editShapes: true
+    reloadShape: shapeLoadedFromDB
     # srid: $("#inputEPSG").val()
     srid: '4674'
     buttons:
@@ -142,29 +143,31 @@ $(document).ready ->
           nro_ocorrencia: nroOcorrencia
   )
 
-  # if isLoad
-  #   drawAPI.editShapes(
-  #     field: 'nro_ocorrencia'
-  #     value: nroOcorrencia
-  #   ,
-  #     fields: ['id_ocorrencia_pon as id_tmp_pon','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
-  #     name: 'ocorrencia_pon'
-  #     parameters:
-  #       field: 'id_ocorrencia'
-  #       value: idOcorrencia
-  #   ,
-  #     fields: ['id_ocorrencia_pol as id_tmp_pol','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
-  #     name: 'ocorrencia_pol'
-  #     parameters:
-  #       field: 'id_ocorrencia'
-  #       value: idOcorrencia
-  #   ,
-  #     fields: ['id_ocorrencia_lin as id_tmp_lin','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
-  #     name: 'ocorrencia_lin'
-  #     parameters:
-  #       field: 'id_ocorrencia'
-  #       value: idOcorrencia
-  #   )
+  if isLoadForm and !shapeLoadedFromDB
+
+    pointTable = {
+      fields: ['id_ocorrencia_pon as id_tmp_pon','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
+      name: 'ocorrencia_pon'
+      parameters:
+        field: 'id_ocorrencia'
+        value: idOcorrencia
+      }
+    polygonTable = {
+      fields: ['id_ocorrencia_pol as id_tmp_pol','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
+      name: 'ocorrencia_pol'
+      parameters:
+        field: 'id_ocorrencia'
+        value: idOcorrencia
+      }
+    lineTable = {
+      fields: ['id_ocorrencia_lin as id_tmp_lin','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
+      name: 'ocorrencia_lin'
+      parameters:
+        field: 'id_ocorrencia'
+        value: idOcorrencia
+      }
+
+    drawAPI.editShapes(pointTable, polygonTable,lineTable)
 
 
   # Add draw functionality to a map
@@ -1146,7 +1149,7 @@ $(document).ready ->
 
     # subjects.push(@nome)
 
-  if isLoad
+  if isLoadForm
     table = new H5.Table (
       container: "myTable"
       url: H5.Data.restURL
