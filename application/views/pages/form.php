@@ -37,6 +37,7 @@
           <!-- <input type="hidden" id="typeOfForm" name="typeOfForm" -->
             <?php
               echo form_input($typeOfForm);
+
               echo form_input($shapeLoaded);
             ?>
           <!-- /> -->
@@ -102,8 +103,12 @@
                   <div class="control-group">
                     <label class="control-label" for="inputMunicipio">Município/UF:</label>
                     <div class="controls">
-                      <?php echo form_input($inputMunicipio); ?>
-                      <?php echo form_input($inputUF); ?>
+                      <?php
+                        echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', '1'), 'id="dropdownMunicipio" class="input-medium"');
+                        echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', '1'), 'id="dropdownUF" class="input-mini"');
+                        // echo form_input($inputMunicipio);
+                        // echo form_input($inputUF);
+                      ?>
                     </div>
                   </div>
                   <div class="control-group">

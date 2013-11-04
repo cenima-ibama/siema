@@ -1230,6 +1230,7 @@ class Form_model extends CI_Model {
     }
 
     return $form;
+
   }
 
   public function load($nro_ocorrencia)
@@ -1260,5 +1261,42 @@ class Form_model extends CI_Model {
       return $this->convertDBtoForm($res->row_array());
     else
       return "";
+
+  }
+
+  public function getMunicipios()
+  {
+
+    $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
+
+    $result = $ocorrenciasDatabase->query("select id_municipio as id, nome as value from municipio order by value;");
+
+    $array = array();
+
+    foreach ($result->result_array() as $key => $value) {
+      $array += array (
+        $value['id']  =>  $value['value']
+      );
+    }
+
+    return $array;
+  }
+
+  public function getUFs()
+  {
+
+    $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
+
+    $result = $ocorrenciasDatabase->query("select id_uf as id, sigla as value from uf order by value;");
+
+    $array = array();
+
+    foreach ($result->result_array() as $key => $value) {
+      $array += array (
+        $value['id']  =>  $value['value']
+      );
+    }
+
+    return $array;
   }
 }

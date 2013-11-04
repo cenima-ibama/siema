@@ -9,13 +9,16 @@ class Form extends CI_Controller {
 
         // Enable firebug
         $this->load->library('Firephp');
+
+        $this->load->model('form_model');
+
         $this->firephp->setEnabled(TRUE);
     }
 
     public function insertDB($form_data)
     {
 
-        $this->load->model('form_model');
+        // $this->load->model('form_model');
 
         if ($form_data['typeOfForm'] == 'create') {
 
@@ -315,6 +318,29 @@ class Form extends CI_Controller {
                 'disabled' => 'disabled'
             );
         }
+
+
+
+        $data['dropdownMunicipio'] = $this->form_model->getMunicipios();
+
+        $data['dropdownUF'] = $this->form_model->getUFs();
+
+        // $data['slctLicenca'] = array(
+        //     '1'         => 'Licença ambiental federal',
+        //     '2'         => 'Licença ambiental estadual',
+        //     '3'         => 'Licença ambiental municipal'
+        // );
+
+        // $data['semResponsavel'] = array(
+        //     'id'           => 'semResponsavel',
+        //     'name'         => 'semResponsavel',
+        //     'type'         => 'checkbox',
+        // );
+        // if(isset($formLoad['semResponsavel'])){
+        //     $data['semResponsavel'] += array(
+        //         'checked'  => 'checked'
+        //     );
+        // }
 
         $data['inputEndereco'] = array(
             'id'           => 'inputEndereco',
@@ -1077,7 +1103,7 @@ class Form extends CI_Controller {
     {
         $this->load->helper('form');
 
-        $this->load->model('form_model');
+        // $this->load->model('form_model');
 
         $formLoad = $this->form_model->load($nro_ocorrencia);
 

@@ -23,12 +23,12 @@
 }
 
 .leaflet-draw-toolbar a {
-	background-image: url('../img/spritesheet.png');
+	background-image: url('images/spritesheet.png');
 	background-repeat: no-repeat;
 }
 
 .leaflet-retina .leaflet-draw-toolbar a {
-	background-image: url('../img/spritesheet-2x.png');
+	background-image: url('images/spritesheet-2x.png');
 	background-size: 210px 30px;
 }
 
@@ -94,6 +94,7 @@
 
 .leaflet-draw-actions-bottom {
 	margin-top: 0;
+	white-space: nowrap;
 }
 
 .leaflet-draw-actions-top {
@@ -150,6 +151,14 @@
 
 .leaflet-draw-toolbar .leaflet-draw-edit-remove {
 	background-position: -182px -2px;
+}
+
+.leaflet-draw-toolbar .leaflet-draw-edit-edit.leaflet-disabled {
+	background-position: -212px -2px;
+}
+
+.leaflet-draw-toolbar .leaflet-draw-edit-remove.leaflet-disabled {
+	background-position: -242px -2px;
 }
 
 /* ================================================================== */

@@ -258,16 +258,25 @@
         return alert("Erro na Busca: " + error);
       }
     };
+    $('#inputLat').bind('input propertychange', function(event) {
+      var qry;
+      if ((($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
+        qry = ($("#inputLat").prop("value")) + "," + ($("#inputLng").prop("value"));
+        return GeoSearch._geosearch(qry, true);
+      }
+    });
     $("#inputEndereco").on('keyup', function(event) {
-      var enterKey, municipio, uf;
+      var enterKey, municipio, municipioVal, uf, ufVal;
       enterKey = 13;
       if (event.keyCode === enterKey) {
-        municipio = $("#inputMunicipio").val();
-        uf = $("#inputUF").val();
-        if (municipio.length === 0 && uf.length === 0) {
+        municipioVal = document.getElementById('dropdownMunicipio').value;
+        municipio = $("#dropdownMunicipio option[value='" + municipioVal + "']");
+        ufVal = document.getElementById('dropdownUF').value;
+        uf = $("#dropdownUF option[value='" + ufVal + "']");
+        if (municipio.html().length === 0 && uf.html().length === 0) {
           return GeoSearch._geosearch(this.value);
         } else {
-          return GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf);
+          return GeoSearch._geosearch(this.value + ", " + municipio.html() + " - " + uf.html());
         }
       }
     });

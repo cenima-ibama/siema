@@ -524,9 +524,10 @@ $(document).ready ->
 
   # Update marker from changed inputs
   # $("#inputLat, #inputLng").on 'change', (event) ->
-  #   if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
-  #     qry = ($("#inputLat").prop "value" ) + "," + ($("#inputLng").prop "value")
-  #     GeoSearch._geosearch qry,true
+  $('#inputLat').bind 'input propertychange', (event) ->
+    if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
+      qry = ($("#inputLat").prop "value" ) + "," + ($("#inputLng").prop "value")
+      GeoSearch._geosearch qry,true
   #   else
   #     $("#inputMunicipio").val ""
   #     $("#inputUF").val ""
@@ -553,12 +554,16 @@ $(document).ready ->
     enterKey = 13
     if event.keyCode is enterKey
       # console.log this.value
-      municipio = $("#inputMunicipio").val()
-      uf = $("#inputUF").val()
-      if municipio.length is 0 and uf.length is 0
+      # municipio = $("#inputMunicipio").val()
+      municipioVal = document.getElementById('dropdownMunicipio').value
+      municipio = $("#dropdownMunicipio option[value='" + municipioVal + "']")
+      # uf = $("#inputUF").val()
+      ufVal = document.getElementById('dropdownUF').value
+      uf = $("#dropdownUF option[value='" + ufVal + "']")
+      if municipio.html().length is 0 and uf.html().length is 0
         GeoSearch._geosearch(this.value)
       else
-        GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf)
+        GeoSearch._geosearch(this.value + ", " + municipio.html() + " - " + uf.html())
 
   # Add a move property to the marker
   # Marker.on "move", (event) ->
