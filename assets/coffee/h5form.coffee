@@ -502,11 +502,15 @@ $(document).ready ->
       subCidade = string.split(" - ")
       if subCidade.length > 1
       #case with the city name
-        $("#inputMunicipio").val subCidade[0]
+        # $("#inputMunicipio").val subCidade[0]
+        $('#dropdownMunicipio option').filter ->
+          return $(this).text() == subCidade[0]
+        .prop 'selected', true
         @_parseEstado subCidade[1]
       else
       #case with only the state name of abbreviation
-        $("#inputMunicipio").val ""
+        # $("#inputMunicipio").val ""
+        $("#dropdownMunicipio").val ""
         @_parseEstado string
 
     _parseEstado: (string) ->
@@ -514,9 +518,15 @@ $(document).ready ->
         uf = ["AC","AL","AP","AM","BA","CE","DF","E","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]
         if string in estados or string in uf
           if string.length > 2
-            $("#inputUF").val uf[estados.indexOf(string)]
+            # $("#inputUF").val uf[estados.indexOf(string)]
+            $('#dropdownUF option').filter ->
+              return $(this).text() == uf[estados.indexOf(string)]
+            .prop 'selected', true
           else
-            $("#inputUF").val string
+            # $("#inputUF").val string
+            $('#dropdownUF option').filter ->
+              return $(this).text() == string
+            .prop 'selected', true
 
     _printError: (error) ->
       alert "Erro na Busca: " + error

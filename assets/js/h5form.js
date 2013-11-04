@@ -235,10 +235,12 @@
         var subCidade;
         subCidade = string.split(" - ");
         if (subCidade.length > 1) {
-          $("#inputMunicipio").val(subCidade[0]);
+          $('#dropdownMunicipio option').filter(function() {
+            return $(this).text() === subCidade[0];
+          }).prop('selected', true);
           return this._parseEstado(subCidade[1]);
         } else {
-          $("#inputMunicipio").val("");
+          $("#dropdownMunicipio").val("");
           return this._parseEstado(string);
         }
       },
@@ -248,9 +250,13 @@
         uf = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "E", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
         if (__indexOf.call(estados, string) >= 0 || __indexOf.call(uf, string) >= 0) {
           if (string.length > 2) {
-            return $("#inputUF").val(uf[estados.indexOf(string)]);
+            return $('#dropdownUF option').filter(function() {
+              return $(this).text() === uf[estados.indexOf(string)];
+            }).prop('selected', true);
           } else {
-            return $("#inputUF").val(string);
+            return $('#dropdownUF option').filter(function() {
+              return $(this).text() === string;
+            }).prop('selected', true);
           }
         }
       },

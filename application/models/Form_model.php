@@ -1279,6 +1279,10 @@ class Form_model extends CI_Model {
       );
     }
 
+    $array += array (
+      $value['0'] => 'Sem município'
+    );
+
     return $array;
   }
 
@@ -1296,6 +1300,10 @@ class Form_model extends CI_Model {
         $value['id']  =>  $value['value']
       );
     }
+
+    $array += array (
+      $value['0'] => 'Sem UF'
+    );
 
     return $array;
   }
