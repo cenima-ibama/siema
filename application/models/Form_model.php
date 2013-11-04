@@ -95,14 +95,14 @@ class Form_model extends CI_Model {
       $values = $values . "0,";
     }
 
-    if(isset($form['inputUF'])) {
+    if(isset($form['dropdownUF'])) {
       $fields = $fields . "id_uf,";
-      $values = $values . $form['inputUF'] . ",";
+      $values = $values . $form['dropdownUF'] . ",";
     }
 
-    if(isset($form['inputMunicipio'])) {
+    if(isset($form['dropdownMunicipio'])) {
       $fields = $fields . "id_municipio,";
-      $values = $values . $form['inputMunicipio'] . ",";
+      $values = $values . $form['dropdownMunicipio'] . ",";
     }
 
     $fields = $fields . "plano_emergencia,";
@@ -1080,8 +1080,8 @@ class Form_model extends CI_Model {
     $form['inputLat'] = $dbResult['inputlat'];
     $form['inputLng'] = $dbResult['inputlng'];
     $form['inputEPSG'] = $dbResult['inputepsg'];
-    $form['inputMunicipio'] = $dbResult['inputmunicipio'];
-    $form['inputUF'] = $dbResult['inputuf'];
+    $form['dropdownMunicipio'] = $dbResult['dropdownMunicipio'];
+    $form['dropdownUF'] = $dbResult['dropdownUF'];
     $form['inputEndereco'] = $dbResult['endereco_ocorrencia'];
 
     // Data e Hora do Acidente
@@ -1242,8 +1242,8 @@ class Form_model extends CI_Model {
                 " ST_X(shape) as inputLng, " .
                 " ST_Y(shape) as inputLat, " .
                 " ST_SRID(shape) as inputEPSG, " .
-                " estado as inputMunicipio, " .
-                " sigla as inputUF, " .
+                " estado as dropdownMunicipio, " .
+                " sigla as dropdownUF, " .
                 " res.* " .
              " from ocorrencia " .
                 " left join responsavel as res on (res.id_responsavel = ocorrencia.id_responsavel) " .
@@ -1280,7 +1280,7 @@ class Form_model extends CI_Model {
     }
 
     $array += array (
-      $value['0'] => 'Sem município'
+      '0' => 'Sem município'
     );
 
     return $array;
@@ -1302,7 +1302,7 @@ class Form_model extends CI_Model {
     }
 
     $array += array (
-      $value['0'] => 'Sem UF'
+      '0' => 'Sem UF'
     );
 
     return $array;

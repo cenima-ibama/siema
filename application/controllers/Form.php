@@ -595,7 +595,10 @@ class Form extends CI_Controller {
         }
 
         // Checkbox fields
-        $data['tipoLocalizacao'] = isset($formLoad['tipoLocalizacao']) ? $formLoad['tipoLocalizacao'] : '';
+        // $data['tipoLocalizacao'] = isset($formLoad['tipoLocalizacao']) ? $formLoad['tipoLocalizacao'] : '';
+        if(isset($formLoad['tipoLocalizacao'])){
+            $data['tipoLocalizacao'] = $formLoad['tipoLocalizacao'];
+        }
 
         // 4. Tipo do Evento
 
@@ -663,7 +666,10 @@ class Form extends CI_Controller {
             );
         }
 
-        $data['tipoEvento'] = isset($formLoad['tipoEvento']) ? $formLoad['tipoEvento'] : '';
+        // $data['tipoEvento'] = isset($formLoad['tipoEvento']) ? $formLoad['tipoEvento'] : '';
+        if(isset($formLoad['tipoEvento'])){
+            $data['tipoEvento'] = $formLoad['tipoEvento'];
+        }
 
         // 5. Tipo de Produto
 
@@ -831,7 +837,10 @@ class Form extends CI_Controller {
             );
         }
 
-        $data['tipoDanoIdentificado'] = isset($formLoad['tipoDanoIdentificado']) ? $formLoad['tipoDanoIdentificado'] : '';
+        // $data['tipoDanoIdentificado'] = isset($formLoad['tipoDanoIdentificado']) ? $formLoad['tipoDanoIdentificado'] : '';
+        if (isset($formLoad['tipoDanoIdentificado'])) {
+            $data['tipoDanoIdentificado'] = $formLoad['tipoDanoIdentificado'];
+        }
 
         // 8. Indentificacao dos responsáveis
 
@@ -938,7 +947,10 @@ class Form extends CI_Controller {
             );
         }
 
-        $data['instituicaoAtuandoLocal'] = isset($formLoad['instituicaoAtuandoLocal']) ? $formLoad['instituicaoAtuandoLocal'] : '';
+        // $data['instituicaoAtuandoLocal'] = isset($formLoad['instituicaoAtuandoLocal']) ? $formLoad['instituicaoAtuandoLocal'] : '';
+        if (isset($formLoad['instituicaoAtuandoLocal'])) {
+            $data['instituicaoAtuandoLocal'] = $formLoad['instituicaoAtuandoLocal'];
+        }
 
         // 10. Procedimentos adotados
 
@@ -1088,7 +1100,10 @@ class Form extends CI_Controller {
         );
 
         // 13. Fonte da Informação.
-        $data['tipoFonteInformacao'] = isset($formLoad['tipoFonteInformacao']) ? $formLoad['tipoFonteInformacao'] : '';
+        // $data['tipoFonteInformacao'] = isset($formLoad['tipoFonteInformacao']) ? $formLoad['tipoFonteInformacao'] : '';
+        if (isset($formLoad['tipoFonteInformacao'])) {
+            $data['tipoFonteInformacao'] = $formLoad['tipoFonteInformacao'];
+        }
 
         // $this->firephp->log($formLoad);
         // $this->firephp->log($formLoad['hasOleo']);

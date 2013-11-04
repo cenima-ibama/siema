@@ -289,9 +289,10 @@
                 <div id="tipoLocalizacao" class="span12">
                   <div style="display:none;">
                     <?php
-                      echo $tipoLocalizacao;
-                      foreach ($tipoLocalizacao as $id) {
-                        echo '<span data-id="postTL">' . $id . '</span>';
+                      if(isset($tipoLocalizacao)) {
+                        foreach ($tipoLocalizacao as $id) {
+                          echo '<span data-id="postTL">' . $id . '</span>';
+                        }
                       }
                     ?>
                   </div>
@@ -373,8 +374,10 @@
                 <div id="tipoEvento" class="span12">
                   <div style="display:none;">
                     <?php
-                        foreach ($tipoEvento as $id) {
-                          echo '<span data-id="postTE">' . $id . '</span>';
+                        if (isset($tipoEvento)) {
+                          foreach ($tipoEvento as $id) {
+                            echo '<span data-id="postTE">' . $id . '</span>';
+                          }
                         }
                     ?>
                   </div>
@@ -692,8 +695,10 @@
                 <div id="tipoInstituicaoAtuando" class="span12">
                   <div style="display:none;">
                     <?php
-                        foreach ($instituicaoAtuandoLocal as $id) {
-                          echo '<span data-id="postIAL">' . $id . '</span>';
+                        if (isset($instituicaoAtuandoLocal)) {
+                          foreach ($instituicaoAtuandoLocal as $id) {
+                            echo '<span data-id="postIAL">' . $id . '</span>';
+                          }
                         }
                     ?>
                   </div>
@@ -922,8 +927,15 @@
 
       <div class="checkbox" style="display:none;">
 
-        <?php echo form_input($hasOleo);?>
-        <?php echo form_input($isServIBAMA); ?>
+        <?php
+          if(isset($hasOleo)) {
+            echo form_input($hasOleo);
+          }
+
+          if(isset($isServIBAMA)) {
+            echo form_input($isServIBAMA);
+          }
+        ?>
 
       </div>
 
