@@ -229,6 +229,15 @@
         return alert("Erro na Busca: " + error);
       }
     };
+    minimapView.on('draw:created', function(event) {
+      var layer, qry, type;
+      type = event.layerType;
+      layer = event.layer;
+      if ((type === 'marker') && (($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
+        qry = ($("#inputLat").prop("value")) + "," + ($("#inputLng").prop("value"));
+        return GeoSearch._geosearch(qry, true);
+      }
+    });
     $("#inputEndereco").on('keyup', function(event) {
       var enterKey, municipio, uf;
       enterKey = 13;

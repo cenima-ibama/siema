@@ -520,10 +520,13 @@ $(document).ready ->
 
 
   # Update marker from changed inputs
-  # $("#inputLat, #inputLng").on 'change', (event) ->
-  #   if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
-  #     qry = ($("#inputLat").prop "value" ) + "," + ($("#inputLng").prop "value")
-  #     GeoSearch._geosearch qry,true
+  minimapView.on 'draw:created', (event) ->
+    type = event.layerType
+    layer = event.layer;
+
+    if (type is 'marker') and (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
+      qry = ($("#inputLat").prop "value" ) + "," + ($("#inputLng").prop "value")
+      GeoSearch._geosearch qry,true
   #   else
   #     $("#inputMunicipio").val ""
   #     $("#inputUF").val ""
