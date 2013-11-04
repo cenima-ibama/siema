@@ -258,9 +258,11 @@
         return alert("Erro na Busca: " + error);
       }
     };
-    $('#inputLat').bind('input propertychange', function(event) {
-      var qry;
-      if ((($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
+    minimapView.on('draw:created', function(event) {
+      var layer, qry, type;
+      type = event.layerType;
+      layer = event.layer;
+      if ((type === 'marker') && (($("#inputLat").prop("value")) !== "") && (($("#inputLng").prop("value")) !== "")) {
         qry = ($("#inputLat").prop("value")) + "," + ($("#inputLng").prop("value"));
         return GeoSearch._geosearch(qry, true);
       }

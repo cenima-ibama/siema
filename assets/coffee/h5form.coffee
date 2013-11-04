@@ -523,9 +523,11 @@ $(document).ready ->
 
 
   # Update marker from changed inputs
-  # $("#inputLat, #inputLng").on 'change', (event) ->
-  $('#inputLat').bind 'input propertychange', (event) ->
-    if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
+  minimapView.on 'draw:created', (event) ->
+    type = event.layerType
+    layer = event.layer;
+
+    if (type is 'marker') and (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
       qry = ($("#inputLat").prop "value" ) + "," + ($("#inputLng").prop "value")
       GeoSearch._geosearch qry,true
   #   else
@@ -563,6 +565,7 @@ $(document).ready ->
       if municipio.html().length is 0 and uf.html().length is 0
         GeoSearch._geosearch(this.value)
       else
+        #GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf)
         GeoSearch._geosearch(this.value + ", " + municipio.html() + " - " + uf.html())
 
   # Add a move property to the marker
