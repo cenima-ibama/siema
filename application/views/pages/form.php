@@ -104,8 +104,8 @@
                     <label class="control-label" for="inputMunicipio">Município/UF:</label>
                     <div class="controls">
                       <?php
-                        echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', '1'), 'id="dropdownMunicipio" class="input-medium"');
-                        echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', '1'), 'id="dropdownUF" class="input-mini"');
+                        echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium"');
+                        echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', $id_uf), 'id="dropdownUF" class="input-mini"');
                         // echo form_input($inputMunicipio);
                         // echo form_input($inputUF);
                       ?>
@@ -427,7 +427,7 @@
                 </div>
                 <div class="span4">
                   <div class="control-group">
-                    <label class="control-label">&nbsp;</label>
+                    <span>&nbsp;</span>
                     <div class="controls">
                       <label class="checkbox text-left">
                       <?php echo form_checkbox($produtoNaoPerigoso, 'on'); ?> Não perigoso
@@ -467,28 +467,21 @@
                         <label class="control-label span4" for="inputTipoSubstancia">
                           Tipo de Substância:
                         </label>
-                        <div class="controls">
-                          <input id="inputTipoSubstancia" class="input" type="text" name="inputTipoSubstancia" placeholder="Tipo da Substância" ';
-                  if (isset($semSubstancia))
-                    echo 'disabled="disabled"';
-                  else
-                    echo ' value="' . set_value('inputTipoSubstancia') . '"';
+                        <div class="controls">';
+                  if (isset($inputTipoSubstancia)) {
+                    echo form_input($inputTipoSubstancia);
+                  }
                   echo '
-                          >
                         </div>
                       </div>
                       <div class="control-group">
                         <div class="controls">
                           <label class="control-label" for="inputValorEstimado">
-                            Volume estimado em
-                            <input id="inputValorEstimado" class="input-small" type="text" name="inputValorEstimado" placeholder="Valor" ';
-                  if (isset($semSubstancia))
-                    echo 'disabled="disabled"';
-                  else
-                    echo ' value="' . set_value('inputValorEstimado') . '"';
-                  echo '
-                            >
-                            m3
+                            Volume estimado em';
+                  if (isset($inputVolumeEstimado)) {
+                    echo form_input($inputVolumeEstimado);
+                  }
+                  echo     '     m3
                           </label>
                         </div>
                       </div>
@@ -496,12 +489,9 @@
                     <div class="row-fluid">
                       <div class="control-group">
                         <div class="controls">
-                          <label class="checkbox text-left">
-                            <input id="semSubstancia" type="checkbox" name="semSubstancia" ';
-                  if (isset($semSubstancia))
-                    echo ' checked="checked"';
+                          <label class="checkbox text-left">';
+                  echo form_checkbox($semSubstancia);
                   echo '
-                            >
                             Sem condições de informar
                           </label>
                         </div>
@@ -660,9 +650,9 @@
                     <div class="controls">
                       <?php
                         if (isset($semResponsavel['checked']))
-                          echo form_dropdown('slctLicenca', $slctLicenca, set_value('slctLicenca'), 'id="slctLicenca" class="input-medium" disabled="disabled"');
+                          echo form_dropdown('slctLicenca', $slctLicenca, set_value('slctLicenca', $id_licenca), 'id="slctLicenca" class="input" disabled="disabled"');
                         else
-                          echo form_dropdown('slctLicenca', $slctLicenca, set_value('slctLicenca'), 'id="slctLicenca" class="input-medium"');
+                          echo form_dropdown('slctLicenca', $slctLicenca, set_value('slctLicenca', $id_licenca), 'id="slctLicenca" class="input"');
                       ?>
                     </div>
                   </div>

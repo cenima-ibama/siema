@@ -34,6 +34,21 @@ class Form_model extends CI_Model {
       $values = $values . "'S',";
     }
 
+    if(isset($form['dropdownUF'])) {
+      $fields = $fields . "id_uf,";
+      $values = $values . $form['dropdownUF'] . ",";
+    }
+
+    if(isset($form['dropdownMunicipio'])) {
+      $fields = $fields . "id_municipio,";
+      $values = $values . $form['dropdownMunicipio'] . ",";
+    }
+
+    if(isset($form['inputEndereco'])) {
+      $fields = $fields . "endereco_ocorrencia,";
+      $values = $values . "'" . $form['inputEndereco'] . "',";
+    }
+
 
     if(!isset($form['semDataObs'])) {
     	if (isset($form["inputDataObs"])) {
@@ -89,20 +104,10 @@ class Form_model extends CI_Model {
 
     if (isset($form['dtFeriado']) and $form['dtFeriado'] == 'on') {
       $fields = $fields . "dt_ocorrencia_feriado,";
-      $values = $values . "1,";
+      $values = $values . "TRUE,";
     } else {
       $fields = $fields . "dt_ocorrencia_feriado,";
-      $values = $values . "0,";
-    }
-
-    if(isset($form['dropdownUF'])) {
-      $fields = $fields . "id_uf,";
-      $values = $values . $form['dropdownUF'] . ",";
-    }
-
-    if(isset($form['dropdownMunicipio'])) {
-      $fields = $fields . "id_municipio,";
-      $values = $values . $form['dropdownMunicipio'] . ",";
+      $values = $values . "FALSE,";
     }
 
     $fields = $fields . "plano_emergencia,";
@@ -279,33 +284,33 @@ class Form_model extends CI_Model {
       $values = $values . "'" . $form['inputTipoSubstancia'] . "',";
     }
 
-    if (isset($form['inputValorEstimado'])) {
-      $fields = $fields . "valor_estimado,";
-      $values = $values . "'" . $form['inputValorEstimado'] . "',";
+    if (isset($form['inputVolumeEstimado'])) {
+      $fields = $fields . "volume_estimado,";
+      $values = $values . "'" . $form['inputVolumeEstimado'] . "',";
     }
 
     if (isset($form['produtoNaoPerigoso']) and $form['produtoNaoPerigoso'] == 'on') {
       $fields = $fields . "produto_perigoso,";
-      $values = $values . "1,";
+      $values = $values . "TRUE,";
     } else {
       $fields = $fields . "produto_perigoso,";
-      $values = $values . "0,";
+      $values = $values . "FALSE,";
     }
 
     if (isset($form['produtoNaoAplica']) and $form['produtoNaoAplica'] == 'on') {
       $fields = $fields . "produto_nao_se_aplica,";
-      $values = $values . "1,";
+      $values = $values . "TRUE,";
     } else {
       $fields = $fields . "produto_nao_se_aplica,";
-      $values = $values . "0,";
+      $values = $values . "FALSE,";
     }
 
     if (isset($form['produtoNaoEspecificado']) and $form['produtoNaoEspecificado'] == 'on') {
       $fields = $fields . "produto_nao_especificado,";
-      $values = $values . "1,";
+      $values = $values . "TRUE,";
     } else {
       $fields = $fields . "produto_nao_especificado,";
-      $values = $values . "0,";
+      $values = $values . "FALSE,";
     }
 
     $fields = $fields . "dt_registro";
@@ -557,10 +562,22 @@ class Form_model extends CI_Model {
       $fields = $fields . "'S'";
     }
 
+    if(isset($form['dropdownUF'])) {
+      $fields = $fields . ",id_uf=" . $form['dropdownUF'];
+    }
+
+    if(isset($form['dropdownMunicipio'])) {
+      $fields = $fields . ",id_municipio=" . $form['dropdownMunicipio'];
+    }
+
+    if(isset($form['inputEndereco'])) {
+      $fields = $fields . ",endereco_ocorrencia='" . $form['inputEndereco'] . "'";
+    }
+
 
     if(!isset($form['semDataObs'])) {
       if (isset($form["inputDataObs"])) {
-        $fields = $fields .",dt_primeira_obs='" . $form["inputDataObs"] . "187'";
+        $fields = $fields .",dt_primeira_obs='" . $form["inputDataObs"] . "'";
       }
       if (!empty($form["inputHoraObs"])) {
         $fields = $fields .",hr_primeira_obs='" . $form["inputHoraObs"] . "'";
@@ -684,6 +701,34 @@ class Form_model extends CI_Model {
         $fields = $fields . "'A'";
         break;
     }
+
+    if (isset($form["inputTipoSubstancia"])) {
+      $fields = $fields . ",tipo_substancia='" . $form["inputTipoSubstancia"] . "'";
+    }
+
+    if (isset($form["inputVolumeEstimado"])) {
+      $fields = $fields . ",volume_estimado='" . $form["inputVolumeEstimado"] . "'";
+    }
+
+    if (isset($form["produtoNaoPerigoso"])) {
+      $fields = $fields . ",produto_perigoso='t'";
+    } else {
+      $fields = $fields . ",produto_perigoso='f'";
+    }
+
+    if (isset($form["produtoNaoAplica"])) {
+      $fields = $fields . ",produto_nao_se_aplica='t'";
+    }else {
+      $fields = $fields . ",produto_nao_se_aplica='f'";
+    }
+
+    if (isset($form["produtoNaoEspecificado"])) {
+      $fields = $fields . ",produto_nao_especificado='t'";
+    } else {
+      $fields = $fields . ",produto_nao_especificado='f'";
+    }
+
+
 
     // Identificacao do responsavel
     $fields = $fields . ",informacao_responsavel=";
@@ -1080,8 +1125,8 @@ class Form_model extends CI_Model {
     $form['inputLat'] = $dbResult['inputlat'];
     $form['inputLng'] = $dbResult['inputlng'];
     $form['inputEPSG'] = $dbResult['inputepsg'];
-    $form['dropdownMunicipio'] = $dbResult['dropdownMunicipio'];
-    $form['dropdownUF'] = $dbResult['dropdownUF'];
+    $form['dropdownMunicipio'] = $dbResult['dropdownmunicipio'];
+    $form['dropdownUF'] = $dbResult['dropdownuf'];
     $form['inputEndereco'] = $dbResult['endereco_ocorrencia'];
 
     // Data e Hora do Acidente
@@ -1138,6 +1183,15 @@ class Form_model extends CI_Model {
     }
     $form['inputCompEvento'] = $dbResult['des_complemento_tipo_evento'];
 
+    // Tipo do produto
+    $form['produtoNaoPerigoso'] = $dbResult['produto_perigoso'];
+    $form['produtoNaoAplica'] = $dbResult['produto_nao_se_aplica'];
+    $form['produtoNaoEspecificado'] = $dbResult['produto_nao_especificado'];
+
+    $form['inputTipoSubstancia'] = $dbResult['tipo_substancia'];
+    $form['inputVolumeEstimado'] = $dbResult['volume_estimado'];
+
+
     // Detalhes do Acidente
     if ($dbResult['des_causa_provavel']) {
       $form['inputCausaProvavel'] = $dbResult['des_causa_provavel'];
@@ -1167,12 +1221,13 @@ class Form_model extends CI_Model {
     foreach ($ocorrenciasDatabase->query($query)->result_array() as $row) {
       array_push($form['tipoDanoIdentificado'], $row['id_tipo_dano_identificado']);
     }
+    $form['inputDesDanos'] = $dbResult['des_danos'];
     $form['inputCompDano'] = $dbResult['des_complemento_tipo_dano_ident'];
 
     // Identificacao Empresa/Orgao Responsavel
     $form['inputResponsavel'] = $dbResult['nome'];
     $form['inputCPFCNPJ'] = $dbResult['cpf_cnpj'];
-    $form['slctLicen'] = $dbResult['des_licenca_ambiental'];
+    $form['slctLicenca'] = $dbResult['des_licenca_ambiental'];
 
     // Instituição/Empresa Atuando no Local
     $query = "select ocorrencia_instituicao_atuando_local.id_instituicao_atuando_local from ocorrencia_instituicao_atuando_local where ocorrencia_instituicao_atuando_local.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
@@ -1180,6 +1235,8 @@ class Form_model extends CI_Model {
     foreach ($ocorrenciasDatabase->query($query)->result_array() as $row) {
       array_push($form['instituicaoAtuandoLocal'], $row['id_instituicao_atuando_local']);
     }
+    $form['inputInfoInstituicaoNome'] = $dbResult['nome_instituicao_atuando'];
+    $form['inputInfoInstituicaoTelefone'] = $dbResult['telefone_instituicao_atuando'];
     $form['inputCompInstituicao'] = $dbResult['des_complemento_instituicao_atu'];
 
     // Procedimentos de Atendimento Adotados
@@ -1242,8 +1299,10 @@ class Form_model extends CI_Model {
                 " ST_X(shape) as inputLng, " .
                 " ST_Y(shape) as inputLat, " .
                 " ST_SRID(shape) as inputEPSG, " .
-                " estado as dropdownMunicipio, " .
-                " sigla as dropdownUF, " .
+                // " estado as dropdownMunicipio, " .
+                " ocorrencia.id_municipio as dropdownMunicipio, " .
+                // " sigla as dropdownUF, " .
+                " uf.id_uf as dropdownUF, " .
                 " res.* " .
              " from ocorrencia " .
                 " left join responsavel as res on (res.id_responsavel = ocorrencia.id_responsavel) " .

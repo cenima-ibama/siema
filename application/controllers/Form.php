@@ -147,12 +147,13 @@ class Form extends CI_Controller {
         // Set the rules for validating the form
         $this->formSetRules($form_data);
 
+        $this->firephp->log($form_data);
+
         if ($this->form_validation->run() == FALSE) {
             $this->validateForm($form_data);
         } else {
             $this->insertDB($form_data);
             // $this->firephp->log("DATA FORM");
-            // $this->firephp->log($form_data);
             if($this->session->userdata('logged_in'))
                 $this->sendMail($form_data);
 
@@ -175,7 +176,7 @@ class Form extends CI_Controller {
 
     public function dataForm($formLoad)
     {
-        // $this->firephp->log($formLoad);
+        $this->firephp->log($formLoad);
 
 
         // Value of the "Comunicado"
@@ -196,12 +197,12 @@ class Form extends CI_Controller {
             'value'         => 'on'
         );
 
-        if (isset($formLoad['hasOleo'])) {
+        if (isset($formLoad['hasOleo']) and ($formLoad['hasOleo'] == 'S')) {
             $data['hasOleo'] = array (
                 'id'            => 'hasOleo',
                 'name'          => 'hasOleo',
                 'type'          => 'hidden',
-                'value'         => 'on'
+                'value'         => 'S'
             );
         }
 
@@ -273,7 +274,7 @@ class Form extends CI_Controller {
             );
         }
 
-        $this->firephp->log($formLoad);
+        // $this->firephp->log($formLoad);
 
         $data['inputBaciaSed'] = array(
             'id'           => 'inputBaciaSed',
@@ -320,27 +321,12 @@ class Form extends CI_Controller {
         }
 
 
-
         $data['dropdownMunicipio'] = $this->form_model->getMunicipios();
+        $data['id_municipio'] = isset($formLoad['dropdownMunicipio']) ? $formLoad['dropdownMunicipio'] : "";
 
         $data['dropdownUF'] = $this->form_model->getUFs();
+        $data['id_uf'] = isset($formLoad['dropdownUF']) ? $formLoad['dropdownUF'] : "";
 
-        // $data['slctLicenca'] = array(
-        //     '1'         => 'Licença ambiental federal',
-        //     '2'         => 'Licença ambiental estadual',
-        //     '3'         => 'Licença ambiental municipal'
-        // );
-
-        // $data['semResponsavel'] = array(
-        //     'id'           => 'semResponsavel',
-        //     'name'         => 'semResponsavel',
-        //     'type'         => 'checkbox',
-        // );
-        // if(isset($formLoad['semResponsavel'])){
-        //     $data['semResponsavel'] += array(
-        //         'checked'  => 'checked'
-        //     );
-        // }
 
         $data['inputEndereco'] = array(
             'id'           => 'inputEndereco',
@@ -678,47 +664,89 @@ class Form extends CI_Controller {
             'name'         => 'produtoNaoPerigoso',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['produtoNaoPerigoso'])){
+        if(isset($formLoad['produtoNaoPerigoso']) and ($formLoad['produtoNaoPerigoso'] == 't')){
             $data['produtoNaoPerigoso'] += array(
                 'checked'  => 'checked'
             );
         }
-        if(isset($formLoad['semDataInci'])){
-            $data['produtoNaoPerigoso'] += array(
-                'disabled' => 'disabled'
-            );
-        }
+        // if(isset($formLoad['semDataInci'])){
+        //     $data['produtoNaoPerigoso'] += array(
+        //         'disabled' => 'disabled'
+        //     );
+        // }
 
         $data['produtoNaoAplica'] = array(
             'id'           => 'produtoNaoAplica',
             'name'         => 'produtoNaoAplica',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['produtoNaoAplica'])){
+        if(isset($formLoad['produtoNaoAplica']) and ($formLoad['produtoNaoAplica'] == 't')){
             $data['produtoNaoAplica'] += array(
                 'checked'  => 'checked'
             );
         }
-        if(isset($formLoad['semDataInci'])){
-            $data['produtoNaoAplica'] += array(
-                'disabled' => 'disabled'
-            );
-        }
+        // if(isset($formLoad['semDataInci'])){
+        //     $data['produtoNaoAplica'] += array(
+        //         'disabled' => 'disabled'
+        //     );
+        // }
 
         $data['produtoNaoEspecificado'] = array(
             'id'           => 'produtoNaoEspecificado',
             'name'         => 'produtoNaoEspecificado',
             'type'         => 'checkbox',
         );
-        if(isset($formLoad['produtoNaoEspecificado'])){
+        if(isset($formLoad['produtoNaoEspecificado']) and ($formLoad['produtoNaoEspecificado'] == 't')){
             $data['produtoNaoEspecificado'] += array(
                 'checked'  => 'checked'
             );
         }
-        if(isset($formLoad['semDataInci'])){
-            $data['produtoNaoEspecificado'] += array(
-                'disabled' => 'disabled'
+        // if(isset($formLoad['semDataInci'])){
+        //     $data['produtoNaoEspecificado'] += array(
+        //         'disabled' => 'disabled'
+        //     );
+        // }
+
+        if($formLoad['hasOleo']) {
+            $data['inputTipoSubstancia'] = array(
+                'id'          =>  'inputTipoSubstancia',
+                'name'        =>  'inputTipoSubstancia',
+                'type'         => 'text',
+                'class'        => 'input',
+                'placeholder'  => 'Tipo da Substância',
+                'value'        => set_value('inputTipoSubstancia',isset($formLoad['inputTipoSubstancia']) ? $formLoad['inputTipoSubstancia'] : '')
             );
+            if(isset($formLoad['semSubstancia'])){
+                $data['inputTipoSubstancia'] += array(
+                    'disabled' => 'disabled'
+                );
+            }
+
+            $data['inputVolumeEstimado'] = array(
+                'id'          =>  'inputVolumeEstimado',
+                'name'        =>  'inputVolumeEstimado',
+                'type'         => 'text',
+                'class'        => 'input-small',
+                'placeholder'  => 'Valor',
+                'value'        => set_value('inputVolumeEstimado',isset($formLoad['inputVolumeEstimado']) ? $formLoad['inputVolumeEstimado'] : '')
+            );
+            if(isset($formLoad['semSubstancia'])){
+                $data['inputVolumeEstimado'] += array(
+                    'disabled' => 'disabled'
+                );
+            }
+
+            $data['semSubstancia'] = array(
+                'id'          =>  'semSubstancia',
+                'name'        =>  'semSubstancia',
+                'value'        =>  'on',
+                'type'        =>  'checkbox'
+            );
+            if(isset($formLoad['semSubstancia'])){
+                $data['semSubstancia'] += array(
+                    'checked' => 'checked'
+                );
+            }
         }
 
         // 6. Detalhes do acidente
@@ -804,7 +832,7 @@ class Form extends CI_Controller {
             'rows'         => '2',
             'maxlength'    => '1000',
             'class'        => 'input-large',
-            'value'        => set_value('inputCompDano')
+            'value'        => set_value('inputCompDano', isset($formLoad['inputCompDano']) ? $formLoad['inputCompDano'] : "")
         );
         if(isset($formLoad['semDanos'])){
             $data['inputCompDano'] += array(
@@ -818,7 +846,7 @@ class Form extends CI_Controller {
             'rows'         => '2',
             'maxlength'    => '2500',
             'class'        => 'input-large',
-            'value'        => set_value('inputDesDanos')
+            'value'        => set_value('inputDesDanos', isset($formLoad['inputDesDanos']) ? $formLoad['inputDesDanos'] : "")
         );
         if(isset($formLoad['semDanos'])){
             $data['inputDesDanos'] += array(
@@ -848,7 +876,7 @@ class Form extends CI_Controller {
             'id'           => 'inputResponsavel',
             'name'         => 'inputResponsavel',
             'type'         => 'text',
-            'class'        => 'input-small',
+            'class'        => 'input',
             'placeholder'  => '',
             'maxlength'    => '150',
             'value'        => set_value('inputResponsavel',isset($formLoad['inputResponsavel']) ? $formLoad['inputResponsavel'] : '')
@@ -863,7 +891,7 @@ class Form extends CI_Controller {
             'id'           => 'inputCPFCNPJ',
             'name'         => 'inputCPFCNPJ',
             'type'         => 'text',
-            'class'        => 'input-small',
+            'class'        => 'input',
             'placeholder'  => '',
             'maxlength'    => '20',
             'value'        => set_value('inputCPFCNPJ',isset($formLoad['inputCPFCNPJ']) ? $formLoad['inputCPFCNPJ'] : '')
@@ -879,6 +907,8 @@ class Form extends CI_Controller {
             '2'         => 'Licença ambiental estadual',
             '3'         => 'Licença ambiental municipal'
         );
+        $data['id_licenca'] = isset($formLoad['slctLicenca']) ? $formLoad['slctLicenca'] : "1";
+
 
         $data['semResponsavel'] = array(
             'id'           => 'semResponsavel',
@@ -1105,10 +1135,6 @@ class Form extends CI_Controller {
             $data['tipoFonteInformacao'] = $formLoad['tipoFonteInformacao'];
         }
 
-        // $this->firephp->log($formLoad);
-        // $this->firephp->log($formLoad['hasOleo']);
-        // $this->firephp->log($formLoad['ocorrencia_oleo']);
-
         // $data['isServIBAMA'] = isset($formLoad['isServIBAMA']) ? $formLoad['isServIBAMA'] : '';
 
         return $data;
@@ -1124,7 +1150,7 @@ class Form extends CI_Controller {
 
         if ($formLoad != "") {
 
-            $this->firephp->log($formLoad);
+            // $this->firephp->log($formLoad);
 
             $formLoad['typeOfForm'] = "load";
 
@@ -1132,7 +1158,7 @@ class Form extends CI_Controller {
 
             $form['data'] = $data;
 
-            $this->firephp->log($data);
+            // $this->firephp->log($data);
 
             $this->load->view('templates/form',$form);
         } else {
