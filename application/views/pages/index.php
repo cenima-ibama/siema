@@ -244,7 +244,7 @@
         <?php echo form_open('form/createform', array('id' => 'formCreate', 'target' => 'form_frame')); ?>
           <label class="checkbox" style="display:none;">
             <label id="defaultHtml" name="defaultHtml"></label>
-            <input type="checkbox" id="hasOleo" name="hasOleo">
+            <input type="checkbox" id="hasOleo" name="hasOleo" value="S">
             <?php
               if($this->session->userdata('logged_in'))
                 echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA" checked>';
@@ -255,7 +255,7 @@
         <?php echo form_close(); ?>
         <?php echo form_open('form/loadform', array('id' => 'formLoad', 'target' => 'form_frame')); ?>
           <label class="checkbox" style="display:none;">
-            <input type="checkbox" id="hasOleo" name="hasOleo">
+            <input type="checkbox" id="hasOleo" name="hasOleo" value="S">
             <?php
               if($this->session->userdata('logged_in'))
                 echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA" checked>';

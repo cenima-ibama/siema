@@ -504,7 +504,8 @@
           $("#inputUF").attr("disabled", "disabled");
           $("#inputEndereco").attr("disabled", "disabled");
           $("#btnAddToMap").attr("disabled", "disabled");
-          return $("button[data-id='slctLicenca']").attr("disabled", "disabled");
+          $("#dropdownMunicipio").attr("disabled", "disabled");
+          return $("#dropdownUF").attr("disabled", "disabled");
         } else {
           $("#inputLat").removeAttr("disabled");
           $("#inputLng").removeAttr("disabled");
@@ -512,7 +513,8 @@
           $("#inputUF").removeAttr("disabled");
           $("#inputEndereco").removeAttr("disabled");
           $("#btnAddToMap").removeAttr("disabled");
-          return $("button[data-id='slctLicenca']").removeAttr("disabled");
+          $("#dropdownMunicipio").removeAttr("disabled");
+          return $("#dropdownUF").removeAttr("disabled");
         }
       });
       $("#semNavioInstalacao").on('click', function() {

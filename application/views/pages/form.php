@@ -104,8 +104,15 @@
                     <label class="control-label" for="inputMunicipio">Município/UF:</label>
                     <div class="controls">
                       <?php
-                        echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium"');
-                        echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', $id_uf), 'id="dropdownUF" class="input-mini"');
+
+                        if (isset($semLocalizacao['checked'])) {
+                          echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium" disabled="disabled"');
+                          echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', $id_uf), 'id="dropdownUF" class="input-mini" disabled="disabled"');
+                        } else {
+                          echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium"');
+                          echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', $id_uf), 'id="dropdownUF" class="input-mini"');
+                        }
+
                         // echo form_input($inputMunicipio);
                         // echo form_input($inputUF);
                       ?>

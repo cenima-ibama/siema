@@ -910,7 +910,8 @@ $(document).ready ->
         $("#inputUF").attr("disabled","disabled")
         $("#inputEndereco").attr("disabled","disabled")
         $("#btnAddToMap").attr("disabled","disabled")
-        $("button[data-id='slctLicenca']").attr("disabled", "disabled")
+        $("#dropdownMunicipio").attr("disabled","disabled")
+        $("#dropdownUF").attr("disabled","disabled")
       else
         $("#inputLat").removeAttr("disabled")
         $("#inputLng").removeAttr("disabled")
@@ -919,7 +920,8 @@ $(document).ready ->
         $("#inputUF").removeAttr("disabled")
         $("#inputEndereco").removeAttr("disabled")
         $("#btnAddToMap").removeAttr("disabled")
-        $("button[data-id='slctLicenca']").removeAttr("disabled")
+        $("#dropdownMunicipio").removeAttr("disabled")
+        $("#dropdownUF").removeAttr("disabled")
 
     $("#semNavioInstalacao").on 'click', () ->
       if $(@).is ":checked"
