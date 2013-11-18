@@ -156,10 +156,8 @@
       _geosearch: function(qry, showAddress) {
         var error, results, url;
         try {
-          console.log(qry);
           if (typeof this._provider.GetLocations === "function") {
             return results = this._provider.GetLocations(qry, (function(results) {
-              console.log(results);
               return this._processResults(results, showAddress);
             }).bind(this));
           } else {
@@ -202,12 +200,10 @@
       },
       _showAddres: function(label) {
         var address;
-        console.log(label);
         $("#inputMunicipio").val("");
         $("#inputUF").val("");
         $("#inputEndereco").val("");
-        address = this._parseLabel(label);
-        return console.log(address);
+        return address = this._parseLabel(label);
       },
       _parseLabel: function(label) {
         var address, cepRegExp, i, indexCity, labelParts, result, strAdd, _i;
@@ -520,10 +516,18 @@
       $("#semNavioInstalacao").on('click', function() {
         if ($(this).is(":checked")) {
           $("#inputNomeNavio").attr("disabled", "disabled");
-          return $("#inputNomeInstalacao").attr("disabled", "disabled");
+          $("#inputNomeInstalacao").attr("disabled", "disabled");
+          $("#navio").attr("disabled", "disabled");
+          return $("#instalacao").attr("disabled", "disabled");
         } else {
-          $("#inputNomeNavio").removeAttr("disabled");
-          return $("#inputNomeInstalacao").removeAttr("disabled");
+          if (!$("#instalacao").is(":checked")) {
+            $("#inputNomeNavio").removeAttr("disabled");
+          }
+          if (!$("#navio").is(":checked")) {
+            $("#inputNomeInstalacao").removeAttr("disabled");
+          }
+          $("#navio").removeAttr("disabled");
+          return $("#instalacao").removeAttr("disabled");
         }
       });
       $("#semDataObs").on('click', function() {
@@ -680,6 +684,20 @@
         }
       });
     });
+    $("#inputDataObs").on('change', function() {
+      if ($(this).val() !== "") {
+        date = new Date($.datepicker.formatDate('dd/mm/yy', new Date($(this).val())));
+        return $("#diaObsSemana").val(date.getDay());
+      }
+    });
+    $("#inputDataInci").on('change', function() {
+      if ($(this).val() !== "") {
+        date = new Date($.datepicker.formatDate('dd/mm/yy', new Date($(this).val())));
+        return $("#diaInciSemana").val(date.getDay());
+      }
+    });
+    $("#inputDataObs").change();
+    $("#inputDataInci").change();
     $("#inputHoraObs").on('change', function() {
       var obsHour;
       if (($(this).prop('value')) !== "") {
@@ -722,6 +740,18 @@
     if (($("#inputHoraInci").prop('value')) !== '') {
       $("#divPeriodoInci").prop('style', 'display:none;');
     }
+    $("#navio").on('click', function() {
+      if ($(this).is(":checked")) {
+        $("#inputNomeInstalacao").attr("disabled", "disabled");
+        return $("#inputNomeNavio").removeAttr("disabled");
+      }
+    });
+    $("#instalacao").on('click', function() {
+      if ($(this).is(":checked")) {
+        $("#inputNomeNavio").attr("disabled", "disabled");
+        return $("#inputNomeInstalacao").removeAttr("disabled");
+      }
+    });
     $("#inputDataObs").mask("99/99/9999");
     $("#inputHoraObs").mask("99:99");
     $("#inputDataInci").mask("99/99/9999");

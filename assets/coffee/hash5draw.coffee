@@ -56,6 +56,7 @@ class H5.Draw
 
     @options.map.addLayer(@drawnItems)
 
+    # Selecting which buttons will appear in the map.
     drawControl = new L.Control.Draw({
       draw: {
         marker: @options.buttons.marker,
@@ -70,24 +71,29 @@ class H5.Draw
         remove: @options.buttons.remove
       }
     })
-
     @options.map.addControl(drawControl)
 
+    # In case it is necessary to reload the shape,
+    # calls the function that retrieves it from the tmp table on the database
     if @.options.reloadShape then @reloadShape()
 
+    # Gets the next id from the database
     @_getNextIdTable()
 
+    # Function that links the draw functionality to each element (point, line, polygon)
     @_addDrawButtonActions()
 
     # Not implemented yet!!!
+    # Function that links the edit funcionality to each element (point, line, polygon)
     # @_addEditButtonActions()
 
+    # Function that links the remove functionality to each element (point, line, polygon)
     @_addRemoveButtonActions()
 
   # Function that gets the next id of the drawing from the database, keeping the unity of the key
   _getNextIdTable: ()->
     $.each @.options.buttons, (key, value)=>
-      # get the key for each true button that the framework gets
+      # get the key for each element (point, line, polygon)
       if value is true
         # Our database stores rectangle, circle and polygon in the same table: they're all polygons
         if key is 'polygon' or key is 'rectangle' or key is 'circle'
@@ -97,7 +103,7 @@ class H5.Draw
               fields: "nextval('" + @.options.tables['polygon'].table + "_" + @.options.tables['polygon'].uniqueField + "_seq') as lastval"
               restService: "ws_selectonlyquery.php"
             )
-
+            # Saves the Id from the database on a Global variable.
             @idPolygon = rest.data[0].lastval
         else if key is 'polyline'
           if @idPolyline is ""
@@ -107,6 +113,7 @@ class H5.Draw
               restService: "ws_selectonlyquery.php"
             )
 
+            # Saves the Id from the database on a Global variable.
             @idPolyline = rest.data[0].lastval
         else if key is 'marker'
           if @idMarker is ""
@@ -116,6 +123,7 @@ class H5.Draw
               restService: "ws_selectonlyquery.php"
             )
 
+            # Saves the Id from the database on a Global variable.
             @idMarker = rest.data[0].lastval
 
   # Add functionality to the buttons inserted
@@ -148,11 +156,9 @@ class H5.Draw
             firstPoint = @
 
           values = values + @.lng + " " + @.lat
-
           values = values +  ","
 
         values = values + firstPoint.lng + " " + firstPoint.lat + ")', " + @.options.srid + "))"
-
         values = values + ",now()"
 
         sql = "(" + columns + ") values (" + values + ")"
@@ -189,7 +195,6 @@ class H5.Draw
             values = values + "," + @.lng + " " + @.lat
 
         values = values + ")', " + @.options.srid + ")"
-
         values = values + ",now()"
 
         sql = "(" + columns + ") values (" + values + ")"
@@ -221,9 +226,7 @@ class H5.Draw
         values = values +
               layer._latlngs[0].lng + "," + layer._latlngs[0].lat + ", " +
               layer._latlngs[2].lng + "," + layer._latlngs[2].lat
-
         values = values + ", " + @.options.srid + ")"
-
         values = values + ",now()"
 
         sql = "(" + columns + ") values (" + values + ")"
@@ -254,7 +257,6 @@ class H5.Draw
         values = values + "ST_Buffer(ST_GeomFromText('POINT("
         values = values + layer._latlng.lng + " " + layer._latlng.lat + ")'," + @.options.srid + "),"
         values = values + layer._mRadius/100010 + ")"
-
         values = values + ",now()"
 
         sql = "(" + columns + ") values (" + values + ")"
@@ -280,7 +282,6 @@ class H5.Draw
           columns = columns + "shape,dt_registro"
           values = values + "ST_SetSRID(ST_MakePoint("
           values = values + layer._latlng.lng + "," + layer._latlng.lat + ")," + @.options.srid + ")"
-
           values = values + ",now()"
 
           sql = "(" + columns + ") values (" + values + ")"

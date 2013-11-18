@@ -208,8 +208,6 @@ $(document).ready ->
 
   #     sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + ")))"
 
-  #     console.log(sql)
-
   #     # Insert the figure in a temporary table.
   #     rest = new H5.Rest (
   #      url: H5.Data.restURL
@@ -234,8 +232,6 @@ $(document).ready ->
 
   #     sql = sql + ")', " + $("#inputEPSG").val() + "))"
 
-  #     console.log(sql)
-
   #     # Insert the figure in a temporary table.
   #     rest = new H5.Rest (
   #      url: H5.Data.restURL
@@ -255,8 +251,6 @@ $(document).ready ->
 
   #     sql = sql + ", " + $("#inputEPSG").val() + "))"
 
-  #     console.log sql
-
   #     # Insert the figure in a temporary table.
   #     rest = new H5.Rest (
   #       url: H5.Data.restURL
@@ -266,16 +260,12 @@ $(document).ready ->
   #     )
   #   else if (type is 'circle')
 
-  #     console.log layer
-
   #     layer._leaflet_id = ++idPol
 
   #     sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ", ST_Buffer(ST_GeomFromText('POINT(" +
   #           layer._latlng.lat + " " + layer._latlng.lng + ")'," + $("#inputEPSG").val() + "),"
 
   #     sql = sql + layer._mRadius/100010 + "))"
-
-  #     console.log sql
 
   #     rest = new H5.Rest (
   #       url: H5.Data.restURL
@@ -424,16 +414,12 @@ $(document).ready ->
     _provider: new L.GeoSearch.Provider.Google
     _geosearch: (qry, showAddress) ->
       try
-        # console.log @_provider
-        console.log qry
         if typeof @_provider.GetLocations is "function"
           # console.log "Is function"
           results = @_provider.GetLocations(qry, ((results) ->
-            console.log results
             @_processResults results, showAddress
           ).bind(this))
         else
-          # console.log "Not a Function"
           url = @_provider.GetServiceUrl(qry)
           $.getJSON url, (data) (->
             try
@@ -464,12 +450,10 @@ $(document).ready ->
       $("#inputLng").val location.X
 
     _showAddres: (label) ->
-      console.log label
       $("#inputMunicipio").val ""
       $("#inputUF").val ""
       $("#inputEndereco").val ""
       address = @_parseLabel label
-      console.log address
 
 
     _parseLabel: (label) ->
@@ -562,10 +546,8 @@ $(document).ready ->
 
   #connect the GeoSearch to the inputAddress
   $("#inputEndereco").on 'keyup', (event) ->
-    # console.log "Entrei no key pressed"
     enterKey = 13
     if event.keyCode is enterKey
-      # console.log this.value
       # municipio = $("#inputMunicipio").val()
       municipioVal = document.getElementById('dropdownMunicipio').value
       municipio = $("#dropdownMunicipio option[value='" + municipioVal + "']")
@@ -660,11 +642,6 @@ $(document).ready ->
         if (@.innerHTML is input.value)
           input.checked = "checked"
           $(@).remove()
-          # addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
-
-      # $(input).click ()->
-      #   if $(this).is(":checked")
-      #     addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
 
       span = document.createElement("span")
       span.innerHTML = value.des_tipo_localizacao
@@ -927,9 +904,15 @@ $(document).ready ->
       if $(@).is ":checked"
         $("#inputNomeNavio").attr("disabled","disabled")
         $("#inputNomeInstalacao").attr("disabled","disabled")
+        $("#navio").attr("disabled","disabled")
+        $("#instalacao").attr("disabled","disabled")
       else
-        $("#inputNomeNavio").removeAttr("disabled")
-        $("#inputNomeInstalacao").removeAttr("disabled")
+        if(!$("#instalacao").is(":checked"))
+          $("#inputNomeNavio").removeAttr("disabled")
+        if(!$("#navio").is(":checked"))
+          $("#inputNomeInstalacao").removeAttr("disabled")
+        $("#navio").removeAttr("disabled")
+        $("#instalacao").removeAttr("disabled")
 
     $("#semDataObs").on 'click', ()->
       if $(this).is(":checked")
@@ -1082,6 +1065,19 @@ $(document).ready ->
     # else
     #   $("button[data-id='slctLicenca']").removeClass("disabled")
 
+  $("#inputDataObs").on 'change', ->
+    if ($(this).val() isnt "")
+      date = new Date($.datepicker.formatDate('dd/mm/yy', new Date($(this).val())))
+      $("#diaObsSemana").val(date.getDay())
+
+  $("#inputDataInci").on 'change', ->
+    if ($(this).val() isnt "")
+      date = new Date($.datepicker.formatDate('dd/mm/yy', new Date($(this).val())))
+      $("#diaInciSemana").val(date.getDay())
+
+  $("#inputDataObs").change()
+  $("#inputDataInci").change()
+
   $("#inputHoraObs").on 'change', ->
     if ($(@).prop 'value') isnt ""
       obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
@@ -1121,6 +1117,20 @@ $(document).ready ->
 
   if ($("#inputHoraInci").prop 'value') isnt ''
     $("#divPeriodoInci").prop('style','display:none;')
+
+
+  $("#navio").on 'click', ->
+    if $(this).is(":checked")
+      $("#inputNomeInstalacao").attr("disabled","disabled")
+      $("#inputNomeNavio").removeAttr("disabled")
+
+  $("#instalacao").on 'click', ->
+    if $(this).is(":checked")
+      $("#inputNomeNavio").attr("disabled","disabled")
+      $("#inputNomeInstalacao").removeAttr("disabled")
+
+  # $("#instalacao").trigger('click')
+  # $("#navio").click()
 
   #-------------------------------------------------------------------------
   # MASK FOR FIELDS

@@ -77,10 +77,15 @@ class Form extends CI_Controller {
 
         if (isset($form_data['hasOleo']) and ($form_data['hasOleo'] == 'S')) {
             if (!isset($form_data['semNavioInstalacao'])) {
-                $this->form_validation->set_rules('inputNomeNavio', 'Nome do navio', 'required');
-                $this->form_validation->set_rules('inputNomeInstalacao', 'Nome da instalação', 'required');
+                if (isset($form_data['typeOfOrigin']) and $form_data['typeOfOrigin'] == 'navio') {
+                    $this->form_validation->set_rules('inputNomeNavio', 'Nome do navio', 'required');
+                } else if (isset($form_data['typeOfOrigin']) and $form_data['typeOfOrigin'] == 'instalacao') {
+                    $this->form_validation->set_rules('inputNomeInstalacao', 'Nome da instalação', 'required');
+                } else {
+                    $this->form_validation->set_rules('inputNomeNavio', 'Nome do navio ou nome da instalação', 'required');
+                }
             } else {
-                $this->form_validation->set_rules('semOrigem', 'Origem do Acidente', 'required');
+                $this->form_validation->set_rules('semNavioInstalacao', 'Nome do navio ou nome da instalação', 'required');
             }
         }
 
@@ -164,10 +169,12 @@ class Form extends CI_Controller {
 
         $form_data =  $this->input->post();
 
+        $this->firephp->log($form_data);
+
         // Set the rules for validating the form
         $this->formSetRules($form_data);
 
-        $this->firephp->log($form_data);
+        // $this->firephp->log($form_data);
 
         if ($this->form_validation->run() == FALSE) {
             $this->validateForm($form_data);
@@ -196,8 +203,7 @@ class Form extends CI_Controller {
 
     public function dataForm($formLoad)
     {
-        $this->firephp->log($formLoad);
-
+        // $this->firephp->log($formLoad);
 
         // Value of the "Comunicado"
         $data['comunicado'] = isset($formLoad['comunicado']) ? $formLoad['comunicado'] : '';
@@ -283,7 +289,7 @@ class Form extends CI_Controller {
             'type'         => 'checkbox',
             'value'         => 'on',
         );
-        if(set_value('oceano') == "on"){
+        if(isset($formLoad['oceano'])){
             $data['oceano'] += array(
                 'checked'  => 'checked'
             );
@@ -293,17 +299,19 @@ class Form extends CI_Controller {
                 'disabled' => 'disabled'
             );
         }
-
-        // $this->firephp->log($formLoad);
-
         $data['inputBaciaSed'] = array(
             'id'           => 'inputBaciaSed',
             'name'         => 'inputBaciaSed',
             'type'         => 'text',
             'class'        => 'input-medium-large',
-            'placeholder'  => 'Nome da Bacia Sedimentar',
-            'value'        => set_value('inputBaciaSed', isset($formLoad['inputBaciaSed']) ? $formLoad['inputBaciaSed'] : "")
+            'placeholder'  => 'Nome da Bacia Sedimentar'
         );
+        if (isset($formLoad['oceano'])) {
+            $data['inputBaciaSed'] += array (
+                'value'        => set_value('inputBaciaSed', $formLoad['inputBaciaSed'])
+            );
+        }
+
         if(set_value('semLocalizacao') == "on"){
             $data['inputBaciaSed'] += array(
                 'disabled' => 'disabled'
@@ -404,6 +412,16 @@ class Form extends CI_Controller {
             );
         }
 
+        $data['diaObsSemana'] = array (
+            '0'            => 'Domingo',
+            '1'            => 'Segunda',
+            '2'            => 'Terça',
+            '3'            => 'Quarta',
+            '4'            => 'Quinta',
+            '5'            => 'Sexta',
+            '6'            => 'Sábado'
+        );
+
         $data['PerObsMatu'] = array(
             'id'           => 'PerObsMatu',
             'name'         => 'PeriodoObs',
@@ -493,6 +511,16 @@ class Form extends CI_Controller {
                 'disabled' => 'disabled'
             );
         }
+
+        $data['diaInciSemana'] = array (
+            '0'            => 'Domingo',
+            '1'            => 'Segunda',
+            '2'            => 'Terça',
+            '3'            => 'Quarta',
+            '4'            => 'Quinta',
+            '5'            => 'Sexta',
+            '6'            => 'Sábado'
+        );
 
         $data['PerInciMatu'] = array(
             'id'           => 'PerInciMatu',
@@ -616,7 +644,7 @@ class Form extends CI_Controller {
             'maxlength'    => '150',
             'value'        => set_value('inputNomeNavio', isset($formLoad['inputNomeNavio']) ? $formLoad['inputNomeNavio'] : '')
         );
-        if(isset($formLoad['semNavioInstalacao'])){
+        if(isset($formLoad['semNavioInstalacao']) or (isset($formLoad['typeOfOrigin']) and $formLoad['typeOfOrigin'] == 'instalacao')){
             $data['inputNomeNavio'] += array(
                 'disabled' => 'disabled'
             );
@@ -630,7 +658,7 @@ class Form extends CI_Controller {
             'maxlength'    => '150',
             'value'        => set_value('inputNomeInstalacao', isset($formLoad['inputNomeInstalacao']) ? $formLoad['inputNomeInstalacao'] : '')
         );
-        if(isset($formLoad['semNavioInstalacao'])){
+        if(isset($formLoad['semNavioInstalacao']) or (isset($formLoad['typeOfOrigin']) and $formLoad['typeOfOrigin'] == 'navio')){
             $data['inputNomeInstalacao'] += array(
                 'disabled' => 'disabled'
             );

@@ -70,7 +70,8 @@
                         <?php echo form_input($inputLng); ?>
                       </div>
                     </div>
-<!--                     <div class="span12">
+
+                    <div class="span12">
                       <label class="checkbox" for="oceano">
                         <?php echo form_checkbox($oceano); ?>
                         &nbsp; Oceano
@@ -84,7 +85,8 @@
                         &nbsp; Bacia Sedimentar
                         <?php echo form_input($inputBaciaSed); ?>
                       </label>
-                    </div> -->
+                    </div>
+
                     <!--
                     <div class="span4">
                       <div class="control-group">
@@ -161,7 +163,10 @@
                   <div class="span6">
                     <label class="control-label" for="inputDataObs">Data:*</label>
                     <div class="controls">
-                      <?php echo form_input($inputDataObs); ?>
+                      <?php
+                        echo form_input($inputDataObs);
+                        echo form_dropdown('diaObsSemana', $diaObsSemana, set_value('diaObsSemana'),'id="diaObsSemana" disabled="disabled"');
+                      ?>
                     </div>
                   </div>
                   <div class="span6">
@@ -221,7 +226,10 @@
                   <div class="span6">
                     <label class="control-label" for="inputDataInci">Data:*</label>
                     <div class="controls">
-                      <?php echo form_input($inputDataInci); ?>
+                      <?php
+                        echo form_input($inputDataInci);
+                        echo form_dropdown('diaInciSemana', $diaInciSemana, set_value('diaInciSemana'),'id="diaInciSemana" disabled="disabled"');
+                      ?>
                     </div>
                   </div>
                   <div class="span6">
@@ -335,19 +343,39 @@
                       </h5>
                       <br />
                       <div class="control-group">
-                        <label class="control-label span4" for="inputNomeNavio">
-                          Nome do navio:
+                        <label class="radio">';
+                  if (isset($inputNomeNavio) and $inputNomeNavio['value'] != "") {
+                    echo '  <input type="radio" id="navio" name="typeOfOrigin" value="navio" checked="checked"';
+                  } else {
+                    echo '  <input type="radio" id="navio" name="typeOfOrigin" value="navio"';
+                  }
+                  if (isset($semNavioInstalacao['checked'])) {
+                    echo 'disabled="disabled"';
+                  }
+                  echo '/>';
+                  echo '
+                          &nbsp; Nome do navio:
                         </label>
-                        <div class="controls">';
-                          echo form_input($inputNomeNavio);
+                        <div class="controls" style="padding-left:23px;">';
+                  echo form_input($inputNomeNavio);
                   echo  '
                         </div>
                       </div>
                       <div class="control-group">
-                        <label class="control-label span4" for="inputNomeInstalacao">
-                          Nome da instalação:
+                        <label class="radio">';
+                  if (isset($inputNomeInstalacao) and $inputNomeInstalacao['value'] != "") {
+                    echo '  <input type="radio" id="instalacao" name="typeOfOrigin" value="instalacao" checked="checked"';
+                  } else {
+                    echo '  <input type="radio" id="instalacao" name="typeOfOrigin" value="instalacao"';
+                  }
+                  if (isset($semNavioInstalacao['checked'])) {
+                    echo 'disabled="disabled"';
+                  }
+                  echo '/>';
+                  echo '
+                          &nbsp; Nome da instalação:
                         </label>
-                        <div class="controls">';
+                        <div class="controls" style="padding-left:23px;">';
                   echo form_input($inputNomeInstalacao);
                   echo '
                         </div>
@@ -484,7 +512,7 @@
                       <div class="control-group">
                         <div class="controls">
                           <label class="control-label" for="inputValorEstimado">
-                            Volume estimado em';
+                            Volume estimado em &nbsp;';
                   if (isset($inputVolumeEstimado)) {
                     echo form_input($inputVolumeEstimado);
                   }

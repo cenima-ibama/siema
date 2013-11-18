@@ -91,14 +91,8 @@ unidadeConservacao = new L.TileLayer.WMS(geoserverUrl,
   transparent: true
 )
 
-blocoR9 = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:bloco_r9"
-  format: "image/png"
-  transparent: true
-)
-
 blocoExploratorio = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:bloco_exploratorio"
+  layers: "cemam:blocoexploratorio"
   format: "image/png"
   transparent: true
 )
@@ -165,6 +159,48 @@ costao = new L.TileLayer.WMS(geoserverUrl,
 
 banhado = new L.TileLayer.WMS(geoserverUrl,
   layers: "cemam:banhado"
+  format: "image/png"
+  transparent: true
+)
+
+hidrografia = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:hidrografia_lin"
+  format: "image/png"
+  transparent: true
+)
+
+eixoDutoviario = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:eixo_dutoviario"
+  format: "image/png"
+  transparent: true
+)
+
+eixoFerroviario = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:eixo_ferroviario"
+  format: "image/png"
+  transparent: true
+)
+
+eixoRodoviario = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:eixo_rodoviario"
+  format: "image/png"
+  transparent: true
+)
+
+estacaoFerroviaria = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:estacao_ferroviaria"
+  format: "image/png"
+  transparent: true
+)
+
+refinaria = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:refinaria"
+  format: "image/png"
+  transparent: true
+)
+
+ponteTunel = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:ponte_tunel"
   format: "image/png"
   transparent: true
 )
@@ -343,14 +379,29 @@ controlswitch = new L.control.switch(
   "Restinga":
     layer: restinga
     tab: "water"
-  "Bloco R9":
-    layer: blocoR9
-    tab: "factory"
   "Bloco Exploratório":
     layer: blocoExploratorio
     tab: "factory"
   "Portos e Terminais":
     layer: portoTerminal
+    tab: "factory"
+  "Eixos Dutoviários":
+    layer: eixoDutoviario
+    tab: "factory"
+  "Eixos Ferroviários":
+    layer: eixoFerroviario
+    tab: "factory"
+  "Eixos Rodoviários":
+    layer: eixoRodoviario
+    tab: "factory"
+  "Estações Ferroviárias":
+    layer: estacaoFerroviaria
+    tab: "factory"
+  "Refinarias":
+    layer: refinaria
+    tab: "factory"
+  "Pontes e Túneis":
+    layer: ponteTunel
     tab: "factory"
   "Terras Indígenas":
     layer: terrasIndigenas
@@ -358,6 +409,8 @@ controlswitch = new L.control.switch(
     layer: unidadeConservacao
   "Bioma IBGE":
     layer: biomaIBGE
+  "Hidrografia":
+    layer: hidrografia
 ,
   water:
     icon: iconsURL + "water.png"

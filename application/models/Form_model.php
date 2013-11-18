@@ -52,6 +52,10 @@ class Form_model extends CI_Model {
     } else {
       $values = $values . "'S',";
 
+      if (isset($form['inputBaciaSed'])) {
+        $fields = $fields . "bacia_sedimentar,";
+        $values = $values . "'" . $form['inputBaciaSed'] . "',";
+      }
       if(isset($form['dropdownUF'])) {
         $fields = $fields . "id_uf,";
         $values = $values . $form['dropdownUF'] . ",";
@@ -541,11 +545,32 @@ class Form_model extends CI_Model {
 
     // Inserting informations about the shipment, related to the oil form
     // Table responsavel
-    if(isset($form['inputNomeNavio']))
+    if(isset($form['inputNomeNavio']) or isset($form['inputNomeInstalacao']))
     {
-      $funcNavio = isset($form['inputFuncaoNavio']) ? $form['inputFuncaoNavio'] :  "";
-      $sql = "insert into detalhamento_ocorrencia (id_ocorrencia, des_navio, des_instalacao, des_funcao_comunicante ) VALUES ('" .
-              $id . "','" . $form['inputNomeNavio'] . "','" . $form['inputNomeInstalacao'] . "','"  . $funcNavio . "');";
+      // $funcNavio = isset($form['inputFuncaoNavio']) ? $form['inputFuncaoNavio'] :  "";
+      // $nomeNavio = isset($form['inputNomeNavio']) ? "'" . $form['inputNomeNavio'] . "'" :  "NULL";
+      // $nomeInstalacao = isset($form['inputNomeInstalacao']) ? "'" . $form['inputNomeInstalacao'] . "'" : "NULL";
+
+      $fields = "id_ocorrencia";
+      $values = $id;
+
+      if(isset($form['inputNomeNavio']))  {
+        $fields = $fields . ",des_navio";
+        $values = $values . ",'" . $form['inputNomeNavio'] . "'";
+      } else if(isset($form['inputNomeInstalacao']))  {
+        $fields = $fields . ",des_instalacao";
+        $values = $values . ",'" . $form['inputNomeInstalacao'] . "'";
+      }
+
+      if (isset($form['inputFuncaoNavio'])) {
+        $fields = $fields . ",des_funcao_comunicante";
+        $values = $values . ",'" . $form['inputFuncaoNavio'] . "'";
+      }
+
+      $sql = "insert into detalhamento_ocorrencia (" . $fields . ") VALUES (" . $values . ")";
+
+      // $sql = "insert into detalhamento_ocorrencia (id_ocorrencia, des_navio, des_instalacao, des_funcao_comunicante ) VALUES ('" .
+      //         $id . "'," . $nomeNavio . "," . $nomeInstalacao . ",'"  . $funcNavio . "');";
 
       $ocorrenciasDatabase->query($sql);
       $this->firephp->log($sql);
@@ -611,6 +636,9 @@ class Form_model extends CI_Model {
     } else {
       $fields = $fields . "'S'";
 
+      if (isset($form['inputBaciaSed'])) {
+        $fields = $fields . ",bacia_sedimentar='" . $form['inputBaciaSed'] . "'";
+      }
       if(isset($form['dropdownUF'])) {
         $fields = $fields . ",id_uf=" . $form['dropdownUF'];
       }
@@ -1113,30 +1141,63 @@ class Form_model extends CI_Model {
     //
     // Relation responsavel (in case it is a oil form)
     // Table responsavel
-    if(isset($form['inputNomeNavio'])) {
+    if(isset($form['inputNomeNavio']) or isset($form['inputNomeInstalacao'])) {
       // Verifies if the form already have a entry for informations about the shipment
       $fields = "select * from detalhamento_ocorrencia where id_ocorrencia='" . $id . "';";
       $oldShipment =  $ocorrenciasDatabase->query($fields);
 
+      // $funcNavio = isset($form['inputFuncaoNavio']) ? "'" . $form['inputFuncaoNavio'] . "'" : "";
+      // $nomeNavio = isset($form['inputNomeNavio']) ? "'" . $form['inputNomeNavio'] . "'" : NULL;
+      // $nomeInstalacao = isset($form['inputNomeInstalacao']) ? "'" . $form['inputNomeInstalacao'] . "'" : NULL;
+
       if ($oldShipment->num_rows() > 0) {
-        $funcNavio = isset($form['inputFuncaoNavio']) ? $form['inputFuncaoNavio'] : "";
         // Updating informations about the shipment, related to the oil form
-        $sql = " update detalhamento_ocorrencia set " .
-                  " des_navio='" . $form['inputNomeNavio'] . "'," .
-                  " des_instalacao='" . $form['inputNomeInstalacao'] . "'," .
-                  " des_funcao_comunicante='" . $funcNavio  . "'" .
-               " where id_ocorrencia='" . $id . "';";
+        $sql = " update detalhamento_ocorrencia set ";
+
+        if(isset($form['inputNomeNavio'])) {
+          $sql = $sql . " des_navio='" . $form['inputNomeNavio'] . "'";
+        } else if (isset($form['inputNomeInstalacao'])) {
+          $sql = $sql . " des_instalacao='" . $form['inputNomeInstalacao'] . "'";
+        }
+        if (isset($form['inputFuncaoNavio'])) {
+          $sql = $sql . " ,des_funcao_comunicante='" . $form['inputFuncaoNavio']  . "'";
+        }
+
+        $sql = $sql . " where id_ocorrencia='" . $id . "';";
 
         $ocorrenciasDatabase->query($sql);
       } else {
         // Inserting informations about the shipment, related to the oil form
-        $sql = " insert into detalhamento_ocorrencia " .
-                    "(id_ocorrencia, des_navio, des_instalacao, des_funcao_comunicante) " .
-                 "values ( " .
-                    "'" . $id . "'," .
-                    "'" . $form['inputNomeNavio'] . "'," .
-                    "'" . $form['inputNomeInstalacao'] . "'," .
-                    "'" . $form['inputFuncaoNavio'] . "');";
+
+        // $funcNavio = isset($form['inputFuncaoNavio']) ? $form['inputFuncaoNavio'] :  "";
+        // $nomeNavio = isset($form['inputNomeNavio']) ? "'" . $form['inputNomeNavio'] . "'" :  "NULL";
+        // $nomeInstalacao = isset($form['inputNomeInstalacao']) ? "'" . $form['inputNomeInstalacao'] . "'" : "NULL";
+
+        $fields = "id_ocorrencia";
+        $values = $id;
+
+        if(isset($form['inputNomeNavio']))  {
+          $fields = $fields . ",des_navio";
+          $values = $values . ",'" . $form['inputNomeNavio'] . "'";
+        } else if(isset($form['inputNomeInstalacao']))  {
+          $fields = $fields . ",des_instalacao";
+          $values = $values . ",'" . $form['inputNomeInstalacao'] . "'";
+        }
+
+        if (isset($form['inputFuncaoNavio'])) {
+          $fields = $fields . ",des_funcao_comunicante";
+          $values = $values . ",'" . $form['inputFuncaoNavio'] . "'";
+        }
+
+        $sql = "insert into detalhamento_ocorrencia (" . $fields . ") VALUES (" . $values . ")";
+
+        // $sql = " insert into detalhamento_ocorrencia " .
+        //             "(id_ocorrencia, des_navio, des_instalacao, des_funcao_comunicante) " .
+        //          "values ( " .
+        //             "'" . $id . "'," .
+        //             "" . $nomeNavio . "," .
+        //             "" . $nomeInstalacao . "," .
+        //             "'" . $funcNavio . "');";
 
         $ocorrenciasDatabase->query($sql);
       }
@@ -1184,6 +1245,10 @@ class Form_model extends CI_Model {
     $form['inputLat'] = $dbResult['inputlat'];
     $form['inputLng'] = $dbResult['inputlng'];
     $form['inputEPSG'] = $dbResult['inputepsg'];
+    if(isset($dbResult['bacia_sedimentar'])) {
+      $form['inputBaciaSed'] = $dbResult['bacia_sedimentar'];
+      $form['oceano'] = "on";
+    }
     $form['dropdownMunicipio'] = $dbResult['dropdownmunicipio'];
     $form['dropdownUF'] = $dbResult['dropdownuf'];
     $form['inputEndereco'] = $dbResult['endereco_ocorrencia'];
@@ -1239,8 +1304,13 @@ class Form_model extends CI_Model {
     $form['inputCompOrigem'] = $dbResult['des_complemento_tipo_localizaca'];
 
     if($dbResult['ocorrencia_oleo']) {
-      $form['inputNomeNavio'] = $infoOil['des_navio'];
-      $form['inputNomeInstalacao'] = $infoOil['des_instalacao'];
+      if ($infoOil['des_navio'] == NULL) {
+        $form['inputNomeInstalacao'] = $infoOil['des_instalacao'];
+        $form['typeOfOrigin'] = 'instalacao';
+      } else {
+        $form['inputNomeNavio'] = $infoOil['des_navio'];
+      $form['typeOfOrigin'] = 'navio';
+      }
     }
 
 
@@ -1462,4 +1532,15 @@ class Form_model extends CI_Model {
 
     return $array;
   }
+
+  // // Returns the date which the accident might had happened
+  // public function getDiaSemana($dateType, $id_ocorrencia)
+  // {
+
+  //   $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
+
+  //   $result = $ocorrenciasDatabase->query("select (" . $dateType . ", 'D') from id_ocorrencia where id_ocorrencia='". $id_ocorrencia . "';");
+
+  //   return $result->row_array();
+  // }
 }
