@@ -323,7 +323,7 @@ class H5.Draw
 
 
 
-  # Not Functioning well!!!
+  # Not Functioning!!!
 
   # Add the edit functionality
   # _addEditButtonActions: ()->

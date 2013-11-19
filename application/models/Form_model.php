@@ -1291,7 +1291,9 @@ class Form_model extends CI_Model {
         $form['PeriodoInci'] = 'inciMadrugada';
         break;
     }
-
+    if (isset($dbResult['dt_ocorrencia_feriado'])) {
+      $form['dtFeriado'] = $dbResult['dt_ocorrencia_feriado'];
+    }
 
     //
     // 3. Origem do Acidente
