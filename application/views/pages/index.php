@@ -285,7 +285,8 @@
   </div>
 </div>
 <div class="loading" id="loading">
-  <img src="<?php echo base_url()?>assets/img/logo.png" id="loading_logo" style="display: inline;" title="">
+  <!-- <img src="<?php echo base_url()?>assets/img/logo.png" id="loading_logo" style="display: inline;" title=""> -->
+  <img src="<?php echo base_url()?>assets/img/logo_ibama.png" id="loading_logo" style="display: inline;" title="">
 </div>
 <div id="map" class="map"></div>
 <div id="dash" class="dash">

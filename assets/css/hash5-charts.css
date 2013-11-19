@@ -353,10 +353,10 @@
   }
 }
 @media (max-width: 767px) {
-  
+
 }
 @media (max-height: 360px) {
-  
+
 }
 .quick-btn .item:last-child {
   border-radius: 0px 4px 4px 0px;
@@ -367,10 +367,10 @@
   }
 }
 @media (max-width: 767px) {
-  
+
 }
 @media (max-height: 360px) {
-  
+
 }
 .quick-btn .item a {
   outline: none;
@@ -476,7 +476,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 45%;
+  bottom: 27%;
   margin: 0 auto;
 }
 @media (max-width: 979px) {

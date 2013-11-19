@@ -2,6 +2,7 @@
 (function() {
   $(document).ready(function() {
     var roundNumber;
+    $("#map").show();
     $('#addMeModal').modal({
       keyboard: false,
       backdrop: false,
@@ -62,6 +63,7 @@
       rndedNum = Math.round(number * multiple) / multiple;
       return rndedNum;
     };
+    $("#dash").fadeOut(1);
     return $(".loading").fadeOut(2000);
   });
 
