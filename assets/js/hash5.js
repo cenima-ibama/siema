@@ -1363,7 +1363,7 @@
                 }
               });
             }
-          } else if (span.innerHTML !== "" && span.innerHTML !== "Empty") {
+          } else if (span.innerHTML !== "" && span.innerHTML !== "Vazio") {
             fields += "" + key + ",";
             values += "'" + span.innerHTML + "',";
           }

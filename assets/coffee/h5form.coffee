@@ -827,48 +827,84 @@ $(document).ready ->
 
   $("#inputDataObs").on 'change', ->
     if ($(this).val() isnt "")
-      date = new Date($.datepicker.formatDate('dd/mm/yy', new Date($(this).val())))
-      $("#diaObsSemana").val(date.getDay())
+      dia = $(this).val().split("/")[0]
+      mes = $(this).val().split("/")[1]
+      ano = $(this).val().split("/")[2]
+
+      date = new Date(mes + "/" + dia + "/" + ano)
+
+      valiDate = date.toLocaleDateString().replace(/-/g, "/")
+
+      if (valiDate is $(this).val())
+        $("#diaObsSemana").val(date.getDay())
+      else
+        $(this).val("")
+        $("#diaObsSemana").val("")
 
   $("#inputDataInci").on 'change', ->
-    if ($(this).val() isnt "")
-      date = new Date($.datepicker.formatDate('dd/mm/yy', new Date($(this).val())))
-      $("#diaInciSemana").val(date.getDay())
+    if $(this).val() isnt ""
+      dia = $(this).val().split("/")[0]
+      mes = $(this).val().split("/")[1]
+      ano = $(this).val().split("/")[2]
+
+      date = new Date(mes + "/" + dia + "/" + ano)
+
+      valiDate = date.toLocaleDateString().replace(/-/g, "/")
+
+      if valiDate is $(this).val()
+        $("#diaInciSemana").val(date.getDay())
+      else
+        $(this).val("")
+        $("#diaInciSemana").val("")
 
   $("#inputDataObs").change()
   $("#inputDataInci").change()
 
   $("#inputHoraObs").on 'change', ->
     if ($(@).prop 'value') isnt ""
-      obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
-      if obsHour < 6
-        $("#PerObsMadru").prop('checked', 'checked')
-      else if obsHour < 12
-        $("#PerObsMatu").prop('checked', 'checked')
-      else if obsHour < 18
-        $("#PerObsVesper").prop('checked', 'checked')
+      hora = $(this).val().split(":")[0]
+      minuto = $(this).val().split(":")[1]
+
+      if (-1 < hora < 23) or (-1 < minuto < 60)
+        obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
+        if obsHour < 6
+          $("#PerObsMadru").prop('checked', 'checked')
+        else if obsHour < 12
+          $("#PerObsMatu").prop('checked', 'checked')
+        else if obsHour < 18
+          $("#PerObsVesper").prop('checked', 'checked')
+        else
+          $("#PerObsNotu").prop('checked', 'checked')
+
+        $("#divPeriodoObs").prop('style','display:none;')
       else
-        $("#PerObsNotu").prop('checked', 'checked')
-
-      $("#divPeriodoObs").prop('style','display:none;')
-
+        $("#divPeriodoObs").prop('style','')
+        $(this).val("")
     else
       $("#divPeriodoObs").prop('style','')
 
   $("#inputHoraInci").on 'change', ->
     if ($(@).prop 'value') isnt ""
-      obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
+      hora = $(this).val().split(":")[0]
+      minuto = $(this).val().split(":")[1]
 
-      if obsHour < 6
-        $("#PerInciMadru").prop('checked', 'checked')
-      else if obsHour < 12
-        $("#PerInciMatu").prop('checked', 'checked')
-      else if obsHour < 18
-        $("#PerInciVesper").prop('checked', 'checked')
+      if (-1 < hora < 23) or (-1 < minuto < 60)
+        obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
+
+        if obsHour < 6
+          $("#PerInciMadru").prop('checked', 'checked')
+        else if obsHour < 12
+          $("#PerInciMatu").prop('checked', 'checked')
+        else if obsHour < 18
+          $("#PerInciVesper").prop('checked', 'checked')
+        else
+          $("#PerInciNotu").prop('checked', 'checked')
+
+        $("#divPeriodoInci").prop('style','display:none;')
       else
-        $("#PerInciNotu").prop('checked', 'checked')
+        $("#divPeriodoInci").prop('style','display:auto;')
+        $(this).val("")
 
-      $("#divPeriodoInci").prop('style','display:none;')
     else
       $("#divPeriodoInci").prop('style','display:auto;')
 

@@ -205,6 +205,12 @@ ponteTunel = new L.TileLayer.WMS(geoserverUrl,
   transparent: true
 )
 
+marTerritorial = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:mar_territorial"
+  format: "image/png"
+  transparent: true
+)
+
 restURL = "http://" + document.domain + "/siema/rest"
 
 # display acidentes
@@ -411,6 +417,8 @@ controlswitch = new L.control.switch(
     layer: biomaIBGE
   "Hidrografia":
     layer: hidrografia
+  "Mar Territorial":
+    layer: marTerritorial
 ,
   water:
     icon: iconsURL + "water.png"

@@ -685,51 +685,85 @@
       });
     });
     $("#inputDataObs").on('change', function() {
+      var ano, dia, mes, valiDate;
       if ($(this).val() !== "") {
-        date = new Date($.datepicker.formatDate('dd/mm/yy', new Date($(this).val())));
-        return $("#diaObsSemana").val(date.getDay());
+        dia = $(this).val().split("/")[0];
+        mes = $(this).val().split("/")[1];
+        ano = $(this).val().split("/")[2];
+        date = new Date(mes + "/" + dia + "/" + ano);
+        valiDate = date.toLocaleDateString().replace(/-/g, "/");
+        if (valiDate === $(this).val()) {
+          return $("#diaObsSemana").val(date.getDay());
+        } else {
+          $(this).val("");
+          return $("#diaObsSemana").val("");
+        }
       }
     });
     $("#inputDataInci").on('change', function() {
+      var ano, dia, mes, valiDate;
       if ($(this).val() !== "") {
-        date = new Date($.datepicker.formatDate('dd/mm/yy', new Date($(this).val())));
-        return $("#diaInciSemana").val(date.getDay());
+        dia = $(this).val().split("/")[0];
+        mes = $(this).val().split("/")[1];
+        ano = $(this).val().split("/")[2];
+        date = new Date(mes + "/" + dia + "/" + ano);
+        valiDate = date.toLocaleDateString().replace(/-/g, "/");
+        if (valiDate === $(this).val()) {
+          return $("#diaInciSemana").val(date.getDay());
+        } else {
+          $(this).val("");
+          return $("#diaInciSemana").val("");
+        }
       }
     });
     $("#inputDataObs").change();
     $("#inputDataInci").change();
     $("#inputHoraObs").on('change', function() {
-      var obsHour;
+      var hora, minuto, obsHour;
       if (($(this).prop('value')) !== "") {
-        obsHour = parseInt($(this).prop('value').split(':')[0], 10);
-        if (obsHour < 6) {
-          $("#PerObsMadru").prop('checked', 'checked');
-        } else if (obsHour < 12) {
-          $("#PerObsMatu").prop('checked', 'checked');
-        } else if (obsHour < 18) {
-          $("#PerObsVesper").prop('checked', 'checked');
+        hora = $(this).val().split(":")[0];
+        minuto = $(this).val().split(":")[1];
+        if (((-1 < hora && hora < 23)) || ((-1 < minuto && minuto < 60))) {
+          obsHour = parseInt($(this).prop('value').split(':')[0], 10);
+          if (obsHour < 6) {
+            $("#PerObsMadru").prop('checked', 'checked');
+          } else if (obsHour < 12) {
+            $("#PerObsMatu").prop('checked', 'checked');
+          } else if (obsHour < 18) {
+            $("#PerObsVesper").prop('checked', 'checked');
+          } else {
+            $("#PerObsNotu").prop('checked', 'checked');
+          }
+          return $("#divPeriodoObs").prop('style', 'display:none;');
         } else {
-          $("#PerObsNotu").prop('checked', 'checked');
+          $("#divPeriodoObs").prop('style', '');
+          return $(this).val("");
         }
-        return $("#divPeriodoObs").prop('style', 'display:none;');
       } else {
         return $("#divPeriodoObs").prop('style', '');
       }
     });
     $("#inputHoraInci").on('change', function() {
-      var obsHour;
+      var hora, minuto, obsHour;
       if (($(this).prop('value')) !== "") {
-        obsHour = parseInt($(this).prop('value').split(':')[0], 10);
-        if (obsHour < 6) {
-          $("#PerInciMadru").prop('checked', 'checked');
-        } else if (obsHour < 12) {
-          $("#PerInciMatu").prop('checked', 'checked');
-        } else if (obsHour < 18) {
-          $("#PerInciVesper").prop('checked', 'checked');
+        hora = $(this).val().split(":")[0];
+        minuto = $(this).val().split(":")[1];
+        if (((-1 < hora && hora < 23)) || ((-1 < minuto && minuto < 60))) {
+          obsHour = parseInt($(this).prop('value').split(':')[0], 10);
+          if (obsHour < 6) {
+            $("#PerInciMadru").prop('checked', 'checked');
+          } else if (obsHour < 12) {
+            $("#PerInciMatu").prop('checked', 'checked');
+          } else if (obsHour < 18) {
+            $("#PerInciVesper").prop('checked', 'checked');
+          } else {
+            $("#PerInciNotu").prop('checked', 'checked');
+          }
+          return $("#divPeriodoInci").prop('style', 'display:none;');
         } else {
-          $("#PerInciNotu").prop('checked', 'checked');
+          $("#divPeriodoInci").prop('style', 'display:auto;');
+          return $(this).val("");
         }
-        return $("#divPeriodoInci").prop('style', 'display:none;');
       } else {
         return $("#divPeriodoInci").prop('style', 'display:auto;');
       }

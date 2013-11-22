@@ -165,7 +165,7 @@
                     <div class="controls">
                       <?php
                         echo form_input($inputDataObs);
-                        echo form_dropdown('diaObsSemana', $diaObsSemana, set_value('diaObsSemana'),'id="diaObsSemana" disabled="disabled"');
+                        echo form_dropdown('diaObsSemana', $diaObsSemana, set_value('diaObsSemana', "0"),'id="diaObsSemana" disabled="disabled"');
                       ?>
                     </div>
                   </div>
@@ -228,7 +228,7 @@
                     <div class="controls">
                       <?php
                         echo form_input($inputDataInci);
-                        echo form_dropdown('diaInciSemana', $diaInciSemana, set_value('diaInciSemana'),'id="diaInciSemana" disabled="disabled"');
+                        echo form_dropdown('diaInciSemana', $diaInciSemana, set_value('diaInciSemana', "0"),'id="diaInciSemana" disabled="disabled"');
                       ?>
                     </div>
                   </div>

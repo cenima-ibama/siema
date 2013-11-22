@@ -436,6 +436,7 @@ class Form extends CI_Controller {
         }
         // Select Dia Semana Observação
         $data['diaObsSemana'] = array (
+            ''            => 'Data Inválida',
             '0'            => 'Domingo',
             '1'            => 'Segunda',
             '2'            => 'Terça',
@@ -535,6 +536,7 @@ class Form extends CI_Controller {
         }
         // Select Dia Semana Incidente
         $data['diaInciSemana'] = array (
+            ''            => 'Data Inválida',
             '0'            => 'Domingo',
             '1'            => 'Segunda',
             '2'            => 'Terça',
@@ -971,12 +973,13 @@ class Form extends CI_Controller {
         }
         // Select Licença Ambiental
         $data['slctLicenca'] = array(
+            '0'         => 'Sem informação',
             '1'         => 'Licença ambiental federal',
             '2'         => 'Licença ambiental estadual',
             '3'         => 'Licença ambiental municipal'
         );
         // Licença Ambiental Selected
-        $data['id_licenca'] = isset($formLoad['slctLicenca']) ? $formLoad['slctLicenca'] : "1";
+        $data['id_licenca'] = isset($formLoad['slctLicenca']) ? $formLoad['slctLicenca'] : "0";
         // Checkbox Sem Responsável
         $data['semResponsavel'] = array(
             'id'           => 'semResponsavel',

@@ -18,7 +18,8 @@
   <script src="<?= base_url()?>assets/js/bootstrap.select.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrap.switch.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrap.maxlength.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.5/bootstrap-editable/js/bootstrap-editable.min.js"></script>
+  <script src="<?= base_url()?>assets/js/bootstrap.editable.min.js"></script>
+  <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.5/bootstrap-editable/js/bootstrap-editable.min.js"></script> -->
 
   <!-- Charts -->
   <script src="//www.google.com/jsapi" type="text/javascript"></script>

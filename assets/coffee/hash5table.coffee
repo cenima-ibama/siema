@@ -794,7 +794,7 @@ class H5.Table
               url: (params)=>
                 where = ""
 
-                # Gets the key of the row, to update on the database
+                # Gets the key of the row, to update on the dtabase
                 $.each row.children, (key,cell) =>
                   tableCell = cell.children[0]
                   if $(tableCell).attr("data-field") is @options.uniqueField.field
@@ -826,7 +826,7 @@ class H5.Table
 
         # Verifies if the passed field has a value
         # in case it doesnt have any value ("" or Empty), the field is not added to the query string
-        else if span.innerHTML isnt "" and span.innerHTML isnt "Empty"
+        else if span.innerHTML isnt "" and span.innerHTML isnt "Vazio"
           fields +=  "" + key + ","
           values += "'" + span.innerHTML + "',"
 
