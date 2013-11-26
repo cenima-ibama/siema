@@ -685,14 +685,15 @@
       });
     });
     $("#inputDataObs").on('change', function() {
-      var ano, dia, mes, valiDate;
+      var actualDate, ano, dia, mes, valiDate;
       if ($(this).val() !== "") {
         dia = $(this).val().split("/")[0];
         mes = $(this).val().split("/")[1];
         ano = $(this).val().split("/")[2];
         date = new Date(mes + "/" + dia + "/" + ano);
+        actualDate = new Date();
         valiDate = date.toLocaleDateString().replace(/-/g, "/");
-        if (valiDate === $(this).val()) {
+        if ((valiDate === $(this).val()) && (actualDate.getFullYear() === date.getFullYear())) {
           return $("#diaObsSemana").val(date.getDay());
         } else {
           $(this).val("");
@@ -701,14 +702,15 @@
       }
     });
     $("#inputDataInci").on('change', function() {
-      var ano, dia, mes, valiDate;
+      var actualDate, ano, dia, mes, valiDate;
       if ($(this).val() !== "") {
         dia = $(this).val().split("/")[0];
         mes = $(this).val().split("/")[1];
         ano = $(this).val().split("/")[2];
         date = new Date(mes + "/" + dia + "/" + ano);
+        actualDate = new Date();
         valiDate = date.toLocaleDateString().replace(/-/g, "/");
-        if (valiDate === $(this).val()) {
+        if ((valiDate === $(this).val()) && (actualDate.getFullYear() === date.getFullYear())) {
           return $("#diaInciSemana").val(date.getDay());
         } else {
           $(this).val("");

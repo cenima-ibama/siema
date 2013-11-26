@@ -50,7 +50,7 @@ H5.DB.occurence.data =
       @regions[region] = {}
     @regions["Todos"] = {}
 
-  populate: (id_ocorrencia, region, date, state, type, origin) ->
+  populate: (id_ocorrencia, region, date, state, type, origin, date_accident) ->
     # convert string into date
     convertDate = (dateStr) ->
       dateStr = String(dateStr)
@@ -91,8 +91,14 @@ rest = new H5.Rest (
 
 H5.DB.occurence.data.init()
 $.each rest.data, (i, properties) ->
+  # Verifies if the occurrence has a accident date. In case it doesnt, sends the date that the form was sent
+  if properties.data_acidente isnt null
+    date = properties.data_acidente
+  else
+    date = properties.dt_registro
+
   H5.DB.occurence.data.populate(
-    properties.id_ocorrencia, properties.regiao, properties.dt_registro, properties.sigla, properties.eventos, properties.origem
+    properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem
     )
 
 #}}}

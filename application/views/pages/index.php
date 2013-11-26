@@ -419,5 +419,8 @@
       <div id="chart7" class="box-small"> </div>
       <div id="chart8" class="box-small"> </div>
     </div>
+    <div id="message" style="text-align: right; font-size: 8px; padding-right: 32px;">
+      <span> *Quando não há informação sobre a data exata de ocorrência do acidente, foi considerada a data de registro pelo IBAMA </span>
+    </div>
   </div>
 </div>

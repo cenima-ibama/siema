@@ -358,7 +358,7 @@ class Form_model extends CI_Model {
 
 
     //
-    // Date of registry creation/update
+    // Date of registry creation
     //
     $fields = $fields . "dt_registro";
     $values = $values . "now()";

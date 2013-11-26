@@ -67,7 +67,7 @@
       }
       return this.regions["Todos"] = {};
     },
-    populate: function(id_ocorrencia, region, date, state, type, origin) {
+    populate: function(id_ocorrencia, region, date, state, type, origin, date_accident) {
       var convertDate, newOrigin, newType, self;
       convertDate = function(dateStr) {
         var dArr;
@@ -107,7 +107,13 @@
   H5.DB.occurence.data.init();
 
   $.each(rest.data, function(i, properties) {
-    return H5.DB.occurence.data.populate(properties.id_ocorrencia, properties.regiao, properties.dt_registro, properties.sigla, properties.eventos, properties.origem);
+    var date;
+    if (properties.data_acidente !== null) {
+      date = properties.data_acidente;
+    } else {
+      date = properties.dt_registro;
+    }
+    return H5.DB.occurence.data.populate(properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem);
   });
 
   H5.Data.thisDate = H5.DB.occurence.data.lastValue.date;

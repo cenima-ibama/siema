@@ -832,10 +832,11 @@ $(document).ready ->
       ano = $(this).val().split("/")[2]
 
       date = new Date(mes + "/" + dia + "/" + ano)
+      actualDate = new Date()
 
       valiDate = date.toLocaleDateString().replace(/-/g, "/")
 
-      if (valiDate is $(this).val())
+      if (valiDate is $(this).val()) and (actualDate.getFullYear() is date.getFullYear())
         $("#diaObsSemana").val(date.getDay())
       else
         $(this).val("")
@@ -848,10 +849,11 @@ $(document).ready ->
       ano = $(this).val().split("/")[2]
 
       date = new Date(mes + "/" + dia + "/" + ano)
+      actualDate = new Date()
 
       valiDate = date.toLocaleDateString().replace(/-/g, "/")
 
-      if valiDate is $(this).val()
+      if (valiDate is $(this).val())  and (actualDate.getFullYear() is date.getFullYear())
         $("#diaInciSemana").val(date.getDay())
       else
         $(this).val("")
