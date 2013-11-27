@@ -20,6 +20,16 @@
 
   </head>
   <body>
+    <?php
+      if(isset($login_fail_msg) and ($login_fail_msg) == 'Error with LDAP authentication.') {
+        echo '<div class="alert alert-danger alert-block fade in" style="margin: 0 5% 10px">';
+        echo '<button class="close" data-dismiss="alert">&times;</button>
+        <p style="text-align: left;">
+        Usuário ou senha incorretos.
+        </p>';
+        echo '</div>';
+      }
+    ?>
     <?php echo form_open('auth/login', array('id' => 'loginForm', 'class' => 'form-horizontal', 'name' => 'loginForm')); ?>
       <h4 style="margin:0;">Login</h4>
       <div class="control-group">

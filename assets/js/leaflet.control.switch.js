@@ -279,10 +279,16 @@
       return this._handlingClick = false;
     },
     _expand: function() {
-      return L.DomUtil.addClass(this._form, "switch-control-layers-expanded");
+      L.DomUtil.addClass(this._form, "switch-control-layers-expanded");
+      if (H5.Map.minimap) {
+        return H5.Map.minimap.toggleMinimap(false);
+      }
     },
     _collapse: function() {
-      return this._form.className = this._form.className.replace(" switch-control-layers-expanded", "");
+      this._form.className = this._form.className.replace(" switch-control-layers-expanded", "");
+      if (H5.Map.minimap) {
+        return H5.Map.minimap.toggleMinimap(true);
+      }
     }
   });
 

@@ -283,7 +283,11 @@ L.control.switch = L.Control.extend (
 
   _expand: ->
     L.DomUtil.addClass @_form, "switch-control-layers-expanded"
+    if (H5.Map.minimap)
+      H5.Map.minimap.toggleMinimap(false);
 
   _collapse: ->
     @_form.className = @_form.className.replace(" switch-control-layers-expanded", "")
+    if (H5.Map.minimap)
+      H5.Map.minimap.toggleMinimap(true);
 )
