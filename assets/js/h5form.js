@@ -5,7 +5,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, pointTable, polygonTable, rest, seconds, shapeLoadedFromDB, subjects, table, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, pointTable, polygonTable, rest, seconds, shapeLoadedFromDB, subjects, table, validationString, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -272,6 +272,15 @@
     $("#inputEndereco").on('keyup', function(event) {
       var enterKey, municipio, municipioVal, uf, ufVal;
       enterKey = 13;
+      if ($(this).val() !== "") {
+        if ($("#oceano").is(":checked")) {
+          $("#oceano").click();
+        }
+        $("#oceano").attr("disabled", "disabled");
+        $("#inputBaciaSed").val("");
+      } else {
+        $("#oceano").removeAttr("disabled");
+      }
       if (event.keyCode === enterKey) {
         municipioVal = document.getElementById('dropdownMunicipio').value;
         municipio = $("#dropdownMunicipio option[value='" + municipioVal + "']");
@@ -725,7 +734,7 @@
       if (($(this).prop('value')) !== "") {
         hora = $(this).val().split(":")[0];
         minuto = $(this).val().split(":")[1];
-        if (((-1 < hora && hora < 23)) || ((-1 < minuto && minuto < 60))) {
+        if (((-1 < hora && hora < 23)) && ((-1 < minuto && minuto < 60))) {
           obsHour = parseInt($(this).prop('value').split(':')[0], 10);
           if (obsHour < 6) {
             $("#PerObsMadru").prop('checked', 'checked');
@@ -788,10 +797,36 @@
         return $("#inputNomeInstalacao").removeAttr("disabled");
       }
     });
+    validationString = "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" + "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" + "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
+    $("#inputBaciaSed").mask(validationString, {
+      'translation': {
+        W: {
+          pattern: /[A-Za-z ]/
+        }
+      }
+    });
     $("#inputDataObs").mask("99/99/9999");
     $("#inputHoraObs").mask("99:99");
     $("#inputDataInci").mask("99/99/9999");
     $("#inputHoraInci").mask("99:99");
+    $("#inputInfoInstituicaoNome").mask(validationString, {
+      'translation': {
+        W: {
+          pattern: /[A-Za-z ]/
+        }
+      }
+    });
+    $("#inputInfoInstituicaoTelefone").mask("(99)999999999");
+    $("#inputCPFCNPJ").mask("99999999999999");
+    $("#inputVolumeEstimado").mask("9999999999999999999999999999");
+    $("#inputNomeInformante").mask(validationString, {
+      'translation': {
+        W: {
+          pattern: /[A-Za-z ]/
+        }
+      }
+    });
+    $("#inputTelInformante").mask("(99)999999999");
     $('#inputCompOrigem').add('#inputCompEvento').add('#inputCompInstituicao').add('#inputCompDano').add('#inputCausaProvavel').add('#inputMedidasTomadas').add('#inputDesOcorrencia').add('#inputDesObs').add('#inputDesDanos').maxlength({
       alwaysShow: true,
       threshold: 10,

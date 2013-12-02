@@ -307,6 +307,16 @@ $(document).ready ->
   #connect the GeoSearch to the inputAddress
   $("#inputEndereco").on 'keyup', (event) ->
     enterKey = 13
+
+    if $(this).val() isnt ""
+      if $("#oceano").is(":checked")
+        $("#oceano").click()
+      $("#oceano").attr "disabled","disabled"
+      $("#inputBaciaSed").val("")
+    else
+      $("#oceano").removeAttr "disabled"
+
+
     if event.keyCode is enterKey
       # municipio = $("#inputMunicipio").val()
       municipioVal = document.getElementById('dropdownMunicipio').value
@@ -319,6 +329,7 @@ $(document).ready ->
       else
         #GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf)
         GeoSearch._geosearch(this.value + ", " + municipio.html() + " - " + uf.html())
+
 
   # Add a move property to the marker
   # Marker.on "move", (event) ->
@@ -867,7 +878,7 @@ $(document).ready ->
       hora = $(this).val().split(":")[0]
       minuto = $(this).val().split(":")[1]
 
-      if (-1 < hora < 23) or (-1 < minuto < 60)
+      if (-1 < hora < 23) && (-1 < minuto < 60)
         obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
         if obsHour < 6
           $("#PerObsMadru").prop('checked', 'checked')
@@ -934,10 +945,30 @@ $(document).ready ->
   # MASK FOR FIELDS
   #-------------------------------------------------------------------------
 
+  validationString =  "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" +
+               "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" +
+               "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+
+  $("#inputBaciaSed").mask(validationString,
+    {'translation': {W: {pattern: /[A-Za-z ]/}}})
+
   $("#inputDataObs").mask("99/99/9999")
   $("#inputHoraObs").mask("99:99")
   $("#inputDataInci").mask("99/99/9999")
   $("#inputHoraInci").mask("99:99")
+
+  $("#inputInfoInstituicaoNome").mask(validationString,
+    {'translation': {W: {pattern: /[A-Za-z ]/}}})
+  # $("#inputInfoInstituicaoNome").mask("S")
+  $("#inputInfoInstituicaoTelefone").mask("(99)999999999")
+
+  $("#inputCPFCNPJ").mask("99999999999999")
+
+  $("#inputVolumeEstimado").mask("9999999999999999999999999999")
+
+  $("#inputNomeInformante").mask(validationString,
+    {'translation': {W: {pattern: /[A-Za-z ]/}}})
+  $("#inputTelInformante").mask("(99)999999999")
 
   $('#inputCompOrigem')
     .add('#inputCompEvento')

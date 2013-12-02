@@ -33,6 +33,10 @@ class Form extends CI_Controller {
 
     public function formSetRules ($form_data)
     {
+
+        // Changing the message to a more user friendly (In portuguese)
+        $this->form_validation->set_message('required', 'O Campo %s é obrigatório');
+
         //
         // 1. Localização
         //

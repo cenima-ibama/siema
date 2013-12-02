@@ -156,7 +156,7 @@
               <div id="DataHoraObs" class="control-group">
                 <div class="control-label">
                   <h5>
-                    > Data e Hora da primeira observação:
+                    data e hora da primeira observação:
                   </h5>
                 </div> <br />
                 <div class="row-fluid">
@@ -165,7 +165,7 @@
                     <div class="controls">
                       <?php
                         echo form_input($inputDataObs);
-                        echo form_dropdown('diaObsSemana', $diaObsSemana, set_value('diaObsSemana', "0"),'id="diaObsSemana" disabled="disabled"');
+                        echo form_dropdown('diaObsSemana', $diaObsSemana, set_value('diaObsSemana', "0"),'id="diaObsSemana" disabled="disabled" style="-moz-appearance:none; text-indent:0.01px; text-overflow:\'\';"');
                       ?>
                     </div>
                   </div>
@@ -219,7 +219,7 @@
               <div id="DataHoraInci" class="control-group">
                 <div class="control-label">
                   <h5>
-                    > Data e Hora estimadas do Incidente:
+                    data e hora estimadas do Incidente:
                   </h5>
                 </div> <br />
                 <div class="row-fluid">
@@ -228,7 +228,7 @@
                     <div class="controls">
                       <?php
                         echo form_input($inputDataInci);
-                        echo form_dropdown('diaInciSemana', $diaInciSemana, set_value('diaInciSemana', "0"),'id="diaInciSemana" disabled="disabled"');
+                        echo form_dropdown('diaInciSemana', $diaInciSemana, set_value('diaInciSemana', "0"),'id="diaInciSemana" disabled="disabled" style="-moz-appearance:none; text-indent:0.01px; text-overflow:\'\';"');
                       ?>
                     </div>
                   </div>
@@ -633,7 +633,7 @@
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputDesDanos">
-                      Descrição dos Danos
+                      Descrição dos Danos:
                     </label>
                   </div>
                   <div class="controls">

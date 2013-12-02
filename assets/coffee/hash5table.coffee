@@ -559,9 +559,11 @@ class H5.Table
       # Create the new row on the table.
       newRow = document.createElement("tr")
 
+      i = 0
+
       $.each @options.fields, (key, properties) =>
 
-        td = newRow.insertCell()
+        td = newRow.insertCell(i++)
         span = document.createElement("span")
 
         # Verifies if the table has a unique field (primary key), and if it has, if it is editable
@@ -611,7 +613,7 @@ class H5.Table
       delBtn = document.createElement("a")
       delBtn.id = "deletarBotaoTabela"
       delBtn.className = "btn "
-      delBtn.style = "display:none;"
+      $(delBtn).attr("style","display:none")
       icon = document.createElement("i")
       icon.className = "icon-trash "
       $(delBtn).append icon
@@ -634,7 +636,7 @@ class H5.Table
       $(div).append delBtn
 
       # Adds the action div to the new row
-      td = newRow.insertCell()
+      td = newRow.insertCell(i++)
       $(td).append div
 
       # Adds the new row to the table.

@@ -476,8 +476,10 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 27%;
+  bottom: 30%;
   margin: 0 auto;
+  margin: 0 auto;
+  height: 44%
 }
 @media (max-width: 979px) {
   #loading img {

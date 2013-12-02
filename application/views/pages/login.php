@@ -48,12 +48,14 @@
 
     <!-- jquery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script src="<?= base_url()?>assets/js/jquery.maskedinput.min.js"></script>
+    <!-- <script src="<?= base_url()?>assets/js/jquery.maskedinput.min.js"></script> -->
+    <script src="<?= base_url()?>assets/js/jquery.mask.min.js"></script>
+
     <!-- Bootstrap -->
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <!-- mask -->
     <script>
-      $("#inputUsername").mask("999.999.999-99");
+      $("#username").mask("99999999999");
     </script>
     <!-- script for logged profile -->
     <?php

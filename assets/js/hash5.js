@@ -1129,12 +1129,13 @@
     Table.prototype._addFields = function() {
       var _this = this;
       return $(this._addBtn).on("click", function(event) {
-        var delBtn, div, icon, newRow, saveBtn, tbody, td;
+        var delBtn, div, i, icon, newRow, saveBtn, tbody, td;
         event.preventDefault();
         newRow = document.createElement("tr");
+        i = 0;
         $.each(_this.options.fields, function(key, properties) {
           var dataField, span, td, value;
-          td = newRow.insertCell();
+          td = newRow.insertCell(i++);
           span = document.createElement("span");
           if (key !== _this.options.uniqueField.field || _this.options.uniqueField.insertable) {
             value = "";
@@ -1176,7 +1177,7 @@
         delBtn = document.createElement("a");
         delBtn.id = "deletarBotaoTabela";
         delBtn.className = "btn ";
-        delBtn.style = "display:none;";
+        $(delBtn).attr("style", "display:none");
         icon = document.createElement("i");
         icon.className = "icon-trash ";
         $(delBtn).append(icon);
@@ -1191,7 +1192,7 @@
         div = document.createElement("div");
         $(div).append(saveBtn);
         $(div).append(delBtn);
-        td = newRow.insertCell();
+        td = newRow.insertCell(i++);
         $(td).append(div);
         if (_this._lastRow != null) {
           $(newRow).insertAfter($(_this._lastRow));

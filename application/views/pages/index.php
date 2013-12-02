@@ -36,7 +36,7 @@
                 <span id="textProgress">Checando Usuário...</span>
                 <div>
                   <p>
-                    <a id="btnLogout" class="btn" href="' . base_url() . 'index.php/auth/logout" style="margin-top: 20px;">Logout</a>
+                    <a id="btnLogout" class="btn" href="' . base_url() . 'index.php/auth/logout" style="margin-top: 20px;">Sair</a>
                     &nbsp;
                     <a id="tipoForm" class="btn" href="#tab2" data-toggle="tab" style="margin-top: 20px;">Avançar</a>
                   </p>
@@ -54,10 +54,10 @@
                     </div>
                   </div>
                   <div id="divDenuncia" class="span6">
-                    <h4>Denúncia anônima</h4>
-                    <p>Esta opção não permite a revisão ou alteração do comunicado enviado.</p>
-                    <p>Ao optar pela denúncia anônima, o IBAMA não conseguirá entrar em contato para solicitar informações precisas sobre o acidente. Favor inserir o máximo de informações possíveis e completas.</p>
-                    <p><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
+                    <h4 style="text-align:center;">Denúncia anônima</h4>
+                    <p style="font-size:11px; text-align:justify;">Esta opção não permite a revisão ou alteração do comunicado enviado.</p>
+                    <p style="font-size:11px; text-align:justify;">Ao optar pela denúncia anônima, o IBAMA não conseguirá entrar em contato para solicitar informações precisas sobre o acidente. Favor inserir o máximo de informações possíveis e completas.</p>
+                    <p style="text-align:center;"><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
                   </div>
                 </div>
                 <div id="divLogin" style="display:none;">
@@ -69,7 +69,7 @@
                     <span id="textProgress">Checando Usuário...</span>
                     <div>
                       <p>
-                        <a id="btnLogout" class="btn" href="' . base_url() . 'index.php/auth/logout" style="margin-top: 20px;">Logout</a>
+                        <a id="btnLogout" class="btn" href="' . base_url() . 'index.php/auth/logout" style="margin-top: 20px;">Sair</a>
                         &nbsp;
                         <a id="tipoForm" class="btn" href="#tab2" data-toggle="tab" style="margin-top: 20px;">Avançar</a>
                       </p>
