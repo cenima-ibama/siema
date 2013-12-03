@@ -312,7 +312,7 @@ $(document).ready ->
       if $("#oceano").is(":checked")
         $("#oceano").click()
       $("#oceano").attr "disabled","disabled"
-      $("#inputBaciaSed").val("")
+      $("#dropdownBaciaSedimentar").val("")
     else
       $("#oceano").removeAttr "disabled"
 
@@ -949,8 +949,8 @@ $(document).ready ->
                "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" +
                "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
 
-  $("#inputBaciaSed").mask(validationString,
-    {'translation': {W: {pattern: /[A-Za-z ]/}}})
+  # $("#inputBaciaSed").mask(validationString,
+  #   {'translation': {W: {pattern: /[A-Za-z ]/}}})
 
   $("#inputDataObs").mask("99/99/9999")
   $("#inputHoraObs").mask("99:99")

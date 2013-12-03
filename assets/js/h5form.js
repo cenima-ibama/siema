@@ -277,7 +277,7 @@
           $("#oceano").click();
         }
         $("#oceano").attr("disabled", "disabled");
-        $("#inputBaciaSed").val("");
+        $("#dropdownBaciaSedimentar").val("");
       } else {
         $("#oceano").removeAttr("disabled");
       }
@@ -798,13 +798,6 @@
       }
     });
     validationString = "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" + "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" + "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
-    $("#inputBaciaSed").mask(validationString, {
-      'translation': {
-        W: {
-          pattern: /[A-Za-z ]/
-        }
-      }
-    });
     $("#inputDataObs").mask("99/99/9999");
     $("#inputHoraObs").mask("99:99");
     $("#inputDataInci").mask("99/99/9999");

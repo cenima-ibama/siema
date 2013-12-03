@@ -52,9 +52,9 @@ class Form_model extends CI_Model {
     } else {
       $values = $values . "'S',";
 
-      if (isset($form['inputBaciaSed'])) {
-        $fields = $fields . "bacia_sedimentar,";
-        $values = $values . "'" . $form['inputBaciaSed'] . "',";
+      if (isset($form['oceano'])) {
+        $fields = $fields . "id_bacia_sedimentar,";
+        $values = $values . "'" . $form['dropdownBaciaSedimentar'] . "',";
       }
       if(isset($form['dropdownUF'])) {
         $fields = $fields . "id_uf,";
@@ -636,8 +636,10 @@ class Form_model extends CI_Model {
     } else {
       $fields = $fields . "'S'";
 
-      if (isset($form['inputBaciaSed'])) {
-        $fields = $fields . ",bacia_sedimentar='" . $form['inputBaciaSed'] . "'";
+      if (isset($form['oceano'])) {
+        $fields = $fields . ",id_bacia_sedimentar='" . $form['dropdownBaciaSedimentar'] . "'";
+      } else {
+        $fields = $fields . ",id_bacia_sedimentar=''";
       }
       if(isset($form['dropdownUF'])) {
         $fields = $fields . ",id_uf=" . $form['dropdownUF'];
@@ -1245,8 +1247,8 @@ class Form_model extends CI_Model {
     $form['inputLat'] = $dbResult['inputlat'];
     $form['inputLng'] = $dbResult['inputlng'];
     $form['inputEPSG'] = $dbResult['inputepsg'];
-    if(isset($dbResult['bacia_sedimentar'])) {
-      $form['inputBaciaSed'] = $dbResult['bacia_sedimentar'];
+    if(isset($dbResult['id_bacia_sedimentar'])) {
+      $form['dropdownBaciaSedimentar'] = $dbResult['id_bacia_sedimentar'];
       $form['oceano'] = "on";
     }
     $form['dropdownMunicipio'] = $dbResult['dropdownmunicipio'];
@@ -1531,6 +1533,27 @@ class Form_model extends CI_Model {
     $array += array (
       '0' => 'Sem UF'
     );
+
+    return $array;
+  }
+
+  // Returns the "UF's" stored on the database
+  public function getBaciasSed()
+  {
+
+    $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
+
+    $result = $ocorrenciasDatabase->query("select id_bacia_sedimentar as id, nome as value from bacia_sedimentar order by value;");
+
+    $array = array(
+      '' => ''
+    );
+
+    foreach ($result->result_array() as $key => $value) {
+      $array += array (
+        $value['id']  =>  $value['value']
+      );
+    }
 
     return $array;
   }

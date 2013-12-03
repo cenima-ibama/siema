@@ -76,14 +76,22 @@
                         <?php echo form_checkbox($oceano); ?>
                         &nbsp; Oceano
                       </label>
-                      <label id="spanBaciaSed" class="checkbox" for="inputBaciaSed"
+                      <label id="spanBaciaSed" class="checkbox" for="dropdownBaciaSedimentar"
                         <?php
                           if (!isset($oceano['checked']))
                             echo ' style="display:none;"';
                         ?>
                       >
                         &nbsp; Bacia Sedimentar
-                        <?php echo form_input($inputBaciaSed); ?>
+                        <?php
+                          if (isset($oceano['checked'])) {
+                            echo form_dropdown('dropdownBaciaSedimentar', $dropdownBaciaSedimentar, set_value('dropdownBaciaSedimentar',$id_bacia), 'id="dropdownBaciaSedimentar" class="input"');
+                          } else {
+                            echo form_dropdown('dropdownBaciaSedimentar', $dropdownBaciaSedimentar, set_value(""), 'id="dropdownBaciaSedimentar" class="input"');
+
+                          }
+                          // echo form_input($inputBaciaSed);
+                        ?>
                       </label>
                     </div>
 

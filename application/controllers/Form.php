@@ -355,21 +355,21 @@ class Form extends CI_Controller {
                 'disabled' => 'disabled'
             );
         }
-        // Input Bacia Sedimentar
-        $data['inputBaciaSed'] = array(
-            'id'           => 'inputBaciaSed',
-            'name'         => 'inputBaciaSed',
-            'type'         => 'text',
-            'class'        => 'input-medium-large',
-            'placeholder'  => 'Nome da Bacia Sedimentar'
-        );
-        if (isset($formLoad['oceano'])) {
-            $data['inputBaciaSed'] += array (
-                'value'        => set_value('inputBaciaSed', $formLoad['inputBaciaSed'])
-            );
-        }
+        // // Input Bacia Sedimentar
+        // $data['inputBaciaSed'] = array(
+        //     'id'           => 'inputBaciaSed',
+        //     'name'         => 'inputBaciaSed',
+        //     'type'         => 'text',
+        //     'class'        => 'input-medium-large',
+        //     'placeholder'  => 'Nome da Bacia Sedimentar'
+        // );
+        // Select Bacia Sedimentar
+        $data['dropdownBaciaSedimentar'] = $this->form_model->getBaciasSed();
+        // if (isset($formLoad['oceano'])) {
+        $data['id_bacia'] = isset($formLoad['oceano'])? $formLoad['dropdownBaciaSedimentar'] : "";
+        // }
         if(set_value('semLocalizacao') == "on"){
-            $data['inputBaciaSed'] += array(
+            $data['dropdownBaciaSedimentar'] += array(
                 'disabled' => 'disabled'
             );
         }
