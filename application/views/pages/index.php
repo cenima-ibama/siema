@@ -55,9 +55,11 @@
                   </div>
                   <div id="divDenuncia" class="span6">
                     <h4 style="text-align:center;">Denúncia anônima</h4>
-                    <p style="font-size:11px; text-align:justify;">Esta opção não permite a revisão ou alteração do comunicado enviado.</p>
-                    <p style="font-size:11px; text-align:justify;">Ao optar pela denúncia anônima, o IBAMA não conseguirá entrar em contato para solicitar informações precisas sobre o acidente. Favor inserir o máximo de informações possíveis e completas.</p>
-                    <p style="text-align:center;"><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
+                    <div style="margin-top: 10px;">
+                      <p style="font-size:11px; text-align:justify;">Esta opção não permite a revisão ou alteração do comunicado enviado.</p>
+                      <p style="font-size:11px; text-align:justify;">Ao optar pela denúncia anônima, o IBAMA não conseguirá entrar em contato para solicitar informações precisas sobre o acidente. Favor inserir o máximo de informações possíveis e completas.</p>
+                      <p style="text-align:center;"><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
+                    </div>
                   </div>
                 </div>
                 <div id="divLogin" style="display:none;">
@@ -196,7 +198,7 @@
         <div class="media">
           <div class="media-body">
             <label class="radio">
-              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOleo" value="1" checked>
+              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOleo" value="1">
               <h4 class="media-heading">Acidente envolvendo óleo</h4>
               <div class="media">
                 <p style="text-align:justify">
@@ -210,7 +212,7 @@
         <div class="media">
           <div class="media-body">
             <label class="radio">
-              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOutros" value="0">
+              <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOutros" value="0" checked>
               <h4 class="media-heading">Demais acidentes ambientais</h4>
               <div class="media">
                 <p style="text-align:justify">Acidente envolvendo produto(s) perigoso(s) (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem.</p>

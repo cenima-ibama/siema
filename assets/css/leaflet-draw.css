@@ -161,6 +161,11 @@
 	background-position: -242px -2px;
 }
 
+.leaflet-draw-edit-remove.leaflet-disabled {
+	display:none;
+}
+
+
 /* ================================================================== */
 /* Drawing styles
 /* ================================================================== */
