@@ -842,7 +842,7 @@
           </div>
           <div id="collapse12" class="accordion-body collapse">
             <div class="accordion-inner">
-              <div class="row-fluid">
+              <!-- <div class="row-fluid">
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputDesOcorrencia">
@@ -853,7 +853,7 @@
                     <?php echo form_textarea($inputDesOcorrencia); ?>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="row-fluid">
                 <div class="control-group">
                   <div class="span12">

@@ -269,6 +269,15 @@
         return GeoSearch._geosearch(qry, true);
       }
     });
+    $("#inputLat").add("#inputLng").on("change", function() {
+      var lat, latlng, lng;
+      if (($("#inputLat").val() !== "") && ($("#inputLng").val() !== "")) {
+        lat = drawAPI.DMS2DecimalDegree($("#inputLat").val());
+        lng = drawAPI.DMS2DecimalDegree($("#inputLng").val());
+        latlng = new L.LatLng(lat, lng);
+        return drawAPI.setPoint(latlng, '4674');
+      }
+    });
     $("#inputEndereco").on('keyup', function(event) {
       var enterKey, municipio, municipioVal, uf, ufVal;
       enterKey = 13;
@@ -798,6 +807,22 @@
       }
     });
     validationString = "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" + "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" + "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
+    $("#inputLat").mask("S99\°99\'99.99999999999", {
+      'translation': {
+        S: {
+          pattern: /^-/,
+          optional: true
+        }
+      }
+    });
+    $("#inputLng").mask("S99\°99\'99.99999999999", {
+      'translation': {
+        S: {
+          pattern: /^-/,
+          optional: true
+        }
+      }
+    });
     $("#inputDataObs").mask("99/99/9999");
     $("#inputHoraObs").mask("99:99");
     $("#inputDataInci").mask("99/99/9999");

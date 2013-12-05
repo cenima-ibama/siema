@@ -328,10 +328,6 @@ class Form_model extends CI_Model {
     //
     // 11. Informações Gerais Sobre a Ocorrência
     //
-    if (isset($form["inputDesOcorrencia"])) {
-      $fields = $fields . "des_ocorrencia,";
-      $values = $values . "'" . $form["inputDesOcorrencia"] . "',";
-    }
     if(isset($form["inputDesObs"])) {
       $fields = $fields . "des_obs,";
       $values = $values . "'" . $form["inputDesObs"] . "',";
@@ -639,7 +635,7 @@ class Form_model extends CI_Model {
       if (isset($form['oceano'])) {
         $fields = $fields . ",id_bacia_sedimentar='" . $form['dropdownBaciaSedimentar'] . "'";
       } else {
-        $fields = $fields . ",id_bacia_sedimentar=''";
+        $fields = $fields . ",id_bacia_sedimentar=NULL";
       }
       if(isset($form['dropdownUF'])) {
         $fields = $fields . ",id_uf=" . $form['dropdownUF'];
@@ -936,9 +932,6 @@ class Form_model extends CI_Model {
     //
     // 11. Informações Gerais Sobre a Ocorrência
     //
-    if (isset($form["inputDesOcorrencia"])) {
-      $fields = $fields . ",des_ocorrencia='" . $form["inputDesOcorrencia"] . "'";
-    }
     if(isset($form["inputDesObs"])) {
       $fields = $fields . ",des_obs='" . $form["inputDesObs"] . "'";
     }
@@ -1244,8 +1237,7 @@ class Form_model extends CI_Model {
     //
     // 1. Localizacao
     //
-    $form['inputLat'] = $dbResult['inputlat'];
-    $form['inputLng'] = $dbResult['inputlng'];
+    list($form['inputLat'], $form['inputLng']) = explode(" ",$dbResult['coordinate']);
     $form['inputEPSG'] = $dbResult['inputepsg'];
     if(isset($dbResult['id_bacia_sedimentar'])) {
       $form['dropdownBaciaSedimentar'] = $dbResult['id_bacia_sedimentar'];
@@ -1420,9 +1412,6 @@ class Form_model extends CI_Model {
     //
     // 11. Informações gerais sobre a Ocorrência
     //
-    if($dbResult['des_ocorrencia']) {
-      $form['inputDesOcorrencia'] = $dbResult['des_ocorrencia'];
-    }
     if($dbResult['des_obs']) {
       $form['inputDesObs'] = $dbResult['des_obs'];
     }
@@ -1471,8 +1460,7 @@ class Form_model extends CI_Model {
     $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
 
     $query = " select ocorrencia.*, " .
-                " ST_X(shape) as inputLng, " .
-                " ST_Y(shape) as inputLat, " .
+                " ST_AsLatLonText(shape, 'D°M''S.SSS') as coordinate, " .
                 " ST_SRID(shape) as inputEPSG, " .
                 " ocorrencia.id_municipio as dropdownMunicipio, " .
                 " uf.id_uf as dropdownUF, " .
