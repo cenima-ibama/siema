@@ -429,3 +429,8 @@ controlswitch = new L.control.switch(
     icon: iconsURL + "factory.png"
 ).addTo(H5.Map.base)
 # }}}
+
+vectorLayer = new L.VectorLayer.Layer (
+  autoUpdate: true
+  map: document.getElementById("map")
+)
