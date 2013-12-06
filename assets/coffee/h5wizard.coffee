@@ -108,7 +108,7 @@
       containerProgress = document.getElementById("containerProgress")
       checkedUser = document.getElementById("checkedUser")
       tipoForm = document.getElementById("tipoForm")
-      btnLogout = document.getElementById("btnLogout")
+      btnLogout = document.getElementById("btnSair")
 
       $(tipoForm).hide()
       $(btnLogout).hide()
