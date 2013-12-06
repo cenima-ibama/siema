@@ -1655,8 +1655,8 @@
             });
           }
           if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
-            $("#inputLat").val(layer._latlng.lat);
-            $("#inputLng").val(layer._latlng.lng);
+            $("#inputLat").val(_this.decimalDegree2DMS(layer._latlng.lat));
+            $("#inputLng").val(_this.decimalDegree2DMS(layer._latlng.lng));
           }
         }
         if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
@@ -1731,10 +1731,48 @@
       });
     };
 
-    Draw.prototype.setPoint = function(latlng) {
-      var columns, rest, sql, values,
+    Draw.prototype.decimalDegree2DMS = function(decdegree) {
+      var deg, dms, frac, min, sec;
+      deg = decdegree | 0;
+      frac = Math.abs(decdegree - deg);
+      min = (frac * 60) | 0;
+      sec = frac * 3600 - min * 60;
+      dms = deg + "°" + min + "\'" + sec;
+      return dms;
+    };
+
+    Draw.prototype.DMS2DecimalDegree = function(dms) {
+      var d, dec, m, neg, parts, r, s;
+      if (!dms) {
+        return Number.NaN;
+      }
+      neg = dms.match(/(^\s?-)|(\s?[SW]\s?$)/) !== null ? -1.0 : 1.0;
+      dms = dms.replace(/(^\s?-)|(\s?[NSEW]\s?)$/, '');
+      dms = dms.replace(/\s/g, '');
+      parts = dms.match(/(\d{1,3})[.,°d]?(\d{0,2})[']?(\d{0,2})[.,]?(\d{0,})(?:["]|[']{2})?/);
+      if (parts === null) {
+        return Number.NaN;
+      }
+      d = parts[1] ? parts[1] : '0.0';
+      d = d * 1.0;
+      m = parts[2] ? parts[2] : '0.0';
+      m = m * 1.0;
+      s = parts[3] ? parts[3] : '0.0';
+      s = s * 1.0;
+      r = parts[4] ? '0.' + parts[4] : '0.0';
+      r = r * 1.0;
+      dec = (d + (m / 60.0) + (s / 3600.0) + (r / 3600.0)) * neg;
+      console.log(dec);
+      return dec;
+    };
+
+    Draw.prototype.setPoint = function(latlng, srid) {
+      var columns, rest, sql, values, _ref2,
         _this = this;
       this.drawnItems.removeLayer(this.options.uniquePoint);
+      srid = (_ref2 = srid !== "") != null ? _ref2 : {
+        srid: this.options.srid
+      };
       if ((this.options.uniquePoint == null) || (this.options.uniquePoint === true)) {
         this.options.uniquePoint = new L.Marker([0, 0]);
         this.options.uniquePoint._leaflet_id = ++this.idMarker;
@@ -1748,7 +1786,7 @@
         });
         columns = columns + "shape,dt_registro";
         values = values + "ST_SetSRID(ST_MakePoint(";
-        values = values + latlng.lat + "," + latlng.lng + ")," + this.options.srid + ")";
+        values = values + latlng.lat + "," + latlng.lng + ")," + srid + ")";
         values = values + ",now()";
         sql = "(" + columns + ") values (" + values + ")";
         rest = new H5.Rest({

@@ -234,7 +234,7 @@ $(document).ready ->
       else
         indexCity = labelParts.length - 2
 
-      @_parseCidade labelParts[indexCity]
+      ret = @_parseCidade labelParts[indexCity]
       strAdd = ""
       for i in [0...indexCity] by 1
         strAdd += (labelParts[i] + " ")
@@ -303,6 +303,17 @@ $(document).ready ->
 
   #   # $("#inputEPSG").val ""
   #   # $("#inputEPSG").removeAttr("disabled")
+
+  # in case the latlng is passed on insertion, instead on the framework
+  $("#inputLat").add("#inputLng").on "change", ()->
+    if ($("#inputLat").val() isnt "") && ($("#inputLng").val() isnt "")
+      # transform latitude and longitute from degrees minutes and seconds (pattern) into decimal degrees
+      lat = drawAPI.DMS2DecimalDegree($("#inputLat").val())
+      lng = drawAPI.DMS2DecimalDegree($("#inputLng").val())
+      latlng = new L.LatLng(lat,lng)
+      # console.log latlng
+      drawAPI.setPoint(latlng, '4674')
+
 
   #connect the GeoSearch to the inputAddress
   $("#inputEndereco").on 'keyup', (event) ->
@@ -949,6 +960,11 @@ $(document).ready ->
                "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" +
                "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
 
+
+  $("#inputLat").mask("S99\°99\'99.99999999999",
+    {'translation': {S: {pattern: /^-/, optional: true}}})
+  $("#inputLng").mask("S99\°99\'99.99999999999",
+    {'translation': {S: {pattern: /^-/, optional: true}}})
   # $("#inputBaciaSed").mask(validationString,
   #   {'translation': {W: {pattern: /[A-Za-z ]/}}})
 

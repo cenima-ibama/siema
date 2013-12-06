@@ -304,7 +304,6 @@ class Form extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => 'Latitude',
-            'readonly'     => 'readonly',
             'value'        => set_value('inputLat', isset($formLoad['inputLat']) ? $formLoad['inputLat'] : "")
         );
         if(set_value('semLocalizacao') == "on"){
@@ -319,7 +318,6 @@ class Form extends CI_Controller {
             'type'         => 'text',
             'class'        => 'input-small',
             'placeholder'  => 'Longitude',
-            'readonly'     => 'readonly',
             'value'        => set_value('inputLng', isset($formLoad['inputLng']) ? $formLoad['inputLng'] : "")
         );
         if(set_value('semLocalizacao') == "on"){
@@ -904,6 +902,7 @@ class Form extends CI_Controller {
             'rows'         => '2',
             'maxlength'    => '1000',
             'class'        => 'input-large',
+            'placeholder'  => 'Insira a descrição do dano e informações complementares',
             'value'        => set_value('inputCompDano', isset($formLoad['inputCompDano']) ? $formLoad['inputCompDano'] : "")
         );
         if(isset($formLoad['semDanos'])){
@@ -912,14 +911,14 @@ class Form extends CI_Controller {
             );
         }
         // Input Descrição Danos
-        $data['inputDesDanos'] = array(
-            'id'           => 'inputDesDanos',
-            'name'         => 'inputDesDanos',
-            'rows'         => '2',
-            'maxlength'    => '2500',
-            'class'        => 'input-large',
-            'value'        => set_value('inputDesDanos', isset($formLoad['inputDesDanos']) ? $formLoad['inputDesDanos'] : "")
-        );
+        // $data['inputDesDanos'] = array(
+        //     'id'           => 'inputDesDanos',
+        //     'name'         => 'inputDesDanos',
+        //     'rows'         => '2',
+        //     'maxlength'    => '2500',
+        //     'class'        => 'input-large',
+        //     'value'        => set_value('inputDesDanos', isset($formLoad['inputDesDanos']) ? $formLoad['inputDesDanos'] : "")
+        // );
         if(isset($formLoad['semDanos'])){
             $data['inputDesDanos'] += array(
                 'disabled' => 'disabled'
@@ -1214,6 +1213,7 @@ class Form extends CI_Controller {
             'rows'         => '2',
             'maxlength'    => '2000',
             'class'        => 'input-large',
+            'placeholder'    => 'Campo para descrição geral da ocorrência e outras informações úteis',
             'value'        => set_value('inputDesObs', isset($formLoad['inputDesObs']) ? $formLoad['inputDesObs'] : '')
         );
 

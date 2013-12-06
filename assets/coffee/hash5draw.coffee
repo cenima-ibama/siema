@@ -310,8 +310,8 @@ class H5.Draw
 
 
         if document.getElementById('inputLat')? and document.getElementById('inputLng')?
-          $("#inputLat").val(layer._latlng.lat)
-          $("#inputLng").val(layer._latlng.lng)
+          $("#inputLat").val(@decimalDegree2DMS(layer._latlng.lat))
+          $("#inputLng").val(@decimalDegree2DMS(layer._latlng.lng))
           # $("#inputLng").val(layer._latlng.lng).trigger('change')
 
       if (!@.options.uniquePoint? || (@.options.uniquePoint? and type isnt 'marker'))
@@ -441,9 +441,60 @@ class H5.Draw
         restService: "ws_deletequery.php"
       )
 
+  decimalDegree2DMS: (decdegree)->
+    deg = decdegree | 0;
+    frac = Math.abs(decdegree - deg);
+    min = (frac * 60) | 0;
+    sec = frac * 3600 - min * 60;
+
+    dms = deg + "°" + min + "\'" + sec
+
+    # console.log dms
+
+    return dms
+
+
+  DMS2DecimalDegree: (dms)->
+    if !dms
+      return Number.NaN
+
+    neg = if dms.match(/(^\s?-)|(\s?[SW]\s?$)/)!=null then -1.0 else 1.0
+    dms = dms.replace /(^\s?-)|(\s?[NSEW]\s?)$/,''
+    dms = dms.replace /\s/g,''
+    parts = dms.match /(\d{1,3})[.,°d]?(\d{0,2})[']?(\d{0,2})[.,]?(\d{0,})(?:["]|[']{2})?/
+
+    # console.log parts
+
+    if parts is null
+      return Number.NaN
+
+    d = if parts[1] then parts[1] else '0.0'
+    d = d  * 1.0
+
+    m = if parts[2] then parts[2] else '0.0'
+    m = m * 1.0
+
+    s = if parts[3] then parts[3] else '0.0'
+    s = s * 1.0
+
+    r = if parts[4] then '0.' + parts[4] else '0.0'
+    r = r * 1.0
+
+    dec = (d + (m/60.0) + (s/3600.0) + (r/3600.0)) * neg
+
+    console.log dec
+
+    return dec
+
+
+
+
   # Sets the marker, if the uniquePoint is defined
-  setPoint: (latlng)->
+  setPoint: (latlng, srid)->
+
     @drawnItems.removeLayer(@.options.uniquePoint)
+
+    srid = srid isnt "" ? srid : @.options.srid
 
     # Create the uniquePoint in case it doesnt exists.
     if (!@.options.uniquePoint?) or (@.options.uniquePoint is true)
@@ -463,7 +514,7 @@ class H5.Draw
 
       columns = columns + "shape,dt_registro"
       values = values + "ST_SetSRID(ST_MakePoint("
-      values = values + latlng.lat + "," + latlng.lng + ")," + @.options.srid + ")"
+      values = values + latlng.lat + "," + latlng.lng + ")," + srid + ")"
 
       values = values + ",now()"
 
