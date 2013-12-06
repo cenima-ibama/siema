@@ -710,7 +710,7 @@
         ano = $(this).val().split("/")[2];
         date = new Date(mes + "/" + dia + "/" + ano);
         actualDate = new Date();
-        valiDate = date.toLocaleDateString().replace(/-/g, "/");
+        valiDate = $.datepicker.formatDate('dd/mm/yy', date);
         if ((valiDate === $(this).val()) && (actualDate.getFullYear() === date.getFullYear())) {
           return $("#diaObsSemana").val(date.getDay());
         } else {
@@ -727,7 +727,7 @@
         ano = $(this).val().split("/")[2];
         date = new Date(mes + "/" + dia + "/" + ano);
         actualDate = new Date();
-        valiDate = date.toLocaleDateString().replace(/-/g, "/");
+        valiDate = $.datepicker.formatDate('dd/mm/yy', date);
         if ((valiDate === $(this).val()) && (actualDate.getFullYear() === date.getFullYear())) {
           return $("#diaInciSemana").val(date.getDay());
         } else {

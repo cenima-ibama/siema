@@ -856,7 +856,7 @@ $(document).ready ->
       date = new Date(mes + "/" + dia + "/" + ano)
       actualDate = new Date()
 
-      valiDate = date.toLocaleDateString().replace(/-/g, "/")
+      valiDate = $.datepicker.formatDate('dd/mm/yy',date)
 
       if (valiDate is $(this).val()) and (actualDate.getFullYear() is date.getFullYear())
         $("#diaObsSemana").val(date.getDay())
@@ -873,7 +873,7 @@ $(document).ready ->
       date = new Date(mes + "/" + dia + "/" + ano)
       actualDate = new Date()
 
-      valiDate = date.toLocaleDateString().replace(/-/g, "/")
+      valiDate = $.datepicker.formatDate('dd/mm/yy',date)
 
       if (valiDate is $(this).val())  and (actualDate.getFullYear() is date.getFullYear())
         $("#diaInciSemana").val(date.getDay())
