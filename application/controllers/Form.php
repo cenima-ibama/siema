@@ -35,7 +35,7 @@ class Form extends CI_Controller {
     {
 
         // Changing the message to a more user friendly (In portuguese)
-        $this->form_validation->set_message('required', 'O Campo %s é obrigatório');
+        $this->form_validation->set_message('required', 'O campo %s é obrigatório');
 
         //
         // 1. Localização
@@ -49,7 +49,7 @@ class Form extends CI_Controller {
             //     $this->form_validation->set_rules('inputEPSG', 'EPSG', 'required');
             // }
         } else {
-            $this->form_validation->set_rules('semLocalizacao', 'Localizacao', 'required');
+            $this->form_validation->set_rules('semLocalizacao', 'Localização', 'required');
         }
 
 
@@ -57,16 +57,16 @@ class Form extends CI_Controller {
         // 2. Data e Hora do Acidente
         //
         if (!isset($form_data["semDataObs"])) {
-            $this->form_validation->set_rules('inputDataObs', 'Data da Observação', 'required');
-            $this->form_validation->set_rules('PeriodoObs', 'Período da Observação', 'required');
+            $this->form_validation->set_rules('inputDataObs', 'Data da observação', 'required');
+            $this->form_validation->set_rules('PeriodoObs', 'Período da observação', 'required');
         } else {
-            $this->form_validation->set_rules('semDataObs', 'Data e Hora da Observação', 'required');
+            $this->form_validation->set_rules('semDataObs', 'Data e hora da observação', 'required');
         }
         if (!isset($form_data["semDataInci"])) {
-            $this->form_validation->set_rules('inputDataInci', 'Data do Acidente', 'required');
-            $this->form_validation->set_rules('PeriodoInci', 'Período do Acidente', 'required');
+            $this->form_validation->set_rules('inputDataInci', 'Data do acidente', 'required');
+            $this->form_validation->set_rules('PeriodoInci', 'Período do acidente', 'required');
         } else {
-            $this->form_validation->set_rules('semDataInci', 'Data e Hora do Acidente', 'required');
+            $this->form_validation->set_rules('semDataInci', 'Data e hora do acidente', 'required');
         }
 
 
@@ -74,9 +74,9 @@ class Form extends CI_Controller {
         // 3. Origem do Acidente
         //
         if (!isset($form_data['semOrigem'])) {
-            $this->form_validation->set_rules('tipoLocalizacao[]', 'Origem do Acidente', 'required');
+            $this->form_validation->set_rules('tipoLocalizacao[]', 'Origem do acidente', 'required');
         } else {
-            $this->form_validation->set_rules('semOrigem', 'Origem do Acidente', 'required');
+            $this->form_validation->set_rules('semOrigem', 'Origem do acidente', 'required');
         }
 
         if (isset($form_data['hasOleo']) and ($form_data['hasOleo'] == 'S')) {
@@ -100,17 +100,17 @@ class Form extends CI_Controller {
         if (!isset($form_data['semEvento'])) {
             $this->form_validation->set_rules('tipoEvento[]', 'Evento', 'required');
         } else {
-            $this->form_validation->set_rules('semEvento', 'Tipo de Evento', 'required');
+            $this->form_validation->set_rules('semEvento', 'Tipo de evento', 'required');
         }
 
 
         // 5. Tipo de Produto
         if (isset($form_data['hasOleo']) and ($form_data['hasOleo'] == 'S')) {
             if (!isset($form_data['semSubstancia'])) {
-                $this->form_validation->set_rules('inputTipoSubstancia', 'Tipo da Substância', 'required');
+                $this->form_validation->set_rules('inputTipoSubstancia', 'Tipo da substância', 'required');
                 $this->form_validation->set_rules('inputVolumeEstimado', 'Volume estimado da substância', 'required');
             } else {
-                $this->form_validation->set_rules('semSubstancia', 'Tipo de Produto', 'required');
+                $this->form_validation->set_rules('semSubstancia', 'Tipo de produto', 'required');
             }
         }
 
@@ -119,12 +119,12 @@ class Form extends CI_Controller {
         // 6. Detalhes do Acidente
         //
         if (!isset($form_data['semCausa'])) {
-            $this->form_validation->set_rules('inputCausaProvavel', 'Causa Provavel do Acidente', 'required');
+            $this->form_validation->set_rules('inputCausaProvavel', 'Causa provável do acidente', 'required');
         } else {
-            $this->form_validation->set_rules('semCausa', 'Causa Provavel do Acidente', 'required');
+            $this->form_validation->set_rules('semCausa', 'Causa provável do acidente', 'required');
         }
         if (!isset($form_data['SituacaoDescarga'])) {
-            $this->form_validation->set_rules('SituacaoDescarga', 'Situação Atual da Descarga', 'required');
+            $this->form_validation->set_rules('SituacaoDescarga', 'Situação atual da descarga', 'required');
         }
 
 
@@ -132,9 +132,9 @@ class Form extends CI_Controller {
         // 7. Danos Identificados
         //
         if (!isset($form_data['semDanos'])) {
-            $this->form_validation->set_rules('tipoDanoIdentificado[]', 'Danos Identificados', 'required');
+            $this->form_validation->set_rules('tipoDanoIdentificado[]', 'Danos identificados', 'required');
         } else {
-            $this->form_validation->set_rules('semDanos', 'Danos Identificados', 'required');
+            $this->form_validation->set_rules('semDanos', 'Danos identificados', 'required');
         }
 
 
@@ -142,11 +142,11 @@ class Form extends CI_Controller {
         // 8. Identificação Empresa/Órgão Responsável
         //
         if (!isset($form_data['semResponsavel'])) {
-            $this->form_validation->set_rules('inputResponsavel', 'Nome da Empresa/Orgão Responsavel', 'required');
-            // $this->form_validation->set_rules('slctLicenca', 'Licença Ambiental da Empresa/Orgão Responsavel', 'required');
-            // $this->form_validation->set_rules('inputCPFCNPJ', 'CPF/CNPJ da Empresa/Orgão Responsavel', 'required');
+            $this->form_validation->set_rules('inputResponsavel', 'Nome da empresa/órgão responsável', 'required');
+            // $this->form_validation->set_rules('slctLicenca', 'Licença ambiental da empresa/órgão responsável', 'required');
+            // $this->form_validation->set_rules('inputCPFCNPJ', 'CPF/CNPJ da empresa/órgão responsável', 'required');
         } else {
-            $this->form_validation->set_rules('semResponsavel', 'Responsavel', 'required');
+            $this->form_validation->set_rules('semResponsavel', 'Responsável', 'required');
         }
 
 
@@ -154,9 +154,9 @@ class Form extends CI_Controller {
         // 9. Instituição/Empresa Atuando no Local
         //
         if (!isset($form_data['semInstituicao'])) {
-            $this->form_validation->set_rules('instituicaoAtuandoLocal[]', 'Instituição/Empresa Atuando no Local', 'required');
+            $this->form_validation->set_rules('instituicaoAtuandoLocal[]', 'Instituição/empresa atuando no local', 'required');
         } else {
-            $this->form_validation->set_rules('semInstituicao', 'Instituição Atuando', 'required');
+            $this->form_validation->set_rules('semInstituicao', 'Instituição atuando', 'required');
         }
 
 
@@ -164,9 +164,9 @@ class Form extends CI_Controller {
         // 10. Ações Inciais Tomadas
         //
         if (!isset($form_data['semProcedimentos'])) {
-            $this->form_validation->set_rules('planoEmergencia', 'Plano de Emergencia ou Similar', 'required');
+            $this->form_validation->set_rules('planoEmergencia', 'Plano de emergência ou similar', 'required');
         } else {
-            $this->form_validation->set_rules('semProcedimentos', 'Plano de Emergencia', 'required');
+            $this->form_validation->set_rules('semProcedimentos', 'Plano de emergência', 'required');
         }
 
 
@@ -174,8 +174,8 @@ class Form extends CI_Controller {
         // // 11. Informações Gerais sobre a Ocorrência
         // //
         // if (!isset($form_data['semNavioInstalacao'])) {
-        //     // $this->form_validation->set_rules('inputNomeNavio', 'Nome do Navio', 'required');
-        //     // $this->form_validation->set_rules('inputNomeInstalacao', 'Nome da Instalação', 'required');
+        //     // $this->form_validation->set_rules('inputNomeNavio', 'Nome do navio', 'required');
+        //     // $this->form_validation->set_rules('inputNomeInstalacao', 'Nome da instalação', 'required');
         // } else {
         //     $this->form_validation->set_rules('semNavioInstalacao', 'Informações sobre o navio/instalação', 'required');
         // }
