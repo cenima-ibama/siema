@@ -236,10 +236,10 @@ class Form_model extends CI_Model {
         $fields = $fields . "des_complemento_tipo_dano_ident,";
         $values = $values . "'" . $form["inputCompDano"] . "',";
       }
-      if (isset($form["inputDesDanos"])) {
-        $fields = $fields . "des_danos,";
-        $values = $values . "'" . $form["inputDesDanos"] . "',";
-      }
+      // if (isset($form["inputDesDanos"])) {
+      //   $fields = $fields . "des_danos,";
+      //   $values = $values . "'" . $form["inputDesDanos"] . "',";
+      // }
     }
 
 
@@ -814,9 +814,9 @@ class Form_model extends CI_Model {
         $fields = $fields . ",des_complemento_tipo_dano_ident='" . $form["inputCompDano"] . "'";
       }
 
-      if (isset($form["inputDesDanos"])) {
-        $fields = $fields . ",des_danos='" . $form["inputDesDanos"] . "'";
-      }
+      // if (isset($form["inputDesDanos"])) {
+      //   $fields = $fields . ",des_danos='" . $form["inputDesDanos"] . "'";
+      // }
     } else {
       $fields = $fields . ",des_complemento_tipo_dano_ident=''";
       $fields = $fields . ",des_danos=''";
@@ -1367,7 +1367,7 @@ class Form_model extends CI_Model {
     foreach ($ocorrenciasDatabase->query($query)->result_array() as $row) {
       array_push($form['tipoDanoIdentificado'], $row['id_tipo_dano_identificado']);
     }
-    $form['inputDesDanos'] = $dbResult['des_danos'];
+    // $form['inputDesDanos'] = $dbResult['des_danos'];
     $form['inputCompDano'] = $dbResult['des_complemento_tipo_dano_ident'];
 
 

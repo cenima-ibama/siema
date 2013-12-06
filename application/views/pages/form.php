@@ -637,7 +637,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row-fluid">
+              <!-- <div class="row-fluid">
                 <div class="control-group">
                   <div class="span12">
                     <label class="control-label" for="inputDesDanos">
@@ -648,7 +648,7 @@
                     <?php echo form_textarea($inputDesDanos); ?>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">

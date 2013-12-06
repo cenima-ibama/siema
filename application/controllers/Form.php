@@ -902,6 +902,7 @@ class Form extends CI_Controller {
             'rows'         => '2',
             'maxlength'    => '1000',
             'class'        => 'input-large',
+            'placeholder'  => 'Insira a descrição do dano e informações complementares',
             'value'        => set_value('inputCompDano', isset($formLoad['inputCompDano']) ? $formLoad['inputCompDano'] : "")
         );
         if(isset($formLoad['semDanos'])){
@@ -910,14 +911,14 @@ class Form extends CI_Controller {
             );
         }
         // Input Descrição Danos
-        $data['inputDesDanos'] = array(
-            'id'           => 'inputDesDanos',
-            'name'         => 'inputDesDanos',
-            'rows'         => '2',
-            'maxlength'    => '2500',
-            'class'        => 'input-large',
-            'value'        => set_value('inputDesDanos', isset($formLoad['inputDesDanos']) ? $formLoad['inputDesDanos'] : "")
-        );
+        // $data['inputDesDanos'] = array(
+        //     'id'           => 'inputDesDanos',
+        //     'name'         => 'inputDesDanos',
+        //     'rows'         => '2',
+        //     'maxlength'    => '2500',
+        //     'class'        => 'input-large',
+        //     'value'        => set_value('inputDesDanos', isset($formLoad['inputDesDanos']) ? $formLoad['inputDesDanos'] : "")
+        // );
         if(isset($formLoad['semDanos'])){
             $data['inputDesDanos'] += array(
                 'disabled' => 'disabled'

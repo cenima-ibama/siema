@@ -206,7 +206,7 @@
         return address = this._parseLabel(label);
       },
       _parseLabel: function(label) {
-        var address, cepRegExp, i, indexCity, labelParts, result, strAdd, _i;
+        var address, cepRegExp, i, indexCity, labelParts, result, ret, strAdd, _i;
         labelParts = label.split(", ");
         address = {};
         if (labelParts.length <= 1) {
@@ -220,7 +220,7 @@
         } else {
           indexCity = labelParts.length - 2;
         }
-        this._parseCidade(labelParts[indexCity]);
+        ret = this._parseCidade(labelParts[indexCity]);
         strAdd = "";
         for (i = _i = 0; _i < indexCity; i = _i += 1) {
           strAdd += labelParts[i] + " ";

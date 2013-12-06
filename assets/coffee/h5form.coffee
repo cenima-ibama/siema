@@ -234,7 +234,7 @@ $(document).ready ->
       else
         indexCity = labelParts.length - 2
 
-      @_parseCidade labelParts[indexCity]
+      ret = @_parseCidade labelParts[indexCity]
       strAdd = ""
       for i in [0...indexCity] by 1
         strAdd += (labelParts[i] + " ")
