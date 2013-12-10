@@ -15,6 +15,14 @@
 
   H5.Data.originOfAccident = ["Rodovia", "Ferrovia", "Terminal/portos/ancoradouros/etc", "Embarcação", "Refinaria", "Plataforma", "Indústria", "Duto", "Barragem", "Armazenamento/depósito", "Posto de combustível", "Outros", "Todos"];
 
+  H5.Data.damageIdentified = ["Óbitos/feridos", "População afetada/evacuada", "Suspensão de abastecimento de água", "Rio/córrego", "Lago", "Mar", "Praia", "Solo", "Águas subterrâneas", "Atmosfera", "Flora", "Fauna", "Unidade de Conservação Federal", "Unidade de Conservação Estadual/Municipal", "Outros", "Todos"];
+
+  H5.Data.institutionLocal = ["IBAMA", "Órgão Estadual ou Municipal de Meio Ambiente", "Defesa Civil", "Corpo de Bombeiros", "Polícia Rodoviária", "Polícia Miliar", "Polícia Civil", "Marinha do Brasil", "Empresa especializada em atendimento", "Outras", "Todos"];
+
+  H5.Data.sourceType = ["Comunicado da empresa/responsável", "OEMA", "Mídia", "Denúncia", "Outras Fontes", "Todos"];
+
+  H5.Data.periodDay = ["Matutino", "Vespertino", "Noturno", "Madrugada", "Todos"];
+
   H5.Data.thisDate = new Date();
 
   H5.Data.thisYear = H5.Data.thisDate.getFullYear();
@@ -67,8 +75,8 @@
       }
       return this.regions["Todos"] = {};
     },
-    populate: function(id_ocorrencia, region, date, state, type, origin, date_accident) {
-      var convertDate, newOrigin, newType, self;
+    populate: function(id_ocorrencia, region, date, state, type, origin, damageIdentified, institutionLocal, sourceType, periodDay) {
+      var convertDate, newDamage, newInstitution, newOrigin, newSource, newType, self;
       convertDate = function(dateStr) {
         var dArr;
         dateStr = String(dateStr);
@@ -77,6 +85,21 @@
       };
       newType = type.replace(/[{}"]/g, "".split(","));
       newOrigin = origin.replace(/[{}"]/g, "".split(","));
+      if (damageIdentified !== void 0) {
+        newDamage = damageIdentified.replace(/[{}"]/g, "".split(","));
+      } else {
+        newDamage = null;
+      }
+      if (institutionLocal !== void 0) {
+        newInstitution = institutionLocal.replace(/[{}"]/g, "".split(","));
+      } else {
+        newInstitution = null;
+      }
+      if (sourceType !== void 0) {
+        newSource = sourceType.replace(/[{}"]/g, "".split(","));
+      } else {
+        newSource = null;
+      }
       if (__indexOf.call(H5.Data.regions, region) < 0) {
         region = "Todos";
       }
@@ -85,6 +108,10 @@
       self[id_ocorrencia].type = newType;
       self[id_ocorrencia].origin = newOrigin;
       self[id_ocorrencia].state = state;
+      self[id_ocorrencia].damage = newDamage;
+      self[id_ocorrencia].institution = newInstitution;
+      self[id_ocorrencia].source = newSource;
+      self[id_ocorrencia].period = periodDay;
       self[id_ocorrencia].date = convertDate(date);
       self[id_ocorrencia].year = convertDate(date).getFullYear();
       self[id_ocorrencia].month = convertDate(date).getMonth();
@@ -113,7 +140,7 @@
     } else {
       date = properties.dt_registro;
     }
-    return H5.DB.occurence.data.populate(properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem);
+    return H5.DB.occurence.data.populate(properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem, properties.tipos_danos_identificados, properties.instituicoes_atuando_local, properties.tipos_fontes_informacoes, properties.periodo_ocorrencia);
   });
 
   H5.Data.thisDate = H5.DB.occurence.data.lastValue.date;

@@ -7,6 +7,10 @@ H5.Data.region = "Todos"
 H5.Data.regions = ["NO", "NE", "CO", "SE", "SU"]
 H5.Data.typesOfEvents = ["Derramamento de líquidos", "Desastre natural", "Explosão/incêndio", "Lançamento de sólidos", "Mortandade de peixes", "Produtos químicos/embalagens abandonadas", "Rompimento de barragem", "Vazamento de gases", "Outros", "Todos"]
 H5.Data.originOfAccident = ["Rodovia", "Ferrovia", "Terminal/portos/ancoradouros/etc", "Embarcação", "Refinaria", "Plataforma", "Indústria", "Duto", "Barragem", "Armazenamento/depósito", "Posto de combustível", "Outros", "Todos"]
+H5.Data.damageIdentified = ["Óbitos/feridos","População afetada/evacuada", "Suspensão de abastecimento de água", "Rio/córrego", "Lago","Mar","Praia","Solo","Águas subterrâneas","Atmosfera","Flora","Fauna","Unidade de Conservação Federal","Unidade de Conservação Estadual/Municipal", "Outros", "Todos"]
+H5.Data.institutionLocal = ["IBAMA","Órgão Estadual ou Municipal de Meio Ambiente","Defesa Civil","Corpo de Bombeiros","Polícia Rodoviária","Polícia Miliar","Polícia Civil","Marinha do Brasil","Empresa especializada em atendimento", "Outras", "Todos"]
+H5.Data.sourceType = ["Comunicado da empresa/responsável", "OEMA", "Mídia", "Denúncia", "Outras Fontes", "Todos"]
+H5.Data.periodDay = ["Matutino", "Vespertino", "Noturno", "Madrugada", "Todos"]
 
 H5.Data.thisDate = new Date()
 H5.Data.thisYear = H5.Data.thisDate.getFullYear()
@@ -50,7 +54,7 @@ H5.DB.occurence.data =
       @regions[region] = {}
     @regions["Todos"] = {}
 
-  populate: (id_ocorrencia, region, date, state, type, origin, date_accident) ->
+  populate: (id_ocorrencia, region, date, state, type, origin, damageIdentified, institutionLocal, sourceType, periodDay) ->
     # convert string into date
     convertDate = (dateStr) ->
       dateStr = String(dateStr)
@@ -63,6 +67,24 @@ H5.DB.occurence.data =
     # populate object
     newOrigin = (origin.replace /[{}"]/g, "".split ",")
 
+    # populate object
+    if damageIdentified isnt undefined
+      newDamage = (damageIdentified.replace /[{}"]/g, "".split ",")
+    else
+      newDamage = null
+
+    # populate object
+    if institutionLocal isnt undefined
+      newInstitution = (institutionLocal.replace /[{}"]/g, "".split ",")
+    else
+      newInstitution = null
+
+    # populate object
+    if sourceType isnt undefined
+      newSource = (sourceType.replace /[{}"]/g, "".split ",")
+    else
+      newSource = null
+
     #recover the register belonging to the current region
     if region not in H5.Data.regions
       region = "Todos"
@@ -71,6 +93,10 @@ H5.DB.occurence.data =
     self[id_ocorrencia].type = newType #type of the event
     self[id_ocorrencia].origin = newOrigin #type of the event
     self[id_ocorrencia].state = state #state UF
+    self[id_ocorrencia].damage = newDamage #type of identified damages
+    self[id_ocorrencia].institution = newInstitution #institutions acting on the scene
+    self[id_ocorrencia].source = newSource #type of infomation source
+    self[id_ocorrencia].period = periodDay #period of the day that occured
     self[id_ocorrencia].date = convertDate(date) #date of ocurrence of the event
     self[id_ocorrencia].year = convertDate(date).getFullYear()
     self[id_ocorrencia].month = convertDate(date).getMonth()
@@ -98,7 +124,7 @@ $.each rest.data, (i, properties) ->
     date = properties.dt_registro
 
   H5.DB.occurence.data.populate(
-    properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem
+    properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem, properties.tipos_danos_identificados, properties.instituicoes_atuando_local, properties.tipos_fontes_informacoes, properties.periodo_ocorrencia
     )
 
 #}}}
