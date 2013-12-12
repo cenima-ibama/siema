@@ -108,10 +108,9 @@
 
   $.each(rest.data, function(i, properties) {
     var date;
-    if (properties.data_acidente !== null) {
+    date = properties.dt_registro;
+    if (typeof properties.data_acidente !== 'undefined') {
       date = properties.data_acidente;
-    } else {
-      date = properties.dt_registro;
     }
     return H5.DB.occurence.data.populate(properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem);
   });

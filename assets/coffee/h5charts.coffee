@@ -92,10 +92,11 @@ rest = new H5.Rest (
 H5.DB.occurence.data.init()
 $.each rest.data, (i, properties) ->
   # Verifies if the occurrence has a accident date. In case it doesnt, sends the date that the form was sent
-  if properties.data_acidente isnt null
+
+  date = properties.dt_registro
+
+  if typeof properties.data_acidente isnt 'undefined'
     date = properties.data_acidente
-  else
-    date = properties.dt_registro
 
   H5.DB.occurence.data.populate(
     properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem

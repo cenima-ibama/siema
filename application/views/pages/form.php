@@ -465,8 +465,8 @@
             <div class="accordion-inner">
               <div id="productsInfo" class="row-fluid">
                 <div class="span12">
-                  <div id="myTable"></div>
-                  <div id="myTable2"></div>
+                  <div id="productOnuTable" name="productOnuTable"></div>
+                  <div id="productOutroTable" name="productOutroTable"></div>
                 </div>
                 <div class="span4">
                   <div class="control-group">

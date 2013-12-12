@@ -6,7 +6,8 @@ $(document).ready ->
   _tipoDanoIdentificado  = null
   _tipoInstituicaoAtuando = null
   _tipoFonteInformacao = null
-  _tipoProduto = null
+  _tipoProdutoOnu = null
+  _tipoProdutoOutro = null
 
   idOcorrencia = null
 
@@ -53,14 +54,22 @@ $(document).ready ->
   # Get the product name from the database, by ajax
   rest = new H5.Rest (
     url: H5.Data.restURL
-    table: "produto"
-    fields: "id_produto,nome,num_onu,classe_risco"
+    table: "produto_onu"
+    fields: "id_produto_onu,nome,num_onu,classe_risco"
     order: "nome"
   )
+  _tipoProdutoOnu = rest.data
+
+  # Get the product name from the database, by ajax
+  rest = new H5.Rest (
+    url: H5.Data.restURL
+    table: "produto_outro"
+    fields: "id_produto_outro,nome"
+    order: "nome"
+  )
+  _tipoProdutoOutro = rest.data
 
   nroOcorrencia = $("#comunicado").val()
-
-  _tipoProduto = rest.data
 
   #-------------------------------------------------------------------------
   # COLAPSE BOOTSTRAP
@@ -639,12 +648,12 @@ $(document).ready ->
 
     # PRODUTO
 
-    subjects = []
+    productsOnu = []
 
-    $.each _tipoProduto, ()->
-      subjects.push(@nome)
+    $.each _tipoProdutoOnu, ()->
+      productsOnu.push(@nome)
 
-    $("#nomeProduto").typeahead({source: subjects})
+    # $("#nomeProduto").typeahead({source: productsOnu})
 
 
     # $("#inputEPSG").on 'change', ()->
@@ -1010,22 +1019,33 @@ $(document).ready ->
   # FORM DATA TABLE
   #-------------------------------------------------------------------------
 
-  subjects = []
+  productsOnu = []
 
-  $.each _tipoProduto, ()->
+  $.each _tipoProdutoOnu, ()->
 
     element =
-      value: @id_produto
+      value: @id_produto_onu
       text: $.trim(@nome) + '-' + $.trim(@num_onu) + '-' + $.trim(@classe_risco)
-    subjects.push(element)
+    productsOnu.push(element)
+
+    # subjects.push(@nome)
+
+  productsOutro = []
+
+  $.each _tipoProdutoOutro, ()->
+
+    element =
+      value: @id_produto_outro
+      text: $.trim(@nome)
+    productsOutro.push(element)
 
     # subjects.push(@nome)
 
   if isLoadForm
-    table = new H5.Table (
-      container: "myTable"
+    onuTable = new H5.Table (
+      container: "productOnuTable"
       url: H5.Data.restURL
-      table: "ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Docorrencia_produto.id_produto)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
+      table: "ocorrencia_produto%20join%20produto_onu%20on%20(produto_onu.id_produto_onu%3Docorrencia_produto.id_produto_onu)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
       primaryTable: 'ocorrencia_produto'
       parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'"
       fields:
@@ -1035,13 +1055,71 @@ $(document).ready ->
         nome:
           columnName: "Substância - Nº Onu - CR"
           tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
-          primaryField: "id_produto"
+          primaryField: "id_produto_onu"
           validation: (value)->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
             return text
-          searchData: subjects
+          searchData: productsOnu
+        quantidade:
+          columnName: "Qtd."
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+        unidade_medida:
+          columnName: "Unidade"
+          selectArray:[
+            value :"m3"
+            text: "Metro Cúbico (m3)"
+          ,
+            value : "l"
+            text : "Litro (L)"
+          ,
+            value: "t"
+            text: "Tonelada (T)"
+          ,
+            value:"kg"
+            text: "Quilograma (Kg)"
+          ]
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+        id_ocorrencia:
+          columnName: "Nro. Ocorrencia"
+          tableName: "ocorrencia_produto.id_ocorrencia"
+          defaultValue: idOcorrencia
+          isVisible: false
+
+      uniqueField:
+        field: "id_ocorrencia_produto"
+    )
+
+    otherTable = new H5.Table (
+      container: "productOutroTable"
+      url: H5.Data.restURL
+      table: "ocorrencia_produto%20join%20produto_outro%20on%20(produto_outro.id_produto_outro%3Docorrencia_produto.id_produto_outro)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
+      primaryTable: 'ocorrencia_produto'
+      parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'"
+      insertNewType: 'produto_outro'
+      fields:
+        id_ocorrencia_produto:
+          columnName: "Identificador"
+          isVisible: false
+        nome:
+          columnName: "Substância"
+          tableName: "trim(nome) as nome"
+          primaryField: "id_produto_outro"
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+          searchData: productsOutro
         quantidade:
           columnName: "Qtd."
           validation: (value)->
@@ -1079,11 +1157,11 @@ $(document).ready ->
         field: "id_ocorrencia_produto"
     )
   else
-    table = new H5.Table (
-      container: "myTable"
+    onuTable = new H5.Table (
+      container: "productOnuTable"
       url: H5.Data.restURL
       registUpdate: true
-      table: "tmp_ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Dtmp_ocorrencia_produto.id_produto)"
+      table: "tmp_ocorrencia_produto%20join%20produto_onu%20on%20(produto_onu.id_produto_onu%3Dtmp_ocorrencia_produto.id_produto_onu)"
       primaryTable: 'tmp_ocorrencia_produto'
       parameters: "nro_ocorrencia%3D'" + nroOcorrencia + "'"
       fields:
@@ -1097,13 +1175,70 @@ $(document).ready ->
         nome:
           columnName: "Substância - Nº Onu - CR"
           tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
-          primaryField: "id_produto"
+          primaryField: "id_produto_onu"
           validation: (value)->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
             return text
-          searchData: subjects
+          searchData: productsOnu
+        quantidade:
+          columnName: "Qtd."
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+        unidade_medida:
+          columnName: "Unidade"
+          selectArray:[
+            value :"m3"
+            text: "Metro Cúbico (m3)"
+          ,
+            value : "l"
+            text : "Litro (L)"
+          ,
+            value: "t"
+            text: "Tonelada (T)"
+          ,
+            value:"kg"
+            text: "Quilograma (Kg)"
+          ]
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+      uniqueField:
+        field: "id_ocorrencia_produto"
+    )
+
+    otherTable = new H5.Table (
+      container: "productOutroTable"
+      url: H5.Data.restURL
+      registUpdate: true
+      table: "tmp_ocorrencia_produto%20join%20produto_outro%20on%20(produto_outro.id_produto_outro%3Dtmp_ocorrencia_produto.id_produto_outro)"
+      primaryTable: 'tmp_ocorrencia_produto'
+      parameters: "nro_ocorrencia%3D'" + nroOcorrencia + "'"
+      insertNewType: 'produto_outro'
+      fields:
+        id_ocorrencia_produto:
+          columnName: "Identificador"
+          isVisible: false
+        nro_ocorrencia:
+          columnName: " "
+          defaultValue: nroOcorrencia
+          isVisible: false
+        nome:
+          columnName: "Substância"
+          tableName: "trim(nome) as nome"
+          primaryField: "id_produto_outro"
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+          searchData: productsOutro
         quantidade:
           columnName: "Qtd."
           validation: (value)->

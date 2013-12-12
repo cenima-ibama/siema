@@ -85,8 +85,20 @@ terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
   transparent: true
 )
 
-unidadeConservacao = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:uc_federal"
+ucMunicipal = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:ucstodas_municipal"
+  format: "image/png"
+  transparent: true
+)
+
+ucFederal = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:ucstodas_federal"
+  format: "image/png"
+  transparent: true
+)
+
+ucEstadual = new L.TileLayer.WMS(geoserverUrl,
+  layers: "ceman:ucstodas_estadual"
   format: "image/png"
   transparent: true
 )
@@ -411,8 +423,12 @@ controlswitch = new L.control.switch(
     tab: "factory"
   "Terras Indígenas":
     layer: terrasIndigenas
-  "Unidade de Conservação":
-    layer: unidadeConservacao
+  "UC Municipal":
+    layer: ucMunicipal
+  "UC Federal":
+    layer: ucFederal
+  "UC Estadual":
+    layer: ucEstadual
   "Bioma IBGE":
     layer: biomaIBGE
   "Hidrografia":
