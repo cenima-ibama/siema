@@ -23,6 +23,7 @@ class H5.Table
       field: null         # string (pass for the framework which field is the primary field (id) of the table, in cases of deletion or insertion)
       insertable: false   # boolean (represents if the field primary field is auto increment, or it accepts the user to define it. By the default, the id is created by the database)
     # Buttons showns on the html table
+    # afterFinish: null     #Sets a event to be started after finishing the action
     buttons:
       arrows: false
       export: false       # Button to export the table info (Not implemented)
@@ -925,6 +926,8 @@ class H5.Table
             restService: "ws_insertquery.php"
           )
 
+        # if @.options.afterFinish?
+        #   @.options.afterFinish()
 
         # Reload table
         @_reloadTable()
@@ -941,6 +944,7 @@ class H5.Table
 
     # Calls the constructor of the classe
     @constructor(@options)
+
 
   # Function that reloads the table on the page
   _reloadSearchData : ()->

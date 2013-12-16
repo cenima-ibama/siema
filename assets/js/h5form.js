@@ -911,6 +911,8 @@
               text = '';
               if (value === '' || value === 'Empty') {
                 text = 'Valor não pode ser vazio';
+              } else if (isNaN(value)) {
+                text = 'Não é permitido letras ou caracteres especiais.';
               }
               return text;
             }
@@ -985,6 +987,8 @@
               text = '';
               if (value === '' || value === 'Empty') {
                 text = 'Valor não pode ser vazio';
+              } else if (isNaN(value)) {
+                text = 'Não é permitido letras ou caracteres especiais.';
               }
               return text;
             }
@@ -1065,6 +1069,8 @@
               text = '';
               if (value === '' || value === 'Empty') {
                 text = 'Valor não pode ser vazio';
+              } else if (isNaN(value)) {
+                text = 'Não é permitido letras ou caracteres especiais.';
               }
               return text;
             }
@@ -1139,6 +1145,8 @@
               text = '';
               if (value === '' || value === 'Empty') {
                 text = 'Valor não pode ser vazio';
+              } else if (isNaN(value)) {
+                text = 'Não é permitido letras ou caracteres especiais.';
               }
               return text;
             }

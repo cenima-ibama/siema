@@ -1068,6 +1068,8 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
+            else if isNaN(value)
+              text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:
           columnName: "Unidade"
@@ -1126,6 +1128,8 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
+            else if isNaN(value)
+              text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:
           columnName: "Unidade"
@@ -1188,6 +1192,8 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
+            else if isNaN(value)
+              text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:
           columnName: "Unidade"
@@ -1245,6 +1251,8 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
+            else if isNaN(value)
+              text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:
           columnName: "Unidade"
@@ -1268,4 +1276,6 @@ $(document).ready ->
             return text
       uniqueField:
         field: "id_ocorrencia_produto"
+      # afterFinish: ()->
+      #   if ()
     )

@@ -33,4 +33,5 @@ $result=$statement->fetchAll(PDO::FETCH_ASSOC);
 $json= json_encode( $result );
 echo isset($_GET['callback']) ? "{$_GET['callback']}($json)" : $json;
 
+close();
 ?>
