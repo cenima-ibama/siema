@@ -5,13 +5,14 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, pointTable, polygonTable, rest, seconds, shapeLoadedFromDB, subjects, table, validationString, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProduto;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, onuTable, otherTable, pointTable, polygonTable, productsOnu, productsOutro, rest, seconds, shapeLoadedFromDB, validationString, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProdutoOnu, _tipoProdutoOutro;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
     _tipoInstituicaoAtuando = null;
     _tipoFonteInformacao = null;
-    _tipoProduto = null;
+    _tipoProdutoOnu = null;
+    _tipoProdutoOutro = null;
     idOcorrencia = null;
     rest = new H5.Rest({
       url: H5.Data.restURL,
@@ -47,12 +48,19 @@
     });
     rest = new H5.Rest({
       url: H5.Data.restURL,
-      table: "produto",
-      fields: "id_produto,nome,num_onu,classe_risco",
+      table: "produto_onu",
+      fields: "id_produto_onu,nome,num_onu,classe_risco",
       order: "nome"
     });
+    _tipoProdutoOnu = rest.data;
+    rest = new H5.Rest({
+      url: H5.Data.restURL,
+      table: "produto_outro",
+      fields: "id_produto_outro,nome",
+      order: "nome"
+    });
+    _tipoProdutoOutro = rest.data;
     nroOcorrencia = $("#comunicado").val();
-    _tipoProduto = rest.data;
     $(".accordion-body").on("shown", function() {
       var delay, stop;
       stop = $(this).offset().top - 55;
@@ -308,7 +316,7 @@
       return field.innerHTML = value;
     };
     $(function() {
-      var labelOutros, subjects, tipoDanoIdentificado, tipoEvento, tipoFonteInformacao, tipoInstituicaoAtuando, tipoLocalizacao, total;
+      var labelOutros, productsOnu, tipoDanoIdentificado, tipoEvento, tipoFonteInformacao, tipoInstituicaoAtuando, tipoLocalizacao, total;
       tipoLocalizacao = document.getElementById("tipoLocalizacao");
       rest = new H5.Rest({
         url: H5.Data.restURL,
@@ -496,12 +504,9 @@
       });
       $(tipoFonteInformacao).append(labelOutros);
       _tipoFonteInformacao = tipoFonteInformacao;
-      subjects = [];
-      $.each(_tipoProduto, function() {
-        return subjects.push(this.nome);
-      });
-      $("#nomeProduto").typeahead({
-        source: subjects
+      productsOnu = [];
+      $.each(_tipoProdutoOnu, function() {
+        return productsOnu.push(this.nome);
       });
       $("#oceano").on('click', function() {
         if ($(this).is(":checked")) {
@@ -855,20 +860,29 @@
       separator: ' de ',
       postText: ' caracteres'
     });
-    subjects = [];
-    $.each(_tipoProduto, function() {
+    productsOnu = [];
+    $.each(_tipoProdutoOnu, function() {
       var element;
       element = {
-        value: this.id_produto,
+        value: this.id_produto_onu,
         text: $.trim(this.nome) + '-' + $.trim(this.num_onu) + '-' + $.trim(this.classe_risco)
       };
-      return subjects.push(element);
+      return productsOnu.push(element);
+    });
+    productsOutro = [];
+    $.each(_tipoProdutoOutro, function() {
+      var element;
+      element = {
+        value: this.id_produto_outro,
+        text: $.trim(this.nome)
+      };
+      return productsOutro.push(element);
     });
     if (isLoadForm) {
-      return table = new H5.Table({
-        container: "myTable",
+      onuTable = new H5.Table({
+        container: "productOnuTable",
         url: H5.Data.restURL,
-        table: "ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Docorrencia_produto.id_produto)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)",
+        table: "ocorrencia_produto%20join%20produto_onu%20on%20(produto_onu.id_produto_onu%3Docorrencia_produto.id_produto_onu)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)",
         primaryTable: 'ocorrencia_produto',
         parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'",
         fields: {
@@ -879,7 +893,7 @@
           nome: {
             columnName: "Substância - Nº Onu - CR",
             tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome",
-            primaryField: "id_produto",
+            primaryField: "id_produto_onu",
             validation: function(value) {
               var text;
               text = '';
@@ -888,7 +902,7 @@
               }
               return text;
             },
-            searchData: subjects
+            searchData: productsOnu
           },
           quantidade: {
             columnName: "Qtd.",
@@ -897,6 +911,84 @@
               text = '';
               if (value === '' || value === 'Empty') {
                 text = 'Valor não pode ser vazio';
+              } else if (isNaN(value)) {
+                text = 'Não é permitido letras ou caracteres especiais.';
+              }
+              return text;
+            }
+          },
+          unidade_medida: {
+            columnName: "Unidade",
+            selectArray: [
+              {
+                value: "m3",
+                text: "Metro Cúbico (m3)"
+              }, {
+                value: "l",
+                text: "Litro (L)"
+              }, {
+                value: "t",
+                text: "Tonelada (T)"
+              }, {
+                value: "kg",
+                text: "Quilograma (Kg)"
+              }
+            ],
+            validation: function(value) {
+              var text;
+              text = '';
+              if (value === '' || value === 'Empty') {
+                text = 'Valor não pode ser vazio';
+              }
+              return text;
+            }
+          },
+          id_ocorrencia: {
+            columnName: "Nro. Ocorrencia",
+            tableName: "ocorrencia_produto.id_ocorrencia",
+            defaultValue: idOcorrencia,
+            isVisible: false
+          }
+        },
+        uniqueField: {
+          field: "id_ocorrencia_produto"
+        }
+      });
+      return otherTable = new H5.Table({
+        container: "productOutroTable",
+        url: H5.Data.restURL,
+        table: "ocorrencia_produto%20join%20produto_outro%20on%20(produto_outro.id_produto_outro%3Docorrencia_produto.id_produto_outro)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)",
+        primaryTable: 'ocorrencia_produto',
+        parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'",
+        insertNewType: 'produto_outro',
+        fields: {
+          id_ocorrencia_produto: {
+            columnName: "Identificador",
+            isVisible: false
+          },
+          nome: {
+            columnName: "Substância",
+            tableName: "trim(nome) as nome",
+            primaryField: "id_produto_outro",
+            validation: function(value) {
+              var text;
+              text = '';
+              if (value === '' || value === 'Empty') {
+                text = 'Valor não pode ser vazio';
+              }
+              return text;
+            },
+            searchData: productsOutro
+          },
+          quantidade: {
+            columnName: "Qtd.",
+            validation: function(value) {
+              var text;
+              text = '';
+              if (value === '' || value === 'Empty') {
+                text = 'Valor não pode ser vazio';
+              } else if (isNaN(value)) {
+                text = 'Não é permitido letras ou caracteres especiais.';
               }
               return text;
             }
@@ -939,11 +1031,11 @@
         }
       });
     } else {
-      return table = new H5.Table({
-        container: "myTable",
+      onuTable = new H5.Table({
+        container: "productOnuTable",
         url: H5.Data.restURL,
         registUpdate: true,
-        table: "tmp_ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Dtmp_ocorrencia_produto.id_produto)",
+        table: "tmp_ocorrencia_produto%20join%20produto_onu%20on%20(produto_onu.id_produto_onu%3Dtmp_ocorrencia_produto.id_produto_onu)",
         primaryTable: 'tmp_ocorrencia_produto',
         parameters: "nro_ocorrencia%3D'" + nroOcorrencia + "'",
         fields: {
@@ -959,7 +1051,7 @@
           nome: {
             columnName: "Substância - Nº Onu - CR",
             tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome",
-            primaryField: "id_produto",
+            primaryField: "id_produto_onu",
             validation: function(value) {
               var text;
               text = '';
@@ -968,7 +1060,7 @@
               }
               return text;
             },
-            searchData: subjects
+            searchData: productsOnu
           },
           quantidade: {
             columnName: "Qtd.",
@@ -977,6 +1069,84 @@
               text = '';
               if (value === '' || value === 'Empty') {
                 text = 'Valor não pode ser vazio';
+              } else if (isNaN(value)) {
+                text = 'Não é permitido letras ou caracteres especiais.';
+              }
+              return text;
+            }
+          },
+          unidade_medida: {
+            columnName: "Unidade",
+            selectArray: [
+              {
+                value: "m3",
+                text: "Metro Cúbico (m3)"
+              }, {
+                value: "l",
+                text: "Litro (L)"
+              }, {
+                value: "t",
+                text: "Tonelada (T)"
+              }, {
+                value: "kg",
+                text: "Quilograma (Kg)"
+              }
+            ],
+            validation: function(value) {
+              var text;
+              text = '';
+              if (value === '' || value === 'Empty') {
+                text = 'Valor não pode ser vazio';
+              }
+              return text;
+            }
+          }
+        },
+        uniqueField: {
+          field: "id_ocorrencia_produto"
+        }
+      });
+      return otherTable = new H5.Table({
+        container: "productOutroTable",
+        url: H5.Data.restURL,
+        registUpdate: true,
+        table: "tmp_ocorrencia_produto%20join%20produto_outro%20on%20(produto_outro.id_produto_outro%3Dtmp_ocorrencia_produto.id_produto_outro)",
+        primaryTable: 'tmp_ocorrencia_produto',
+        parameters: "nro_ocorrencia%3D'" + nroOcorrencia + "'",
+        insertNewType: 'produto_outro',
+        fields: {
+          id_ocorrencia_produto: {
+            columnName: "Identificador",
+            isVisible: false
+          },
+          nro_ocorrencia: {
+            columnName: " ",
+            defaultValue: nroOcorrencia,
+            isVisible: false
+          },
+          nome: {
+            columnName: "Substância",
+            tableName: "trim(nome) as nome",
+            primaryField: "id_produto_outro",
+            validation: function(value) {
+              var text;
+              text = '';
+              if (value === '' || value === 'Empty') {
+                text = 'Valor não pode ser vazio';
+              }
+              return text;
+            },
+            searchData: productsOutro
+          },
+          quantidade: {
+            columnName: "Qtd.",
+            validation: function(value) {
+              var text;
+              text = '';
+              if (value === '' || value === 'Empty') {
+                text = 'Valor não pode ser vazio';
+              } else if (isNaN(value)) {
+                text = 'Não é permitido letras ou caracteres especiais.';
               }
               return text;
             }

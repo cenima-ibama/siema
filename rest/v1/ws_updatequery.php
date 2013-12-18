@@ -26,7 +26,7 @@ $limit = isset($_REQUEST['limit']) ? " limit " . $_REQUEST['limit'] : '';
 
 # Perform the query
 $sql = "update " . $table . " set " . $fields . $parameters . $order . $limit;
-$db = pgConnection();
+$db = pgConnection(false);
 $statement=$db->prepare( $sql );
 $statement->execute();
 $result=$statement->fetchAll(PDO::FETCH_ASSOC);

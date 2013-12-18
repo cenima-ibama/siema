@@ -224,6 +224,7 @@
                   </div>
                 </div>
               </div>
+              <hr>
               <div id="DataHoraInci" class="control-group">
                 <div class="control-label">
                   <h5>
@@ -344,7 +345,7 @@
               <?php
                 if  (isset($hasOleo)) {
                   echo '
-                    <br />
+                    <hr>
                     <div class="row-fluid" data-oleo="true">
                       <h5>
                         Identificação do navio ou instalação que originou o incidente:
@@ -465,12 +466,15 @@
             <div class="accordion-inner">
               <div id="productsInfo" class="row-fluid">
                 <div class="span12">
-                  <div id="myTable"></div>
-                  <div id="myTable2"></div>
+                  <h5 style="font-style:italic;"> Produtos cadastrados na lista ONU</h5>
+                  <div id="productOnuTable" name="productOnuTable"></div>
+                  <hr>
+                  <h5 style="font-style:italic;"> Produtos NÃO cadastrados na lista ONU</h5>
+                  <div id="productOutroTable" name="productOutroTable"></div>
                 </div>
+                <hr>
                 <div class="span4">
                   <div class="control-group">
-                    <span>&nbsp;</span>
                     <div class="controls">
                       <label class="checkbox text-left">
                       <?php echo form_checkbox($produtoNaoPerigoso, 'on'); ?> Não perigoso
@@ -489,6 +493,7 @@
                   </div>
                 </div>
               </div>
+              <br/>
               <div class="row-fluid">
                 <div class="span12">
                   <label class="checkbox text-left">
@@ -500,7 +505,7 @@
               <?php
                 if (isset($hasOleo)) {
                   echo '
-                    <br />
+                    <hr>
                     <div class="row-fluid" data-oleo="true">
                       <h5>
                         Substância descarregada:
@@ -575,7 +580,7 @@
                   </label>
                 </div>
               </div>
-              <br />
+              <hr>
               <div class="row-fluid">
                 <label class="control-label"> Situação atual da descarga: </label>
                 <div class="controls row-fluid">
@@ -737,13 +742,6 @@
                   </div>
                 </div>
               </div>
-              <div class="control-group">
-                <label class="control-label" for="inputInfoInstituicaoNome">Nome do responsável no local/telefone:</label>
-                <div class="controls">
-                  <?php echo form_input($inputInfoInstituicaoNome); ?>
-                  <?php echo form_input($inputInfoInstituicaoTelefone); ?>
-                </div>
-              </div>
               <div class="row-fluid">
                 <div class="control-group">
                   <div class="span12">
@@ -754,6 +752,13 @@
                   <div class="controls">
                     <?php echo form_textarea($inputCompInstituicao); ?>
                   </div>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="inputInfoInstituicaoNome">Nome do responsável no local/telefone:</label>
+                <div class="controls">
+                  <?php echo form_input($inputInfoInstituicaoNome); ?>
+                  <?php echo form_input($inputInfoInstituicaoTelefone); ?>
                 </div>
               </div>
               <div class="row-fluid">

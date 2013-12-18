@@ -354,6 +354,20 @@ class Form_model extends CI_Model {
 
 
     //
+    // Informations about the person who is sending the form
+    //
+    if ($this->session->userdata('logged_in')) {
+      // getting the user's cpf
+      $fields = $fields . "cpf_contato,";
+      $values = $values . "'" . $this->session->userdata('username') . "',";
+
+      // getting the user's ip
+      $fields = $fields . "ip_contato,";
+      $values = $values . "'" . $this->session->userdata('ip_address') . "',";
+    }
+
+
+    //
     // Date of registry creation
     //
     $fields = $fields . "dt_registro";
@@ -525,8 +539,8 @@ class Form_model extends CI_Model {
         $this->firephp->log($row);
         $sql = $sql .
                " insert into ocorrencia_produto " .
-               " (id_ocorrencia,id_produto,quantidade,unidade_medida) values " .
-               " ('" . $id . "','" . $row['id_produto'] . "','" . $row['quantidade'] . "','" . $row['unidade_medida'] . "');";
+               " (id_ocorrencia,id_produto_onu,id_produto_outro,quantidade,unidade_medida) values " .
+               " ('" . $id . "','" . $row['id_produto_onu'] . "','" . $row['id_produto_outro'] . "','" . $row['quantidade'] . "','" . $row['unidade_medida'] . "');";
       }
 
       $this->firephp->log($sql);

@@ -1,6 +1,7 @@
 class H5.Table
 
   options:
+    insertNewType: null      # if it is possible to insert
     container: null       # represents where the table will be created
     title: null           # Title shown in the html table
     table: null           # Table used to create the fields that will be show on the html table
@@ -22,6 +23,7 @@ class H5.Table
       field: null         # string (pass for the framework which field is the primary field (id) of the table, in cases of deletion or insertion)
       insertable: false   # boolean (represents if the field primary field is auto increment, or it accepts the user to define it. By the default, the id is created by the database)
     # Buttons showns on the html table
+    # afterFinish: null     #Sets a event to be started after finishing the action
     buttons:
       arrows: false
       export: false       # Button to export the table info (Not implemented)
@@ -527,11 +529,53 @@ class H5.Table
 
     @_addBtn = addBtn
 
+    @_addTypeBtn = null
+
+    if @options.insertNewType?
+      # Creating Add Type Button
+      addTypeBtn = document.createElement("a")
+      addTypeBtn.id = "addTipoBotao"
+      addTypeBtn.className = "btn"
+
+      iconBtn = document.createElement("i")
+      iconBtn.className = "icon-plus"
+      $(addTypeBtn).append iconBtn
+
+      defaultName = " Novo Tipo"
+
+      unless @options.buttons.minimize and
+        not @options.buttons.maximize and
+        not @options.buttons.close
+          $(addTypeBtn).append defaultName
+
+      $(addTypeBtn).editable(
+        type: 'text'
+        value: ""
+        placement: 'right'
+        display: false
+        url: (params)=>
+
+          if params.value isnt ''
+            # Insert the new product
+            rest = new H5.Rest (
+              url: @options.url
+              table: @options.insertNewType
+              fields: " (nome) values ('" + params.value + "') "
+              restService: "ws_insertquery.php"
+            )
+
+          @_reloadSearchData()
+      )
+
+      @_addTypeBtn = addTypeBtn
+
     # Add the button to the table, on top.
     $(@_rightCtrl).append addBtn
+    $(@_rightCtrl).append addTypeBtn
 
-    # Gives the add button the add fuction
+    # Gives the add buttons the add fuction
     @_addFields()
+    # @_addNewType()
 
     # Add the created table to the container on the page
     $(@_boxContent).append @_table
@@ -549,6 +593,22 @@ class H5.Table
         $(field).attr 'style', 'display:none;'
     field = row.insertCell(i++)
     $(field).width(37)
+
+
+  # Function that add the add function to add buttons.
+  _addNewType: ()->
+    $(@_addTypeBtn).on "click", (event) =>
+
+      event.preventDefault()
+
+
+      # $(@_addTypeBtn).editable(
+      #   type: 'text'
+      #   value: value
+      #   placement: 'right'
+      # )
+
+
 
   # Function that add the add function to add buttons.
   _addFields: ()->
@@ -643,7 +703,8 @@ class H5.Table
       if @_lastRow?
         $(newRow).insertAfter $(@_lastRow)
       else
-        tbody = document.getElementsByClassName("table")[0].appendChild(document.createElement('tbody'))
+        # tbody = document.getElementsByClassName("table")[0].appendChild(document.createElement('tbody'))
+        tbody = document.getElementsByName(_this.options.container)[0].getElementsByClassName('table')[0].appendChild(document.createElement('tbody'))
         tbody.appendChild newRow
 
 
@@ -865,6 +926,8 @@ class H5.Table
             restService: "ws_insertquery.php"
           )
 
+        # if @.options.afterFinish?
+        #   @.options.afterFinish()
 
         # Reload table
         @_reloadTable()
@@ -881,3 +944,31 @@ class H5.Table
 
     # Calls the constructor of the classe
     @constructor(@options)
+
+
+  # Function that reloads the table on the page
+  _reloadSearchData : ()->
+
+    # For each child element of the container, remove it from the page.
+    $.each @options.fields, (key,childs) =>
+      if childs.searchData?
+
+        # Get the product name from the database, by ajax
+        rest = new H5.Rest (
+          url: @options.url
+          table: "produto_outro"
+          fields: "id_produto_outro,nome"
+          order: "nome"
+        )
+
+        searchData = []
+
+        $.each rest.data, ()->
+
+          elements =
+            value: @id_produto_outro
+            text: $.trim(@nome)
+
+          searchData.push(elements)
+
+        childs.searchData = searchData

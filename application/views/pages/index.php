@@ -343,7 +343,7 @@
           <select id="typesSlct" class="selectpicker" data-width="140px" data-size="6" name="types">
             <option value="0">Derramamento de líquidos</option>
             <option value="1">Desastre natural</option>
-            <option value="2">Explosão/incêncio</option>
+            <option value="2">Explosão/incêndio</option>
             <option value="3">Lançamento de sólidos</option>
             <option value="4">Mortandade de peixes</option>
             <option value="5">Produtos químicos/embalagens abandonadas</option>

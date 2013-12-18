@@ -658,6 +658,7 @@
 
   H5.Table = (function() {
     Table.prototype.options = {
+      insertNewType: null,
       container: null,
       title: null,
       table: null,
@@ -887,7 +888,7 @@
     };
 
     Table.prototype._createTable = function() {
-      var addBtn, field, head, i, iconBtn, rest, row,
+      var addBtn, addTypeBtn, defaultName, field, head, i, iconBtn, rest, row,
         _this = this;
       this._table = document.createElement("table");
       this._table.className = "table table-striped";
@@ -1107,7 +1108,39 @@
         $(addBtn).append(" Adicionar");
       }
       this._addBtn = addBtn;
+      this._addTypeBtn = null;
+      if (this.options.insertNewType != null) {
+        addTypeBtn = document.createElement("a");
+        addTypeBtn.id = "addTipoBotao";
+        addTypeBtn.className = "btn";
+        iconBtn = document.createElement("i");
+        iconBtn.className = "icon-plus";
+        $(addTypeBtn).append(iconBtn);
+        defaultName = " Novo Tipo";
+        if (!(this.options.buttons.minimize && !this.options.buttons.maximize && !this.options.buttons.close)) {
+          $(addTypeBtn).append(defaultName);
+        }
+        $(addTypeBtn).editable({
+          type: 'text',
+          value: "",
+          placement: 'right',
+          display: false,
+          url: function(params) {
+            if (params.value !== '') {
+              rest = new H5.Rest({
+                url: _this.options.url,
+                table: _this.options.insertNewType,
+                fields: " (nome) values ('" + params.value + "') ",
+                restService: "ws_insertquery.php"
+              });
+            }
+            return _this._reloadSearchData();
+          }
+        });
+        this._addTypeBtn = addTypeBtn;
+      }
       $(this._rightCtrl).append(addBtn);
+      $(this._rightCtrl).append(addTypeBtn);
       this._addFields();
       $(this._boxContent).append(this._table);
       head = this._table.createTHead();
@@ -1124,6 +1157,13 @@
       });
       field = row.insertCell(i++);
       return $(field).width(37);
+    };
+
+    Table.prototype._addNewType = function() {
+      var _this = this;
+      return $(this._addTypeBtn).on("click", function(event) {
+        return event.preventDefault();
+      });
     };
 
     Table.prototype._addFields = function() {
@@ -1197,7 +1237,7 @@
         if (_this._lastRow != null) {
           $(newRow).insertAfter($(_this._lastRow));
         } else {
-          tbody = document.getElementsByClassName("table")[0].appendChild(document.createElement('tbody'));
+          tbody = document.getElementsByName(_this.options.container)[0].getElementsByClassName('table')[0].appendChild(document.createElement('tbody'));
           tbody.appendChild(newRow);
         }
         return _this._lastRow = newRow;
@@ -1404,6 +1444,31 @@
       });
       this._lastRow = null;
       return this.constructor(this.options);
+    };
+
+    Table.prototype._reloadSearchData = function() {
+      var _this = this;
+      return $.each(this.options.fields, function(key, childs) {
+        var rest, searchData;
+        if (childs.searchData != null) {
+          rest = new H5.Rest({
+            url: _this.options.url,
+            table: "produto_outro",
+            fields: "id_produto_outro,nome",
+            order: "nome"
+          });
+          searchData = [];
+          $.each(rest.data, function() {
+            var elements;
+            elements = {
+              value: this.id_produto_outro,
+              text: $.trim(this.nome)
+            };
+            return searchData.push(elements);
+          });
+          return childs.searchData = searchData;
+        }
+      });
     };
 
     return Table;
