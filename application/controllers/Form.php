@@ -40,7 +40,7 @@ class Form extends CI_Controller {
         //
         // 1. Localização
         //
-        if (!isset($form_data["semLocalizacao"])) {
+        // if (!isset($form_data["semLocalizacao"])) {
             $this->form_validation->set_rules('inputLat', 'Latitude', 'required');
             $this->form_validation->set_rules('inputLng', 'Longitude ', 'required');
             // $this->form_validation->set_rules('inputMunicipio', 'Municipio', 'required');
@@ -48,9 +48,9 @@ class Form extends CI_Controller {
             // if(isset($form_data["inputEPSG"])) {
             //     $this->form_validation->set_rules('inputEPSG', 'EPSG', 'required');
             // }
-        } else {
-            $this->form_validation->set_rules('semLocalizacao', 'Localização', 'required');
-        }
+        // } else {
+        //     $this->form_validation->set_rules('semLocalizacao', 'Localização', 'required');
+        // }
 
 
         //
@@ -306,11 +306,11 @@ class Form extends CI_Controller {
             'placeholder'  => 'Latitude',
             'value'        => set_value('inputLat', isset($formLoad['inputLat']) ? $formLoad['inputLat'] : "")
         );
-        if(set_value('semLocalizacao') == "on"){
-            $data['inputLat'] += array(
-                'disabled' => 'disabled'
-            );
-        }
+        // if(set_value('semLocalizacao') == "on"){
+        //     $data['inputLat'] += array(
+        //         'disabled' => 'disabled'
+        //     );
+        // }
         // Input Longitude
         $data['inputLng'] = array(
             'id'           => 'inputLng',
@@ -320,11 +320,11 @@ class Form extends CI_Controller {
             'placeholder'  => 'Longitude',
             'value'        => set_value('inputLng', isset($formLoad['inputLng']) ? $formLoad['inputLng'] : "")
         );
-        if(set_value('semLocalizacao') == "on"){
-            $data['inputLng'] += array(
-                'disabled' => 'disabled'
-            );
-        }
+        // if(set_value('semLocalizacao') == "on"){
+        //     $data['inputLng'] += array(
+        //         'disabled' => 'disabled'
+        //     );
+        // }
         // Currently disabled
         // Select EPSG
         // $data['inputEPSG'] = array(
@@ -348,11 +348,11 @@ class Form extends CI_Controller {
                 'checked'  => 'checked'
             );
         }
-        if(set_value('semLocalizacao') == "on"){
-            $data['oceano'] += array(
-                'disabled' => 'disabled'
-            );
-        }
+        // if(set_value('semLocalizacao') == "on"){
+        //     $data['oceano'] += array(
+        //         'disabled' => 'disabled'
+        //     );
+        // }
         // // Input Bacia Sedimentar
         // $data['inputBaciaSed'] = array(
         //     'id'           => 'inputBaciaSed',
@@ -366,11 +366,11 @@ class Form extends CI_Controller {
         // if (isset($formLoad['oceano'])) {
         $data['id_bacia'] = isset($formLoad['oceano'])? $formLoad['dropdownBaciaSedimentar'] : "";
         // }
-        if(set_value('semLocalizacao') == "on"){
-            $data['dropdownBaciaSedimentar'] += array(
-                'disabled' => 'disabled'
-            );
-        }
+        // if(set_value('semLocalizacao') == "on"){
+        //     $data['dropdownBaciaSedimentar'] += array(
+        //         'disabled' => 'disabled'
+        //     );
+        // }
         // Select Municipio
         $data['dropdownMunicipio'] = $this->form_model->getMunicipios();
         $data['id_municipio'] = isset($formLoad['dropdownMunicipio']) ? $formLoad['dropdownMunicipio'] : "";
@@ -387,22 +387,22 @@ class Form extends CI_Controller {
             'maxlength'    => '512',
             'value'        => set_value('inputEndereco', isset($formLoad['inputEndereco']) ? $formLoad['inputEndereco'] : "")
         );
-        if(set_value('semLocalizacao') == "on"){
-            $data['inputEndereco'] += array(
-                'disabled' => 'disabled'
-            );
-        }
+        // if(set_value('semLocalizacao') == "on"){
+        //     $data['inputEndereco'] += array(
+        //         'disabled' => 'disabled'
+        //     );
+        // }
         // Checkbox Sem Localização
-        $data['semLocalizacao'] = array(
-            'id'           => 'semLocalizacao',
-            'name'         => 'semLocalizacao',
-            'type'         => 'checkbox',
-        );
-        if(set_value('semLocalizacao') == "on"){
-            $data['semLocalizacao'] += array(
-                'checked'  => 'checked'
-            );
-        }
+        // $data['semLocalizacao'] = array(
+        //     'id'           => 'semLocalizacao',
+        //     'name'         => 'semLocalizacao',
+        //     'type'         => 'checkbox',
+        // );
+        // if(set_value('semLocalizacao') == "on"){
+        //     $data['semLocalizacao'] += array(
+        //         'checked'  => 'checked'
+        //     );
+        // }
 
 
         //

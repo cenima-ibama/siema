@@ -136,7 +136,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row-fluid">
+              <!-- <div class="row-fluid">
                 <div class="span12">
                   <div class="control-group">
                     <label class="checkbox text-left">
@@ -145,7 +145,7 @@
                     </label>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

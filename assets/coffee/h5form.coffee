@@ -669,27 +669,27 @@ $(document).ready ->
       else
         $("#spanBaciaSed").attr("style","display:none;")
 
-    $("#semLocalizacao").on 'click', ()->
-      if $(this).is(":checked")
-        $("#inputLat").attr("disabled","disabled")
-        $("#inputLng").attr("disabled","disabled")
-        # $("#inputEPSG").attr("disabled","disabled")
-        $("#inputMunicipio").attr("disabled","disabled")
-        $("#inputUF").attr("disabled","disabled")
-        $("#inputEndereco").attr("disabled","disabled")
-        $("#btnAddToMap").attr("disabled","disabled")
-        $("#dropdownMunicipio").attr("disabled","disabled")
-        $("#dropdownUF").attr("disabled","disabled")
-      else
-        $("#inputLat").removeAttr("disabled")
-        $("#inputLng").removeAttr("disabled")
-        # $("#inputEPSG").removeAttr("disabled")
-        $("#inputMunicipio").removeAttr("disabled")
-        $("#inputUF").removeAttr("disabled")
-        $("#inputEndereco").removeAttr("disabled")
-        $("#btnAddToMap").removeAttr("disabled")
-        $("#dropdownMunicipio").removeAttr("disabled")
-        $("#dropdownUF").removeAttr("disabled")
+    # $("#semLocalizacao").on 'click', ()->
+    #   if $(this).is(":checked")
+    #     $("#inputLat").attr("disabled","disabled")
+    #     $("#inputLng").attr("disabled","disabled")
+    #     # $("#inputEPSG").attr("disabled","disabled")
+    #     $("#inputMunicipio").attr("disabled","disabled")
+    #     $("#inputUF").attr("disabled","disabled")
+    #     $("#inputEndereco").attr("disabled","disabled")
+    #     $("#btnAddToMap").attr("disabled","disabled")
+    #     $("#dropdownMunicipio").attr("disabled","disabled")
+    #     $("#dropdownUF").attr("disabled","disabled")
+    #   else
+    #     $("#inputLat").removeAttr("disabled")
+    #     $("#inputLng").removeAttr("disabled")
+    #     # $("#inputEPSG").removeAttr("disabled")
+    #     $("#inputMunicipio").removeAttr("disabled")
+    #     $("#inputUF").removeAttr("disabled")
+    #     $("#inputEndereco").removeAttr("disabled")
+    #     $("#btnAddToMap").removeAttr("disabled")
+    #     $("#dropdownMunicipio").removeAttr("disabled")
+    #     $("#dropdownUF").removeAttr("disabled")
 
     $("#semNavioInstalacao").on 'click', () ->
       if $(@).is ":checked"
