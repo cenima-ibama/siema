@@ -363,7 +363,7 @@ class Form_model extends CI_Model {
 
       // getting the user's ip
       $fields = $fields . "ip_contato,";
-      $values = $values . "'" . $this->session->userdata('ip_address') . "',";
+      $values = $values . "'" . $_SERVER['REMOTE_ADDR'] . "',";
     }
 
 
