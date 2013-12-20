@@ -1272,7 +1272,7 @@ class Form extends CI_Controller {
             $this->firephp->log("Email enviado com sucesso!");
         else
             $this->firephp->log("Erro ao enviar o email");
-            $this->firephp->log($this->email->print_debugger());
+            // $this->firephp->log($this->email->print_debugger());
 
     }
 }
