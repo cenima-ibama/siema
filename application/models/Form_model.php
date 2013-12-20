@@ -47,9 +47,9 @@ class Form_model extends CI_Model {
     // 1. Localização
     //
     $fields = $fields . "informacao_geografica,";
-    if (isset($form["semLocalizacao"])) {
-      $values = $values . "'N',";
-    } else {
+    // if (isset($form["semLocalizacao"])) {
+    //   $values = $values . "'N',";
+    // } else {
       $values = $values . "'S',";
 
       if (isset($form['oceano'])) {
@@ -68,7 +68,7 @@ class Form_model extends CI_Model {
         $fields = $fields . "endereco_ocorrencia,";
         $values = $values . "'" . $form['inputEndereco'] . "',";
       }
-    }
+    // }
 
 
     //
@@ -537,10 +537,18 @@ class Form_model extends CI_Model {
       foreach ($res->result_array() as $key => $row)
       {
         $this->firephp->log($row);
-        $sql = $sql .
+        if (isset($row['id_produto_onu'])) {
+          $sql = $sql .
                " insert into ocorrencia_produto " .
-               " (id_ocorrencia,id_produto_onu,id_produto_outro,quantidade,unidade_medida) values " .
-               " ('" . $id . "','" . $row['id_produto_onu'] . "','" . $row['id_produto_outro'] . "','" . $row['quantidade'] . "','" . $row['unidade_medida'] . "');";
+               " (id_ocorrencia,id_produto_onu,quantidade,unidade_medida) values " .
+               " ('" . $id . "','" . $row['id_produto_onu'] . "','" . $row['quantidade'] . "','" . $row['unidade_medida'] . "');";
+        } else if (isset($row['id_produto_outro'])) {
+          $sql = $sql .
+               " insert into ocorrencia_produto " .
+               " (id_ocorrencia,id_produto_outro,quantidade,unidade_medida) values " .
+               " ('" . $id . "','" . $row['id_produto_outro'] . "','" . $row['quantidade'] . "','" . $row['unidade_medida'] . "');";
+        }
+
       }
 
       $this->firephp->log($sql);
@@ -641,9 +649,9 @@ class Form_model extends CI_Model {
     // 1. Localização
     //
     $fields = $fields . ",informacao_geografica=";
-    if (isset($form["semLocalizacao"])) {
-      $fields = $fields . "'N'";
-    } else {
+    // if (isset($form["semLocalizacao"])) {
+    //   $fields = $fields . "'N'";
+    // } else {
       $fields = $fields . "'S'";
 
       if (isset($form['oceano'])) {
@@ -661,7 +669,7 @@ class Form_model extends CI_Model {
       if(isset($form['inputEndereco'])) {
         $fields = $fields . ",endereco_ocorrencia='" . $form['inputEndereco'] . "'";
       }
-    }
+    // }
 
 
     //
