@@ -5,7 +5,7 @@
     <title>SIEMA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Sistema de monitoramento de desmatamento">
-    <meta name="author" content="Helmuth Saatkamp <helmuthdu@gmail.com>">
+    <meta name="author" content="Hex Tecnologias Espaciais Inovadoras">
 
     <!-- Leaflet -->
     <link href="//cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" rel="stylesheet" />
