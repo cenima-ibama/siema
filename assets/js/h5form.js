@@ -5,7 +5,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, onuTable, otherTable, pointTable, polygonTable, productsOnu, productsOutro, rest, seconds, shapeLoadedFromDB, validationString, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProdutoOnu, _tipoProdutoOutro;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, onuTable, otherTable, pointTable, polygonTable, productsOnu, productsOutro, rest, seconds, shapeLoadedFromDB, validationString, _shownAccordion, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProdutoOnu, _tipoProdutoOutro;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -28,6 +28,7 @@
       limit: "1"
     });
     idLin = rest.data[0].lastval;
+    _shownAccordion = null;
     if (!$("#comunicado").val()) {
       date = new Date();
       seconds = parseInt(date.getSeconds() + (date.getHours() * 60 * 60), 10);
@@ -63,12 +64,15 @@
     nroOcorrencia = $("#comunicado").val();
     $(".accordion-body").on("shown", function() {
       var delay, stop;
-      stop = $(this).offset().top - 55;
-      delay = 300;
-      $("body, html").animate({
-        scrollTop: stop
-      }, delay);
-      return false;
+      if (_shownAccordion !== this) {
+        _shownAccordion = this;
+        stop = $(this).offset().top - 40;
+        delay = 300;
+        $("body, html").animate({
+          scrollTop: stop
+        }, delay);
+        return false;
+      }
     });
     bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h";
     binghybrid = new L.BingLayer(bingKey, {

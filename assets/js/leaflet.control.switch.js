@@ -72,7 +72,7 @@
         link.href = "#";
         link.title = "Layers";
         if (L.Browser.touch) {
-          L.DomEvent.on(link, "click", L.DomEvent.stop).on(link, "click", this._expand, this).on(link, "click", this._activeTab, this);
+          L.DomEvent.on(link, "click", L.DomEvent.stop).on(link, "click", this._activeTab, this).on(link, "click", this._expand, this);
         } else {
           L.DomEvent.on(link, "mouseover", this._activeTab, this).on(link, "focus", this._expand, this);
         }
@@ -129,6 +129,9 @@
         this._selectedTab = newTabName;
         return this._selectedTabContent = newTabContent;
       }), this);
+      if (L.Browser.touch) {
+        L.DomEvent.on(newTabName, "click", L.DomEvent.stop).on(newTabName, "click", this._activeTab, this).on(newTabName, "click", this._expand, this);
+      }
     },
     _activeTab: function() {
       return $(this._selectedTab).trigger("click");

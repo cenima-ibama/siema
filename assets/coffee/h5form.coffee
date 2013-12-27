@@ -30,6 +30,8 @@ $(document).ready ->
   )
   idLin = rest.data[0].lastval
 
+  _shownAccordion = null
+
   if !$("#comunicado").val()
     date = new Date()
 
@@ -76,12 +78,14 @@ $(document).ready ->
   #-------------------------------------------------------------------------
 
   $(".accordion-body").on "shown", ->
-    stop = $(this).offset().top - 55
-    delay = 300
-    $("body, html").animate
-      scrollTop: stop
-    , delay
-    return false
+    if _shownAccordion isnt @
+      _shownAccordion = @
+      stop = $(this).offset().top - 40
+      delay = 300
+      $("body, html").animate
+        scrollTop: stop
+      , delay
+      return false
 
   #-------------------------------------------------------------------------
   # MINIMAP

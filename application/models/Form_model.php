@@ -317,11 +317,18 @@ class Form_model extends CI_Model {
       if (isset($form["outrasMedidas"])) {
         $values = $values . "'S',";
 
-        $fields = $fields . "des_outras_providencias,";
+        $fields = $fields . "des_outras_provideFncias,";
         $values = $values . "'" . $form["inputMedidasTomadas"] . "',";
       } else {
         $values = $values . "'N',";
       }
+    } else  {
+      $fields = $fields . "plano_emergencia,";
+      $values = $values . "'N',";
+      $fields = $fields . "plano_emergencia_acionado,";
+      $values = $values . "'N',";
+      $fields = $fields ."iniciados_outras_providencias,";
+      $values = $values . "'N',";
     }
 
 
