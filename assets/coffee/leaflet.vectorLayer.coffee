@@ -1,6 +1,6 @@
 # L.VectorLayer.VectorLayer {{{
 L.VectorLayer = {
-  author: "Helmuth Duarte Saatkamp <helmuthdu@gmail.com>"
+  author: "HexGIS Tecnologias Espaciais Inovadoras"
 }
 # this Project is a fork from the LeafletVectorlayers from Json Sanfora
 L.VectorLayer.Layer = L.Class.extend(

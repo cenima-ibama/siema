@@ -5,12 +5,13 @@ H5.Data.changed = false
 
 H5.Data.region = "Todos"
 H5.Data.regions = ["NO", "NE", "CO", "SE", "SU"]
-H5.Data.typesOfEvents = ["Derramamento de líquidos", "Desastre natural", "Explosão/incêndio", "Lançamento de sólidos", "Mortandade de peixes", "Produtos químicos/embalagens abandonadas", "Rompimento de barragem", "Vazamento de gases", "Outros", "Todos"]
+H5.Data.typesOfEvents = ["Derramamento de líquido", "Desastre natural", "Explosão/incêndio", "Lançamento de sólidos", "Mortandade de peixes", "Produtos químicos/embalagens abandonadas", "Rompimento de barragem", "Vazamento de gases", "Outros", "Todos"]
 H5.Data.originOfAccident = ["Rodovia", "Ferrovia", "Terminal/portos/ancoradouros/etc", "Embarcação", "Refinaria", "Plataforma", "Indústria", "Duto", "Barragem", "Armazenamento/depósito", "Posto de combustível", "Outros", "Todos"]
 H5.Data.damageIdentified = ["Óbitos/feridos","População afetada/evacuada", "Suspensão de abastecimento de água", "Rio/córrego", "Lago","Mar","Praia","Solo","Águas subterrâneas","Atmosfera","Flora","Fauna","Unidade de Conservação Federal","Unidade de Conservação Estadual/Municipal", "Outros", "Todos"]
 H5.Data.institutionLocal = ["IBAMA","Órgão Estadual ou Municipal de Meio Ambiente","Defesa Civil","Corpo de Bombeiros","Polícia Rodoviária","Polícia Miliar","Polícia Civil","Marinha do Brasil","Empresa especializada em atendimento", "Outras", "Todos"]
-H5.Data.sourceType = ["Comunicado da empresa/responsável", "OEMA", "Mídia", "Denúncia", "Outras Fontes", "Todos"]
-H5.Data.periodDay = ["Matutino", "Vespertino", "Noturno", "Madrugada", "Todos"]
+H5.Data.sourceType = ["Comunicado da empresa/responsável", "OEMA", "Mídia", "Denúncia", "Outras Fontes"]
+H5.Data.periodDay = ["Matutino", "Vespertino", "Noturno", "Madrugada"]
+H5.Data.periodDayAbbrv = ["M", "V", "N", "S"]
 
 H5.Data.thisDate = new Date()
 H5.Data.thisYear = H5.Data.thisDate.getFullYear()
@@ -125,7 +126,7 @@ $.each rest.data, (i, properties) ->
     date = properties.data_acidente
 
   H5.DB.occurence.data.populate(
-    properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem, properties.tipos_danos_identificados, properties.instituicoes_atuando_local, properties.tipos_fontes_informacoes, properties.periodo_ocorrencia
+    properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem, properties.tipos_danos_identificados, properties.institiuicoes_atuando_local, properties.tipos_fontes_informacoes, properties.periodo_ocorrencia
     )
 
 #}}}
@@ -138,8 +139,8 @@ H5.Data.thisYear = H5.DB.occurence.data.lastValue.year
 
 H5.Data.selectedYear = H5.Data.thisYear
 H5.Data.selectedMonth = H5.Data.thisMonth
-H5.Data.selectedType = 0 #first item of the list
-H5.Data.selectedOrigin = 0 #first item of the list
+H5.Data.selectedType = 9 #last item of the list
+H5.Data.selectedOrigin = 12 #last item of the list
 
 #}}}
 # CHART1 {{{
@@ -162,6 +163,8 @@ chart1._originsSlct = document.getElementById('originsSlct')
 # make those options selected
 # chart1._yearsSlct.options[H5.Data.thisYear - 2004].selected = true
 chart1._monthsSlct.options[H5.Data.thisMonth].selected = true
+chart1._typesSlct.options[9].selected = true
+chart1._originsSlct.options[12].selected = true
 
 $(chart1._monthsSlct).on "change", (event) ->
   H5.Data.selectedMonth = parseInt chart1._monthsSlct.value
@@ -192,6 +195,8 @@ $(chart1._typesSlct).on "change", (event) ->
   chart2.drawChart()
   chart3.drawChart()
   chart4.drawChart()
+  chart5.drawChart()
+  chart6.drawChart()
   chart7.drawChart()
   chart8.drawChart()
   knob1.drawChart()
@@ -206,6 +211,8 @@ $(chart1._originsSlct).on "change", (event) ->
   chart2.drawChart()
   chart3.drawChart()
   chart4.drawChart()
+  chart5.drawChart()
+  chart6.drawChart()
   chart7.drawChart()
   chart8.drawChart()
   knob1.drawChart()
@@ -523,7 +530,7 @@ chart4 = new H5.Charts.GoogleCharts(
   type: "Column"
   container: "chart4"
   period: 2
-  title: "Acidentes: UFs"
+  title: "Acidentes por período do dia"
   buttons:
     minusplus: true
     export: true
@@ -542,17 +549,19 @@ chart4._delBtn.onclick = ->
 
 chart4.drawChart = ->
   # sum values
-  sumValues = (region, year, type, origin) ->
+  sumValues = (period, region, year, type, origin) ->
     sum = 0 #counter of occuresce
     firstPeriod = new Date(year, 1, 1)
     secondPeriod = new Date(year , 12, 31)
     $.each H5.DB.occurence.data.regions[region], (key, reg) ->
       if type is "Todos" and origin is "Todos"
-        if firstPeriod <= reg.date <= secondPeriod
+        if firstPeriod <= reg.date <= secondPeriod and (reg.period is period)
           sum++
-      else if firstPeriod <= reg.date <= secondPeriod  and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
+          # console.log "somando " + key
+      else if firstPeriod <= reg.date <= secondPeriod  and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos") and (reg.period is period)
         #counter of the number of occurences
         sum++
+        # console.log "somando " + key
     Math.round(sum * 100) / 100
 
   # create new chart
@@ -562,22 +571,28 @@ chart4.drawChart = ->
   @createDataTable()
 
   # init table
-  @data.addColumn "string", "Região"
+  @data.addColumn "string", "Período"
+  #create the columns with the years
   for i in [0...@options.period]
     @data.addColumn "number", H5.Data.thisYear - i
 
   # populate table with real values
-  if H5.Data.region is "Todos"
-    $.each H5.DB.occurence.data.regions, (region, reg) =>
-      data = [region]
-      for j in [1..@options.period] #gets the value of the years fo every region
-        data[j] = sumValues(region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
-      @data.addRow data
-  else
-    data = [H5.Data.region] #gets the value of every period for only one region
-    for j in [1..@options.period]
-      data[j] = sumValues(H5.Data.region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
-    @data.addRow data
+
+  countPeriod = 0
+  data = []
+  for period in H5.Data.periodDayAbbrv
+    data[0] = H5.Data.periodDay[countPeriod]
+    if H5.Data.region is "Todos"
+      $.each H5.DB.occurence.data.regions, (region, reg) =>
+        for j in [1..@options.period] #gets the value of the years fo every region
+          data[j] = sumValues(period, region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
+    else
+      allData = [H5.Data.region] #gets the value of every period for only one region
+      for j in [1..@options.period]
+        data[j] = sumValues(period, H5.Data.region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
+     @data.addRow data
+
+     countPeriod++
 
   options =
     title: ""
@@ -595,7 +610,7 @@ chart4.drawChart = ->
     bar:
       groupWidth: "100%"
     vAxis:
-      title: "Área km²"
+      title: "Número de Acidentes"
     animation: H5.Data.animate
 
   # Disabling the buttons while the chart is drawing.
@@ -610,179 +625,189 @@ chart4.drawChart = ->
   @chart.draw @data, options
 #}}}
 # CHART5 {{{
-# chart5 = new H5.Charts.GoogleCharts(
-#   type: "Area"
-#   container: "chart5"
-#   title: "Taxa PRODES|Alerta DETER: Acumulado Períodos"
-#   buttons:
-#     export: true
-#     table: true
-#     minimize: true
-#     maximize: true
-# )
+chart5 = new H5.Charts.GoogleCharts(
+  type: "Column"
+  container: "chart5"
+  period: 1
+  title: "Número de Acidentes Atendidos por Instituições"
+  buttons:
+    minusplus: true
+    export: true
+    table: true
+    minimize: true
+    maximize: true
+)
 
-# chart5.drawChart = ->
-#   # sum values
-#   sumDeter = (year) ->
-#     sum = 0
-#     firstPeriod = new Date(year - 1, 7, 1)
-#     secondPeriod = new Date(year , 7, 0)
-#     if H5.Data.region is "Todos"
-#       $.each H5.DB.occurence.data.regions, (key, region) ->
-#         $.each region, (key, reg) ->
-#           if firstPeriod <= reg.date <= secondPeriod
-#             sum += reg.area
-#     else
-#       $.each H5.DB.occurence.data.regions[H5.Data.region], (key, reg) ->
-#         if firstPeriod <= reg.date <= secondPeriod
-#           sum += reg.area
-#     return Math.round(sum * 100) / 100 if sum >= 0
+chart5._addBtn.onclick = ->
+  chart5.options.period++
+  chart5.drawChart()
 
-#   sumProdes = (period) ->
-#     sum = 0
-#     if H5.Data.region is "Todos"
-#       $.each H5.DB.prodes.data.regions, (key, region) ->
-#         sum+= region[period].area
-#     else
-#       sum = H5.DB.prodes.data.regions[H5.Data.region][period].area
+chart5._delBtn.onclick = ->
+  chart5.options.period--
+  chart5.drawChart()
 
-#     return sum if sum >= 0
+chart5.drawChart = ->
+  sumValues = (institution, region, year, type, origin) ->
+  # sum values
+    sum = 0 #counter of occuresce
+    firstPeriod = new Date(year, 1, 1)
+    secondPeriod = new Date(year , 12, 31)
+    $.each H5.DB.occurence.data.regions[region], (key, reg) ->
+      # console.log reg.institution
+      if reg.institution isnt null
+        if type is "Todos" and origin is "Todos"
+          if firstPeriod <= reg.date <= secondPeriod and (reg.institution.indexOf(institution) >= 0)
+            sum++
+            # console.log "somando " + key
+        else if firstPeriod <= reg.date <= secondPeriod  and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos") and (reg.institution.indexOf(institution) >= 0 )
+          #counter of the number of occurences
+          sum++
+          # console.log "somando " + key
+    Math.round(sum * 100) / 100
 
-#   # create new chart
-#   @createChart()
+  # create new chart
+  @createChart()
 
-#   # create an empty table
-#   @createDataTable()
+  # create an empty table
+  @createDataTable()
 
-#   # init table
-#   @data.addColumn "string", "Ano"
-#   @data.addColumn "number", "Alerta DETER"
-#   @data.addColumn "number", "Taxa PRODES"
+  # init table
+  @data.addColumn "string", "Instituição Ambiental"
+  #create the columns with the years
+  for i in [0...@options.period]
+    @data.addColumn "number", H5.Data.thisYear - i
 
-#   # populate table
-#   i = H5.Data.totalPeriods
-#   while i >= 0
-#     data = [H5.Data.periods[i]]
-#     data[1] = sumDeter(H5.Data.thisProdesYear - i)
-#     data[2] = sumProdes(H5.Data.periods[i])
-#     @data.addRow data
-#     i--
+  # populate table
+  data = []
+  for institution in H5.Data.institutionLocal
+    # console.log institution
+    data[0] = institution
+    if H5.Data.region is "Todos"
+      $.each H5.DB.occurence.data.regions, (region, reg) =>
+        for j in [1..@options.period] #gets the value of the years fo every region
+          data[j] = sumValues(institution, region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
+    else
+      allData = [H5.Data.region] #gets the value of every period for only one region
+      for j in [1..@options.period]
+        data[j] = sumValues(institution, H5.Data.region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
+     @data.addRow data
 
-#   options =
-#     title: ""
-#     titleTextStyle:
-#       color: "#333"
-#       fontSize: 13
-#     backgroundColor: "transparent"
-#     focusTarget: "category"
-#     chartArea:
-#       width: "70%"
-#       height: "80%"
-#     colors: ['#3ABCFC', '#D0FC3F']
-#     vAxis:
-#       title: "Área km²"
-#     hAxis:
-#       title: "Período PRODES"
-#     animation: H5.Data.animate
+  options =
+    title: ""
+    titleTextStyle:
+      color: "#333"
+      fontSize: 13
+    backgroundColor: "transparent"
+    focusTarget: "category"
+    chartArea:
+      width: "70%"
+      height: "76%"
+    colors: ['#3ABCFC', '#FC2121', '#D0FC3F', '#FCAC0A',
+             '#67C2EF', '#FF5454', '#CBE968', '#FABB3D',
+             '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
+    bar:
+      groupWidth: "100%"
+    vAxis:
+      title: "Número de Acidentes"
+    animation: H5.Data.animate
 
-#   @chart.draw @data, options
-#}}}
+  @chart.draw @data, options
+# }}}
 # CHART6 {{{
-# chart6 = new H5.Charts.GoogleCharts(
-#   type: "Column"
-#   container: "chart6"
-#   period: 1
-#   title: "Taxa PRODES|Alerta DETER: UFs"
-#   buttons:
-#     export: true
-#     table: true
-#     minimize: true
-#     maximize: true
-#     arrows: true
-# )
+chart6 = new H5.Charts.GoogleCharts(
+  type: "Pie"
+  container: "chart6"
+  period: 0
+  buttons:
+    arrows: true
+    export: true
+    table: true
+    minimize: true
+    maximize: true
+)
+chart6._leftBtn.onclick = ->
+  chart6.options.period++
+  chart6.drawChart()
 
-# chart6.changeTitle H5.Data.periods[chart6.options.period]
+chart6._rightBtn.onclick = ->
+  chart6.options.period--
+  chart6.drawChart()
 
-# chart6._leftBtn.onclick = ->
-#   chart6.options.period++
-#   chart6.drawChart()
+chart6.drawChart = ->
+  # sum values
+  sumValues = (source, region, year, type, origin) ->
+    sum = 0
+    firstPeriod = new Date(year, 1, 1)
+    secondPeriod = new Date(year , 12, 31)
+    $.each H5.DB.occurence.data.regions[region], (key, reg) ->
+      if type is "Todos" and origin is "Todos"
+        if firstPeriod <= reg.date <= secondPeriod and (reg.source.indexOf(source) >= 0)
+          # console.log key + source + " -> " + reg.source + " :" + reg.source.indexOf(source)
+          sum++
+      else if firstPeriod <= reg.date <= secondPeriod and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos") and (reg.source.indexOf(source) >= 0)
+        sum++ #counter of ocurrences
+    Math.round(sum * 100) / 100
 
-# chart6._rightBtn.onclick = ->
-#   chart6.options.period--
-#   chart6.drawChart()
+  # create new chart
+  @createChart()
 
-# chart6.drawChart = ->
-#   # sum values
-#   sumDeter = (region, year) ->
-#     sum = 0
-#     firstPeriod = new Date(year - 1, 7, 1)
-#     secondPeriod = new Date(year , 7, 0)
-#     $.each H5.DB.occurence.data.regions[region], (key, reg) ->
-#       if firstPeriod <= reg.date <= secondPeriod
-#         sum+= reg.area
-#     return Math.round(sum * 100) / 100
+  # create an empty table
+  @createDataTable()
 
-#   sumProdes = (region, year) ->
-#     sum = 0
-#     period = (year - 1) + "-" + (year)
-#     $.each H5.DB.prodes.data.regions[region], (key, reg) ->
-#       if key is period
-#         sum+= reg.area if reg.area?
-#     return Math.round(sum * 100) / 100
+  # init table
+  @data.addColumn "string", "Fonte de Informação"
+  @data.addColumn "number", H5.Data.selectedYear
 
-#   # create new chart
-#   @createChart()
+  # populate table
+  for source in H5.Data.sourceType #for every source of information
+    data = []
+    data[0] = source
+    data[1] = 0
+    # console.log source
+    if H5.Data.region is "Todos"
+      $.each H5.DB.occurence.data.regions, (region, reg) =>
+        data[1] = data[1] + sumValues(source, region, H5.Data.thisYear - @options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
+    else
+      data[1] = data[1] + sumValues(source, H5.Data.region, H5.Data.thisYear - @options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
+    @data.addRow data
 
-#   # create an empty table
-#   @createDataTable()
+  # #Handles the registers without a region defined
+  # region = H5.Data.regions[H5.Data.regions.length + 1] #for the data that doesnt have a region
+  # data = ["Sem Região Cadastrada"]
+  # data[1] = sumValues("Todos", H5.Data.thisYear - @options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
+  # @data.addRow data
 
-#   # init table
-#   @data.addColumn "string", "Estado"
-#   @data.addColumn "number", "Alerta DETER"
-#   @data.addColumn "number", "Taxa PRODES"
+  options =
+    title: ""
+    titleTextStyle:
+      color: "#333"
+      fontSize: 13
+    chartArea:
+      width: "90%"
+      height: "80%"
+    colors: ['#3ABCFC', '#FC2121', '#D0FC3F', '#FCAC0A',
+             '#67C2EF', '#FF5454', '#CBE968', '#FABB3D',
+             '#77A4BD', '#CC6C6C', '#A6B576', '#C7A258']
+    backgroundColor: "transparent"
 
-#   # populate table with real values
-#   if H5.Data.region is "Todos"
-#     $.each H5.DB.occurence.data.regions, (region, reg) =>
-#       data = [region]
-#       data[1] = sumDeter(region, H5.Data.thisProdesYear - @options.period)
-#       data[2] = sumProdes(region, H5.Data.thisProdesYear - @options.period)
-#       @data.addRow data
-#   else
-#     data = [H5.Data.region]
-#     data[1] = sumDeter(H5.Data.region, H5.Data.thisProdesYear - @options.period)
-#     data[2] = sumProdes(H5.Data.region, H5.Data.thisProdesYear - @options.period)
-#     @data.addRow data
+  # @changeTitle H5.Data.periods[@options.period]
+  originTitle = if H5.Data.selectedOrigin is 12 then "Todos Tipos de Origens" else H5.Data.originOfAccident[H5.Data.selectedOrigin]
 
-#   options =
-#     title: ""
-#     titleTextStyle:
-#       color: "#333"
-#       fontSize: 13
-#     backgroundColor: "transparent"
-#     focusTarget: "category"
-#     chartArea:
-#       width: "70%"
-#       height: "76%"
-#     colors: ['#3ABCFC', '#D0FC3F']
-#     bar:
-#       groupWidth: "100%"
-#     vAxis:
-#       title: "Área km²"
-#     animation: H5.Data.animate
+  if (H5.Data.selectedType == 9)
+    @changeTitle "Fonte de Informação [" + (H5.Data.thisYear - @options.period) + "] - Todos Tipos de Eventos" + " - " + originTitle
+  else
+    @changeTitle "Fonte de Informação [" + (H5.Data.thisYear - @options.period) + "]" +  H5.Data.typesOfEvents[H5.Data.selectedType] + " : " + originTitle
 
-#   @changeTitle "Taxa PRODES|Alerta DETER: UFs [" + H5.Data.periods[@options.period] + "]"
+  # Disabling the buttons while the chart is drawing.
+  @_rightBtn.disabled = true
+  @_leftBtn.disabled = true
 
-#   # Disabling the buttons while the chart is drawing.
-#   @_rightBtn.disabled = true
-#   @_leftBtn.disabled = true
+  google.visualization.events.addListener @chart, "ready", =>
+    # Enabling only relevant buttons.
+    @_rightBtn.disabled = @options.period < 1
+    @_leftBtn.disabled = @options.period >= H5.Data.thisYear - 2004
 
-#   google.visualization.events.addListener @chart, "ready", =>
-#     # Enabling only relevant buttons.
-#     @_rightBtn.disabled = @options.period < 2
-#     @_leftBtn.disabled = @options.period >= H5.Data.totalPeriods
-
-#   @chart.draw @data, options
+  @chart.draw @data, options
 #}}}
 # CHART7 {{{
 chart7 = new H5.Charts.GoogleCharts(
@@ -1310,8 +1335,8 @@ H5.Charts.reloadCharts = ->
   chart2.drawChart()
   chart3.drawChart()
   chart4.drawChart()
-  # chart5.drawChart()
-  # chart6.drawChart()
+  chart5.drawChart()
+  chart6.drawChart()
   chart7.drawChart()
   chart8.drawChart()
   # chart9.drawChart()
@@ -1323,6 +1348,9 @@ H5.Charts.reloadCharts = ->
 #}}}
 # MENUS {{{
 $(document).ready ->
+  #makes charts visible
+  $("#dash").show()
+
   # BOOTSTRAP
   $("[rel=tooltip]").tooltip placement: "bottom"
 
@@ -1352,4 +1380,7 @@ $(document).ready ->
     H5.Data.changed = true
 
   H5.Charts.reloadCharts()
+
+  #makes charts invisible after loading
+  $("#dash").hide()
 # }}}

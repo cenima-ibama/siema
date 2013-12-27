@@ -4,7 +4,7 @@
 
   company: "Hexgis <www.hexgis.com>"
 
-  author: "Helmuth Saatkamp <helmuthdu@gmail.com>"
+  author: "HexGIS Tecnologias Espaciais Inovadoras"
 
   isMobile:
     Android: ->

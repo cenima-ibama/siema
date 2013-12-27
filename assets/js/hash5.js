@@ -7,7 +7,7 @@
   this.H5 = {
     version: 0.7,
     company: "Hexgis <www.hexgis.com>",
-    author: "Helmuth Saatkamp <helmuthdu@gmail.com>",
+    author: "HexGIS Tecnologias Espaciais Inovadoras",
     isMobile: {
       Android: function() {
         return navigator.userAgent.match(/Android/i);
