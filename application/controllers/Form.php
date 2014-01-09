@@ -371,12 +371,12 @@ class Form extends CI_Controller {
         //         'disabled' => 'disabled'
         //     );
         // }
-        // Select Municipio
-        $data['dropdownMunicipio'] = $this->form_model->getMunicipios();
-        $data['id_municipio'] = isset($formLoad['dropdownMunicipio']) ? $formLoad['dropdownMunicipio'] : "";
         // Select UF
         $data['dropdownUF'] = $this->form_model->getUFs();
         $data['id_uf'] = isset($formLoad['dropdownUF']) ? $formLoad['dropdownUF'] : "";
+        // Select Municipio
+        $data['dropdownMunicipio'] = $this->form_model->getMunicipios($data['id_uf']);
+        $data['id_municipio'] = isset($formLoad['dropdownMunicipio']) ? $formLoad['dropdownMunicipio'] : "";
         // Input Endereço
         $data['inputEndereco'] = array(
             'id'           => 'inputEndereco',

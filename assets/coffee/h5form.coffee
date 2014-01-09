@@ -8,6 +8,7 @@ $(document).ready ->
   _tipoFonteInformacao = null
   _tipoProdutoOnu = null
   _tipoProdutoOutro = null
+  _municipios = null
 
   idOcorrencia = null
 
@@ -72,6 +73,16 @@ $(document).ready ->
   _tipoProdutoOutro = rest.data
 
   nroOcorrencia = $("#comunicado").val()
+
+  # Get all "Municipio" from database to limit the access to the DB
+  rest = new H5.Rest (
+    url: H5.Data.restURL
+    table: "municipio"
+    fields: "id_municipio as id, nome as value, id_uf"
+    order: "value"
+  )
+  _municipios = rest.data
+
 
   #-------------------------------------------------------------------------
   # COLAPSE BOOTSTRAP
@@ -666,7 +677,16 @@ $(document).ready ->
 
   #-------------------------------------------------------------------------
   # DISABLE SELECTED INPUTS
-  #-------------------------------------------------------------------------
+  #--------------------------------------------------------------------------------------------------------------------------------------------------
+    $("#dropdownUF").on 'change', () ->
+      if $(@).val() isnt ''
+        $("#dropdownMunicipio").find('option').remove()
+        $('<option>').val("0").text("Sem Município").appendTo('#dropdownMunicipio');
+        $.each _municipios, ()->
+          value = $("#dropdownUF").val()
+          if @.id_uf.toString() is value
+            $('<option>').val(@.id).text(@.value).appendTo('#dropdownMunicipio');
+
     $("#oceano").on 'click', () ->
       if $(@).is ":checked"
         $("#spanBaciaSed").removeAttr("style")

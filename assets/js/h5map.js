@@ -248,7 +248,7 @@
       if (!properties.municipio && !properties.estado) {
         text = "Sem informação";
       }
-      html += '<tr><th>Municipio - Estado: </th><td>' + text + '</td></tr>';
+      html += '<tr><th>Município - Estado: </th><td style="max-width:200px;">' + text + '</td></tr>';
       text = "";
       if (properties.data_acidente) {
         text += properties.data_acidente;
@@ -256,31 +256,31 @@
       if (!properties.data_acidente) {
         text = "Sem informação";
       }
-      html += '<tr><th>Data: </th><td>' + text + '</td></tr>';
+      html += '<tr><th>Data: </th><td style="max-width:200px;">' + text + '</td></tr>';
       text = "";
       if (properties.origem_acidente !== "{}") {
-        text += properties.origem_acidente.replace(/[{}]/g, "");
+        text += properties.origem_acidente.replace(/[{}]/g, "").replace(/,/g, ", ");
       }
       if (properties.origem_acidente === "{}") {
         text = "Sem informação";
       }
-      html += '<tr><th>Origem do Acidente: </th><td>' + text + '</td></tr>';
+      html += '<tr><th>Origem do Acidente: </th><td style="max-width:200px;">' + text + '</td></tr>';
       text = "";
       if (properties.tipo_eventos !== "{}") {
-        text += properties.tipo_eventos.replace(/[{}]/g, "");
+        text += properties.tipo_eventos.replace(/[{}]/g, "").replace(/,/g, ", ");
       }
       if (properties.tipo_eventos === "{}") {
         text = "Sem informação";
       }
-      html += '<tr><th>Tipo de Evento: </th><td>' + text + '</td></tr>';
+      html += '<tr><th>Tipo de Evento: </th><td style="max-width:200px;">' + text + '</td></tr>';
       text = "";
       if (properties.produtos !== "{}") {
-        text += properties.produtos.replace(/[{}]/g, "");
+        text += properties.produtos.replace(/[{}]/g, "").replace(/,/g, ", ");
       }
       if (properties.produtos === "{}") {
         text = "Sem informação";
       }
-      html += '<tr><th>Produtos Envolvidos: </th><td>' + text + '</td></tr>';
+      html += '<tr><th>Produtos Envolvidos: </th><td style="max-width:200px;">' + text + '</td></tr>';
       html += '</tbody></table></div>';
       return html;
     },

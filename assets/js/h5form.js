@@ -5,7 +5,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, onuTable, otherTable, pointTable, polygonTable, productsOnu, productsOutro, rest, seconds, shapeLoadedFromDB, validationString, _shownAccordion, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProdutoOnu, _tipoProdutoOutro;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, onuTable, otherTable, pointTable, polygonTable, productsOnu, productsOutro, rest, seconds, shapeLoadedFromDB, validationString, _municipios, _shownAccordion, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProdutoOnu, _tipoProdutoOutro;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -13,6 +13,7 @@
     _tipoFonteInformacao = null;
     _tipoProdutoOnu = null;
     _tipoProdutoOutro = null;
+    _municipios = null;
     idOcorrencia = null;
     rest = new H5.Rest({
       url: H5.Data.restURL,
@@ -62,6 +63,13 @@
     });
     _tipoProdutoOutro = rest.data;
     nroOcorrencia = $("#comunicado").val();
+    rest = new H5.Rest({
+      url: H5.Data.restURL,
+      table: "municipio",
+      fields: "id_municipio as id, nome as value, id_uf",
+      order: "value"
+    });
+    _municipios = rest.data;
     $(".accordion-body").on("shown", function() {
       var delay, stop;
       if (_shownAccordion !== this) {
@@ -511,6 +519,19 @@
       productsOnu = [];
       $.each(_tipoProdutoOnu, function() {
         return productsOnu.push(this.nome);
+      });
+      $("#dropdownUF").on('change', function() {
+        if ($(this).val() !== '') {
+          $("#dropdownMunicipio").find('option').remove();
+          $('<option>').val("0").text("Sem Município").appendTo('#dropdownMunicipio');
+          return $.each(_municipios, function() {
+            var value;
+            value = $("#dropdownUF").val();
+            if (this.id_uf.toString() === value) {
+              return $('<option>').val(this.id).text(this.value).appendTo('#dropdownMunicipio');
+            }
+          });
+        }
       });
       $("#oceano").on('click', function() {
         if ($(this).is(":checked")) {

@@ -243,27 +243,27 @@ acidentes = new L.VectorLayer.Postgis (
     text += " - "
     if properties.estado then text += properties.estado
     if !properties.municipio and !properties.estado then text = "Sem informação"
-    html += '<tr><th>Municipio - Estado: </th><td>' + text + '</td></tr>'
+    html += '<tr><th>Município - Estado: </th><td style="max-width:200px;">' + text + '</td></tr>'
 
     text = ""
     if properties.data_acidente then text += properties.data_acidente
     if !properties.data_acidente then text = "Sem informação"
-    html += '<tr><th>Data: </th><td>' + text + '</td></tr>'
+    html += '<tr><th>Data: </th><td style="max-width:200px;">' + text + '</td></tr>'
 
     text = ""
-    if properties.origem_acidente isnt "{}" then text += properties.origem_acidente.replace(/[{}]/g,"")
+    if properties.origem_acidente isnt "{}" then text += properties.origem_acidente.replace(/[{}]/g,"").replace(/,/g,", ")
     if properties.origem_acidente is "{}" then text = "Sem informação"
-    html += '<tr><th>Origem do Acidente: </th><td>' + text  + '</td></tr>'
+    html += '<tr><th>Origem do Acidente: </th><td style="max-width:200px;">' + text  + '</td></tr>'
 
     text = ""
-    if properties.tipo_eventos isnt "{}" then text += properties.tipo_eventos.replace(/[{}]/g,"")
+    if properties.tipo_eventos isnt "{}" then text += properties.tipo_eventos.replace(/[{}]/g,"").replace(/,/g,", ")
     if properties.tipo_eventos is "{}" then text = "Sem informação"
-    html += '<tr><th>Tipo de Evento: </th><td>' + text + '</td></tr>'
+    html += '<tr><th>Tipo de Evento: </th><td style="max-width:200px;">' + text + '</td></tr>'
 
     text = ""
-    if properties.produtos isnt "{}" then text += properties.produtos.replace(/[{}]/g,"")
+    if properties.produtos isnt "{}" then text += properties.produtos.replace(/[{}]/g,"").replace(/,/g,", ")
     if properties.produtos is "{}" then text = "Sem informação"
-    html += '<tr><th>Produtos Envolvidos: </th><td>' + text + '</td></tr>'
+    html += '<tr><th>Produtos Envolvidos: </th><td style="max-width:200px;">' + text + '</td></tr>'
 
     html += '</tbody></table></div>'
     return html

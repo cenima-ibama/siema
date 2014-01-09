@@ -1513,22 +1513,26 @@ class Form_model extends CI_Model {
   }
 
   // Returns the "municipios" stored on the database
-  public function getMunicipios()
+  public function getMunicipios($id_uf)
   {
 
-    $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
-
-    $result = $ocorrenciasDatabase->query("select id_municipio as id, nome as value from municipio order by value;");
-
     $array = array();
-    foreach ($result->result_array() as $key => $value) {
-      $array += array (
-        $value['id']  =>  $value['value']
-      );
-    }
     $array += array (
-      '0' => 'Sem município'
+      '0' => 'Sem Município'
     );
+
+    if (!empty($id_uf)) {
+
+      $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
+
+      $result = $ocorrenciasDatabase->query("select id_municipio as id, nome as value from municipio where id_uf=" . $id_uf . " order by value;");
+
+      foreach ($result->result_array() as $key => $value) {
+        $array += array (
+          $value['id']  =>  $value['value']
+        );
+      }
+    }
 
     return $array;
   }
@@ -1542,14 +1546,14 @@ class Form_model extends CI_Model {
     $result = $ocorrenciasDatabase->query("select id_uf as id, sigla as value from uf order by value;");
 
     $array = array();
+    $array += array (
+      '0' => 'Sem UF'
+    );
     foreach ($result->result_array() as $key => $value) {
       $array += array (
         $value['id']  =>  $value['value']
       );
     }
-    $array += array (
-      '0' => 'Sem UF'
-    );
 
     return $array;
   }
