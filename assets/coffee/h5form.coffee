@@ -271,19 +271,21 @@ $(document).ready ->
       if subCidade.length > 1
       #case with the city name
         # $("#inputMunicipio").val subCidade[0]
-        $('#dropdownMunicipio option').filter ->
-          return $(this).text() == subCidade[0]
-        .prop 'selected', true
         @_parseEstado subCidade[1]
+        _this = this
+        $('#dropdownMunicipio option').filter ->
+          return $(this).text().latinise() == subCidade[0]
+        .prop 'selected', true
       else
       #case with only the state name of abbreviation
         # $("#inputMunicipio").val ""
-        $("#dropdownMunicipio").val ""
         @_parseEstado string
+        $("#dropdownMunicipio").val "0"
+      $("#dropdownMunicipio").trigger('change')
 
     _parseEstado: (string) ->
-        estados = ["Acre","Alagoas","Amapá","Amazonas","Bahia","Ceará","Distrito Federal","Espírito Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso do Sul","Minas Gerais","Pará","Paraíba","Paraná","Pernambuco","Piauí","Rio de Janeiro","Rio Grande do Norte","Rio Grande do Sul","Rondônia","Roraima","Santa Catarina","São Paulo","Sergipe","Tocantins"]
-        uf = ["AC","AL","AP","AM","BA","CE","DF","E","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]
+        estados = ["Acre","Alagoas","Amapá","Amazonas","Bahia","Ceará","Distrito Federal","Espirito Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso do Sul","Minas Gerais","Pará","Paraíba","Paraná","Pernambuco","Piauí","Rio de Janeiro","Rio Grande do Norte","Rio Grande do Sul","Rondônia","Roraima","Santa Catarina","São Paulo","Sergipe","Tocantins"]
+        uf = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]
         if string in estados or string in uf
           if string.length > 2
             # $("#inputUF").val uf[estados.indexOf(string)]
@@ -295,6 +297,8 @@ $(document).ready ->
             $('#dropdownUF option').filter ->
               return $(this).text() == string
             .prop 'selected', true
+
+          $("#dropdownUF").trigger('change')
 
     _printError: (error) ->
       alert "Erro na Busca: " + error

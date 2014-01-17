@@ -7,6 +7,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
   <!-- <script src="<?= base_url()?>assets/js/jquery.maskedinput.min.js"></script> -->
   <script src="<?= base_url()?>assets/js/jquery.mask.min.js"></script>
+  <script src="<?= base_url()?>assets/js/latinise.min.js"></script>
   <!-- Leaflet -->
   <script src="//cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.fullscreen.js"></script>

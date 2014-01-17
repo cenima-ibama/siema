@@ -248,32 +248,35 @@
         return $("#inputEndereco").val(strAdd);
       },
       _parseCidade: function(string) {
-        var subCidade;
+        var subCidade, _this;
         subCidade = string.split(" - ");
         if (subCidade.length > 1) {
+          this._parseEstado(subCidade[1]);
+          _this = this;
           $('#dropdownMunicipio option').filter(function() {
-            return $(this).text() === subCidade[0];
+            return $(this).text().latinise() === subCidade[0];
           }).prop('selected', true);
-          return this._parseEstado(subCidade[1]);
         } else {
-          $("#dropdownMunicipio").val("");
-          return this._parseEstado(string);
+          this._parseEstado(string);
+          $("#dropdownMunicipio").val("0");
         }
+        return $("#dropdownMunicipio").trigger('change');
       },
       _parseEstado: function(string) {
         var estados, uf;
-        estados = ["Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal", "Espírito Santo", "Goiás", "Maranhão", "Mato Grosso", "Mato Grosso do Sul", "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco", "Piauí", "Rio de Janeiro", "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia", "Roraima", "Santa Catarina", "São Paulo", "Sergipe", "Tocantins"];
-        uf = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "E", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
+        estados = ["Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceará", "Distrito Federal", "Espirito Santo", "Goiás", "Maranhão", "Mato Grosso", "Mato Grosso do Sul", "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco", "Piauí", "Rio de Janeiro", "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia", "Roraima", "Santa Catarina", "São Paulo", "Sergipe", "Tocantins"];
+        uf = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
         if (__indexOf.call(estados, string) >= 0 || __indexOf.call(uf, string) >= 0) {
           if (string.length > 2) {
-            return $('#dropdownUF option').filter(function() {
+            $('#dropdownUF option').filter(function() {
               return $(this).text() === uf[estados.indexOf(string)];
             }).prop('selected', true);
           } else {
-            return $('#dropdownUF option').filter(function() {
+            $('#dropdownUF option').filter(function() {
               return $(this).text() === string;
             }).prop('selected', true);
           }
+          return $("#dropdownUF").trigger('change');
         }
       },
       _printError: function(error) {
