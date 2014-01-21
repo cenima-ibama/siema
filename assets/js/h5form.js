@@ -5,7 +5,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, onuTable, otherTable, pointTable, polygonTable, productsOnu, productsOutro, rest, seconds, shapeLoadedFromDB, validationString, _municipios, _shownAccordion, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProdutoOnu, _tipoProdutoOutro;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, doubleClick, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, onuTable, otherTable, pointTable, polygonTable, productsOnu, productsOutro, rest, seconds, shapeLoadedFromDB, validationString, _municipios, _shownAccordion, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProdutoOnu, _tipoProdutoOutro;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -94,11 +94,16 @@
     Marker = new L.Marker([0, 0], {
       draggable: true
     });
+    doubleClick = true;
+    if (window.parent.H5.isMobile.any()) {
+      doubleClick = false;
+    }
     minimapView = new L.Map("minimap", {
       center: new L.LatLng(-10.0, -50.0),
       zoom: 3,
       layers: [binghybrid],
-      zoomControl: true
+      zoomControl: true,
+      doubleClickZoom: doubleClick
     });
     isLoadForm = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked");
     shapeLoadedFromDB = $("#shapeLoaded").prop("checked");
@@ -254,7 +259,7 @@
           this._parseEstado(subCidade[1]);
           _this = this;
           $('#dropdownMunicipio option').filter(function() {
-            return $(this).text().latinise() === subCidade[0];
+            return $(this).text().latinise() === subCidade[0].latinise();
           }).prop('selected', true);
         } else {
           this._parseEstado(string);
