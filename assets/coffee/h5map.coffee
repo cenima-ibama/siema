@@ -228,8 +228,8 @@ restURL = "http://" + document.domain + "/siema/rest"
 # display acidentes
 acidentes = new L.VectorLayer.Postgis (
   url: restURL
-  geotable: "vw_ocorrencia_shape"
-  fields: "id_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos"
+  geotable: "vw_ocorrencia_mapa"
+  fields: "id_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, legado"
   srid: 4326
   geomFieldName: "shape"
   showAll: true
@@ -268,6 +268,7 @@ acidentes = new L.VectorLayer.Postgis (
     html += '</tbody></table></div>'
     return html
   focus: false
+  where: 'legado IS FALSE'
   symbology:
     type: "single"
     vectorStyle:
@@ -325,37 +326,62 @@ new L.control.locate(
 ).addTo(H5.Map.base)
 
 
-# H5.Map.layer.alerta = new L.VectorLayer.Postgis (
-#   url: restURL
-#   geotable: H5.DB.alert.table
-#   fields: "id_des, tipo, data_imagem, area_km2, dominio"
-#   srid: 4326
-#   geomFieldName: "shape"
-#   popupTemplate: (properties) ->
-#     html = '<div class="iw-content"><h4>' + properties.id_des + '</h4>'
-#     html += '<h5>' + properties.tipo + '</h5>'
-#     html += '<table class="condensed-table bordered-table zebra-striped"><tbody>'
-#     html += '<tr><th>Data: </th><td>' + properties.data_imagem.split(" ", 1) + '</td></tr>'
-#     html += '<tr><th>Área: </th><td>' + properties.area_km2+ '</td></tr>'
-#     if properties.dominio.length > 1
-#       html += '<tr><th>Domínio: </th><td>' + properties.dominio + '</td></tr>'
-#     html += '</tbody></table></div>'
-#     return html
-#   singlePopup: true
-#   where: "ano = '2013'"
-#   showAll: false
-#   limit: 200
-#   scaleRange: [9, 20]
-#   symbology:
-#     type: "single"
-#     vectorStyle:
-#       fillColor: "#ff0000"
-#       fillOpacity: 0.6
-#       weight: 4.0
-#       color: "#ff0000"
-#       opacity: 0.8
-# )
-# H5.Map.layer.alerta.setMap H5.Map.base
+legados = new L.VectorLayer.Postgis (
+  url: restURL
+  map: H5.Map.base
+  geotable: "vw_ocorrencia_mapa"
+  fields: "id_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, legado"
+  srid: 4326
+  geomFieldName: "shape"
+  showAll: true
+  cluster: true
+  popupTemplate: (properties) ->
+    html = '<div class="iw-content"><h4>' + properties.id_ocorrencia + '</h4>'
+    html += '<table class="condensed-table bordered-table zebra-striped"><tbody>'
+
+    text = ""
+    if properties.municipio then text += properties.municipio
+    text += " - "
+    if properties.estado then text += properties.estado
+    if !properties.municipio and !properties.estado then text = "Sem informação"
+    html += '<tr><th>Município - Estado: </th><td style="max-width:200px;">' + text + '</td></tr>'
+
+    text = ""
+    if properties.data_acidente then text += properties.data_acidente
+    if !properties.data_acidente then text = "Sem informação"
+    html += '<tr><th>Data: </th><td style="max-width:200px;">' + text + '</td></tr>'
+
+    text = ""
+    if properties.origem_acidente isnt "{}" then text += properties.origem_acidente.replace(/[{}]/g,"").replace(/,/g,", ")
+    if properties.origem_acidente is "{}" then text = "Sem informação"
+    html += '<tr><th>Origem do Acidente: </th><td style="max-width:200px;">' + text  + '</td></tr>'
+
+    text = ""
+    if properties.tipo_eventos isnt "{}" then text += properties.tipo_eventos.replace(/[{}]/g,"").replace(/,/g,", ")
+    if properties.tipo_eventos is "{}" then text = "Sem informação"
+    html += '<tr><th>Tipo de Evento: </th><td style="max-width:200px;">' + text + '</td></tr>'
+
+    text = ""
+    if properties.produtos isnt "{}" then text += properties.produtos.replace(/[{}]/g,"").replace(/,/g,", ")
+    if properties.produtos is "{}" then text = "Sem informação"
+    html += '<tr><th>Produtos Envolvidos: </th><td style="max-width:200px;">' + text + '</td></tr>'
+
+    html += '</tbody></table></div>'
+    return html
+  focus: false
+  where: 'legado IS TRUE'
+  symbology:
+    type: "single"
+    vectorStyle:
+      circleMarker: true
+      radius: 6
+      fillColor: "#ff0000"
+      fillOpacity: 0.8
+      weight: 4.0
+      color: "#ff0000"
+      opacity: 0.8
+)
+legados.setMap H5.Map.base
 
 # icons
 iconsURL = "http://" + document.domain + "/siema/assets/img/icons/"
@@ -435,13 +461,18 @@ controlswitch = new L.control.switch(
     layer: hidrografia
   "Mar Territorial":
     layer: marTerritorial
+  "Dados Legados":
+    layer: legados.layer
+    vectorLayer:
+      layer: legados
+
 ,
   water:
     icon: iconsURL + "water.png"
     name: null
     selected: true
   factory:
-    name: null
     icon: iconsURL + "factory.png"
+    name: null
 ).addTo(H5.Map.base)
 # }}}
