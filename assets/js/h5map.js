@@ -80,7 +80,7 @@
   geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms";
 
   terrasIndigenas = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:t_indigena",
+    layers: "cemam:terra_indigena",
     format: "image/png",
     transparent: true
   });
@@ -176,7 +176,7 @@
   });
 
   hidrografia = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:hidrografia_lin",
+    layers: "cemam:Hidrografia",
     format: "image/png",
     transparent: true
   });
