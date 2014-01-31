@@ -368,8 +368,10 @@ legados = new L.VectorLayer.Postgis (
 
     html += '</tbody></table></div>'
     return html
+  singlePopup: true
   focus: false
   where: 'legado IS TRUE'
+  # limit: 200
   symbology:
     type: "single"
     vectorStyle:
@@ -382,6 +384,25 @@ legados = new L.VectorLayer.Postgis (
       opacity: 0.8
 )
 legados.setMap H5.Map.base
+
+# # display clusters
+# legados.clusters = new L.VectorLayer.Postgis (
+#   url: restURL
+#   geotable: "vw_ocorrencia_mapa"
+#   fields: "id_ocorrencia"
+#   srid: 4326
+#   geomFieldName: "centroide"
+#   showAll: true
+#   cluster: true
+#   popupTemplate: null
+#   where: 'legado IS TRUE'
+#   # focus: true
+#   symbology:
+#     type: "single"
+#     vectorStyle:
+#       icon: new customMarker()
+# )
+# legados.clusters.setMap H5.Map.base
 
 # icons
 iconsURL = "http://" + document.domain + "/siema/assets/img/icons/"
@@ -465,7 +486,6 @@ controlswitch = new L.control.switch(
     layer: legados.layer
     vectorLayer:
       layer: legados
-
 ,
   water:
     icon: iconsURL + "water.png"
@@ -476,3 +496,6 @@ controlswitch = new L.control.switch(
     name: null
 ).addTo(H5.Map.base)
 # }}}
+
+$(document).ready ()->
+  legados.hideLayer()

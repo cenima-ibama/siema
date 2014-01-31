@@ -53,6 +53,9 @@
       this._hide();
       return this._show();
     },
+    hideLayer: function() {
+      return this._hideVectors();
+    },
     _show: function() {
       var _this = this;
       this._addIdleListener();

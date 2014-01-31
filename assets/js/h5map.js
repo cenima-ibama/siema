@@ -401,6 +401,7 @@
       html += '</tbody></table></div>';
       return html;
     },
+    singlePopup: true,
     focus: false,
     where: 'legado IS TRUE',
     symbology: {
@@ -541,5 +542,9 @@
       name: null
     }
   }).addTo(H5.Map.base);
+
+  $(document).ready(function() {
+    return legados.hideLayer();
+  });
 
 }).call(this);
