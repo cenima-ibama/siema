@@ -66,7 +66,7 @@
   H5.Map.base = new L.Map("map", {
     center: new L.LatLng(-10.0, -58.0),
     zoom: 6,
-    layers: [binghybrid]
+    layers: [openstreet]
   });
 
   H5.Map.minimap = new L.Control.MiniMap(bingMini, {
