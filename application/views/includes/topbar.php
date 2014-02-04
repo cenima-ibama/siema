@@ -13,6 +13,9 @@
         <li class=""><a id="btn-charts" href="#"><i class="icon-bar-chart icon-white"></i> Estatística</a></li>
         <li><a id="btn-form" data-toggle="modal" href="#addMeModal"><i class="icon-plus-sign icon-white"></i> Informar Acidente</a></li>
       </ul>
+      <ul class="nav pull-right" style="margin-top:10px;margin-right:10px;color: #FFFFFF;">
+        <li class=""><strong> Sistema Nacional de Emergências Ambientais </strong></li>
+      </ul>
     </div>
   </div>
 </header>
