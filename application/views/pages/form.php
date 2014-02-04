@@ -353,15 +353,15 @@
                       <br />
                       <div class="control-group">
                         <label class="radio">';
-                  if (isset($inputNomeNavio) and $inputNomeNavio['value'] != "") {
-                    echo '  <input type="radio" id="navio" name="typeOfOrigin" value="navio" checked="checked"';
-                  } else {
-                    echo '  <input type="radio" id="navio" name="typeOfOrigin" value="navio"';
-                  }
-                  if (isset($semNavioInstalacao['checked'])) {
-                    echo 'disabled="disabled"';
-                  }
-                  echo '/>';
+                  // if (isset($inputNomeNavio) and $inputNomeNavio['value'] != "") {
+                  //   echo '  <input type="radio" id="navio" name="typeOfOrigin" value="navio" checked="checked"';
+                  // } else {
+                  //   echo '  <input type="radio" id="navio" name="typeOfOrigin" value="navio"';
+                  // }
+                  // if (isset($semNavioInstalacao['checked'])) {
+                  //   echo 'disabled="disabled"';
+                  // }
+                  // echo '/>';
                   echo '
                           &nbsp; Nome do navio:
                         </label>
@@ -372,15 +372,15 @@
                       </div>
                       <div class="control-group">
                         <label class="radio">';
-                  if (isset($inputNomeInstalacao) and $inputNomeInstalacao['value'] != "") {
-                    echo '  <input type="radio" id="instalacao" name="typeOfOrigin" value="instalacao" checked="checked"';
-                  } else {
-                    echo '  <input type="radio" id="instalacao" name="typeOfOrigin" value="instalacao"';
-                  }
-                  if (isset($semNavioInstalacao['checked'])) {
-                    echo 'disabled="disabled"';
-                  }
-                  echo '/>';
+                  // if (isset($inputNomeInstalacao) and $inputNomeInstalacao['value'] != "") {
+                  //   echo '  <input type="radio" id="instalacao" name="typeOfOrigin" value="instalacao" checked="checked"';
+                  // } else {
+                  //   echo '  <input type="radio" id="instalacao" name="typeOfOrigin" value="instalacao"';
+                  // }
+                  // if (isset($semNavioInstalacao['checked'])) {
+                  //   echo 'disabled="disabled"';
+                  // }
+                  // echo '/>';
                   echo '
                           &nbsp; Nome da instalação:
                         </label>
@@ -601,7 +601,7 @@
                   </div>
                   <div class="span3">
                     <label class="radio">
-                      <?php echo form_radio($SitNaoSeApl); ?> <strong> Não se aplica </strong>
+                      <?php echo form_radio($SitNaoSeApl); ?> Não se aplica
                     </label>
                   </div>
                 </div>
@@ -897,25 +897,48 @@
             echo '
                       </div>
                     </div>';
-                      if (isset($hasOleo) && isset($isServIBAMA)) {
+                      // if (isset($hasOleo) && isset($isServIBAMA)) {
             echo '
-                          <div class="controls span12">
-                            <label class="control-label span5" for="inputFuncaoNavio">Função navio ou instalação:
-                            </label>
-                            <div class="span6">';
-                        echo form_input($inputFuncaoNavio);
+                    <div class="controls span12">
+                      <label class="control-label span5" for="inputInstEmp">Instituição / Empresa:
+                      </label>
+                      <div class="span6">';
+                  echo form_input($inputInstEmp);
+            echo '
+                      </div>
+                    </div>
+                    ';
+            if (isset($hasOleo)) {
               echo '
-                            </div>
-                          </div>
-                        ';
-                      }
+                      <div class="controls span12">
+                        <label class="control-label span5" for="inputCargoFunc">Cargo / Função navio ou instalação:
+                        </label>
+                        <div class="span6">';
+                    echo form_input($inputCargoFunc);
               echo '
+                        </div>
+                      </div>
+                      ';
+            } else {
+              echo '
+                      <div class="controls span12">
+                        <label class="control-label span5" for="inputCargoFunc">Cargo / Função:
+                        </label>
+                        <div class="span6">';
+                    echo form_input($inputCargoFunc);
+              echo '
+                        </div>
+                      </div>
+                      ';
+            }
+                      // }
+            echo '
                     <div class="controls span12">
                       <label class="control-label span5" for="inputTelInformante">Telefone de contato:
                       </label>
                       <div class="span6">';
                         echo form_input($inputTelInformante);
-              echo '
+            echo '
                       </div>
                     </div>
                     <div class="controls span12">
@@ -923,7 +946,7 @@
                       </label>
                       <div class="span6">';
                         echo form_input($inputEmailInformante);
-              echo '
+            echo '
                       </div>
                     </div>
                   </div>

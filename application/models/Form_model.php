@@ -349,6 +349,16 @@ class Form_model extends CI_Model {
       $values = $values . "'" . $form["inputNomeInformante"] . "',";
     }
 
+    if (isset($form['inputInstEmp'])) {
+      $fields = $fields . "des_instituicao_empresa,";
+      $values = $values . "'" . $form['inputInstEmp'] . "',";
+    }
+
+    if (isset($form['inputCargoFunc'])) {
+      $fields = $fields . "des_funcao_comunicante,";
+      $values = $values . "'" . $form['inputCargoFunc'] . "',";
+    }
+
     if (isset($form["inputTelInformante"])) {
       $fields = $fields . "telefone_contato,";
       $values = $values . "'" . $form["inputTelInformante"] . "',";
@@ -585,11 +595,6 @@ class Form_model extends CI_Model {
       } else if(isset($form['inputNomeInstalacao']))  {
         $fields = $fields . ",des_instalacao";
         $values = $values . ",'" . $form['inputNomeInstalacao'] . "'";
-      }
-
-      if (isset($form['inputFuncaoNavio'])) {
-        $fields = $fields . ",des_funcao_comunicante";
-        $values = $values . ",'" . $form['inputFuncaoNavio'] . "'";
       }
 
       $sql = "insert into detalhamento_ocorrencia (" . $fields . ") VALUES (" . $values . ")";
@@ -972,6 +977,12 @@ class Form_model extends CI_Model {
     if (isset($form["inputNomeInformante"])) {
       $fields = $fields . ",nome_comunicante='" . $form["inputNomeInformante"] . "'";
     }
+    if (isset($form['inputInstEmp'])) {
+      $fields = $fields . ",des_instituicao_empresa='" . $form["inputInstEmp"] . "'";
+    }
+    if (isset($form['inputCargoFunc'])) {
+      $fields = $fields . ",des_funcao_comunicante='" . $form['inputCargoFunc']  . "'";
+    }
     if (isset($form["inputTelInformante"])) {
       $fields = $fields . ",telefone_contato='" . $form["inputTelInformante"] . "'";
     }
@@ -1183,9 +1194,6 @@ class Form_model extends CI_Model {
         } else if (isset($form['inputNomeInstalacao'])) {
           $sql = $sql . " des_instalacao='" . $form['inputNomeInstalacao'] . "'";
         }
-        if (isset($form['inputFuncaoNavio'])) {
-          $sql = $sql . " ,des_funcao_comunicante='" . $form['inputFuncaoNavio']  . "'";
-        }
 
         $sql = $sql . " where id_ocorrencia='" . $id . "';";
 
@@ -1206,11 +1214,6 @@ class Form_model extends CI_Model {
         } else if(isset($form['inputNomeInstalacao']))  {
           $fields = $fields . ",des_instalacao";
           $values = $values . ",'" . $form['inputNomeInstalacao'] . "'";
-        }
-
-        if (isset($form['inputFuncaoNavio'])) {
-          $fields = $fields . ",des_funcao_comunicante";
-          $values = $values . ",'" . $form['inputFuncaoNavio'] . "'";
         }
 
         $sql = "insert into detalhamento_ocorrencia (" . $fields . ") VALUES (" . $values . ")";
@@ -1452,16 +1455,17 @@ class Form_model extends CI_Model {
     if ($dbResult['nome_comunicante']) {
       $form['inputNomeInformante'] = $dbResult['nome_comunicante'];
     }
+    if ($dbResult['des_instituicao_empresa']) {
+      $form['inputInstEmp'] = $dbResult['des_instituicao_empresa'];
+    }
+    if ($dbResult['des_funcao_comunicante']) {
+      $form['inputCargoFunc'] = $dbResult['des_funcao_comunicante'];
+    }
     if ($dbResult['telefone_contato']) {
       $form['inputTelInformante'] = $dbResult['telefone_contato'];
     }
     if ($dbResult['email_comunicante']) {
       $form['inputEmailInformante'] = $dbResult['email_comunicante'];
-    }
-    if($dbResult['ocorrencia_oleo']) {
-      if ($infoOil['des_funcao_comunicante']) {
-        $form['inputFuncaoNavio'] = $infoOil['des_funcao_comunicante'];
-      }
     }
 
 

@@ -1169,12 +1169,20 @@ class Form extends CI_Controller {
             'value'        => set_value('inputNomeInformante', $this->session->userdata('name'))
         );
         // Input Funcão Navio Comunicante (Informante)
-        $data['inputFuncaoNavio'] = array(
-            'id'           => 'inputFuncaoNavio',
-            'name'         => 'inputFuncaoNavio',
+        $data['inputCargoFunc'] = array(
+            'id'           => 'inputCargoFunc',
+            'name'         => 'inputCargoFunc',
             'class'        => 'input-large',
             'maxlength'    => '150',
-            'value'        => set_value('inputFuncaoNavio', isset($formLoad['inputFuncaoNavio']) ? $formLoad['inputFuncaoNavio'] : '')
+            'value'        => set_value('inputCargoFunc', isset($formLoad['inputCargoFunc']) ? $formLoad['inputCargoFunc'] : '')
+        );
+        // Input Funcão Navio Comunicante (Informante)
+        $data['inputInstEmp'] = array(
+            'id'           => 'inputInstEmp',
+            'name'         => 'inputInstEmp',
+            'class'        => 'input-large',
+            'maxlength'    => '150',
+            'value'        => set_value('inputInstEmp', isset($formLoad['inputInstEmp']) ? $formLoad['inputInstEmp'] : '')
         );
         // Input Email Comunicante (Informante)
         $data['inputEmailInformante'] = array(

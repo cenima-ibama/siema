@@ -981,15 +981,31 @@ $(document).ready ->
     $("#divPeriodoInci").prop('style','display:none;')
 
 
-  $("#navio").on 'click', ->
-    if $(this).is(":checked")
+  $("#inputNomeNavio").on 'change', ->
+    if $(this).val() is ""
+      $("#inputNomeInstalacao").removeAttr("disabled")
+    else
       $("#inputNomeInstalacao").attr("disabled","disabled")
       $("#inputNomeNavio").removeAttr("disabled")
 
-  $("#instalacao").on 'click', ->
-    if $(this).is(":checked")
+  $("#inputNomeInstalacao").on 'change', ->
+    if $(this).val() is ""
+      $("#inputNomeNavio").removeAttr("disabled")
+    else
       $("#inputNomeNavio").attr("disabled","disabled")
       $("#inputNomeInstalacao").removeAttr("disabled")
+
+
+  # They'll soon ask to change. I bet on it.
+  # $("#navio").on 'click', ->
+  #   if $(this).is(":checked")
+  #     $("#inputNomeInstalacao").attr("disabled","disabled")
+  #     $("#inputNomeNavio").removeAttr("disabled")
+
+  # $("#instalacao").on 'click', ->
+  #   if $(this).is(":checked")
+  #     $("#inputNomeNavio").attr("disabled","disabled")
+  #     $("#inputNomeInstalacao").removeAttr("disabled")
 
   # $("#instalacao").trigger('click')
   # $("#navio").click()

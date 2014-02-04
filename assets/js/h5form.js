@@ -811,14 +811,18 @@
     if (($("#inputHoraInci").prop('value')) !== '') {
       $("#divPeriodoInci").prop('style', 'display:none;');
     }
-    $("#navio").on('click', function() {
-      if ($(this).is(":checked")) {
+    $("#inputNomeNavio").on('change', function() {
+      if ($(this).val() === "") {
+        return $("#inputNomeInstalacao").removeAttr("disabled");
+      } else {
         $("#inputNomeInstalacao").attr("disabled", "disabled");
         return $("#inputNomeNavio").removeAttr("disabled");
       }
     });
-    $("#instalacao").on('click', function() {
-      if ($(this).is(":checked")) {
+    $("#inputNomeInstalacao").on('change', function() {
+      if ($(this).val() === "") {
+        return $("#inputNomeNavio").removeAttr("disabled");
+      } else {
         $("#inputNomeNavio").attr("disabled", "disabled");
         return $("#inputNomeInstalacao").removeAttr("disabled");
       }
