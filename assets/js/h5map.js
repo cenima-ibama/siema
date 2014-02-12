@@ -104,7 +104,7 @@
   });
 
   blocoExploratorio = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:blocoexploratorio",
+    layers: "cemam:bloco_exploratorio",
     format: "image/png",
     transparent: true
   });
