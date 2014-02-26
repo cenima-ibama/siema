@@ -372,6 +372,7 @@ legados = new L.VectorLayer.Postgis (
   focus: false
   where: 'legado IS TRUE'
   # limit: 200
+  scaleRange: [1,8]
   symbology:
     type: "single"
     vectorStyle:
