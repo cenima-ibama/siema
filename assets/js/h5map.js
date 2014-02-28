@@ -65,7 +65,7 @@
 
   H5.Map.base = new L.Map("map", {
     center: new L.LatLng(-10.0, -58.0),
-    zoom: 6,
+    zoom: 4,
     layers: [openstreet]
   });
 
@@ -404,7 +404,7 @@
     singlePopup: true,
     focus: false,
     where: 'legado IS TRUE',
-    scaleRange: [1, 8],
+    scaleRange: [1, 13],
     symbology: {
       type: "single",
       vectorStyle: {
