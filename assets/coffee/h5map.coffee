@@ -223,6 +223,22 @@ marTerritorial = new L.TileLayer.WMS(geoserverUrl,
   transparent: true
 )
 
+manchadia1 = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:mancha_oleo_dia_1"
+  format: "image/png"
+  transparent: true
+)
+manchadia2 = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:mancha_oleo_dia_2"
+  format: "image/png"
+  transparent: true
+)
+manchadia3 = new L.TileLayer.WMS(geoserverUrl,
+  layers: "cemam:mancha_oleo_dia_3"
+  format: "image/png"
+  transparent: true
+)
+
 restURL = "http://" + document.domain + "/siema/rest"
 
 # display acidentes
@@ -483,6 +499,15 @@ controlswitch = new L.control.switch(
     layer: hidrografia
   "Mar Territorial":
     layer: marTerritorial
+  "Mancha - Dia 1":
+    layer: manchadia1
+    tab: "video"
+  "Mancha - Dia 2":
+    layer: manchadia2
+    tab: "video"
+  "Mancha - Dia 3":
+    layer: manchadia3
+    tab: "video"
   "Dados Legados":
     layer: legados.layer
     vectorLayer:
@@ -494,6 +519,9 @@ controlswitch = new L.control.switch(
     selected: true
   factory:
     icon: iconsURL + "factory.png"
+    name: null
+  video:
+    icon: iconsURL + "chemicals.png"
     name: null
 ).addTo(H5.Map.base)
 # }}}
