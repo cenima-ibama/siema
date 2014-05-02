@@ -494,7 +494,7 @@ class H5.Draw
 
     @drawnItems.removeLayer(@.options.uniquePoint)
 
-    srid = srid isnt "" ? srid : @.options.srid
+    srid = if srid isnt "" then srid else @.options.srid
 
     # Create the uniquePoint in case it doesnt exists.
     if (!@.options.uniquePoint?) or (@.options.uniquePoint is true)
@@ -514,7 +514,7 @@ class H5.Draw
 
       columns = columns + "shape,dt_registro"
       values = values + "ST_SetSRID(ST_MakePoint("
-      values = values + latlng.lat + "," + latlng.lng + ")," + srid + ")"
+      values = values + latlng.lng + "," + latlng.lat + ")," + srid + ")"
 
       values = values + ",now()"
 

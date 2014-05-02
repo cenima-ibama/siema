@@ -317,7 +317,7 @@ class Form_model extends CI_Model {
       if (isset($form["outrasMedidas"])) {
         $values = $values . "'S',";
 
-        $fields = $fields . "des_outras_provideFncias,";
+        $fields = $fields . "des_outras_providencias,";
         $values = $values . "'" . $form["inputMedidasTomadas"] . "',";
       } else {
         $values = $values . "'N',";

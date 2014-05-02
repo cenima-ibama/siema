@@ -813,10 +813,10 @@ $(document).ready ->
     $("#semSubstancia").on 'click', ()->
       if $(this).is(":checked")
         $("#inputTipoSubstancia").attr("disabled","disabled")
-        $("#inputValorEstimado").attr("disabled","disabled")
+        $("#inputVolumeEstimado").attr("disabled","disabled")
       else
         $("#inputTipoSubstancia").removeAttr("disabled")
-        $("#inputValorEstimado").removeAttr("disabled")
+        $("#inputVolumeEstimado").removeAttr("disabled")
 
     $("#semCausa").on 'click', ()->
       if $(this).is(":checked")
@@ -942,7 +942,7 @@ $(document).ready ->
         else
           $("#PerObsNotu").prop('checked', 'checked')
 
-        $("#divPeriodoObs").prop('style','display:none;')
+         $("#divPeriodoObs").css('display','none')
       else
         $("#divPeriodoObs").prop('style','')
         $(this).val("")
@@ -966,9 +966,9 @@ $(document).ready ->
         else
           $("#PerInciNotu").prop('checked', 'checked')
 
-        $("#divPeriodoInci").prop('style','display:none;')
+         $("#divPeriodoInci").css('display','none')
       else
-        $("#divPeriodoInci").prop('style','display:auto;')
+        $("#divPeriodoInci").css('display','auto;')
         $(this).val("")
 
     else

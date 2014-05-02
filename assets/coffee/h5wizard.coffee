@@ -25,7 +25,12 @@
     $("#submit").hide()
     $("#modalBtnCancel").hide()
     $("#btnClose").hide()
+    
+    #Deletar dados temporários ao fechar o form de cadastro.
+    deleteTempData();
+
     $(".modal-footer").show()
+
 
   #hide footer o form when click on topbar
   $("#btn-form").click (event) ->
@@ -290,3 +295,39 @@
     $(".modal-footer").show()
 
     $(@).tab('show')
+
+  deleteTempData = -> 
+    
+    nroOcorrencia = $(window.top.form_frame.document.getElementById("comunicado")).val()
+
+    # Clean the temporary produt table (tmp_ocorrencia_produto)
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
+      table: "tmp_ocorrencia_produto"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
+    )
+
+    # Clean the temporary polygon table (tmp_pol)
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
+      table: "tmp_pol"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
+    )
+
+    # Clean the temporary polyline table (tmp_lin)
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
+      table: "tmp_lin"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
+    )
+
+    # Clean the temporary point table (tmp_pon)
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
+      table: "tmp_pon"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
+    )

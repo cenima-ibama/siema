@@ -919,11 +919,13 @@ class Form extends CI_Controller {
         //     'class'        => 'input-large',
         //     'value'        => set_value('inputDesDanos', isset($formLoad['inputDesDanos']) ? $formLoad['inputDesDanos'] : "")
         // );
+        /*
         if(isset($formLoad['semDanos'])){
             $data['inputDesDanos'] += array(
                 'disabled' => 'disabled'
             );
         }
+        */
         // Checkbox Sem Danos
         $data['semDanos'] = array(
             'id'           => 'semDanos',
