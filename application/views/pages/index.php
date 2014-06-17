@@ -321,6 +321,7 @@
             <option value="9">Out</option>
             <option value="10">Nov</option>
             <option value="11">Dez</option>
+            <option value="12">Todos</option>
           </select>
         </div>
         <div class="item">
@@ -417,11 +418,11 @@
       <div id="chart4" class="box"> </div>
       <div id="chart5" class="box"> </div>
       <div id="chart6" class="box"> </div>
-      <div id="chart9" class="box"> </div>
-      <div id="chart7" class="box-small"> </div>
-      <div id="chart8" class="box-small"> </div>
+      <!--<div id="chart9" class="box"> </div>-->
+      <div id="chart7" class="box"> </div>
+      <div id="chart8" class="box"> </div>
     </div>
-    <div id="message" style="text-align: right; font-size: 8px; padding-right: 32px;">
+    <div id="message" style="text-align: right; font-size: 10px; padding-right: 32px;float:left">
       <span> *Quando não há informação sobre a data exata de ocorrência do acidente, foi considerada a data de registro pelo IBAMA </span>
     </div>
   </div>
