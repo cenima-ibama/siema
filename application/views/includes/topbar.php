@@ -4,14 +4,18 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
     </a>
     <!-- <a class="brand" href="#"><img src="<?= base_url()?>/assets/img/ibama.png" style="margin:-2px 2px 0 10px;"> <span class="label label-inverse">v1.0a</span></a> -->
     <a class="brand" href="#"><img src="<?= base_url()?>/assets/img/logo_ibama_icone.png" style="margin:-2px 2px 0 10px;"> <span class="label label-inverse">v1.0a</span></a>
     <div class="nav-collapse collapse">
       <ul class="nav">
-        <li class="active"><a id="btn-map" href="#"><i class="icon-globe icon-white"></i> Mapa</a></li>
-        <li class=""><a id="btn-charts" href="#"><i class="icon-bar-chart icon-white"></i> Estatística</a></li>
-        <li><a id="btn-form" data-toggle="modal" href="#addMeModal"><i class="icon-plus-sign icon-white"></i> Informar Acidente</a></li>
+        <li class="active"><a id="btn-map" href="#"><i class="icon-globe icon-white"></i> Mapa </a></li>
+        <li><a id="btn-charts" href="#"><i class="icon-bar-chart icon-white"></i> Estatística </a></li>
+        <li><a id="btn-form" data-toggle="modal" href="#addMeModal"><i class="icon-plus-sign icon-white"></i> Informar Acidente </a></li>
+        <li class=""><a id="btn-consult" href="#"><i class="icon-search icon-white"></i> Consultas </a></li>
+        <li><a id="btn-manag" href="#"><i class="icon-list-alt icon-white"></i> Cadastros </a></li>
       </ul>
       <ul class="nav pull-right" style="margin-top:10px;margin-right:10px;color: #FFFFFF;">
         <li class=""><strong> Sistema Nacional de Emergências Ambientais </strong></li>
