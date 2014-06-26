@@ -168,14 +168,26 @@ chart1._originsSlct.options[12].selected = true
 
 $(chart1._monthsSlct).on "change", (event) ->
   H5.Data.selectedMonth = parseInt chart1._monthsSlct.value
-  chart1.drawChart()
-  chart3.drawChart()
-  chart8.drawChart()
-  knob1.drawChart()
-  knob2.drawChart()
-  knob3.drawChart()
-  spark1.drawChart()
-  spark2.drawChart()
+  if (chart1._monthsSlct.value isnt "12")
+    $("#knob1").show();
+    $("#knob2").show();
+    $("#spark1").show();
+    $("#chart8").show();
+     
+    knob1.drawChart();
+    knob2.drawChart();
+    spark1.drawChart();
+    chart8.drawChart();
+  else
+    $("#knob1").hide();
+    $("#knob2").hide();
+    $("#spark1").hide();
+    $("#chart8").hide();      
+    
+  chart1.drawChart();
+  chart3.drawChart();
+  knob3.drawChart();
+  spark2.drawChart();
 
 $(chart1._yearsSlct).on "change", (event) ->
   H5.Data.selectedYear = parseInt chart1._yearsSlct.value
