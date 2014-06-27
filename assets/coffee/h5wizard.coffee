@@ -25,7 +25,7 @@
     $("#submit").hide()
     $("#modalBtnCancel").hide()
     $("#btnClose").hide()
-    
+
     #Deletar dados temporários ao fechar o form de cadastro.
     deleteTempData();
 
@@ -114,6 +114,8 @@
       checkedUser = document.getElementById("checkedUser")
       tipoForm = document.getElementById("tipoForm")
       btnLogout = document.getElementById("btnSair")
+      consultTab = document.getElementById("btn-consult")
+      manageTab = document.getElementById("btn-manag")
 
       $(tipoForm).hide()
       $(btnLogout).hide()
@@ -296,8 +298,8 @@
 
     $(@).tab('show')
 
-  deleteTempData = -> 
-    
+  deleteTempData = ->
+
     nroOcorrencia = $(window.top.form_frame.document.getElementById("comunicado")).val()
 
     # Clean the temporary produt table (tmp_ocorrencia_produto)

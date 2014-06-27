@@ -12,6 +12,14 @@ $(document).ready ->
   inputLoadForm = window.parent.document.getElementById("inputLoadForm")
   loggedList = window.parent.document.getElementsByName("isServIBAMA")
 
+  # Consultas and Cadastros tab
+  consultTab = window.parent.document.getElementById("btn-consult")
+  manageTab = window.parent.document.getElementById("btn-manag")
+
+  # Login button
+  manageTab = window.parent.document.getElementById("li-login")
+  sessionName = window.document.getElementById("sessionName")
+
 
   $(tipoForm).hide()
   $(btnLogout).hide()
@@ -33,4 +41,14 @@ $(document).ready ->
       $(btnLogout).show()
       $(inputLoadForm).show()
       clearInterval(progressAnimetion)
+
+      # parent.location.reload()
+      window.parent.location.replace( window.parent.location.href )
+
+      # working with a non reloaded page
+      # $(consultTab.parentNode).show()
+      # $(manageTab.parentNode).show()
+
+      # console.log sessionName.val()
+
   , 100)

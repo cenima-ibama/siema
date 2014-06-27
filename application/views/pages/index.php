@@ -290,6 +290,11 @@
   <!-- <img src="<?php echo base_url()?>assets/img/logo.png" id="loading_logo" style="display: inline;" title=""> -->
   <img src="<?php echo base_url()?>assets/img/logo_ibama.png" id="loading_logo" style="display: inline;" title="">
 </div>
+<?php
+  if(!$logged_in) {
+    echo '<div id="login" class="login"> </div>';
+  }
+?>
 <div id="map" class="map"></div>
 <div id="dash" class="dash">
   <div class="charts-content">
