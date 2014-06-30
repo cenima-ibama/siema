@@ -44,6 +44,7 @@
               <?php echo form_password(array('name' => 'inputPassword', 'id' => 'password','class' => 'formfield')); ?>
           </div>
       </div>
+      <?php echo form_checkbox(array('name' => 'loginSite', 'id' => 'loginSite', 'type' => 'hidden'), 1,  FALSE);?>
     <?php echo form_close(); ?>
 
     <!-- jquery -->
@@ -61,6 +62,7 @@
     <?php
       if( $this->session->userdata('logged_in') ) {
         echo '<script src="' . base_url() . 'assets/js/h5login.js" type="text/javascript"></script>';
+        echo '<input type="hidden" value="' . $name . '" id="sessionName"/>';
       }
     ?>
   </body>

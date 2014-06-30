@@ -2,6 +2,8 @@
 (function() {
   $(document).ready(function() {
     var roundNumber;
+    $("#login").load("http://" + document.domain + "/siema/index.php/login/login_window");
+    $("#login").hide();
     $("#map").show();
     $('#addMeModal').modal({
       keyboard: false,
