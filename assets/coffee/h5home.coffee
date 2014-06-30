@@ -27,8 +27,8 @@ $(document).ready ->
 
   $(".navbar a").on "click", (event) ->
     # clean all selection
-    $(@).each ->
-      $("a").parent().removeClass("active")
+    # $(@).each ->
+    $(".nav-collapse a").parent().removeClass("active")
     # mark selected option
     $(@).parent().addClass("active")
 
@@ -36,6 +36,7 @@ $(document).ready ->
       $("#dash").hide()
       $("#login").hide()
       $("#map").show()
+      $("#manag").hide()
 
       if H5.Data.changed
         if H5.Data.state is "Todos"
@@ -54,10 +55,18 @@ $(document).ready ->
       $("#login").hide()
       $("#map").hide()
       $("#dash").show()
+      $("#manag").hide()
     else if $(@).prop("id") is "btn-login"
       $("#dash").hide()
       $("#map").show()
       $("#login").show()
+      $("#manag").hide()
+    else if $(@).prop("id") is "btn-manag"
+      $("#login").hide()
+      $("#map").hide()
+      $("#dash").hide()
+      $("#manag").show()
+      $("#btn-manage1").click()
 
     $('.nav-collapse').collapse('hide')
 

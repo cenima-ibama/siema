@@ -427,3 +427,76 @@
     </div>
   </div>
 </div>
+
+<div id="manag" class="dash">
+  <div class="charts-content">
+    <div class="row-fluid">
+      <div class="span3 col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+          <li class="active"><a href="#" id="btn-manage1">Cadastro de Pessoas</a></li>
+          <li><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>
+          <li><a href="#" id="btn-manage3">Gerência de Regras</a></li>
+          <li><a href="#" id="btn-manage4">Cadastro de Órgão</a></li>
+        </ul>
+      </div>
+      <div class="span9 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="row-fluid">
+          <div id="manage1">
+            <h1 class="page-header">Cadastro de Pessoas</h1>
+            <form class="form-horizontal" role="form">
+              <div class="form-group">
+                <div class="item">
+                  <label for="inputNome" class="col-sm-2 control-label">Nome</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputNome" placeholder="Nome">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputCPF" class="col-sm-2 control-label">CPF</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputCPF" placeholder="CPF">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                  <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputOrgao" class="col-sm-2 control-label">Órgão</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputOrgao" placeholder="Orgao">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputTelefone" class="col-sm-2 control-label">Telefone</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="inputTelefone" placeholder="Telefone">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox"> Lembrar-me
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-default">Enviar</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div id="manage2">
+            <p>teste</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
