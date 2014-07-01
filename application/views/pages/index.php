@@ -441,7 +441,7 @@
           <label>Tipo de Produto</label>
           <select id="tipoProd" class="selectpicker" data-width="150px" data-size="auto" name="tipoProd">
             <option value="Produtos na lista ONU">Produtos na lista ONU</option>
-            <option value="Produtos fora da lista ONU">Produtos fora da lista ONU</option>            
+            <option value="Produtos fora da lista ONU">Produtos fora da lista ONU</option>
             <option value="Todos" selected="true">Todos</option>
           </select>
         </div>
@@ -478,7 +478,7 @@
               <option value="Todos" selected="true">Todos</option>
           </select>
         </div>
-        
+
         <div class="item">
           <label>Origem do Acidente</label>
           <select id="originsConsultSlct" class="selectpicker" data-width="140px" data-size="6" name="origins">
@@ -498,33 +498,34 @@
           </select>
         </div>
         <div class="item">
-          
+
           <label>Data Inicial</label>
               <div class="input-daterange pull-right" id="dtDataIni">
                   <input class="input-small" name="dateStart" type="text" id="dateStart" placeholder="dd/mm/aaaa" disabled="true">
-              </div>    
-         
+              </div>
+
         </div>
         <div class="item">
           <label>Data Final</label>
           <div class="input-daterange pull-right" id="dtDataIni" style="float:left">
-             <input class="input-small" name="dateFinish" type="text" id="dateFinish" placeholder="dd/mm/aaaa" disabled="true">               
-          </div>               
+             <input class="input-small" name="dateFinish" type="text" id="dateFinish" placeholder="dd/mm/aaaa" disabled="true">
+          </div>
         </div>
         <div>
-           <label><input type="checkbox" name="chkAllDates" value="1" checked="true" id="chkAllDates" class="pull-left">Todas as datas</label>   
+           <label><input type="checkbox" name="chkAllDates" value="1" checked="true" id="chkAllDates" class="pull-left">Todas as datas</label>
         </div>
-     
+
       </div>
 
     <div class="row-fluid">
       <div id="resultsConsult">
-        
+
       </div>
     </div>
 
-    </div>    
+    </div>
   </div>
+</div>
 
 <div id="manag" class="dash">
   <div class="charts-content">
