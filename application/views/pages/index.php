@@ -541,7 +541,7 @@
       <div class="span9 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <div class="row-fluid">
           <div id="manage1">
-            <h1 class="page-header">Cadastro de Pessoas</h1>
+            <h2 class="sub-header">Cadastro de Pessoas</h2>
             <form id="center-cadastro" class="form-horizontal" role="form">
               <div class="form-group">
                 <div class="item">

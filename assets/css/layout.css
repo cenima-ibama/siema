@@ -696,8 +696,9 @@ footer a {
 /*Manager button*/
 
 #manage1{
-  margin: 10px;
+  /*margin: 10px;*/
   float: left;
+  width: 100%;
 }
 
 .form-control{
@@ -705,7 +706,8 @@ footer a {
 }
 
 #center-cadastro{
-  margin: 0 -30% 0 15%;
+  margin: 3% -30% 0 25%;
+  width: 50%;
 }
 
 #table-ocorrencia{

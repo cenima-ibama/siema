@@ -85,20 +85,23 @@ terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
   transparent: true
 )
 
-ucMunicipal = new L.TileLayer.WMS(geoserverUrl,
-  layers: "cemam:ucstodas_municipal"
+ucSustentavel = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms",
+  # layers: "cemam:ucstodas_municipal"
+  layers: "csr:unidade_uso_sustentavel"
   format: "image/png"
   transparent: true
 )
 
-ucFederal = new L.TileLayer.WMS(geoserverUrl,
-  layers: "cemam:ucstodas_federal"
+ucIntegral = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms",
+  # layers: "cemam:ucstodas_federal"
+  layers: "csr:unidade_protecao_integral"
   format: "image/png"
   transparent: true
 )
 
-ucEstadual = new L.TileLayer.WMS(geoserverUrl,
-  layers: "cemam:ucstodas_estadual"
+ucFederacao = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms",
+  # layers: "cemam:ucstodas_estadual"
+  layers: "csr:unidade_federacao"
   format: "image/png"
   transparent: true
 )
@@ -471,12 +474,12 @@ controlswitch = new L.control.switch(
     tab: "factory"
   "Terras Indígenas":
     layer: terrasIndigenas
-  "UC Municipal":
-    layer: ucMunicipal
-  "UC Federal":
-    layer: ucFederal
-  "UC Estadual":
-    layer: ucEstadual
+  "UC Uso Sustentavel":
+    layer: ucSustentavel
+  "UC Proteção Integral":
+    layer: ucIntegral
+  "UC Fedecarao":
+    layer: ucFederacao
   "Bioma IBGE":
     layer: biomaIBGE
   "Hidrografia":
