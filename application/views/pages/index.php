@@ -442,7 +442,7 @@
           <label>Tipo de Produto</label>
           <select id="tipoProd" class="selectpicker" data-width="150px" data-size="auto" name="tipoProd">
             <option value="Produtos na lista ONU">Produtos na lista ONU</option>
-            <option value="Produtos fora da lista ONU">Produtos fora da lista ONU</option>            
+            <option value="Produtos fora da lista ONU">Produtos fora da lista ONU</option>
             <option value="Todos" selected="true">Todos</option>
           </select>
         </div>
@@ -479,7 +479,7 @@
               <option value="Todos" selected="true">Todos</option>
           </select>
         </div>
-        
+
         <div class="item">
           <label>Origem do Acidente</label>
           <select id="originsConsultSlct" class="selectpicker" data-width="140px" data-size="6" name="origins">
@@ -499,38 +499,38 @@
           </select>
         </div>
         <div class="item">
-          
+
           <label>Data Inicial</label>
               <div class="input-daterange pull-right" id="dtDataIni">
                   <input class="input-small" name="dateStart" type="text" id="dateStart" placeholder="dd/mm/aaaa" disabled="true">
-              </div>    
-         
+              </div>
+
         </div>
         <div class="item">
           <label>Data Final</label>
           <div class="input-daterange pull-right" id="dtDataIni" style="float:left">
-             <input class="input-small" name="dateFinish" type="text" id="dateFinish" placeholder="dd/mm/aaaa" disabled="true">               
-          </div>               
+             <input class="input-small" name="dateFinish" type="text" id="dateFinish" placeholder="dd/mm/aaaa" disabled="true">
+          </div>
         </div>
         <div>
-           <label><input type="checkbox" name="chkAllDates" value="1" checked="true" id="chkAllDates" class="pull-left">Todas as datas</label>   
+           <label><input type="checkbox" name="chkAllDates" value="1" checked="true" id="chkAllDates" class="pull-left">Todas as datas</label>
         </div>
-     
+
       </div>
 
     <div>
       <div id="resultsConsult">
-       
+
       </div>
        <div id="optionsExport">
             <a class="btn" style="margin-top: 10px;width: 10%;" >Exportar para XLS</a>
             <a class="btn" style="margin-top: 10px;width: 10%;" >Exportar para PDF</a>
         </div>
 
-    </div>  
+    </div>
 
 
-    </div> 
+    </div>
 
   </div>
 
@@ -551,8 +551,8 @@
       <div class="span9 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <div class="row-fluid">
           <div id="manage1">
-            <h1 class="page-header">Cadastro de Pessoas</h1>
-            <form class="form-horizontal" role="form">
+            <h2 class="sub-header">Cadastro de Pessoas</h2>
+            <form class="form-horizontal" role="form" id="center-cadastro">
               <div class="form-group">
                 <div class="item">
                   <label for="inputNome" class="col-sm-2 control-label">Nome</label>
@@ -609,5 +609,5 @@
       </div>
     </div>
   </div>
- 
+
 </div>
