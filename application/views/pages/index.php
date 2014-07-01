@@ -498,7 +498,8 @@
             </form>
           </div>
           <div id="manage2">
-            <p>teste</p>
+            <h2 class="sub-header">Ocorrências</h2>
+            <div class="table-responsive" id="table-ocorrencia"></div>
           </div>
         </div>
       </div>
