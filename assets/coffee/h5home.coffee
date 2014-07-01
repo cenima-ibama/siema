@@ -211,6 +211,7 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
       { "title": "Inst. Atuando no Local" }
       { "title": "Fontes de Informação" }
     ]
+    ###
     "oTableTools":
         "sSwfPath": "http://" + document.domain + "/siema/assets/img/copy_csv_xls_pdf.swf"
         "aButtons": [
@@ -228,6 +229,7 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
             "sPdfOrientation": "landscape"
           }
         ]
+    ###
     "oLanguage":
       {
         "sLengthMenu": "Mostrar _MENU_ registros por página"
