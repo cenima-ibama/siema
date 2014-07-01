@@ -11,15 +11,17 @@
 
   H5.Data.regions = ["NO", "NE", "CO", "SE", "SU"];
 
+  H5.Data.regionsLabels = ["Norte", "Nordeste", "Centro-Oeste", "Sudeste", "Sul"];
+
   H5.Data.typesOfEvents = ["Derramamento de líquido", "Desastre natural", "Explosão/incêndio", "Lançamento de sólidos", "Mortandade de peixes", "Produtos químicos/embalagens abandonadas", "Rompimento de barragem", "Vazamento de gases", "Outros", "Todos"];
 
   H5.Data.originOfAccident = ["Rodovia", "Ferrovia", "Terminal/portos/ancoradouros/etc", "Embarcação", "Refinaria", "Plataforma", "Indústria", "Duto", "Barragem", "Armazenamento/depósito", "Posto de combustível", "Outros", "Todos"];
 
   H5.Data.damageIdentified = ["Óbitos/feridos", "População afetada/evacuada", "Suspensão de abastecimento de água", "Rio/córrego", "Lago", "Mar", "Praia", "Solo", "Águas subterrâneas", "Atmosfera", "Flora", "Fauna", "Unidade de Conservação Federal", "Unidade de Conservação Estadual/Municipal", "Outros", "Todos"];
 
-  H5.Data.institutionLocal = ["IBAMA", "Órgão Estadual ou Municipal de Meio Ambiente", "Defesa Civil", "Corpo de Bombeiros", "Polícia Rodoviária", "Polícia Miliar", "Polícia Civil", "Marinha do Brasil", "Empresa especializada em atendimento", "Outras", "Todos"];
+  H5.Data.institutionLocal = ["IBAMA", "Órgão Estadual ou Municipal de Meio Ambiente", "Defesa Civil", "Corpo de Bombeiros", "Polícia Rodoviária", "Polícia Militar", "Polícia Civil", "Marinha do Brasil", "Empresa especializada em atendimento", "Outra(s)", "Todos"];
 
-  H5.Data.sourceType = ["Comunicado da empresa/responsável", "OEMA", "Mídia", "Denúncia", "Outras Fontes"];
+  H5.Data.sourceType = ["Comunicado da empresa/responsável", "OEMA", "Mídia", "Denúncia", "Outra(s) fonte(s)"];
 
   H5.Data.periodDay = ["Matutino", "Vespertino", "Noturno", "Madrugada"];
 
@@ -49,7 +51,7 @@
     8: "Set",
     9: "Out",
     10: "Nov",
-    11: "Dev"
+    11: "Dez"
   };
 
   if (!H5.isMobile.any()) {
@@ -212,7 +214,12 @@
   $(chart1._yearsSlct).on("change", function(event) {
     H5.Data.selectedYear = parseInt(chart1._yearsSlct.value);
     chart1.drawChart();
+    chart2.drawChart();
     chart3.drawChart();
+    chart4.drawChart();
+    chart5.drawChart();
+    chart6.drawChart();
+    chart7.drawChart();
     chart8.drawChart();
     knob1.drawChart();
     knob2.drawChart();
@@ -257,12 +264,17 @@
   });
 
   chart1.drawChart = function() {
-    var createTable, data, day, daysInMonth, firstPeriod, months, options, secondPeriod, _i;
+    var contMes, createTable, data, day, daysInMonth, firstPeriod, indexMes, mes, mesIndex, monthLoop, months, options, secondPeriod, titleChart, titleX, todosMeses, _i, _j, _k, _len;
     createTable = (function(_this) {
-      return function(region, type, origin) {
-        var day, sum, _i, _results;
+      return function(region, type, origin, indexMonth) {
+        var day, daysInMonth, firstPeriod, secondPeriod, sum, _i;
         sum = 0;
-        _results = [];
+        daysInMonth = new Date(H5.Data.selectedYear, indexMonth + 1, 0).getDate();
+        firstPeriod = new Date(H5.Data.selectedYear, indexMonth, 1);
+        secondPeriod = new Date(H5.Data.selectedYear, indexMonth, daysInMonth);
+        if (todosMeses) {
+          daysInMonth = 31;
+        }
         for (day = _i = 1; 1 <= daysInMonth ? _i <= daysInMonth : _i >= daysInMonth; day = 1 <= daysInMonth ? ++_i : --_i) {
           $.each(H5.DB.occurence.data.regions[region], function(key, reg) {
             var _ref, _ref1;
@@ -274,31 +286,16 @@
               return sum++;
             }
           });
-          _results.push(_this.data.setValue(day - 1, 1, _this.data.getValue(day - 1, 1) + sum));
+          if (!todosMeses) {
+            _this.data.setValue(day - 1, 1, _this.data.getValue(day - 1, 1) + sum);
+          }
         }
-        return _results;
+        if (todosMeses) {
+          return _this.data.setValue(indexMes, 1, _this.data.getValue(indexMes, 1) + sum);
+        }
       };
     })(this);
-    this.createChart();
-    this.createDataTable();
-    this.data.addColumn("number", "Dia");
-    this.data.addColumn("number", "Número de Ocorrências");
-    daysInMonth = new Date(H5.Data.selectedYear, H5.Data.selectedMonth + 1, 0).getDate();
-    firstPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, 1);
-    secondPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, daysInMonth);
-    data = [];
-    for (day = _i = 1; 1 <= daysInMonth ? _i <= daysInMonth : _i >= daysInMonth; day = 1 <= daysInMonth ? ++_i : --_i) {
-      data[0] = day;
-      data[1] = 0;
-      this.data.addRow(data);
-    }
-    if (H5.Data.region === "Todos") {
-      $.each(H5.DB.occurence.data.regions, function(region, value) {
-        return createTable(region, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
-      });
-    } else {
-      createTable(H5.Data.region, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
-    }
+    todosMeses = H5.Data.selectedMonth === 12;
     months = {
       0: "Janeiro",
       1: "Fevereiro",
@@ -313,7 +310,69 @@
       10: "Novembro",
       11: "Dezembro"
     };
-    this.changeTitle("Acidentes: Índice Diário [" + months[H5.Data.selectedMonth] + "]");
+    this.createChart();
+    this.createDataTable();
+    if (todosMeses) {
+      this.data.addColumn("string", "Mês");
+    } else {
+      this.data.addColumn("number", "Dia");
+    }
+    daysInMonth = new Date(H5.Data.selectedYear, H5.Data.selectedMonth + 1, 0).getDate();
+    firstPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, 1);
+    secondPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, daysInMonth);
+    data = [];
+    monthLoop = new Array();
+    if (todosMeses) {
+      for (mes = _i = 0; _i <= 11; mes = ++_i) {
+        monthLoop[mes] = H5.Data.months[mes];
+      }
+      this.data.addColumn("number", H5.Data.selectedYear);
+      titleChart = "Todos os meses";
+    } else {
+      monthLoop[0] = H5.Data.selectedMonth;
+      titleChart = months[H5.Data.selectedMonth];
+      this.data.addColumn("number", titleChart);
+    }
+    data = [];
+    contMes = 1;
+    indexMes = 0;
+    for (_j = 0, _len = monthLoop.length; _j < _len; _j++) {
+      mesIndex = monthLoop[_j];
+      indexMes = todosMeses ? monthLoop.indexOf(mesIndex) : mesIndex;
+      daysInMonth = new Date(H5.Data.selectedYear, indexMes + 1, 0).getDate();
+      firstPeriod = new Date(H5.Data.selectedYear, indexMes, 1);
+      secondPeriod = new Date(H5.Data.selectedYear, indexMes, daysInMonth);
+      if (todosMeses) {
+
+        /*
+        for day in [1..31]           
+           *Day (x);
+          data[0] = day;
+        
+           *Qtde Ocorrências by month(y)
+          for m in [0..11] 
+            data[m+1] = 0;
+         */
+        data[0] = monthLoop[indexMes];
+        data[1] = 0;
+        this.data.addRow(data);
+      } else {
+        for (day = _k = 1; 1 <= daysInMonth ? _k <= daysInMonth : _k >= daysInMonth; day = 1 <= daysInMonth ? ++_k : --_k) {
+          data[0] = day;
+          data[1] = 0;
+          this.data.addRow(data);
+        }
+      }
+      if (H5.Data.region === "Todos") {
+        $.each(H5.DB.occurence.data.regions, function(region, value) {
+          return createTable(region, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin], indexMes);
+        });
+      } else {
+        createTable(H5.Data.region, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin], indexMes);
+      }
+    }
+    this.changeTitle("Acidentes: Índice Diário [" + titleChart + "] - [" + H5.Data.selectedYear + "]");
+    titleX = todosMeses ? "Meses" : "Dias";
     options = {
       title: "",
       titleTextStyle: {
@@ -321,17 +380,18 @@
         fontSize: 13
       },
       backgroundColor: "transparent",
-      legend: "none",
+      legend: {
+        position: 'right'
+      },
       chartArea: {
         width: "70%",
         height: "70%"
       },
-      colors: ['#3ABCFC'],
       vAxis: {
         title: "Número de Ocorrências"
       },
       hAxis: {
-        title: "Dias",
+        title: titleX,
         gridlines: {
           color: "#CCC",
           count: daysInMonth / 5
@@ -371,14 +431,14 @@
     sumValues = function(year, month, type, origin) {
       var firstPeriod, secondPeriod, sum;
       sum = 0;
-      firstPeriod = new Date(year, 1, 1);
-      secondPeriod = new Date(year, 12, 31);
+      firstPeriod = new Date(year, 0, 1);
+      secondPeriod = new Date(year, 11, 31);
       if (H5.Data.region === "Todos") {
         $.each(H5.DB.occurence.data.regions, function(key, region) {
           return $.each(region, function(key, reg) {
             var _ref, _ref1;
             if (type === "Todos" && origin === "Todos") {
-              if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod) && reg.month === month) {
+              if (((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) && (reg.month === month)) {
                 return sum++;
               }
             } else if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod) && reg.month === month && (reg.type.indexOf(type) >= 0 || type === "Todos") && (reg.origin.indexOf(origin) >= 0 || origin === "Todos")) {
@@ -404,13 +464,13 @@
     this.createDataTable();
     this.data.addColumn("string", "Mês");
     for (i = _i = 0, _ref = this.options.period; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-      this.data.addColumn("number", H5.Data.thisYear - i);
+      this.data.addColumn("number", H5.Data.selectedYear - i);
     }
     for (month in H5.Data.months) {
       data = [H5.Data.months[month]];
       month = parseInt(month);
       for (i = _j = 1, _ref1 = this.options.period; 1 <= _ref1 ? _j <= _ref1 : _j >= _ref1; i = 1 <= _ref1 ? ++_j : --_j) {
-        data[i] = sumValues(H5.Data.thisYear - i + 1, month, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
+        data[i] = sumValues(H5.Data.selectedYear - i + 1, month, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
       }
       this.data.addRow(data);
     }
@@ -469,18 +529,18 @@
 
   chart3.drawChart = function() {
     var data, i, options, period, sumAvg, sumAvgValues, sumTotal, sumTotalValues, sumValues, _i, _ref;
-    sumValues = function(firstPeriod, secondPeriod) {
+    sumValues = function(firstPeriod, secondPeriod, type, origin) {
       var sum;
       sum = 0;
       if (H5.Data.region === "Todos") {
         $.each(H5.DB.occurence.data.regions, function(key, region) {
           return $.each(region, function(key, reg) {
             var _ref, _ref1;
-            if (H5.Data.selectedType === 9) {
+            if (type === "Todos" && origin === "Todos") {
               if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
                 return sum++;
               }
-            } else if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod) && (reg.type.indexOf(H5.Data.typesOfEvents[H5.Data.selectedType]) >= 0)) {
+            } else if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod) && (reg.type.indexOf(type) >= 0 || type === "Todos") && (reg.origin.indexOf(origin) >= 0 || origin === "Todos")) {
               return sum++;
             }
           });
@@ -488,11 +548,11 @@
       } else {
         $.each(H5.DB.occurence.data.regions[H5.Data.region], function(key, reg) {
           var _ref, _ref1;
-          if (H5.Data.selectedType === 9) {
+          if (type === "Todos" && origin === "Todos") {
             if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
               return sum++;
             }
-          } else if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod) && (reg.type.indexOf(H5.Data.typesOfEvents[H5.Data.selectedType]) >= 0)) {
+          } else if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod) && (reg.type.indexOf(type) >= 0 || type === "Todos") && (origin >= 0 || origin === "Todos")) {
             return sum++;
           }
         });
@@ -501,20 +561,26 @@
     };
     sumTotalValues = function(year) {
       var firstPeriod, secondPeriod;
-      firstPeriod = new Date(year, 1, 1);
-      secondPeriod = new Date(year, 12, 31);
-      return sumValues(firstPeriod, secondPeriod);
+      firstPeriod = new Date(year, 0, 1);
+      secondPeriod = new Date(year, 11, 31);
+      return sumValues(firstPeriod, secondPeriod, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
     };
     sumAvgValues = function(year) {
       var firstPeriod, month, secondPeriod;
       month = H5.Data.selectedMonth;
-      firstPeriod = new Date(year, 1, 1);
-      if (month === H5.Data.thisMonth) {
-        secondPeriod = new Date(year, month, H5.Data.thisDay);
-      } else {
-        secondPeriod = new Date(year, month + 1, 0);
+      if (month === 12) {
+        month = 11;
       }
-      return sumValues(firstPeriod, secondPeriod);
+      firstPeriod = new Date(year, 0, 1);
+      secondPeriod = new Date(year, month + 1, 0);
+
+      /*
+      if month is H5.Data.thisMonth
+        secondPeriod = new Date(year, month, H5.Data.thisDay) #goes until the current day
+      else
+        secondPeriod = new Date(year, month+1, 0) #get the last day of the selected month
+       */
+      return sumValues(firstPeriod, secondPeriod, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
     };
     this.createChart();
     this.createDataTable();
@@ -559,7 +625,7 @@
     this._delBtn.disabled = true;
     google.visualization.events.addListener(this.chart, "ready", (function(_this) {
       return function() {
-        _this._addBtn.disabled = _this.options.period > H5.Data.thisYear - 2004 - 1;
+        _this._addBtn.disabled = _this.options.period > H5.Data.selectedYear - 2004 - 1;
         return _this._delBtn.disabled = _this.options.period < 2;
       };
     })(this));
@@ -591,12 +657,12 @@
   };
 
   chart4.drawChart = function() {
-    var allData, countPeriod, data, i, j, options, period, sumValues, _i, _j, _k, _len, _ref, _ref1, _ref2;
+    var allData, countPeriod, data, i, j, options, period, sumValues, totalReg, _i, _j, _k, _len, _ref, _ref1, _ref2;
     sumValues = function(period, region, year, type, origin) {
       var firstPeriod, secondPeriod, sum;
       sum = 0;
-      firstPeriod = new Date(year, 1, 1);
-      secondPeriod = new Date(year, 12, 31);
+      firstPeriod = new Date(year, 0, 1);
+      secondPeriod = new Date(year, 11, 31);
       $.each(H5.DB.occurence.data.regions[region], function(key, reg) {
         var _ref, _ref1;
         if (type === "Todos" && origin === "Todos") {
@@ -613,7 +679,7 @@
     this.createDataTable();
     this.data.addColumn("string", "Período");
     for (i = _i = 0, _ref = this.options.period; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-      this.data.addColumn("number", H5.Data.thisYear - i);
+      this.data.addColumn("number", H5.Data.selectedYear - i);
     }
     countPeriod = 0;
     data = [];
@@ -621,13 +687,15 @@
     for (_j = 0, _len = _ref1.length; _j < _len; _j++) {
       period = _ref1[_j];
       data[0] = H5.Data.periodDay[countPeriod];
+      totalReg = 0;
       if (H5.Data.region === "Todos") {
         $.each(H5.DB.occurence.data.regions, (function(_this) {
           return function(region, reg) {
             var j, _k, _ref2, _results;
             _results = [];
             for (j = _k = 1, _ref2 = _this.options.period; 1 <= _ref2 ? _k <= _ref2 : _k >= _ref2; j = 1 <= _ref2 ? ++_k : --_k) {
-              _results.push(data[j] = sumValues(period, region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]));
+              totalReg = sumValues(period, region, H5.Data.selectedYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
+              _results.push(data[j] = data[j] >= 0 ? data[j] + totalReg : totalReg);
             }
             return _results;
           };
@@ -635,10 +703,11 @@
       } else {
         allData = [H5.Data.region];
         for (j = _k = 1, _ref2 = this.options.period; 1 <= _ref2 ? _k <= _ref2 : _k >= _ref2; j = 1 <= _ref2 ? ++_k : --_k) {
-          data[j] = sumValues(period, H5.Data.region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
+          data[j] = sumValues(period, H5.Data.region, H5.Data.selectedYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
         }
       }
       this.data.addRow(data);
+      data = [];
       countPeriod++;
     }
     options = {
@@ -666,7 +735,7 @@
     this._delBtn.disabled = true;
     google.visualization.events.addListener(this.chart, "ready", (function(_this) {
       return function() {
-        _this._addBtn.disabled = _this.options.period > H5.Data.thisYear - 2004;
+        _this._addBtn.disabled = _this.options.period > H5.Data.selectedYear - 2004;
         return _this._delBtn.disabled = _this.options.period < 2;
       };
     })(this));
@@ -698,44 +767,66 @@
   };
 
   chart5.drawChart = function() {
-    var allData, data, i, institution, j, options, sumValues, _i, _j, _k, _len, _ref, _ref1, _ref2;
+    var allData, data, i, institution, j, options, sumValues, totalReg, _i, _j, _k, _len, _ref, _ref1, _ref2;
     sumValues = function(institution, region, year, type, origin) {
       var firstPeriod, secondPeriod, sum;
       sum = 0;
-      firstPeriod = new Date(year, 1, 1);
-      secondPeriod = new Date(year, 12, 31);
+      firstPeriod = new Date(year, 0, 1);
+      secondPeriod = new Date(year, 11, 31);
       $.each(H5.DB.occurence.data.regions[region], function(key, reg) {
-        var _ref, _ref1;
+        var t, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3, _results, _results1;
         if (reg.institution !== null) {
           if (type === "Todos" && origin === "Todos") {
-            if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod) && (reg.institution.indexOf(institution) >= 0)) {
-              return sum++;
+            if ((firstPeriod <= (_ref = reg.date) && _ref <= secondPeriod)) {
+              _ref1 = reg.institution.split(",");
+              _results = [];
+              for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+                t = _ref1[_i];
+                if (t === institution) {
+                  _results.push(sum++);
+                } else {
+                  _results.push(void 0);
+                }
+              }
+              return _results;
             }
-          } else if ((firstPeriod <= (_ref1 = reg.date) && _ref1 <= secondPeriod) && (reg.type.indexOf(type) >= 0 || type === "Todos") && (reg.origin.indexOf(origin) >= 0 || origin === "Todos") && (reg.institution.indexOf(institution) >= 0)) {
-            return sum++;
+          } else if ((firstPeriod <= (_ref2 = reg.date) && _ref2 <= secondPeriod) && (reg.type.indexOf(type) >= 0 || type === "Todos") && (reg.origin.indexOf(origin) >= 0 || origin === "Todos")) {
+            _ref3 = reg.institution.split(",");
+            _results1 = [];
+            for (_j = 0, _len1 = _ref3.length; _j < _len1; _j++) {
+              t = _ref3[_j];
+              if (t === institution) {
+                _results1.push(sum++);
+              } else {
+                _results1.push(void 0);
+              }
+            }
+            return _results1;
           }
         }
       });
-      return Math.round(sum * 100) / 100;
+      return Math.round((sum * 100) / 100);
     };
     this.createChart();
     this.createDataTable();
     this.data.addColumn("string", "Instituição Ambiental");
     for (i = _i = 0, _ref = this.options.period; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-      this.data.addColumn("number", H5.Data.thisYear - i);
+      this.data.addColumn("number", H5.Data.selectedYear - i);
     }
     data = [];
     _ref1 = H5.Data.institutionLocal;
     for (_j = 0, _len = _ref1.length; _j < _len; _j++) {
       institution = _ref1[_j];
       data[0] = institution;
+      totalReg = 0;
       if (H5.Data.region === "Todos") {
         $.each(H5.DB.occurence.data.regions, (function(_this) {
           return function(region, reg) {
             var j, _k, _ref2, _results;
             _results = [];
             for (j = _k = 1, _ref2 = _this.options.period; 1 <= _ref2 ? _k <= _ref2 : _k >= _ref2; j = 1 <= _ref2 ? ++_k : --_k) {
-              _results.push(data[j] = sumValues(institution, region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]));
+              totalReg = sumValues(institution, region, H5.Data.selectedYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
+              _results.push(data[j] = data[j] >= 0 ? data[j] + totalReg : totalReg);
             }
             return _results;
           };
@@ -743,10 +834,11 @@
       } else {
         allData = [H5.Data.region];
         for (j = _k = 1, _ref2 = this.options.period; 1 <= _ref2 ? _k <= _ref2 : _k >= _ref2; j = 1 <= _ref2 ? ++_k : --_k) {
-          data[j] = sumValues(institution, H5.Data.region, H5.Data.thisYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
+          data[j] = sumValues(institution, H5.Data.region, H5.Data.selectedYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
         }
       }
       this.data.addRow(data);
+      data = [];
     }
     options = {
       title: "",
@@ -800,8 +892,8 @@
     sumValues = function(source, region, year, type, origin) {
       var firstPeriod, secondPeriod, sum;
       sum = 0;
-      firstPeriod = new Date(year, 1, 1);
-      secondPeriod = new Date(year, 12, 31);
+      firstPeriod = new Date(year, 0, 1);
+      secondPeriod = new Date(year, 11, 31);
       $.each(H5.DB.occurence.data.regions[region], function(key, reg) {
         var _ref, _ref1;
         if (type === "Todos" && origin === "Todos") {
@@ -812,7 +904,7 @@
           return sum++;
         }
       });
-      return Math.round(sum * 100) / 100;
+      return Math.round((sum * 100) / 100);
     };
     this.createChart();
     this.createDataTable();
@@ -827,11 +919,11 @@
       if (H5.Data.region === "Todos") {
         $.each(H5.DB.occurence.data.regions, (function(_this) {
           return function(region, reg) {
-            return data[1] = data[1] + sumValues(source, region, H5.Data.thisYear - _this.options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
+            return data[1] = data[1] + sumValues(source, region, H5.Data.selectedYear - _this.options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
           };
         })(this));
       } else {
-        data[1] = data[1] + sumValues(source, H5.Data.region, H5.Data.thisYear - this.options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
+        data[1] = data[1] + sumValues(source, H5.Data.region, H5.Data.selectedYear - this.options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
       }
       this.data.addRow(data);
     }
@@ -850,16 +942,16 @@
     };
     originTitle = H5.Data.selectedOrigin === 12 ? "Todos Tipos de Origens" : H5.Data.originOfAccident[H5.Data.selectedOrigin];
     if (H5.Data.selectedType === 9) {
-      this.changeTitle("Fonte de Informação [" + (H5.Data.thisYear - this.options.period) + "] - Todos Tipos de Eventos" + " - " + originTitle);
+      this.changeTitle("Fonte de Informação [" + (H5.Data.selectedYear - this.options.period) + "] - Todos Tipos de Eventos" + " - " + originTitle);
     } else {
-      this.changeTitle("Fonte de Informação [" + (H5.Data.thisYear - this.options.period) + "]" + H5.Data.typesOfEvents[H5.Data.selectedType] + " : " + originTitle);
+      this.changeTitle("Fonte de Informação [" + (H5.Data.selectedYear - this.options.period) + "]" + H5.Data.typesOfEvents[H5.Data.selectedType] + " : " + originTitle);
     }
     this._rightBtn.disabled = true;
     this._leftBtn.disabled = true;
     google.visualization.events.addListener(this.chart, "ready", (function(_this) {
       return function() {
         _this._rightBtn.disabled = _this.options.period < 1;
-        return _this._leftBtn.disabled = _this.options.period >= H5.Data.thisYear - 2004;
+        return _this._leftBtn.disabled = _this.options.period >= H5.Data.selectedYear - 2004;
       };
     })(this));
     return this.chart.draw(this.data, options);
@@ -893,8 +985,8 @@
     sumValues = function(region, year, type, origin) {
       var firstPeriod, secondPeriod, sum;
       sum = 0;
-      firstPeriod = new Date(year, 1, 1);
-      secondPeriod = new Date(year, 12, 31);
+      firstPeriod = new Date(year, 0, 1);
+      secondPeriod = new Date(year, 11, 31);
       $.each(H5.DB.occurence.data.regions[region], function(key, reg) {
         var _ref, _ref1;
         if (type === "Todos" && origin === "Todos") {
@@ -905,21 +997,21 @@
           return sum++;
         }
       });
-      return Math.round(sum * 100) / 100;
+      return Math.round((sum * 100) / 100);
     };
     this.createChart();
     this.createDataTable();
     this.data.addColumn("string", "Região");
     this.data.addColumn("number", H5.Data.selectedYear);
     for (i = _i = 0, _ref = H5.Data.regions.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-      region = H5.Data.regions[i];
+      region = H5.Data.regionsLabels[i];
       data = [region];
-      data[1] = sumValues(H5.Data.regions[i], H5.Data.thisYear - this.options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
+      data[1] = sumValues(H5.Data.regions[i], H5.Data.selectedYear - this.options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
       this.data.addRow(data);
     }
     region = H5.Data.regions[H5.Data.regions.length + 1];
     data = ["Sem Região Cadastrada"];
-    data[1] = sumValues("Todos", H5.Data.thisYear - this.options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
+    data[1] = sumValues("Todos", H5.Data.selectedYear - this.options.period, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
     this.data.addRow(data);
     options = {
       title: "",
@@ -936,16 +1028,16 @@
     };
     originTitle = H5.Data.selectedOrigin === 12 ? "Todos Tipos de Origens" : H5.Data.originOfAccident[H5.Data.selectedOrigin];
     if (H5.Data.selectedType === 9) {
-      this.changeTitle(H5.Data.thisYear - this.options.period + " : Todos Tipos de Eventos" + " : " + originTitle);
+      this.changeTitle(H5.Data.selectedYear - this.options.period + " : Todos Tipos de Eventos" + " : " + originTitle);
     } else {
-      this.changeTitle(H5.Data.thisYear - this.options.period + " : " + H5.Data.typesOfEvents[H5.Data.selectedType] + " : " + originTitle);
+      this.changeTitle(H5.Data.selectedYear - this.options.period + " : " + H5.Data.typesOfEvents[H5.Data.selectedType] + " : " + originTitle);
     }
     this._rightBtn.disabled = true;
     this._leftBtn.disabled = true;
     google.visualization.events.addListener(this.chart, "ready", (function(_this) {
       return function() {
         _this._rightBtn.disabled = _this.options.period < 1;
-        return _this._leftBtn.disabled = _this.options.period >= H5.Data.thisYear - 2004;
+        return _this._leftBtn.disabled = _this.options.period >= H5.Data.selectedYear - 2004;
       };
     })(this));
     return this.chart.draw(this.data, options);
@@ -978,11 +1070,13 @@
           return sum++;
         }
       });
-      if (firstPeriod > H5.Data.thisDate) {
-        return 1;
-      } else {
-        return Math.round(sum * 100) / 100;
-      }
+
+      /*    
+      if firstPeriod > H5.Data.thisDate
+        return 1
+      else
+       */
+      return Math.round((sum * 100) / 100);
     };
     this.createChart();
     this.createDataTable();
@@ -999,7 +1093,7 @@
       pieTooltip = "focus";
     }
     for (i = _i = 0, _ref = H5.Data.regions.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-      region = H5.Data.regions[i];
+      region = H5.Data.regionsLabels[i];
       data = [region];
       data[1] = sumValues(H5.Data.regions[i], H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
       this.data.addRow(data);
@@ -1098,12 +1192,15 @@
     sumValues = function(year, month, type, origin) {
       var firstPeriod, secondPeriod, sum;
       sum = 0;
-      firstPeriod = new Date(year, 1, 1);
-      if (month !== H5.Data.thisMonth) {
-        secondPeriod = new Date(year, month + 1, 0);
-      } else {
-        secondPeriod = new Date(year, month, H5.Data.thisDay);
-      }
+      firstPeriod = new Date(year, 0, 1);
+      secondPeriod = new Date(year, month + 1, 0);
+
+      /*
+      if month != H5.Data.thisMonth
+        secondPeriod = new Date(year, month+1, 0)
+      else
+        secondPeriod = new Date(year, month, H5.Data.thisDay)
+       */
       if (H5.Data.region === "Todos") {
         $.each(H5.DB.occurence.data.regions, function(key, region) {
           return $.each(region, function(key, reg) {
@@ -1140,7 +1237,10 @@
     }
     value = 0;
     $.each(data, function() {
-      return value += this;
+      value += this;
+      if (value === 600) {
+        return alert(value);
+      }
     });
     return this.updateInfo(data, Math.round(value * 100) / 100);
   };
@@ -1193,7 +1293,7 @@
       if (preValue === 0) {
         return 0;
       } else {
-        return Math.round((curValue - preValue) / preValue) * 100;
+        return Math.round((curValue - preValue) / preValue * 100);
       }
     };
     value = periodDeforestationRate(H5.Data.selectedYear, H5.Data.selectedMonth, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
@@ -1290,12 +1390,18 @@
       };
       sumPeriods = function(year, month) {
         var firstPeriod, secondPeriod;
-        firstPeriod = new Date(year, 1, 1);
-        if (month === H5.Data.thisMonth) {
-          secondPeriod = new Date(year, month, H5.Data.thisDay);
-        } else {
-          secondPeriod = new Date(year, month + 1, 0);
+        firstPeriod = new Date(year, 0, 1);
+        if (month === 12) {
+          month = 11;
         }
+        secondPeriod = new Date(year, month + 1, 0);
+
+        /*
+        if month is H5.Data.thisMonth
+          secondPeriod = new Date(year, month, H5.Data.thisDay)
+        else
+          secondPeriod = new Date(year, month+1, 0)
+         */
         return sumValues(firstPeriod, secondPeriod);
       };
       curValue = sumPeriods(year, month);
@@ -1306,7 +1412,7 @@
         return Math.round((curValue - preValue) / preValue * 100);
       }
     };
-    value = periodDeforestationAvgRate(H5.Data.selectedYear, H5.Data.selectedMonth);
+    value = periodDeforestationAvgRate(H5.Data.selectedYear, H5.Data.selectedMonth, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
     return this.updateInfo(value);
   };
 

@@ -24,6 +24,7 @@
     <link href="<?= base_url()?>assets/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrap-switch.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrap-jqueryui.css" rel="stylesheet">
+    <link href="<?= base_url()?>assets/css/bootstrap-datepicker.css" rel="stylesheet">
 
     <!-- Hash5 styles -->
     <link href="<?= base_url()?>assets/css/hash5-charts.css" rel="stylesheet" media="screen">
@@ -32,6 +33,9 @@
     <!-- <link href="<?= base_url()?>assets/less/hash5-charts.less" rel="stylesheet/less" type="text/css" /> -->
 
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='<?= base_url()?>assets/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
+    <link href='<?= base_url()?>assets/css/dataTables.tableTools.min.css' rel='stylesheet' type='text/css'>
+    
     <link href="<?= base_url()?>assets/css/layout.css" rel="stylesheet" media="all">
 
     <!-- Le fav and touch icons -->

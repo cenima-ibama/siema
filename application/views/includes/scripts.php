@@ -7,6 +7,10 @@
   <script src="<?= base_url()?>assets/js/jquery-ui.min.js"></script>
   <!-- <script src="<?= base_url()?>assets/js/jquery.maskedinput.min.js"></script> -->
   <script src="<?= base_url()?>assets/js/jquery.mask.min.js"></script>
+  <script src="<?= base_url()?>/assets/js/jquery.dataTables.min.js"></script>
+  <script src="<?= base_url()?>/assets/js/dataTables.tableTools.min.js"></script>
+  
+  
   <!-- Leaflet -->
   <script src="//cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.bing.js"></script>
@@ -24,6 +28,8 @@
   <script src="<?= base_url()?>assets/js/bootstrap.select.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrap.switch.js"></script>
   <script src="<?= base_url()?>assets/js/bootstrap.editable.min.js"></script>
+  <script src="<?= base_url()?>assets/js/bootstrap-datepicker.js"></script>
+  <script src="<?= base_url()?>assets/js/locales/bootstrap-datepicker.pt-BR.js" charset="UTF-8"></script>
 
   <!-- Charts -->
   <script src="<?= base_url()?>assets/js/google.charts.js" type="text/javascript"></script>

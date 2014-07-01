@@ -669,3 +669,26 @@ footer a {
     margin-left: 70px;
   }
 }
+
+.consultas {
+  position: absolute;
+  top: 42px;
+  background-color: #F7F7F7;
+  z-index: 2;
+  width: 100%;
+}
+@media (max-width: 979px) {
+  .consultas {
+    top: 53px;
+  }
+}
+
+.consultas-content {
+  text-align: center;
+  margin: 2% 2% 4%;
+}
+@media (max-width: 979px) {
+  .consultas-content {
+    margin: 6% 2% 4%;
+  }
+}

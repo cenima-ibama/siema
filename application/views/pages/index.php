@@ -427,3 +427,98 @@
     </div>
   </div>
 </div>
+
+<div id="consultas" class="consultas">
+  <div class="consultas-content">
+    <div class="row-fluid">
+      <div class="quick-slct">
+        <div class="item ">
+          <label>Tipo de Produto</label>
+          <select id="tipoProd" class="selectpicker" data-width="150px" data-size="auto" name="tipoProd">
+            <option value="Produtos na lista ONU">Produtos na lista ONU</option>
+            <option value="Produtos fora da lista ONU">Produtos fora da lista ONU</option>            
+            <option value="Todos" selected="true">Todos</option>
+          </select>
+        </div>
+        <div class="item">
+          <label>Estado(UF)</label>
+          <select name="dropDownConsultUF" id="dropConsultUF" data-width="80px" data-size="6" class="selectpicker">
+              <option value="AC">AC</option>
+              <option value="AL">AL</option>
+              <option value="AM">AM</option>
+              <option value="AP">AP</option>
+              <option value="BA">BA</option>
+              <option value="CE">CE</option>
+              <option value="DF">DF</option>
+              <option value="ES">ES</option>
+              <option value="GO">GO</option>
+              <option value="MA">MA</option>
+              <option value="MG">MG</option>
+              <option value="MS">MS</option>
+              <option value="MT">MT</option>
+              <option value="PA">PA</option>
+              <option value="PB">PB</option>
+              <option value="PE">PE</option>
+              <option value="PI">PI</option>
+              <option value="PR">PR</option>
+              <option value="RJ">RJ</option>
+              <option value="RN">RN</option>
+              <option value="RO">RO</option>
+              <option value="RR">RR</option>
+              <option value="RS">RS</option>
+              <option value="SC">SC</option>
+              <option value="SE">SE</option>
+              <option value="SP">SP</option>
+              <option value="TO">TO</option>
+              <option value="Todos" selected="true">Todos</option>
+          </select>
+        </div>
+        
+        <div class="item">
+          <label>Origem do Acidente</label>
+          <select id="originsConsultSlct" class="selectpicker" data-width="140px" data-size="6" name="origins">
+            <option value="Rodovia">Rodovia</option>
+            <option value="Ferrovia">Ferrovia</option>
+            <option value="Terminal/portos/ancoradouros/etc.">Terminal/portos/ancoradouros/etc.</option>
+            <option value="Embarcação">Embarcação</option>
+            <option value="Refinaria">Refinaria</option>
+            <option value="Plataforma">Plataforma</option>
+            <option value="Indústria">Indústria</option>
+            <option value="Duto">Duto</option>
+            <option value="Barragem">Barragem</option>
+            <option value="Armazenamento/Depósito">Armazenamento/Depósito</option>
+            <option value="Posto de combustível">Posto de combustível</option>
+            <option value="Outros">Outros</option>
+            <option value="Todos" selected="true">Todos</option>
+          </select>
+        </div>
+        <div class="item">
+          
+          <label>Data Inicial</label>
+              <div class="input-daterange pull-right" id="dtDataIni">
+                  <input class="input-small" name="dateStart" type="text" id="dateStart" placeholder="dd/mm/aaaa" disabled="true">
+              </div>    
+         
+        </div>
+        <div class="item">
+          <label>Data Final</label>
+          <div class="input-daterange pull-right" id="dtDataIni" style="float:left">
+             <input class="input-small" name="dateFinish" type="text" id="dateFinish" placeholder="dd/mm/aaaa" disabled="true">               
+          </div>               
+        </div>
+        <div>
+           <label><input type="checkbox" name="chkAllDates" value="1" checked="true" id="chkAllDates" class="pull-left">Todas as datas</label>   
+        </div>
+     
+      </div>
+
+    <div class="row-fluid">
+      <div id="resultsConsult">
+        
+      </div>
+    </div>
+
+    </div>    
+  </div>
+
+</div>
