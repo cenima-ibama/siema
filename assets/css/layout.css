@@ -692,3 +692,26 @@ footer a {
     margin: 6% 2% 4%;
   }
 }
+
+/*Manager button*/
+
+#manage1{
+  margin: 10px;
+  float: left;
+}
+
+.form-control{
+  margin: 3px;
+}
+
+#center-cadastro{
+  margin: 0 -30% 0 15%;
+}
+
+#table-ocorrencia{
+position: relative;
+height: 570px;
+overflow-y: scroll;
+}
+
+/**/

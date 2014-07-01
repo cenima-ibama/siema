@@ -542,7 +542,7 @@
         <div class="row-fluid">
           <div id="manage1">
             <h1 class="page-header">Cadastro de Pessoas</h1>
-            <form class="form-horizontal" role="form">
+            <form id="center-cadastro" class="form-horizontal" role="form">
               <div class="form-group">
                 <div class="item">
                   <label for="inputNome" class="col-sm-2 control-label">Nome</label>
@@ -577,9 +577,9 @@
               </div>
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                  <div class="checkbox">
+                  <div class="checkbox" style="margin: 2% 40% 2% 30%">
                     <label>
-                      <input type="checkbox"> Lembrar-me
+                      <input type="checkbox" style="margin: 3px"> Lembrar-me
                     </label>
                   </div>
                 </div>
