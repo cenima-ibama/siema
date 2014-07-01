@@ -38,7 +38,10 @@ $(document).ready ->
       $("#dash").hide()
       $("#login").hide()
       $("#map").show()
+<<<<<<< HEAD
       $("#consultas").hide()
+=======
+>>>>>>> ebe2bb9a458b3f86aefc01575fab4b69afd82c84
       $("#manag").hide()
 
       if H5.Data.changed
@@ -58,18 +61,24 @@ $(document).ready ->
       $("#login").hide()
       $("#map").hide()
       $("#dash").show()
+<<<<<<< HEAD
       $("#consultas").hide()
+=======
+>>>>>>> ebe2bb9a458b3f86aefc01575fab4b69afd82c84
       $("#manag").hide()
     else if $(@).prop("id") is "btn-login"
       $("#dash").hide()
       $("#map").show()
       $("#login").show()
+<<<<<<< HEAD
       $("#consultas").hide()
     else if $(@).prop("id") is "btn-consult"
       $("#login").hide()
       $("#map").hide()
       $("#dash").hide()
       $("#consultas").show()
+=======
+>>>>>>> ebe2bb9a458b3f86aefc01575fab4b69afd82c84
       $("#manag").hide()
     else if $(@).prop("id") is "btn-manag"
       $("#login").hide()
@@ -212,6 +221,7 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
       { "title": "Fontes de Informação" }
     ]
     "oTableTools":
+      {
         "sSwfPath": "http://" + document.domain + "/siema/assets/img/copy_csv_xls_pdf.swf"
         "aButtons": [
           {
@@ -220,14 +230,16 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
             "sFileName": "*.xls"
             "sFieldSeperator": ","
             "sTitle": "Consulta de ocorrências SIEMA(Sistema Nacional de Emergências Ambientais)"
-          },
+          }
           {
             "sExtends": "pdf"
             "sButtonText": "Exportar para PDF"
             "sTitle": "Consulta de ocorrências SIEMA(Sistema Nacional de Emergências Ambientais)"
             "sPdfOrientation": "landscape"
           }
+
         ]
+    }
     "oLanguage":
       {
         "sLengthMenu": "Mostrar _MENU_ registros por página"
