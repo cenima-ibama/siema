@@ -955,6 +955,51 @@
             </div>';
           }
         ?>
+
+<script type="text/javascript">
+function showFileName(inputFile) {
+    inputFile.offsetParent.getElementsByClassName('fileName')[0].innerHTML = inputFile.value.replace(/\\/g, '/').split('/').pop();
+}
+</script>
+
+<!-- BOTAO DE ADICIONAR ARQUIVOS SEM BOOTSTRAP CARREGADO / UPLOADFILE /-->
+        <?php 
+            if (!($this->authldap->is_authenticated())){
+              echo '
+               <div class="accordion-group">
+                  <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse14">
+                    12. Adicionar arquivos
+                    </a>
+                  </div>
+                  <div id="collapse14" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                      <div class="row-fluid">
+                        <div class="control-group">
+                            <div class="input-append">
+                              <style type="text/css">                                           
+                              .customFileInput input {
+                                  position: absolute;
+                                  visibility: hidden;
+                                  right: 10px;
+                              }
+                              </style>                     
+
+                              <form class="btn" action="upload.php" method="post" enctype="multipart/form-data">
+                                  <label class="customFileInput">
+                                      <div class="btn">Escolher um arquivo</div><div class="fileName" style="position:absolute; top: 17px; left: 175px"></div><input type="file" multiple name="uploadedFile[]" onchange="showFileName(this)">
+                                      
+                                  </label>
+                              </form>              
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>'
+            ;} 
+        ?>
+<!-- -->
+
         <?php
           if($this->authldap->is_authenticated()) {
             echo '
@@ -983,9 +1028,47 @@
             ';
           }
         ?>
-        <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
-      </div>
 
+        <?php 
+          if ($this->authldap->is_authenticated()){
+            echo '
+             <div class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse14">
+                  14. Adicionar arquivos
+                  </a>
+                </div>
+                <div id="collapse14" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <div class="row-fluid">
+                      <div class="control-group">
+                          <div class="input-append">
+                            <style type="text/css">                                           
+                            .customFileInput input {
+                                position: absolute;
+                                visibility: hidden;
+                                right: 10px;
+                            }
+                            </style>                     
+
+                            <form class="btn" action="upload.php" method="post" enctype="multipart/form-data">
+                                <label class="customFileInput">
+                                    <div class="btn">Escolher um arquivo</div><div class="fileName" style="position:absolute; top: 17px; left: 175px"></div><input type="file" multiple name="uploadedFile[]" onchange="showFileName(this)">
+                                    
+                                </label>
+                            </form>              
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>'
+          ;} 
+      ?>
+
+
+        
+      </div>
+      <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
       <div class="checkbox" style="display:none;">
 
         <?php

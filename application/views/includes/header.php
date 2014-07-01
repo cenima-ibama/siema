@@ -37,6 +37,7 @@
     <link href='<?= base_url()?>assets/css/dataTables.tableTools.min.css' rel='stylesheet' type='text/css'>
     
     <link href="<?= base_url()?>assets/css/layout.css" rel="stylesheet" media="all">
+    <link href="<?= base_url()?>assets/css/dashboard.css" rel="stylesheet" media="all">
 
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="assets/ico/favicon.ico">

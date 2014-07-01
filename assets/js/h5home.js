@@ -4,6 +4,8 @@
 
   $(document).ready(function() {
     var roundNumber;
+    $("#login").load("http://" + document.domain + "/siema/index.php/login/login_window");
+    $("#login").hide();
     $("#map").show();
     $('#addMeModal').modal({
       keyboard: false,
@@ -19,15 +21,17 @@
     });
     $(".navbar a").on("click", function(event) {
       var where;
-      $(this).each(function() {
-        return $("a").parent().removeClass("active");
-      });
+      $(".nav-collapse a").parent().removeClass("active");
       $(this).parent().addClass("active");
       if ($(this).prop("id") === "btn-map") {
         $("#dash").hide();
         $("#login").hide();
         $("#map").show();
+<<<<<<< HEAD
         $("#consultas").hide();
+=======
+        $("#manag").hide();
+>>>>>>> ebe2bb9a458b3f86aefc01575fab4b69afd82c84
         if (H5.Data.changed) {
           if (H5.Data.state === "Todos") {
             where = "ano='" + H5.Data.selectedYear + "'";
@@ -48,17 +52,31 @@
         $("#login").hide();
         $("#map").hide();
         $("#dash").show();
+<<<<<<< HEAD
         $("#consultas").hide();
+=======
+        $("#manag").hide();
+>>>>>>> ebe2bb9a458b3f86aefc01575fab4b69afd82c84
       } else if ($(this).prop("id") === "btn-login") {
         $("#dash").hide();
         $("#map").show();
         $("#login").show();
+<<<<<<< HEAD
         $("#consultas").hide();
       } else if ($(this).prop("id") === "btn-consult") {
         $("#login").hide();
         $("#map").hide();
         $("#dash").hide();
         $("#consultas").show();
+=======
+        $("#manag").hide();
+      } else if ($(this).prop("id") === "btn-manag") {
+        $("#login").hide();
+        $("#map").hide();
+        $("#dash").hide();
+        $("#manag").show();
+        $("#btn-manage1").click();
+>>>>>>> ebe2bb9a458b3f86aefc01575fab4b69afd82c84
       }
       return $('.nav-collapse').collapse('hide');
     });

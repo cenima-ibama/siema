@@ -5,6 +5,7 @@ coffee --join js/h5charts.js -cw coffee/h5charts.coffee &
 coffee --join js/h5home.js -cw coffee/h5home.coffee &
 coffee --join js/h5form.js -cw coffee/h5form.coffee &
 coffee --join js/h5login.js -cw coffee/h5login.coffee &
+coffee --join js/h5manag.js -cw coffee/h5manag.coffee &
 coffee --join js/h5wizard.js -cw coffee/h5wizard.coffee &
 coffee --join js/leaflet.control.switch.js -cw coffee/leaflet.control.switch.coffee &
 coffee --join js/hash5.js -cw coffee/hash5.coffee coffee/hash5rest.coffee coffee/hash5charts.coffee coffee/hash5table.coffee coffee/hash5draw.coffee

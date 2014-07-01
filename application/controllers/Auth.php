@@ -30,6 +30,7 @@ class Auth extends CI_Controller {
         $this->load->helper('form');
         $this->load->library('Form_validation');
         $this->load->library('AuthLDAP');
+        $this->load->library('Firephp');
         $this->load->helper('url');
     }
 
@@ -55,6 +56,37 @@ class Auth extends CI_Controller {
                         redirect($this->session->flashdata('tried_to'));
                     } else {
                         $this->load->view('pages/login');
+
+                    }
+                }
+            else {
+                // Login FAIL
+                $this->load->view('pages/login', array('login_fail_msg'
+                    => 'Error with LDAP authentication.'));
+            }
+        } else {
+            // Already logged in...
+            $this->load->view('pages/login');
+        }
+    }
+
+    function login_site($errorMsg = NULL){
+        $this->session->keep_flashdata('tried_to');
+        if(!$this->authldap->is_authenticated()) {
+            // Set up rules for form validation
+            $rules = $this->form_validation;
+            $rules->set_rules('inputUsername', 'Username', 'required|alpha_dash');
+            $rules->set_rules('inputPassword', 'Password', 'required');
+
+            // Do the login...
+            if($rules->run() && $this->authldap->login(
+                $rules->set_value('inputUsername'),
+                $rules->set_value('inputPassword'))) {
+                    // Login WIN!
+                    if($this->session->flashdata('tried_to')) {
+                        redirect($this->session->flashdata('tried_to'));
+                    } else {
+                        redirect(base_url());
                     }
                 }
             else {

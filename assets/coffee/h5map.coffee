@@ -86,19 +86,19 @@ terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
 )
 
 ucMunicipal = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:ucstodas_municipal"
+  layers: "cemam:ucstodas_municipal"
   format: "image/png"
   transparent: true
 )
 
 ucFederal = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:ucstodas_federal"
+  layers: "cemam:ucstodas_federal"
   format: "image/png"
   transparent: true
 )
 
 ucEstadual = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:ucstodas_estadual"
+  layers: "cemam:ucstodas_estadual"
   format: "image/png"
   transparent: true
 )
@@ -110,13 +110,13 @@ blocoExploratorio = new L.TileLayer.WMS(geoserverUrl,
 )
 
 biomaIBGE = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:bioma_ibge"
+  layers: "cemam:bioma_ibge"
   format: "image/png"
   transparent: true
 )
 
 portoTerminal = new L.TileLayer.WMS(geoserverUrl,
-  layers: "ceman:porto_terminal"
+  layers: "cemam:porto_terminal"
   format: "image/png"
   transparent: true
 )
@@ -219,22 +219,6 @@ ponteTunel = new L.TileLayer.WMS(geoserverUrl,
 
 marTerritorial = new L.TileLayer.WMS(geoserverUrl,
   layers: "cemam:mar_territorial"
-  format: "image/png"
-  transparent: true
-)
-
-manchadia1 = new L.TileLayer.WMS(geoserverUrl,
-  layers: "cemam:mancha_oleo_dia_1"
-  format: "image/png"
-  transparent: true
-)
-manchadia2 = new L.TileLayer.WMS(geoserverUrl,
-  layers: "cemam:mancha_oleo_dia_2"
-  format: "image/png"
-  transparent: true
-)
-manchadia3 = new L.TileLayer.WMS(geoserverUrl,
-  layers: "cemam:mancha_oleo_dia_3"
   format: "image/png"
   transparent: true
 )
@@ -499,15 +483,6 @@ controlswitch = new L.control.switch(
     layer: hidrografia
   "Mar Territorial":
     layer: marTerritorial
-  "Mancha - Dia 1":
-    layer: manchadia1
-    tab: "video"
-  "Mancha - Dia 2":
-    layer: manchadia2
-    tab: "video"
-  "Mancha - Dia 3":
-    layer: manchadia3
-    tab: "video"
   "Dados Legados":
     layer: legados.layer
     vectorLayer:
@@ -519,9 +494,6 @@ controlswitch = new L.control.switch(
     selected: true
   factory:
     icon: iconsURL + "factory.png"
-    name: null
-  video:
-    icon: iconsURL + "chemicals.png"
     name: null
 ).addTo(H5.Map.base)
 # }}}

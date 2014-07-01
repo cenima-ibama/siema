@@ -87,7 +87,7 @@
   });
 
   $("#btnBeginForm").click(function(event) {
-    var btnLogout, checkedUser, containerProgress, i, progressAnimetion, progressBar, textProgress, tipoForm;
+    var btnLogout, checkedUser, consultTab, containerProgress, i, manageTab, progressAnimetion, progressBar, textProgress, tipoForm;
     if ((document.getElementById('divLogin')) == null) {
       progressBar = document.getElementById("authProgress");
       textProgress = document.getElementById("textProgress");
@@ -95,6 +95,8 @@
       checkedUser = document.getElementById("checkedUser");
       tipoForm = document.getElementById("tipoForm");
       btnLogout = document.getElementById("btnSair");
+      consultTab = document.getElementById("btn-consult");
+      manageTab = document.getElementById("btn-manag");
       $(tipoForm).hide();
       $(btnLogout).hide();
       i = 0;

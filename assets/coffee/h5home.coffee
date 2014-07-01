@@ -1,4 +1,6 @@
 $(document).ready ->
+  $("#login").load("http://" + document.domain + "/siema/index.php/login/login_window")
+  $("#login").hide()
 
   $("#map").show()
 
@@ -27,8 +29,8 @@ $(document).ready ->
 
   $(".navbar a").on "click", (event) ->
     # clean all selection
-    $(@).each ->
-      $("a").parent().removeClass("active")
+    # $(@).each ->
+    $(".nav-collapse a").parent().removeClass("active")
     # mark selected option
     $(@).parent().addClass("active")
 
@@ -37,6 +39,7 @@ $(document).ready ->
       $("#login").hide()
       $("#map").show()
       $("#consultas").hide()
+      $("#manag").hide()
 
       if H5.Data.changed
         if H5.Data.state is "Todos"
@@ -56,6 +59,7 @@ $(document).ready ->
       $("#map").hide()
       $("#dash").show()
       $("#consultas").hide()
+      $("#manag").hide()
     else if $(@).prop("id") is "btn-login"
       $("#dash").hide()
       $("#map").show()
@@ -66,6 +70,13 @@ $(document).ready ->
       $("#map").hide()
       $("#dash").hide()
       $("#consultas").show()
+      $("#manag").hide()
+    else if $(@).prop("id") is "btn-manag"
+      $("#login").hide()
+      $("#map").hide()
+      $("#dash").hide()
+      $("#manag").show()
+      $("#btn-manage1").click()
 
     $('.nav-collapse').collapse('hide')
 
@@ -77,7 +88,7 @@ $(document).ready ->
     else
       $("#dateStart").removeAttr "disabled", "disabled"
       $("#dateFinish").removeAttr "disabled", "disabled"
-    
+
   $("#tipoProd").on "change", (event) ->
     setFilter()
 
@@ -85,7 +96,7 @@ $(document).ready ->
     setFilter()
 
   $("#originsConsultSlct").on "change", (event) ->
-    setFilter()  
+    setFilter()
 
   $("#dateFinish").on "change", (event) ->
     setFilter()
@@ -98,9 +109,9 @@ $(document).ready ->
       if $("#dateStart").value() isnt "" and $("#dateFinish").value() isnt ""
          #Consultar caso as datas estiverem preenchidas.
          setFilter()
-        
-        
-      
+
+
+
 
 
   #-------------------------------------------------------------------------
@@ -125,7 +136,7 @@ $(document).ready ->
     autoclose: true
     orientation: "auto right"
     clearBtn: true
-    startView: 1    
+    startView: 1
     endDate: "today"
   );
 
@@ -135,10 +146,10 @@ $(document).ready ->
     autoclose: true
     orientation: "auto right"
     clearBtn: true
-    startView: 1    
+    startView: 1
     endDate: "today"
   );
-  
+
   # Animate load screen
   $("#dash").fadeOut(1)
   $("#consultas").hide()
@@ -152,41 +163,41 @@ dtIni -> Data Inicial
 dfFim -> Data final
 ###
 consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
-  
-  registroTemp = new Array(); 
+
+  registroTemp = new Array();
   query = ""
 
   query += " tipoProd = "+tpProd if tpProd isnt ""
-  
+
   if uf isnt ""
-    query += " AND " if query.length isnt 0 
-    query += "sigla='"+uf+"'" 
+    query += " AND " if query.length isnt 0
+    query += "sigla='"+uf+"'"
 
   if origem isnt ""
     query += " AND " if query.length isnt 0
-    query += " origem = '{"+origem+"}'" 
+    query += " origem = '{"+origem+"}'"
 
   if (dtIni isnt "" and dtFim isnt "")
     query += " AND " if query.length isnt 0
-    query += " (dt_registro >= '"+dtIni+"' AND "+"dt_registro <= '"+dtFim+"')" 
-                          
+    query += " (dt_registro >= '"+dtIni+"' AND "+"dt_registro <= '"+dtFim+"')"
+
 
   H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 
   rest = new H5.Rest (
     url: H5.Data.restURL
     table: "vw_ocorrencia"
-    fields: "id_ocorrencia,to_char(dt_registro,'DD/MM/YYYY') AS dt_registro,periodo_ocorrencia, regiao, sigla, array_to_string(origem,';') AS origem, array_to_string(tipos_danos_identificados,';') AS tipos_danos_identificados, array_to_string(institiuicoes_atuando_local,';') AS institiuicoes_atuando_local, array_to_string(tipos_fontes_informacoes,';') AS tipos_fontes_informacoes"                
-    parameters: query    
-    
+    fields: "id_ocorrencia,to_char(dt_registro,'DD/MM/YYYY') AS dt_registro,periodo_ocorrencia, regiao, sigla, array_to_string(origem,';') AS origem, array_to_string(tipos_danos_identificados,';') AS tipos_danos_identificados, array_to_string(institiuicoes_atuando_local,';') AS institiuicoes_atuando_local, array_to_string(tipos_fontes_informacoes,';') AS tipos_fontes_informacoes"
+    parameters: query
+
   )
-              
-  $.each rest.data, (index,dt) ->   
-     registroTemp[registroTemp.length] = new Array(dt.id_ocorrencia,dt.dt_registro,dt.periodo_ocorrencia, dt.regiao, dt.sigla, dt.origem, dt.tipos_danos_identificados, dt.institiuicoes_atuando_local, dt.tipos_fontes_informacoes);                                                                       
-  
+
+  $.each rest.data, (index,dt) ->
+     registroTemp[registroTemp.length] = new Array(dt.id_ocorrencia,dt.dt_registro,dt.periodo_ocorrencia, dt.regiao, dt.sigla, dt.origem, dt.tipos_danos_identificados, dt.institiuicoes_atuando_local, dt.tipos_fontes_informacoes);
+
   $('#resultsConsult').html '<table cellpadding="0" cellspacing="0" border="0"  id="resultTable"></table>';
 
-  $('#resultTable').dataTable( 
+  $('#resultTable').dataTable(
     dom: "T<'clear'>lfrtip"
     "data": registroTemp
     "columns": [
@@ -201,44 +212,44 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
       { "title": "Fontes de Informação" }
     ]
     "oTableTools":
-      { 
+      {
         "sSwfPath": "http://" + document.domain + "/siema/assets/img/copy_csv_xls_pdf.swf"
-        "aButtons": [ 
-          { 
+        "aButtons": [
+          {
             "sExtends": "xls"
             "sButtonText": "Exportar para XLS"
             "sFileName": "*.xls"
-            "sFieldSeperator": ","                       
+            "sFieldSeperator": ","
             "sTitle": "Consulta de ocorrências SIEMA(Sistema Nacional de Emergências Ambientais)"
           }
-          { 
+          {
             "sExtends": "pdf"
             "sButtonText": "Exportar para PDF"
             "sTitle": "Consulta de ocorrências SIEMA(Sistema Nacional de Emergências Ambientais)"
-            "sPdfOrientation": "landscape"            
+            "sPdfOrientation": "landscape"
           }
 
-        ] 
+        ]
     }
-    "oLanguage": 
-      { 
+    "oLanguage":
+      {
         "sLengthMenu": "Mostrar _MENU_ registros por página"
         "sZeroRecords": "Nenhum registro encontrado"
         "sInfo": "Mostrando _END_ de _TOTAL_ registro(s)"
         "sInfoEmpty": "Mostrando 0 de 0 registros"
         "sInfoFiltered": "(filtrado de _MAX_ registros)"
         "sSearch": "Pesquisar: "
-        "oPaginate": 
-          { 
+        "oPaginate":
+          {
             "sFirst": "Início"
             "sPrevious": "Anterior"
             "sNext": "Próximo"
-            "sLast": "Último" 
-          } 
+            "sLast": "Último"
+          }
       }
   )
 
-setFilter = -> 
+setFilter = ->
   filterTipo = if $("#tipoProd").val() is "Todos" then "" else $("#tipoProd").val()
   filterUF =  if $("#dropConsultUF").val() is "Todos" then "" else $("#dropConsultUF").val()
   filterOrigem = if $("#originsConsultSlct").val() is "Todos" then "" else $("#originsConsultSlct").val()
@@ -251,4 +262,4 @@ setFilter = ->
     dtFim = $("#dateFinish").val()
 
   consultarOcorrencias(filterTipo,filterUF,filterOrigem,dtIni,dtFim)
-  
+
