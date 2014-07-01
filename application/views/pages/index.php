@@ -588,8 +588,8 @@
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                   <div class="checkbox">
-                    <label>
-                      <input type="checkbox"> Lembrar-me
+                    <label style="margin: 1% 40% 1% 40%;">
+                      <input type="checkbox" style="margin: 5% 0% 0% -15%"> Lembrar-me
                     </label>
                   </div>
                 </div>
