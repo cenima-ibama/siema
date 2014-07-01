@@ -37,11 +37,25 @@ $(".nav-sidebar a").on "click", (event) ->
   $(@).parent().addClass("active")
 
   if $(@).prop("id") is "btn-manage1"
-    $("#manage2").hide()
     $("#manage1").show()
+    $("#manage2").hide()
+    $("#manage3").hide()
+    $("#manage4").hide()
   else if $(@).prop("id") is "btn-manage2"
     $("#manage1").hide()
     $("#manage2").show()
+    $("#manage3").hide()
+    $("#manage4").hide()
+  else if $(@).prop("id") is "btn-manage3"
+    $("#manage1").hide()
+    $("#manage2").hide()
+    $("#manage3").show()
+    $("#manage4").hide()
+  else if $(@).prop("id") is "btn-manage4"
+    $("#manage1").hide()
+    $("#manage2").hide()
+    $("#manage3").hide()
+    $("#manage4").show()
 
 
 drawTable = ->
