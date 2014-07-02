@@ -76,6 +76,7 @@ $(document).ready ->
       $("#map").hide()
       $("#dash").hide()
       $("#manag").show()
+      $("#consultas").hide()
       $("#btn-manage1").click()
 
     $('.nav-collapse').collapse('hide')
