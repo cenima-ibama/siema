@@ -518,7 +518,7 @@
         </div>
 
         <!-- Button consultarDados on / modify h5home.coffe on assets/coffee-->
-        <!-- <button id="consultarDados" type="button" class="btn" style="height: 1%; margin: 1.5em -5% 0% 2%">Consultar</button> -->
+        <button id="consultarDados" type="button" class="btn" style="height: 1%; margin: 1.5em -5% 0% 2%">Consultar</button>
         <!-- -->
 
       </div>
@@ -609,6 +609,14 @@
           <div id="manage2">
             <h2 class="sub-header">Ocorrências</h2>
             <div class="table-responsive" id="table-ocorrencia"></div>
+          </div>
+          <div id="manage3">
+            <h2 class="sub-header">Gerência de Regras</h2>
+            <div></div>
+          </div>
+          <div id="manage4">
+            <h2 class="sub-header">Cadastro de Órgão</h2>
+            <div></div>
           </div>
         </div>
       </div>
