@@ -513,13 +513,18 @@
           </div>
         </div>
         <div>
+        <br />
            <label><input type="checkbox" name="chkAllDates" value="1" checked="true" id="chkAllDates" class="pull-left">Todas as datas</label>
         </div>
+
+        <!-- Button consultarDados on / modify h5home.coffe on assets/coffee-->
+        <!-- <button id="consultarDados" type="button" class="btn" style="height: 1%; margin: 1.5em -5% 0% 2%">Consultar</button> -->
+        <!-- -->
 
       </div>
 
     <div>
-      <div id="resultsConsult">
+      <div id="resultsConsult" style="overflow-y: auto; max-height: 500px">
 
       </div>
        <div id="optionsExport">

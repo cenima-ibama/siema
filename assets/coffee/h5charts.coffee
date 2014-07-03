@@ -717,12 +717,12 @@ chart4.drawChart = ->
       allData = [H5.Data.region] #gets the value of every period for only one region
       for j in [1..@options.period]
         data[j] = sumValues(period, H5.Data.region, H5.Data.selectedYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
-     @data.addRow data
+    @data.addRow data
 
      #Clear registrers.
-     data = [];
+    data = [];
 
-     countPeriod++
+    countPeriod++
 
   options =
     title: ""
@@ -832,10 +832,10 @@ chart5.drawChart = ->
       allData = [H5.Data.region] #gets the value of every period for only one region
       for j in [1..@options.period]
         data[j] = sumValues(institution, H5.Data.region, H5.Data.selectedYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
-     @data.addRow data
+    @data.addRow data
 
      #Clear array for next interaction.
-     data = []
+    data = []
 
   options =
     title: ""

@@ -113,6 +113,18 @@ $(document).ready ->
 
 
 
+  # ----------------- Consulta BTN -----------------------------------------
+
+  # $("#dateStart").on "change", (event) ->
+  #   $("#chkAllDates").attr "unchecked", "unchecked"
+
+  # $("#dateFinish").on "change", (event) ->
+  #   $("#chkAllDates").attr "unchecked", "unchecked"
+
+  # $("#consultarDados").on "click", (event) ->
+  #   setFilter()
+
+  # ----------------- End Consulta BTN -------------------------------------
 
 
   #-------------------------------------------------------------------------
@@ -155,6 +167,7 @@ $(document).ready ->
   $("#dash").fadeOut(1)
   $("#consultas").hide()
   $(".loading").fadeOut(2000)
+
 
 ###
 tpProd -> Tipo de produto(lista ONU)
