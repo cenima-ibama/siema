@@ -8,23 +8,24 @@ H5.DB.ocorrencia.data =
   init: ->
     @ocorrencia = {}
 
-  populate: (id_ocorrencia, des_ocorrencia) ->
+  populate: (nro_ocorrencia, des_ocorrencia, legado) ->
     self = @ocorrencia
-    self[id_ocorrencia] = {}
-    self[id_ocorrencia].id_ocorrencia = id_ocorrencia
-    self[id_ocorrencia].des_ocorrencia = des_ocorrencia
+    self[nro_ocorrencia] = {}
+    self[nro_ocorrencia].nro_ocorrencia = nro_ocorrencia
+    self[nro_ocorrencia].des_ocorrencia = des_ocorrencia
+    self[nro_ocorrencia].legado = legado
 
 rest = new H5.Rest (
   url: H5.Data.restURL
   table: H5.DB.ocorrencia.table
   # parameters: "data_cadastro > '2013-01-01'"
-  fields: "id_ocorrencia, des_ocorrencia"
+  fields: "nro_ocorrencia, des_ocorrencia, legado"
 )
 
 H5.DB.ocorrencia.data.init()
 for i, properties of rest.data
   H5.DB.ocorrencia.data.populate(
-    properties.id_ocorrencia, properties.des_ocorrencia
+    properties.nro_ocorrencia, properties.des_ocorrencia, properties.legado
   )
 
 
@@ -32,7 +33,7 @@ $("#btn_manage1").addClass("active")
 $(".nav-sidebar a").on "click", (event) ->
   # clean all selection
   $(@).each ->
-    $("a").parent().removeClass("active")
+    $(".nav-sidebar a").parent().removeClass("active")
   # mark selected option
   $(@).parent().addClass("active")
 
@@ -59,33 +60,47 @@ $(".nav-sidebar a").on "click", (event) ->
 
 
 drawTable = ->
-
 # html = '<div class="table-responsive">'
+  html = ''
   html = '<table class="table table-striped">'
-  html += '              <thead>'
-  html += '                <tr>'
-  html += '                  <th>ID da Ocorrência</th>'
-  html += '                  <th>Descrição da Ocorrência</th>'
-  html += '                  <th>Editar</th>'
-  html += '                </tr>'
-  html += '              </thead>'
-  html += '              <tbody>'
+  html += '  <thead>'
+  html += '    <tr>'
+  html += '      <th>ID da Ocorrência</th>'
+  html += '      <th>Descrição da Ocorrência</th>'
+  html += '      <th>Editar</th>'
+  html += '    </tr>'
+  html += '  </thead>'
+  html += '  <tbody>'
 
   for key, reg of H5.DB.ocorrencia.data.ocorrencia
-    html += '                <tr>'
-    html += '                  <td>' + reg.id_ocorrencia + '</td>'
-    html += '                  <td>' + reg.des_ocorrencia + '</td>'
-    html += '                  <td>Editar</td>'
-    html += '                </tr>'
+    if not reg.legado
+      html += '    <tr>'
+      html += '      <td>' + reg.nro_ocorrencia + '</td>'
+      html += '      <td>' + reg.des_ocorrencia + '</td>'
+      html += '      <td><a data-toggle="modal" class="editOcorrencia" data-ocorrencia="' + reg.nro_ocorrencia + '"href="#editMeModal"><i class="icon-edit icon-white"></i></a></td>'
+      html += '    </tr>'
 
-  html += '              </tbody>'
-  html += '            </table>'
+  html += '  </tbody>'
+  html += '</table>'
 # html += '          </div>'
   $("#table-ocorrencia").html(html)
 
 drawTable()
 
+$('#editMeModal').modal(
+  keyboard: false
+  backdrop: false
+  show: false
+)
 
+$("#editMeModal").draggable(
+  handle: ".modal-header"
+)
+
+$("a.editOcorrencia").on "click", (event) ->
+  nro_ocorrencia = $(this).attr("data-ocorrencia")
+  $("#nro_ocorrencia").val(nro_ocorrencia)
+  $("#formLoadEdit").submit()
 
   #makes mangage area invisible after loading
 $("#manag").hide()

@@ -604,6 +604,65 @@
           <div id="manage2">
             <h2 class="sub-header">Ocorrências</h2>
             <div class="table-responsive" id="table-ocorrencia"></div>
+            <!-- <div id="editMeModal" class="login"> </div> -->
+            <!-- Modal -->
+            <div id="editMeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-header">
+                <button id="btnXClose" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h5 id="myModalLabel">Acidente Ambiental</h5>
+              </div>
+              <div class="modal-body" id="modal-body" style="padding: 5%">
+                <div style="overflow:hidden;">
+            <!-- <div class="modal fade" id="editMeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                  </div>
+                  <div class="modal-body" id="modal-body"> -->
+                    <?php echo form_open('form/loadformcall', array('id' => 'formLoadEdit', 'target' => 'form_frame_edit')); ?>
+                      <label class="checkbox" style="display:none;">
+                        <input type="checkbox" id="hasOleo" name="hasOleo" value="S">
+                        <input type="hidden" id="nro_ocorrencia" name="nro_ocorrencia" value="">
+                        <?php
+                          if($this->session->userdata('logged_in'))
+                            echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA" checked>';
+                          else
+                            echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA">';
+                        ?>
+                      </label>
+                    <?php echo form_close(); ?>
+                    <iframe name="form_frame_edit" id="myModalFrame" style="border: medium none white; height: 394px; width: 100%;"></iframe>
+                  </div>
+                </div>
+                  <div class="modal-footer" style="display:none;">
+                    <!-- <a id="modalBtnBack" href="" class="btn" data-toggle="tab">Voltar</a> -->
+                    <!-- <a id="modalBtnNext" href="#tab1" class="btn" data-toggle="tab">Avançar</a> -->
+                    <a id="modalBtnCancel" href="#tab2" class="btn" data-dismiss="modal"><i class="icon-trash"></i> Cancelar</a>
+                    <a id="submit" class="btn btn-primary" type="button" onClick="window.top.form_frame_edit.document.formAcidentes.submit()">
+                      <i class="icon-ok icon-white"></i>
+                      Enviar
+                    </a>
+                    <!-- Creating the new buttons Cancelar and Fechar - both hidden -->
+                    <a id="btnClose" class="btn btn-primary" type="button" style="display:none;" data-dismiss="modal"><i class="icon-remove"></i>Fechar</a>
+                  </div>
+                </div>
+                  <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+          </div>
+          <div id="manage3">
+            <h2 class="sub-header">Gerência de Regras</h2>
+            <div></div>
+          </div>
+          <div id="manage4">
+            <h2 class="sub-header">Cadastro de Órgão</h2>
+            <div></div>
           </div>
         </div>
       </div>

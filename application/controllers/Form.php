@@ -209,10 +209,18 @@ class Form extends CI_Controller {
         $form['data'] = $data;
 
         $this->load->view('templates/form', $form);
-
     }
 
-    public function loadForm($nro_ocorrencia)
+    public function loadFormCall()
+    {
+        $this->load->helper('form');
+
+        $form_data =  $this->input->post();
+
+        $this->loadForm($form_data["nro_ocorrencia"]);
+    }
+
+    private function loadForm($nro_ocorrencia)
     {
         $this->load->helper('form');
 
