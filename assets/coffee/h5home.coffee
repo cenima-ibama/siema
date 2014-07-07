@@ -82,37 +82,49 @@ $(document).ready ->
     $('.nav-collapse').collapse('hide')
 
 
-  $("#chkAllDates").on "click", (event) ->
-    if $(@).is ":checked"
-      $("#dateStart").attr "disabled", "disabled"
-      $("#dateFinish").attr "disabled", "disabled"
-    else
-      $("#dateStart").removeAttr "disabled", "disabled"
-      $("#dateFinish").removeAttr "disabled", "disabled"
+  # $("#chkAllDates").on "click", (event) ->
+  #   if $(@).is ":checked"
+  #     $("#dateStart").attr "disabled", "disabled"
+  #     $("#dateFinish").attr "disabled", "disabled"
+  #   else
+  #     $("#dateStart").removeAttr "disabled", "disabled"
+  #     $("#dateFinish").removeAttr "disabled", "disabled"
 
-  $("#tipoProd").on "change", (event) ->
-    setFilter()
+  # $("#tipoProd").on "change", (event) ->
+  #   setFilter()
 
-  $("#dropConsultUF").on "change", (event) ->
-    setFilter()
+  # $("#dropConsultUF").on "change", (event) ->
+  #   setFilter()
 
-  $("#originsConsultSlct").on "change", (event) ->
-    setFilter()
+  # $("#originsConsultSlct").on "change", (event) ->
+  #   setFilter()
+
+  # $("#dateFinish").on "change", (event) ->
+  #   setFilter()
+
+  # $("#chkAllDates").on "change", (event) ->
+  #   if $(@).is ":checked"
+  #     #Consultar.
+  #     setFilter()
+  #   else
+  #     if $("#dateStart").value() isnt "" and $("#dateFinish").value() isnt ""
+  #        #Consultar caso as datas estiverem preenchidas.
+  #        setFilter()
+
+
+
+  # ----------------- Consulta BTN -----------------------------------------
+
+  $("#dateStart").on "change", (event) ->
+    $("#chkAllDates").attr "unchecked", "unchecked"
 
   $("#dateFinish").on "change", (event) ->
+    $("#chkAllDates").attr "unchecked", "unchecked"
+
+  $("#consultarDados").on "click", (event) ->
     setFilter()
 
-  $("#chkAllDates").on "change", (event) ->
-    if $(@).is ":checked"
-      #Consultar.
-      setFilter()
-    else
-      if $("#dateStart").value() isnt "" and $("#dateFinish").value() isnt ""
-         #Consultar caso as datas estiverem preenchidas.
-         setFilter()
-
-
-
+  # ----------------- End Consulta BTN -------------------------------------
 
 
   #-------------------------------------------------------------------------
@@ -155,6 +167,7 @@ $(document).ready ->
   $("#dash").fadeOut(1)
   $("#consultas").hide()
   $(".loading").fadeOut(2000)
+
 
 ###
 tpProd -> Tipo de produto(lista ONU)

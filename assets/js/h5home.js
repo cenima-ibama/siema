@@ -72,35 +72,14 @@
       }
       return $('.nav-collapse').collapse('hide');
     });
-    $("#chkAllDates").on("click", function(event) {
-      if ($(this).is(":checked")) {
-        $("#dateStart").attr("disabled", "disabled");
-        return $("#dateFinish").attr("disabled", "disabled");
-      } else {
-        $("#dateStart").removeAttr("disabled", "disabled");
-        return $("#dateFinish").removeAttr("disabled", "disabled");
-      }
-    });
-    $("#tipoProd").on("change", function(event) {
-      return setFilter();
-    });
-    $("#dropConsultUF").on("change", function(event) {
-      return setFilter();
-    });
-    $("#originsConsultSlct").on("change", function(event) {
-      return setFilter();
+    $("#dateStart").on("change", function(event) {
+      return $("#chkAllDates").attr("unchecked", "unchecked");
     });
     $("#dateFinish").on("change", function(event) {
-      return setFilter();
+      return $("#chkAllDates").attr("unchecked", "unchecked");
     });
-    $("#chkAllDates").on("change", function(event) {
-      if ($(this).is(":checked")) {
-        return setFilter();
-      } else {
-        if ($("#dateStart").value() !== "" && $("#dateFinish").value() !== "") {
-          return setFilter();
-        }
-      }
+    $("#consultarDados").on("click", function(event) {
+      return setFilter();
     });
     String.prototype.toProperCase = function() {
       return this.replace(/\w\S*/g, function(txt) {
