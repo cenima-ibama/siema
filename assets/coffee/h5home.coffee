@@ -115,6 +115,14 @@ $(document).ready ->
 
   # ----------------- Consulta BTN -----------------------------------------
 
+  $("#chkAllDates").on "click", (event) ->
+    if $(@).is ":checked"
+      $("#dateStart").attr "disabled", "disabled"
+      $("#dateFinish").attr "disabled", "disabled"
+    else
+      $("#dateStart").removeAttr "disabled", "disabled"
+      $("#dateFinish").removeAttr "disabled", "disabled"
+  
   $("#dateStart").on "change", (event) ->
     $("#chkAllDates").attr "unchecked", "unchecked"
 

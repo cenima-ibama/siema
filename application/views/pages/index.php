@@ -502,19 +502,19 @@
 
           <label>Data Inicial</label>
               <div class="input-daterange pull-right" id="dtDataIni">
-                  <input class="input-small" name="dateStart" type="text" id="dateStart" placeholder="dd/mm/aaaa" disabled="true">
+                  <input class="input-small" name="dateStart" type="text" id="dateStart" placeholder="dd/mm/aaaa" >
               </div>
 
         </div>
         <div class="item">
           <label>Data Final</label>
           <div class="input-daterange pull-right" id="dtDataIni" style="float:left">
-             <input class="input-small" name="dateFinish" type="text" id="dateFinish" placeholder="dd/mm/aaaa" disabled="true">
+             <input class="input-small" name="dateFinish" type="text" id="dateFinish" placeholder="dd/mm/aaaa" >
           </div>
         </div>
         <div>
         <br />
-           <label><input type="checkbox" name="chkAllDates" value="1" checked="true" id="chkAllDates" class="pull-left">Todas as datas</label>
+           <label><input type="checkbox" name="chkAllDates" value="1" id="chkAllDates" class="pull-left">Todas as datas</label>
         </div>
 
         <!-- Button consultarDados on / modify h5home.coffe on assets/coffee-->
@@ -590,17 +590,9 @@
                   <input type="text" class="form-control" id="inputTelefone" placeholder="Telefone">
                 </div>
               </div>
+              <div class="form-group"></div>
               <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                  <div class="checkbox">
-                    <label style="margin: 1% 40% 1% 40%;">
-                      <input type="checkbox" style="margin: 5% 0% 0% -15%"> Lembrar-me
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
+                <div class="col-sm-offset-2 col-sm-10" style="margin: 0.5em">
                   <button type="submit" class="btn btn-default">Enviar</button>
                 </div>
               </div>
