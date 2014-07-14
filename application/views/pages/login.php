@@ -8,7 +8,8 @@
     <meta name="author" content="Helmuth Saatkamp <helmuthdu@gmail.com>">
 
     <!-- Bootstrap -->
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="<?= base_url()?>assets/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <!-- <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet"> -->
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 
     <style>
@@ -31,17 +32,17 @@
       }
     ?>
     <?php echo form_open('auth/login', array('id' => 'loginForm', 'class' => 'form-horizontal', 'name' => 'loginForm')); ?>
-      <h4 style="margin:0;">Login</h4>
-      <div class="control-group">
+      <!-- <h4 style="margin:0;">Login</h4> -->
+      <div class="control-group" style="margin-bottom:5px;">
           <?php echo form_label('Usuário:', 'inputUsername', array('class' => 'control-label', 'for' => 'username')); ?>
           <div class="controls">
-              <?php echo form_input(array('name' => 'inputUsername', 'id' => 'username', 'class' => 'formfield', 'type', 'number')); ?>
+              <?php echo form_input(array('name' => 'inputUsername', 'id' => 'username', 'class' => 'formfield login-input', 'type', 'number')); ?>
           </div>
       </div>
-      <div class="control-group">
+      <div class="control-group" style="margin-bottom:5px;">
           <?php echo form_label('Senha:', 'inputPassword', array('class' => 'control-label', 'for' => 'password')) ?>
           <div class="controls">
-              <?php echo form_password(array('name' => 'inputPassword', 'id' => 'password','class' => 'formfield')); ?>
+              <?php echo form_password(array('name' => 'inputPassword', 'id' => 'password','class' => 'formfield login-input')); ?>
           </div>
       </div>
       <?php echo form_checkbox(array('name' => 'loginSite', 'id' => 'loginSite', 'type' => 'hidden'), 1,  FALSE);?>
