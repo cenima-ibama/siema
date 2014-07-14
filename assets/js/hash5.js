@@ -1173,7 +1173,7 @@
     Table.prototype._addFields = function() {
       var _this = this;
       return $(this._addBtn).on("click", function(event) {
-        var delBtn, div, i, icon, newRow, saveBtn, tbody, td;
+        var closeBtn, delBtn, div, i, icon, newRow, saveBtn, tbody, td;
         event.preventDefault();
         newRow = document.createElement("tr");
         i = 0;
@@ -1233,9 +1233,17 @@
         icon.className = "icon-ok ";
         $(saveBtn).append(icon);
         _this._saveFields(saveBtn, delBtn, newRow);
+        closeBtn = document.createElement("a");
+        closeBtn.id = "fecharBotaoTabela";
+        closeBtn.className = "btn editable-cancel ";
+        icon = document.createElement("i");
+        icon.className = "icon-remove";
+        $(closeBtn).append(icon);
+        _this._closeFields(closeBtn, newRow);
         div = document.createElement("div");
         $(div).append(saveBtn);
         $(div).append(delBtn);
+        $(div).append(closeBtn);
         td = newRow.insertCell(i++);
         $(td).append(div);
         if (_this._lastRow != null) {
@@ -1440,6 +1448,13 @@
           return _this._reloadTable();
         }
       });
+    };
+
+    Table.prototype._closeFields = function(closeBtn, tableRow) {
+      $(closeBtn).on("click", function(event) {
+        return $(this).closest('tr').remove();
+      });
+      return this._lastRow = null;
     };
 
     Table.prototype._reloadTable = function() {

@@ -942,7 +942,7 @@ $(document).ready ->
         else
           $("#PerObsNotu").prop('checked', 'checked')
 
-         $("#divPeriodoObs").css('display','none')
+          $("#divPeriodoObs").css('display','none')
       else
         $("#divPeriodoObs").prop('style','')
         $(this).val("")
@@ -966,7 +966,7 @@ $(document).ready ->
         else
           $("#PerInciNotu").prop('checked', 'checked')
 
-         $("#divPeriodoInci").css('display','none')
+          $("#divPeriodoInci").css('display','none')
       else
         $("#divPeriodoInci").css('display','auto;')
         $(this).val("")
@@ -1328,3 +1328,12 @@ $(document).ready ->
       # afterFinish: ()->
       #   if ()
     )
+
+  $("#uploadButton").on 'click', (event) ->
+  sendNroComunicado = $('#nroComunicado').html()
+  $('#sendNroComunicado').val(sendNroComunicado);
+  # sendNroComunicado = $('iframe[name=form_frame]').contents().find('#nroComunicado').html()
+  # $('iframe[name=form_frame]').contents().find('#sendNroComunicado').val(sendNroComunicado)
+
+  if (hideIfisOutros = window.top.document.getElementById("optionsAcidenteOutros").checked) 
+    $("#hideifOutrosAcidentes").css("display", "none")

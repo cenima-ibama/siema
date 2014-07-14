@@ -111,16 +111,17 @@
                     -->
                   </div>
                   <div class="control-group">
-                    <label class="control-label" for="inputMunicipio">Município/UF:</label>
+                    <label class="control-label" for="inputMunicipio">UF/Município:</label>
                     <div class="controls">
                       <?php
 
                         if (isset($semLocalizacao['checked'])) {
-                          echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium" disabled="disabled"');
                           echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', $id_uf), 'id="dropdownUF" class="input-small" disabled="disabled"');
+                          echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium" disabled="disabled"');
+
                         } else {
-                          echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium"');
                           echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', $id_uf), 'id="dropdownUF" class="input-small"');
+                          echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium"');
                         }
 
                         // echo form_input($inputMunicipio);
@@ -487,7 +488,7 @@
                     </div>
                     <div class="controls">
                       <label class="checkbox text-left">
-                      <?php echo form_checkbox($produtoNaoEspecificado, 'on'); ?> Não especificado na lista ONU
+                      <?php echo form_checkbox($produtoNaoEspecificado, 'on'); ?> Não especificado
                       </label>
                     </div>
                   </div>
@@ -581,7 +582,9 @@
                 </div>
               </div>
               <hr>
-              <div class="row-fluid">
+
+<!-- Hide if Outros acidentes is checked -->
+              <div class="row-fluid" id="hideifOutrosAcidentes">
                 <label class="control-label"> Situação atual da descarga: </label>
                 <div class="controls row-fluid">
                   <div class="span3">
@@ -606,13 +609,14 @@
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse7">
-              7. Danos identificados*
+              7. Ocorrências e/ou ambientes atingidos*
             </a>
           </div>
           <div id="collapse7" class="accordion-body collapse">
@@ -875,7 +879,7 @@
           </div>
         </div>
         <?php
-          if($this->authldap->is_authenticated()) {
+          if($this->authldap->is_authenticated()) {   
             echo '
             <div class="accordion-group">
               <div class="accordion-heading">
@@ -890,7 +894,7 @@
                 <div class="accordion-inner">
                   <div class="row-fluid">
                     <div class="controls span12">
-                      <label class="control-label span5" for="inputNomeInformante">Nome completo:
+                      <label class="control-label span5" for="inputNomeInformante" >Nome completo:
                       </label>
                       <div class="span6">';
                         echo form_input($inputNomeInformante);
@@ -942,7 +946,7 @@
                       </div>
                     </div>
                     <div class="controls span12">
-                      <label class="control-label span5" for="inputEmailInformante">Email de contato:
+                      <label class="control-label span5" for="inputEmailInformante" >Email de contato:
                       </label>
                       <div class="span6">';
                         echo form_input($inputEmailInformante);
@@ -966,7 +970,7 @@ function showFileName(inputFile) {
         <?php 
             if (!($this->authldap->is_authenticated())){
               echo '
-               <div class="accordion-group">
+              <div class="accordion-group">
                   <div class="accordion-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse14">
                     12. Adicionar arquivos
@@ -976,26 +980,44 @@ function showFileName(inputFile) {
                     <div class="accordion-inner">
                       <div class="row-fluid">
                         <div class="control-group">
-                            <div class="input-append">
-                              <style type="text/css">                                           
-                              .customFileInput input {
-                                  position: absolute;
-                                  visibility: hidden;
-                                  right: 10px;
-                              }
-                              </style>                     
+                          <div class="input-append">
+                            <style type="text/css">                                           
+                            .customFileInput input {
+                                position: absolute;
+                                visibility: hidden;
+                                right: 10px;
 
-                              <form class="btn" action="upload.php" method="post" enctype="multipart/form-data">
-                                  <label class="customFileInput">
-                                      <div class="btn">Escolher um arquivo</div><div class="fileName" style="position:absolute; top: 17px; left: 175px"></div><input type="file" multiple name="uploadedFile[]" onchange="showFileName(this)">
-                                      
-                                  </label>
-                              </form>              
+                              }
+
+                              #boxpor {
+                                -o-text-overflow: ellipsis;   
+                                text-overflow: ellipsis;
+                                overflow:hidden;
+                                white-space:nowrap;
+                                width: 300px; 
+
+                              }
+
+                            </style>                     
+
+                            <form class="btn" method="post" enctype="multipart/form-data" />
+                                <label class="customFileInput">
+                                    <div class="btn">Escolher um arquivo</div>
+                                    <div class="fileName" style="position:absolute; top: 1em; left: 13em"></div>
+                                    <a class="btn" id="uploadButton" href="#" style="position: absolute; right: 2em;" > Upload</a> 
+                                    <input type="hidden" id="sendNroComunicado" value="" />
+                                    <input type="file" name="userfile" onchange="showFileName(this)" id="boxpor" />
+                                    <br /><small> *jpg, doc, pdf, xls, até 5MB</small>
+
+                                </label>
+
+                            </form>
+                          </div>
+
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>'
+                  </div>'
             ;} 
         ?>
 <!-- -->
@@ -1032,37 +1054,44 @@ function showFileName(inputFile) {
         <?php 
           if ($this->authldap->is_authenticated()){
             echo '
-             <div class="accordion-group">
-                <div class="accordion-heading">
-                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse14">
-                  14. Adicionar arquivos
-                  </a>
-                </div>
-                <div id="collapse14" class="accordion-body collapse">
-                  <div class="accordion-inner">
-                    <div class="row-fluid">
-                      <div class="control-group">
+            <div class="accordion-group">
+                  <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse14">
+                    14. Adicionar arquivos
+                    </a>
+                  </div>
+                  <div id="collapse14" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                      <div class="row-fluid">
+                        <div class="control-group">
                           <div class="input-append">
                             <style type="text/css">                                           
                             .customFileInput input {
                                 position: absolute;
                                 visibility: hidden;
                                 right: 10px;
-                            }
+
                             </style>                     
 
-                            <form class="btn" action="upload.php" method="post" enctype="multipart/form-data">
+                            <form class="btn" method="post" enctype="multipart/form-data" />
                                 <label class="customFileInput">
-                                    <div class="btn">Escolher um arquivo</div><div class="fileName" style="position:absolute; top: 17px; left: 175px"></div><input type="file" multiple name="uploadedFile[]" onchange="showFileName(this)">
-                                    
+                                    <div class="btn">Escolher um arquivo</div>
+                                    <div class="fileName" style="position:absolute; top: 1em; left: 13em"></div>
+                                    <a class="btn" id="uploadButton" href="#" style="position: absolute; right: 2em;" > Upload</a> 
+                                    <input type="hidden" id="sendNroComunicado" value="" />
+                                    <input type="file" name="userfile" onchange="showFileName(this)" class="boxname" />
+                                    <br /><small> *jpg, doc, pdf, xls, até 5MB</small>
+
                                 </label>
-                            </form>              
+
+                            </form>
+                          </div>
+
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>'
-          ;} 
+                  </div>'          
+                  ;} 
       ?>
 
 
