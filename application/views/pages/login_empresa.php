@@ -31,7 +31,7 @@
         echo '</div>';
       }
     ?>
-    <?php echo form_open('auth/login', array('id' => 'loginForm', 'class' => 'form-horizontal', 'name' => 'loginForm')); ?>
+    <?php echo form_open('auth/login_empresa', array('id' => 'loginForm', 'class' => 'form-horizontal', 'name' => 'loginForm')); ?>
       <!-- <h4 style="margin:0;">Login</h4> -->
       <div class="control-group" style="margin-bottom:5px;">
           <?php echo form_label('Usuário:', 'inputUsername', array('class' => 'control-label', 'for' => 'username')); ?>

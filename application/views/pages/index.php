@@ -50,20 +50,20 @@
                     <h4 style="text-align:center;">Comunicado do IBAMA</h4>
                     <p style="font-size:11px; text-align:justify;">Destinado aos usuários registrados no Sistema Ibama-Net.</p>
                       <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
-                    <iframe name="login_Form" src="' . base_url() . '/index.php/login" frameborder="0" style="width:100%; height: 135px;"></iframe>
+                    <iframe name="login_Form_Ibama" src="' . base_url() . '/index.php/login/login_ibama" frameborder="0" style="width:100%; height: 135px;"></iframe>
                     <div class="block text-center">
                       <button id="btnCadastrar" class="btn btn-success span5" data-toggle="tab" disabled="disabled">Cadastrar</button>
-                      <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form.document.loginForm.submit();">Logar</button>
+                      <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form_Ibama.document.loginForm.submit();">Logar</button>
                     </div>
                   </div>
                   <div class="span4">
                     <h4 style="text-align:center;">Comunicado das Empresas</h4>
                     <p style="font-size:11px; text-align:justify;">Destinado as Empresas licenciadas pelo Ibama.</p>
                       <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
-                    <iframe name="login_Form" src="' . base_url() . '/index.php/login" frameborder="0" style="width:100%; height: 135px;"></iframe>
+                    <iframe name="login_Form_Empresa" src="' . base_url() . '/index.php/login/login_empresa" frameborder="0" style="width:100%; height: 135px;"></iframe>
                     <div class="block text-center">
                       <button id="btnCadastrar" class="btn btn-success span5" data-toggle="tab" disabled="disabled">Cadastrar</button>
-                      <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form.document.loginForm.submit();">Logar</button>
+                      <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form_Empresa.document.loginForm.submit();">Logar</button>
                     </div>
                   </div>
                   <div id="divDenuncia" class="span4">
