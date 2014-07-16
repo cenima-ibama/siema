@@ -46,19 +46,32 @@
               } else {
                 echo '
                 <div id="divLogout">
-                  <div class="span6">
-                    <iframe name="login_Form" src="' . base_url() . '/index.php/login" frameborder="0" style="width:100%; height: 175px;"></iframe>
+                  <div class="span4">
+                    <h4 style="text-align:center;">Comunicado do IBAMA</h4>
+                    <p style="font-size:11px; text-align:justify;">Destinado aos usuários registrados no Sistema Ibama-Net.</p>
+                      <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
+                    <iframe name="login_Form" src="' . base_url() . '/index.php/login" frameborder="0" style="width:100%; height: 135px;"></iframe>
                     <div class="block text-center">
                       <button id="btnCadastrar" class="btn btn-success span5" data-toggle="tab" disabled="disabled">Cadastrar</button>
                       <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form.document.loginForm.submit();">Logar</button>
                     </div>
                   </div>
-                  <div id="divDenuncia" class="span6">
-                    <h4 style="text-align:center;">Denúncia anônima</h4>
+                  <div class="span4">
+                    <h4 style="text-align:center;">Comunicado das Empresas</h4>
+                    <p style="font-size:11px; text-align:justify;">Destinado as Empresas licenciadas pelo Ibama.</p>
+                      <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
+                    <iframe name="login_Form" src="' . base_url() . '/index.php/login" frameborder="0" style="width:100%; height: 135px;"></iframe>
+                    <div class="block text-center">
+                      <button id="btnCadastrar" class="btn btn-success span5" data-toggle="tab" disabled="disabled">Cadastrar</button>
+                      <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form.document.loginForm.submit();">Logar</button>
+                    </div>
+                  </div>
+                  <div id="divDenuncia" class="span4">
+                    <h4 style="text-align:center;">Comunicado do Cidadão</h4>
                     <div style="margin-top: 10px;">
-                      <p style="font-size:11px; text-align:justify;">Esta opção não permite a revisão ou alteração do comunicado enviado.</p>
-                      <p style="font-size:11px; text-align:justify;">Ao optar pela denúncia anônima, o IBAMA não conseguirá entrar em contato para solicitar informações precisas sobre o acidente. Favor inserir o máximo de informações possíveis e completas.</p>
-                      <p style="text-align:center;"><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
+                      <p style="font-size:11px; text-align:justify;">Destinado aos cidadãos que queiram comunicar um acidente ambiental.</p>
+                      <p style="font-size:11px; text-align:justify;">O comunicante poderá identificar-se ou não. Favor inserir o máximo de informações.</p>
+                      <p style="text-align:center; margin-top:37%;"><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
                     </div>
                   </div>
                 </div>

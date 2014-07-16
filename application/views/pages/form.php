@@ -478,7 +478,7 @@
                   <div class="control-group">
                     <div class="controls">
                       <label class="checkbox text-left">
-                      <?php echo form_checkbox($produtoNaoPerigoso, 'on'); ?> Não perigoso
+                      <?php echo form_checkbox($produtoNaoPerigoso, 'on'); ?> Não classificado
                       </label>
                     </div>
                     <div class="controls">
@@ -582,37 +582,48 @@
                 </div>
               </div>
               <hr>
+              <?php 
+              if (isset($hasOleo)){
+                echo '
+                  <div class="row-fluid" >
+                    <label class="control-label"> Situação atual da descarga: </label>
+                    <div class="controls row-fluid">
+                      <div class="span3">
+                        <label class="radio">';
+                          echo form_radio($SitParal); 
+                          echo ' Paralisada
+                        </label>
+                      </div>
+                      <div class="span3">
+                        <label class="radio">';
+                          echo form_radio($SitNaoParal); 
+                          echo ' Não foi paralisada
+                        </label>
+                      </div>
+                      <div class="span3">
+                        <label class="radio">';
+                          echo form_radio($SitSemCondi); 
+                          echo 'Sem condições de informar
+                        </label>
+                      </div>
+                      <div class="span3">
+                        <label class="radio">';
+                          echo form_radio($SitNaoSeApl);
+                          echo 'Não se aplica
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                ';
+              }
 
-<!-- Hide if Outros acidentes is checked -->
-              <div class="row-fluid" id="hideifOutrosAcidentes">
-                <label class="control-label"> Situação atual da descarga: </label>
-                <div class="controls row-fluid">
-                  <div class="span3">
-                    <label class="radio">
-                      <?php echo form_radio($SitParal); ?> Paralisada
-                    </label>
-                  </div>
-                  <div class="span3">
-                    <label class="radio">
-                      <?php echo form_radio($SitNaoParal); ?> Não foi paralisada
-                    </label>
-                  </div>
-                  <div class="span3">
-                    <label class="radio">
-                      <?php echo form_radio($SitSemCondi); ?> Sem condições de informar
-                    </label>
-                  </div>
-                  <div class="span3">
-                    <label class="radio">
-                      <?php echo form_radio($SitNaoSeApl); ?> Não se aplica
-                    </label>
-                  </div>
-                </div>
-              </div>
+
+              ?>
 
             </div>
           </div>
         </div>
+
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse7">
@@ -662,7 +673,7 @@
                 <div class="span12">
                   <label class="checkbox text-left">
                     <?php echo form_checkbox($semDanos,'on'); ?>
-                    Sem informação sobre os danos
+                    Sem informação sobre ocorrências e/ou ambientes atingidos
                   </label>
                 </div>
               </div>
@@ -672,7 +683,7 @@
         <div class="accordion-group">
           <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse8">
-              8. Identificação empresa/órgão responsável*
+              8. Identificação da empresa/responsável*
             </a>
           </div>
           <div id="collapse8" class="accordion-body collapse">
@@ -716,7 +727,7 @@
                     <div class="controls">
                       <label class="checkbox text-left">
                         <?php echo form_checkbox($semResponsavel,'on'); ?>
-                        Sem informação sobre a empresa
+                        Sem informação sobre a empresa/responsável
                       </label>
                     </div>
                   </div>
@@ -769,7 +780,7 @@
                 <div class="span12">
                   <label class="checkbox text-left">
                     <?php echo form_checkbox($semInstituicao,'on'); ?>
-                    Sem informação sobre as instituções
+                    Sem informação sobre as instituição/empresa atuando no local
                   </label>
                 </div>
               </div>
@@ -790,7 +801,7 @@
             <div class="accordion-inner">
               <div class="row-fluid">
                 <div class="span12">
-                  <label class="control-label span8"> Existência de plano de emergência ou similar: </label>
+                  <label class="control-label span8"> Existência de Plano de Emergência Individual ou similar: </label>
                   <div class="control-group span4">
                     <div class="controls">
                       <div class="span6">
@@ -811,7 +822,7 @@
                 <div class="span12">
                   <label class="checkbox text-left">
                     <?php echo form_input($planoAcionado); ?>
-                    Acionado plano individual de emergência
+                    Acionado Plano de Emergência Individual
                   </label>
                 </div>
               </div>
@@ -832,7 +843,7 @@
                 <div class="span12">
                   <label class="checkbox text-left">
                     <?php echo form_checkbox($semProcedimentos, 'on'); ?>
-                    Sem evidência de ação ou providência até o momento
+                    Sem informação sobre existência/acionamento de Plano de Emergência individual
                   </label>
                 </div>
               </div>
@@ -879,7 +890,6 @@
           </div>
         </div>
         <?php
-          if($this->authldap->is_authenticated()) {   
             echo '
             <div class="accordion-group">
               <div class="accordion-heading">
@@ -897,8 +907,9 @@
                       <label class="control-label span5" for="inputNomeInformante" >Nome completo:
                       </label>
                       <div class="span6">';
-                        echo form_input($inputNomeInformante);
+                        echo form_input($inputNomeInformante);;
             echo '
+
                       </div>
                     </div>';
                       // if (isset($hasOleo) && isset($isServIBAMA)) {
@@ -923,7 +934,7 @@
                         </div>
                       </div>
                       ';
-            } else {
+
               echo '
                       <div class="controls span12">
                         <label class="control-label span5" for="inputCargoFunc">Cargo / Função:
@@ -956,71 +967,12 @@
                   </div>
                 </div>
               </div>
-            </div>';
-          }
+            </div>'
+          
         ?>
 
-<script type="text/javascript">
-function showFileName(inputFile) {
-    inputFile.offsetParent.getElementsByClassName('fileName')[0].innerHTML = inputFile.value.replace(/\\/g, '/').split('/').pop();
-}
+
 </script>
-
-<!-- BOTAO DE ADICIONAR ARQUIVOS SEM BOOTSTRAP CARREGADO / UPLOADFILE /-->
-        <?php 
-            if (!($this->authldap->is_authenticated())){
-              echo '
-              <div class="accordion-group">
-                  <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse14">
-                    12. Adicionar arquivos
-                    </a>
-                  </div>
-                  <div id="collapse14" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                      <div class="row-fluid">
-                        <div class="control-group">
-                          <div class="input-append">
-                            <style type="text/css">                                           
-                            .customFileInput input {
-                                position: absolute;
-                                visibility: hidden;
-                                right: 10px;
-
-                              }
-
-                              #boxpor {
-                                -o-text-overflow: ellipsis;   
-                                text-overflow: ellipsis;
-                                overflow:hidden;
-                                white-space:nowrap;
-                                width: 300px; 
-
-                              }
-
-                            </style>                     
-
-                            <form class="btn" method="post" enctype="multipart/form-data" />
-                                <label class="customFileInput">
-                                    <div class="btn">Escolher um arquivo</div>
-                                    <div class="fileName" style="position:absolute; top: 1em; left: 13em"></div>
-                                    <a class="btn" id="uploadButton" href="#" style="position: absolute; right: 2em;" > Upload</a> 
-                                    <input type="hidden" id="sendNroComunicado" value="" />
-                                    <input type="file" name="userfile" onchange="showFileName(this)" id="boxpor" />
-                                    <br /><small> *jpg, doc, pdf, xls, até 5MB</small>
-
-                                </label>
-
-                            </form>
-                          </div>
-
-                        </div>
-                      </div>
-                    </div>
-                  </div>'
-            ;} 
-        ?>
-<!-- -->
 
         <?php
           if($this->authldap->is_authenticated()) {
@@ -1051,14 +1003,19 @@ function showFileName(inputFile) {
           }
         ?>
 
+
+<!--upload file button without strap-->
         <?php 
-          if ($this->authldap->is_authenticated()){
             echo '
             <div class="accordion-group">
                   <div class="accordion-heading">
-                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse14">
-                    14. Adicionar arquivos
-                    </a>
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse14">';
+                    if ($this->authldap->is_authenticated())
+                      echo '14. Adicionar arquivos';
+                    else 
+                      echo '13.Adicionar arquivos';
+                    echo 
+                    '</a>
                   </div>
                   <div id="collapse14" class="accordion-body collapse">
                     <div class="accordion-inner">
@@ -1091,7 +1048,7 @@ function showFileName(inputFile) {
                       </div>
                     </div>
                   </div>'          
-                  ;} 
+                  ;
       ?>
 
 

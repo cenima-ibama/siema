@@ -5,7 +5,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, doubleClick, drawAPI, hideIfisOutros, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, onuTable, otherTable, pointTable, polygonTable, productsOnu, productsOutro, rest, seconds, sendNroComunicado, shapeLoadedFromDB, validationString, _municipios, _shownAccordion, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProdutoOnu, _tipoProdutoOutro;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, doubleClick, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, onuTable, otherTable, pointTable, polygonTable, productsOnu, productsOutro, rest, seconds, sendNroComunicado, shapeLoadedFromDB, validationString, _municipios, _shownAccordion, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProdutoOnu, _tipoProdutoOutro;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -904,7 +904,7 @@
             isVisible: false
           },
           nome: {
-            columnName: "Substância - Nº Onu - CR",
+            columnName: "Substância - Nº ONU - CR",
             tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome",
             primaryField: "id_produto_onu",
             validation: function(value) {
@@ -1062,7 +1062,7 @@
             isVisible: false
           },
           nome: {
-            columnName: "Substância - Nº Onu - CR",
+            columnName: "Substância - Nº ONU - CR",
             tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome",
             primaryField: "id_produto_onu",
             validation: function(value) {
@@ -1199,8 +1199,9 @@
     $("#uploadButton").on('click', function(event) {});
     sendNroComunicado = $('#nroComunicado').html();
     $('#sendNroComunicado').val(sendNroComunicado);
-    if ((hideIfisOutros = window.top.document.getElementById("optionsAcidenteOutros").checked)) {
-      return $("#hideifOutrosAcidentes").css("display", "none");
+    if (!parent.H5.logged_in) {
+      $("#inputNomeInformante").removeAttr("disabled");
+      return $("#inputEmailInformante").removeAttr("disabled");
     }
   });
 

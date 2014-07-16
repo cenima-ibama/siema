@@ -1102,7 +1102,7 @@ $(document).ready ->
           columnName: "Identificador"
           isVisible: false
         nome:
-          columnName: "Substância - Nº Onu - CR"
+          columnName: "Substância - Nº ONU - CR"
           tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
           primaryField: "id_produto_onu"
           validation: (value)->
@@ -1226,7 +1226,7 @@ $(document).ready ->
           defaultValue: nroOcorrencia
           isVisible: false
         nome:
-          columnName: "Substância - Nº Onu - CR"
+          columnName: "Substância - Nº ONU - CR"
           tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
           primaryField: "id_produto_onu"
           validation: (value)->
@@ -1329,11 +1329,15 @@ $(document).ready ->
       #   if ()
     )
 
+  #Upload file on form, getting value from 
   $("#uploadButton").on 'click', (event) ->
   sendNroComunicado = $('#nroComunicado').html()
   $('#sendNroComunicado').val(sendNroComunicado);
   # sendNroComunicado = $('iframe[name=form_frame]').contents().find('#nroComunicado').html()
   # $('iframe[name=form_frame]').contents().find('#sendNroComunicado').val(sendNroComunicado)
 
-  if (hideIfisOutros = window.top.document.getElementById("optionsAcidenteOutros").checked) 
-    $("#hideifOutrosAcidentes").css("display", "none")
+
+
+  if !parent.H5.logged_in
+    $("#inputNomeInformante").removeAttr("disabled")
+    $("#inputEmailInformante").removeAttr("disabled")

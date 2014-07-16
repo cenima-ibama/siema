@@ -342,7 +342,7 @@ class Form_model extends CI_Model {
 
 
     //
-    // 12.Identificação do Comunicante (In case the user is logged)
+    // 12.Identificação do Comunicante
     //
     if (isset($form["inputNomeInformante"])) {
       $fields = $fields . "nome_comunicante,";

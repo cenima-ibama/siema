@@ -1234,7 +1234,6 @@ class Form extends CI_Controller {
             'rows'         => '2',
             'maxlength'    => '2000',
             'class'        => 'input-large',
-            'placeholder'    => 'Campo para descrição geral da ocorrência e outras informações úteis',
             'value'        => set_value('inputDesObs', isset($formLoad['inputDesObs']) ? $formLoad['inputDesObs'] : '')
         );
 
