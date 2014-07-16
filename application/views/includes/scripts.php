@@ -54,3 +54,5 @@
   <script src="<?= base_url()?>assets/js/h5charts.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/h5manag.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/h5wizard.js" type="text/javascript"></script>
+  <script src="<?= base_url()?>assets/js/pdfmake.js" type="text/javascript"></script>   
+  <script src="<?= base_url()?>assets/js/vfs_fonts.js" type="text/javascript"></script>
