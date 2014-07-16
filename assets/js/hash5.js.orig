@@ -1233,7 +1233,7 @@
                   value: value
                 });
               }
->>>>>>> 0b6300f05a3d94d65da38d2963141f12ee026f43
+>>>>>>> 28902e3bd0c5296300126c50ad71da458d83e0da
             }
             if (properties.primaryField != null) {
               dataField = properties.primaryField;
@@ -1316,7 +1316,7 @@
           return _this._lastRow = newRow;
         };
       })(this));
->>>>>>> 0b6300f05a3d94d65da38d2963141f12ee026f43
+>>>>>>> 28902e3bd0c5296300126c50ad71da458d83e0da
     };
 
     Table.prototype._delFields = function(delBtn, tableRow) {

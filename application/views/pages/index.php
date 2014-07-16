@@ -507,7 +507,7 @@
             <option value="Barragem">Barragem</option>
             <option value="Armazenamento/Depósito">Armazenamento/Depósito</option>
             <option value="Posto de combustível">Posto de combustível</option>
-            <option value="Outros">Outros</option>
+            <option value="Outro(s)">Outro(s)</option>
             <option value="Todos" selected="true">Todos</option>
           </select>
         </div>
@@ -537,12 +537,12 @@
       </div>
 
     <div>
-      <div id="resultsConsult" style="overflow-y: auto; max-height: 500px">
+      <div id="resultsConsult" >
 
       </div>
-       <div id="optionsExport">
-            <a class="btn" style="margin-top: 10px;width: 10%;" >Exportar para XLS</a>
-            <a class="btn" style="margin-top: 10px;width: 10%;" >Exportar para PDF</a>
+       <div id="optionsExport" style="display:none">
+            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls" >Exportar para XLS</a>
+            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportPdf" >Exportar para PDF</a>
         </div>
 
     </div>
