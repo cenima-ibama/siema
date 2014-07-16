@@ -42,10 +42,20 @@
 
   <script>
       <?php
-            echo "H5.DB.addDB({name:'alert', table:'public_alert'});\n";
-            echo "H5.DB.addDB({name:'cloud', table:'public_cloud'});\n";
-            echo "H5.DB.addDB({name:'diary', table:'public_diary'});\n";
-            echo "H5.DB.addDB({name:'prodes', table:'public_prodes'});\n";
+            // echo "H5.DB.addDB({name:'alert', table:'public_alert'});\n";
+            // echo "H5.DB.addDB({name:'cloud', table:'public_cloud'});\n";
+            // echo "H5.DB.addDB({name:'diary', table:'public_diary'});\n";
+            // echo "H5.DB.addDB({name:'prodes', table:'public_prodes'});\n";
+
+
+       if($this->session->userdata('logged_in')) {
+            echo "H5.logged_in = true;";
+        }
+        else {
+            echo "H5.logged_in = false;";
+        }
+
+
       ?>
   </script>
 
