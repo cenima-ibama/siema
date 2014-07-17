@@ -121,14 +121,13 @@
                     -->
                   </div>
                   <div class="control-group">
-                    <label class="control-label" for="inputMunicipio">Município/UF:</label>
+                    <label class="control-label" for="inputMunicipio">UF/Município:</label>
                     <div class="controls">
                       <?php
 
                         if (isset($semLocalizacao['checked'])) {
                           echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', $id_uf), 'id="dropdownUF" class="input-small" disabled="disabled"');
                           echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium" disabled="disabled"');
-
                         } else {
                           echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', $id_uf), 'id="dropdownUF" class="input-small"');
                           echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium"');
@@ -919,7 +918,6 @@
                       <div class="span6">';
                         echo form_input($inputNomeInformante);
             echo '
-
                       </div>
                     </div>';
                       // if (isset($hasOleo) && isset($isServIBAMA)) {
