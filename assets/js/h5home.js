@@ -72,6 +72,24 @@
       }
       return $('.nav-collapse').collapse('hide');
     });
+    $("#chkAllDates").on("click", function(event) {
+      if ($(this).is(":checked")) {
+        $("#dateStart").attr("disabled", "disabled");
+        return $("#dateFinish").attr("disabled", "disabled");
+      } else {
+        $("#dateStart").removeAttr("disabled", "disabled");
+        return $("#dateFinish").removeAttr("disabled", "disabled");
+      }
+    });
+    $("#dateStart").on("change", function(event) {
+      return $("#chkAllDates").attr("unchecked", "unchecked");
+    });
+    $("#dateFinish").on("change", function(event) {
+      return $("#chkAllDates").attr("unchecked", "unchecked");
+    });
+    $("#consultarDados").on("click", function(event) {
+      return setFilter();
+    });
     String.prototype.toProperCase = function() {
       return this.replace(/\w\S*/g, function(txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
