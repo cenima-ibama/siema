@@ -94,7 +94,7 @@ $(document).ready ->
   roundNumber = (number, digits) ->
     multiple = Math.pow(10, digits)
     rndedNum = Math.round(number * multiple) / multiple
-    rndedNum
+    rndedNum  
 
   # Animate load screen
   $("#dash").fadeOut(1)
@@ -104,7 +104,7 @@ $(document).ready ->
 #---------------------------------------------------------------------------------#
 #GUIA DE CONSULTAS:
 #---------------------------------------------------------------------------------#
-
+   
   #Configurar DatePicker para consulta de datas.
   $("#dateStart").datepicker(
     format: "dd/mm/yyyy"
@@ -162,7 +162,7 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
 
   if uf isnt ""
     query += " AND " if query.length isnt 0
-    query += "sigla='"+uf+"'"
+    query += "uf='"+uf+"'"
 
   if origem isnt ""
     query += " AND " if query.length isnt 0
@@ -177,30 +177,62 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
 
   rest = new H5.Rest (
     url: H5.Data.restURL
-    table: "vw_ocorrencia"
+    table: "vw_ocorrencia_consulta"
     fields: 
-      "to_char(dt_registro,'DD/MM/YYYY') AS dt_registro,
-      periodo_ocorrencia,
-      regiao,
-      sigla,
-      array_to_string(origem,';') AS origem,
+      "cast( id_ocorrencia AS text) AS id_ocorrencia,
+      to_char(dt_registro,'DD/MM/YYYY') AS dt_registro,
+      to_char(dt_ocorrencia,'DD/MM/YYYY') AS dt_ocorrencia,
+      to_char(dt_primeira_obs,'DD/MM/YYYY') AS dt_primeira_obs, 
+      municipio,
+      uf,
+      array_to_string(origem,';') AS origem,          
+      array_to_string(tipo_evento,';') AS tipo_evento, 
       array_to_string(tipos_danos_identificados,';') AS tipos_danos_identificados,
       array_to_string(institiuicoes_atuando_local,';') AS institiuicoes_atuando_local,
-      array_to_string(tipos_fontes_informacoes,';') AS tipos_fontes_informacoes"
+      array_to_string(tipos_fontes_informacoes,';') AS tipos_fontes_informacoes,      
+      dia_semana,
+      dia_semana_primeira_obs,
+      dia_semana_registro,
+      periodo_ocorrencia,       
+      dt_ocorrencia_feriado"      
     parameters: query
   )
 
-  #Montar array com os registros retornados.
+  dataIncidente = ""
+  diaSemana = ""
+  dataCadastrada = false
+
+  #Montar array com os registros retornados pra passar para o datatable.
   $.each rest.data, (index,dt) ->
+     #Data do Incidente.
+     dataIncCadastrada = !(dt.dt_ocorrencia is null or dt.dt_ocorrencia is "")
+
+     #Data da primeira observação.
+     dataObsCadastrada = !(dt.dt_primeira_obs is null or dt.dt_primeira_obs is "")
+
+     if dataIncCadastrada
+      dataIncidente = dt.dt_ocorrencia
+      diaSemana = dt.dia_semana
+     else if dataObsCadastrada
+      dataIncidente = dt.dt_primeira_obs
+      diaSemana = dt.dia_semana_primeira_obs
+     else
+      dataIncidente = dt.dt_registro
+      diaSemana = dt.dia_semana_registro
+
      registroTemp[registroTemp.length] = new Array(
-        dt.dt_registro
-        dt.periodo_ocorrencia
-        dt.regiao
-        dt.sigla 
+        dt.id_ocorrencia        
+        dataIncidente
+        dt.municipio        
+        dt.uf
         dt.origem
+        dt.tipo_evento
         dt.tipos_danos_identificados
         dt.institiuicoes_atuando_local
-        dt.tipos_fontes_informacoes
+        dt.tipos_fontes_informacoes        
+        diaSemana        
+        dt.periodo_ocorrencia
+        dt.dt_ocorrencia_feriado        
       );
 
   #Mostrar opções de exportação quando houver registro sendo mostrados.
@@ -209,21 +241,14 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
   else
     $("#optionsExport").hide();  
 
+  headersTable = getHeadersColumnsResults()
+
   $('#resultsConsult').html '<table cellpadding="0" cellspacing="0" border="0"  id="resultTable"></table>';
 
   $('#resultTable').dataTable(
     "dom": "T<'clear'>lfrtip"
     "data": registroTemp
-    "columns": [
-      { "title": "Data de Cadastro" }
-      { "title": "Período" }
-      { "title": "Região" }
-      { "title": "UF" }
-      { "title": "Origem" }
-      { "title": "Danos Identificados" }
-      { "title": "Inst. Atuando no Local" }
-      { "title": "Fontes de Informação" }
-    ]   
+    "columns": headersTable
     "oLanguage":
       {
         "sLengthMenu": "Mostrar _MENU_ registros por página"
@@ -295,7 +320,7 @@ $("#btnExportPdf").on "click", (event) ->
           {text: ["Data de Cadastro: ", {text: dtCadastro,bold: true}],  margin: [0, 0, 0, 10]}
           {text: [{text: "Total de registro(s): "+qtdeReg,bold: true}],  margin: [0, 0, 0, 10]}
           table:  
-            widths: [95,40,40,20,100,150,150,100]                      
+            widths: [50,65,50,20,80,70,70,70,70,45,45,38]                      
             headerRows: 1              
             body: ""          
         ]
@@ -337,34 +362,54 @@ generateConsultCSV = =>
 
 getContentExportConsult = ->  
   
-  arrayTemp = new Array();
+  arrayTemp = new Array()
 
-  #Include header coluns for table results search.
+  #Include header coluns for table results search.  
   arrayResults = new Array [  
-      {text:"Data de Cadastro", style: "header"},
-      {text:"Período", style: "header"},
-      {text:"Região", style: "header"},
+      {text:"Número Registro", style: "header"},      
+      {text:"Data", style: "header"},
+      {text:"Município", style: "header"},
       {text:"UF", style: "header"},
       {text:"Origem", style: "header"},
-      {text:"Danos Identificados", style: "header"},
-      {text:"Inst. Atuando Local", style: "header"},
-      {text:"Fonte", style: "header"}
+      {text:"Tipo Evento", style: "header"},
+      {text:"Ocorrências/Ambientes Atingidos", style: "header"},
+      {text:"Inst. Atuando no Local", style: "header"},
+      {text:"Fonte", style: "header"},
+      {text:"Dia", style: "header"},
+      {text:"Período", style: "header"},
+      {text:"Feriado", style: "header"}
   ]
   
   #Add records of result search, add rows for table of results. 
   $("#resultTable").DataTable().rows().data().each (row) ->     
     arrayTemp = []
-
     for col in row          
       if col is null       
         arrayTemp[arrayTemp.length] = ""
       else
         arrayTemp[arrayTemp.length] = if typeof(col) isnt "object" then col else col.text
       
-    arrayResults[arrayResults.length] = arrayTemp  
-
+    arrayResults[arrayResults.length] = arrayTemp
 
   return arrayResults  
+
+getHeadersColumnsResults = ->
+  columnsResultsConsulta = new Array(
+      { "title": "Número de Registro" }      
+      { "title": "Data do Incidente" }
+      { "title": "Município" }
+      { "title": "UF" }           
+      { "title": "Origem" }
+      { "title": "Tipo de Evento" }
+      { "title": "Ocorrências/Ambientes Atingidos" }
+      { "title": "Inst. Atuando no Local" }
+      { "title": "Fontes de Informação" }
+      { "title": "Dia da Semana" } 
+      { "title": "Período" }
+      { "title": "Feriado" }      
+    )
+
+  return columnsResultsConsulta
 
 #---------------------------------------------------------------------------------#
 #FIM - GUIA DE CONSULTAS:
