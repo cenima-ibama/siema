@@ -1182,9 +1182,25 @@
     };
 
     Table.prototype._addFields = function() {
+<<<<<<< HEAD
+      var _this = this;
+      return $(this._addBtn).on("click", function(event) {
+        var closeBtn, delBtn, div, i, icon, newRow, saveBtn, tbody, td;
+        event.preventDefault();
+        newRow = document.createElement("tr");
+        i = 0;
+        $.each(_this.options.fields, function(key, properties) {
+          var dataField, span, td, value;
+          td = newRow.insertCell(i++);
+          span = document.createElement("span");
+          if (key !== _this.options.uniqueField.field || _this.options.uniqueField.insertable) {
+            value = "";
+            if (properties.defaultValue != null) {
+              value = properties.defaultValue;
+=======
       return $(this._addBtn).on("click", (function(_this) {
         return function(event) {
-          var closeBtn, delBtn, div, i, icon, newRow, saveBtn, tbody, td;
+          var delBtn, div, i, icon, newRow, saveBtn, tbody, td;
           event.preventDefault();
           newRow = document.createElement("tr");
           i = 0;
@@ -1217,6 +1233,7 @@
                   value: value
                 });
               }
+>>>>>>> 28902e3bd0c5296300126c50ad71da458d83e0da
             }
             if (properties.primaryField != null) {
               dataField = properties.primaryField;
@@ -1244,17 +1261,9 @@
           icon.className = "icon-ok ";
           $(saveBtn).append(icon);
           _this._saveFields(saveBtn, delBtn, newRow);
-          closeBtn = document.createElement("a");
-          closeBtn.id = "fecharBotaoTabela";
-          closeBtn.className = "btn editable-cancel ";
-          icon = document.createElement("i");
-          icon.className = "icon-remove";
-          $(closeBtn).append(icon);
-          _this._closeFields(closeBtn, newRow);
           div = document.createElement("div");
           $(div).append(saveBtn);
           $(div).append(delBtn);
-          $(div).append(closeBtn);
           td = newRow.insertCell(i++);
           $(td).append(div);
           if (_this._lastRow != null) {
@@ -1263,9 +1272,51 @@
             tbody = document.getElementsByName(_this.options.container)[0].getElementsByClassName('table')[0].appendChild(document.createElement('tbody'));
             tbody.appendChild(newRow);
           }
+<<<<<<< HEAD
+          $(span).attr("data-field", dataField);
+          return $(td).append(span);
+        });
+        delBtn = document.createElement("a");
+        delBtn.id = "deletarBotaoTabela";
+        delBtn.className = "btn ";
+        $(delBtn).attr("style", "display:none");
+        icon = document.createElement("i");
+        icon.className = "icon-trash ";
+        $(delBtn).append(icon);
+        _this._delFields(delBtn, newRow);
+        saveBtn = document.createElement("a");
+        saveBtn.id = "salvarBotaoTabela";
+        saveBtn.className = "btn btn-primary editable-submit ";
+        icon = document.createElement("i");
+        icon.className = "icon-ok ";
+        $(saveBtn).append(icon);
+        _this._saveFields(saveBtn, delBtn, newRow);
+        closeBtn = document.createElement("a");
+        closeBtn.id = "fecharBotaoTabela";
+        closeBtn.className = "btn editable-cancel ";
+        icon = document.createElement("i");
+        icon.className = "icon-remove";
+        $(closeBtn).append(icon);
+        _this._closeFields(closeBtn, newRow);
+        div = document.createElement("div");
+        $(div).append(saveBtn);
+        $(div).append(delBtn);
+        $(div).append(closeBtn);
+        td = newRow.insertCell(i++);
+        $(td).append(div);
+        if (_this._lastRow != null) {
+          $(newRow).insertAfter($(_this._lastRow));
+        } else {
+          tbody = document.getElementsByName(_this.options.container)[0].getElementsByClassName('table')[0].appendChild(document.createElement('tbody'));
+          tbody.appendChild(newRow);
+        }
+        return _this._lastRow = newRow;
+      });
+=======
           return _this._lastRow = newRow;
         };
       })(this));
+>>>>>>> 28902e3bd0c5296300126c50ad71da458d83e0da
     };
 
     Table.prototype._delFields = function(delBtn, tableRow) {

@@ -5,7 +5,7 @@
   H5.Data.restURL = "http://" + document.domain + "/siema/rest";
 
   $(document).ready(function() {
-    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, doubleClick, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, onuTable, otherTable, pointTable, polygonTable, productsOnu, productsOutro, rest, seconds, shapeLoadedFromDB, validationString, _municipios, _shownAccordion, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProdutoOnu, _tipoProdutoOutro;
+    var GeoSearch, Marker, addSelection, bingKey, binghybrid, date, doubleClick, drawAPI, idLin, idOcorrencia, idPol, isLoadForm, lineTable, minimapView, nroComunicado, nroOcorrencia, onuTable, otherTable, pointTable, polygonTable, productsOnu, productsOutro, rest, seconds, sendNroComunicado, shapeLoadedFromDB, validationString, _municipios, _shownAccordion, _tipoDanoIdentificado, _tipoEvento, _tipoFonteInformacao, _tipoInstituicaoAtuando, _tipoLocalizacao, _tipoProdutoOnu, _tipoProdutoOutro;
     _tipoLocalizacao = null;
     _tipoEvento = null;
     _tipoDanoIdentificado = null;
@@ -763,15 +763,15 @@
         if (((-1 < hora && hora < 23)) && ((-1 < minuto && minuto < 60))) {
           obsHour = parseInt($(this).prop('value').split(':')[0], 10);
           if (obsHour < 6) {
-            $("#PerObsMadru").prop('checked', 'checked');
+            return $("#PerObsMadru").prop('checked', 'checked');
           } else if (obsHour < 12) {
-            $("#PerObsMatu").prop('checked', 'checked');
+            return $("#PerObsMatu").prop('checked', 'checked');
           } else if (obsHour < 18) {
-            $("#PerObsVesper").prop('checked', 'checked');
+            return $("#PerObsVesper").prop('checked', 'checked');
           } else {
             $("#PerObsNotu").prop('checked', 'checked');
+            return $("#divPeriodoObs").css('display', 'none');
           }
-          return $("#divPeriodoObs").css('display', 'none');
         } else {
           $("#divPeriodoObs").prop('style', '');
           return $(this).val("");
@@ -788,15 +788,15 @@
         if (((-1 < hora && hora < 23)) || ((-1 < minuto && minuto < 60))) {
           obsHour = parseInt($(this).prop('value').split(':')[0], 10);
           if (obsHour < 6) {
-            $("#PerInciMadru").prop('checked', 'checked');
+            return $("#PerInciMadru").prop('checked', 'checked');
           } else if (obsHour < 12) {
-            $("#PerInciMatu").prop('checked', 'checked');
+            return $("#PerInciMatu").prop('checked', 'checked');
           } else if (obsHour < 18) {
-            $("#PerInciVesper").prop('checked', 'checked');
+            return $("#PerInciVesper").prop('checked', 'checked');
           } else {
             $("#PerInciNotu").prop('checked', 'checked');
+            return $("#divPeriodoInci").css('display', 'none');
           }
-          return $("#divPeriodoInci").css('display', 'none');
         } else {
           $("#divPeriodoInci").css('display', 'auto;');
           return $(this).val("");
@@ -907,7 +907,7 @@
             isVisible: false
           },
           nome: {
-            columnName: "Substância - Nº Onu - CR",
+            columnName: "Substância - Nº ONU - CR",
             tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome",
             primaryField: "id_produto_onu",
             validation: function(value) {
@@ -970,7 +970,7 @@
           field: "id_ocorrencia_produto"
         }
       });
-      return otherTable = new H5.Table({
+      otherTable = new H5.Table({
         container: "productOutroTable",
         url: H5.Data.restURL,
         table: "ocorrencia_produto%20join%20produto_outro%20on%20(produto_outro.id_produto_outro%3Docorrencia_produto.id_produto_outro)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)",
@@ -1065,7 +1065,7 @@
             isVisible: false
           },
           nome: {
-            columnName: "Substância - Nº Onu - CR",
+            columnName: "Substância - Nº ONU - CR",
             tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome",
             primaryField: "id_produto_onu",
             validation: function(value) {
@@ -1122,7 +1122,7 @@
           field: "id_ocorrencia_produto"
         }
       });
-      return otherTable = new H5.Table({
+      otherTable = new H5.Table({
         container: "productOutroTable",
         url: H5.Data.restURL,
         registUpdate: true,
@@ -1198,6 +1198,13 @@
           field: "id_ocorrencia_produto"
         }
       });
+    }
+    $("#uploadButton").on('click', function(event) {});
+    sendNroComunicado = $('#nroComunicado').html();
+    $('#sendNroComunicado').val(sendNroComunicado);
+    if (!parent.H5.logged_in) {
+      $("#inputNomeInformante").removeAttr("disabled");
+      return $("#inputEmailInformante").removeAttr("disabled");
     }
   });
 

@@ -1176,7 +1176,8 @@ class Form extends CI_Controller {
             'name'         => 'inputNomeInformante',
             'class'        => 'input-large',
             'maxlength'    => '150',
-            'value'        => set_value('inputNomeInformante', $this->session->userdata('name'))
+            'value'        => set_value('inputNomeInformante', $this->session->userdata('name')),
+            'disabled'     =>  'disabled'
         );
         // Input Funcão Navio Comunicante (Informante)
         $data['inputCargoFunc'] = array(
@@ -1200,7 +1201,9 @@ class Form extends CI_Controller {
             'name'         => 'inputEmailInformante',
             'class'        => 'input-large',
             'maxlength'    => '150',
-            'value'        => set_value('inputEmailInformante', $this->session->userdata('mail'))
+            'value'        => set_value('inputEmailInformante', $this->session->userdata('mail')),
+            'disabled'     =>  'disabled'
+
         );
         // Input Telefone Comunicante (Informante)
         $data['inputTelInformante'] = array(
@@ -1231,7 +1234,6 @@ class Form extends CI_Controller {
             'rows'         => '2',
             'maxlength'    => '2000',
             'class'        => 'input-large',
-            'placeholder'    => 'Campo para descrição geral da ocorrência e outras informações úteis',
             'value'        => set_value('inputDesObs', isset($formLoad['inputDesObs']) ? $formLoad['inputDesObs'] : '')
         );
 
@@ -1293,4 +1295,43 @@ class Form extends CI_Controller {
             // $this->firephp->log($this->email->print_debugger());
 
     }
+
+
+
+    public function uploadFile($name){
+        
+        $fileName = $_FILES["userfile"]["name"];
+        $fileTmpLoc = $_FILES["userfile"]["tmp_name"];
+        $extensionAllowed = array("jpeg", "jpg", "pdf", "doc", "csv", "xls", "xlsx", "png", "pneg");
+        $path = '../../assets/uploads/';
+        $pathFix = $path . $name . '/';
+        $ext = end((explode(".", $fileName)));
+
+        if (in_array($ext, $extensionAllowed))
+        {
+            if ($_FILES["userfile"]["size"] < 5*1024*1024)
+            { //5 MB
+                if(!is_dir($pathFix))
+                {
+                    mkdir ($pathFix, 0777);
+                    $pathAndName = $pathFix . $fileName;
+                    $moveResult = move_uploaded_file($fileTmpLoc, $pathAndName);
+                        if ($moveResult == true) 
+                        {
+                           echo "File has been moved from page to " . $pathAndName;
+                        }
+                } else 
+                    {
+                    echo "Registro existente!";
+                    } 
+            } else{
+                echo "Tamanho excede o total permitido.";
+                }
+        } else{
+                echo "Extensao nao permitida.";
+            }
+
+    }
+
+
 }

@@ -690,10 +690,22 @@ class H5.Table
       # Adds the save function to the save button
       @_saveFields(saveBtn, delBtn, newRow)
 
+
+      # Creates and configure the new button Close lines
+      closeBtn = document.createElement("a")
+      closeBtn.id = "fecharBotaoTabela"
+      closeBtn.className = "btn editable-cancel "
+      icon = document.createElement("i")
+      icon.className = "icon-remove"
+      $(closeBtn).append icon
+      @_closeFields(closeBtn, newRow)
+
+
       # Adds both to the new action div
       div = document.createElement("div")
       $(div).append saveBtn
       $(div).append delBtn
+      $(div).append closeBtn
 
       # Adds the action div to the new row
       td = newRow.insertCell(i++)
@@ -712,6 +724,7 @@ class H5.Table
       @_lastRow = newRow
 
   # Function that add the delete function to delete buttons
+
   _delFields: (delBtn, tableRow)->
     $(delBtn).on "click", (event) =>
 
@@ -931,6 +944,13 @@ class H5.Table
 
         # Reload table
         @_reloadTable()
+
+  # Function to close tables if click on "#fecharBotaoTabela"
+  _closeFields: (closeBtn, tableRow)->
+    $(closeBtn).on "click", (event) ->
+      $(@).closest('tr').remove()
+    
+    @._lastRow = null
 
   # Function that reloads the table on the page
   _reloadTable : ()->
