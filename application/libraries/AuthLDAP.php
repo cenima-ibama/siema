@@ -133,6 +133,8 @@ class AuthLDAP {
             'role_name' => $user_info['role_name'],
             'role_level' => $user_info['role_level'],
             'logged_in' => TRUE
+            // ,'user_information' => $user_info,
+            // 'teste' => 'teste'
             );
 
         $this->ci->session->set_userdata($customdata);

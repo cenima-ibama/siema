@@ -39,7 +39,7 @@ class Auth extends CI_Controller {
         $this->login();
     }
 
-    function login($errorMsg = NULL){
+    function login_ibama($errorMsg = NULL){
         $this->session->keep_flashdata('tried_to');
         if(!$this->authldap->is_authenticated()) {
             // Set up rules for form validation
@@ -55,18 +55,50 @@ class Auth extends CI_Controller {
                     if($this->session->flashdata('tried_to')) {
                         redirect($this->session->flashdata('tried_to'));
                     } else {
-                        $this->load->view('pages/login');
+                        $this->load->view('pages/login_ibama');
 
                     }
                 }
             else {
                 // Login FAIL
-                $this->load->view('pages/login', array('login_fail_msg'
+                $this->load->view('pages/login_ibama', array('login_fail_msg'
                     => 'Error with LDAP authentication.'));
             }
         } else {
             // Already logged in...
-            $this->load->view('pages/login');
+            $this->load->view('pages/login_ibama');
+        }
+    }
+
+
+    function login_empresa($errorMsg = NULL){
+        $this->session->keep_flashdata('tried_to');
+        if(!$this->authldap->is_authenticated()) {
+            // Set up rules for form validation
+            $rules = $this->form_validation;
+            $rules->set_rules('inputUsername', 'Username', 'required|alpha_dash');
+            $rules->set_rules('inputPassword', 'Password', 'required');
+
+            // Do the login...
+            if($rules->run() && $this->authldap->login(
+                $rules->set_value('inputUsername'),
+                $rules->set_value('inputPassword'))) {
+                    // Login WIN!
+                    if($this->session->flashdata('tried_to')) {
+                        redirect($this->session->flashdata('tried_to'));
+                    } else {
+                        $this->load->view('pages/login_empresa');
+
+                    }
+                }
+            else {
+                // Login FAIL
+                $this->load->view('pages/login_empresa', array('login_fail_msg'
+                    => 'Error with LDAP authentication.'));
+            }
+        } else {
+            // Already logged in...
+            $this->load->view('pages/login_empresa');
         }
     }
 

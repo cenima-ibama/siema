@@ -21,7 +21,7 @@
 
   H5.Data.institutionLocal = ["IBAMA", "Órgão Estadual ou Municipal de Meio Ambiente", "Defesa Civil", "Corpo de Bombeiros", "Polícia Rodoviária", "Polícia Militar", "Polícia Civil", "Marinha do Brasil", "Empresa especializada em atendimento", "Outra(s)", "Todos"];
 
-  H5.Data.sourceType = ["Comunicado da empresa/responsável", "OEMA", "Mídia", "Denúncia", "Outra(s) fonte(s)"];
+  H5.Data.sourceType = ["Comunicado da empresa/responsável", "Órgão Estadual ou Municipal de Meio Ambiente", "Mídia", "Denúncia", "Outra(s) fonte(s)"];
 
   H5.Data.periodDay = ["Matutino", "Vespertino", "Noturno", "Madrugada"];
 

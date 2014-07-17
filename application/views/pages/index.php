@@ -46,19 +46,32 @@
               } else {
                 echo '
                 <div id="divLogout">
-                  <div class="span6">
-                    <iframe name="login_Form" src="' . base_url() . '/index.php/login" frameborder="0" style="width:100%; height: 175px;"></iframe>
+                  <div class="span4">
+                    <h4 style="text-align:center;">Comunicado do IBAMA</h4>
+                    <p style="font-size:11px; text-align:justify;">Destinado aos usuários registrados no Sistema Ibama-Net.</p>
+                      <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
+                    <iframe name="login_Form_Ibama" src="' . base_url() . '/index.php/login/login_ibama" frameborder="0" style="width:100%; height: 135px;"></iframe>
                     <div class="block text-center">
                       <button id="btnCadastrar" class="btn btn-success span5" data-toggle="tab" disabled="disabled">Cadastrar</button>
-                      <button id="btnLogar" class="btn btn-success span5"  onClick="window.top.login_Form.document.loginForm.submit();">Logar</button>
+                      <button id="btnLogar" class="btn btn-success span5" onClick="window.top.login_Form_Ibama.document.loginForm.submit();">Logar</button>
                     </div>
                   </div>
-                  <div id="divDenuncia" class="span6">
-                    <h4 style="text-align:center;">Denúncia anônima</h4>
+                  <div class="span4">
+                    <h4 style="text-align:center;">Comunicado das Empresas</h4>
+                    <p style="font-size:11px; text-align:justify;">Destinado as Empresas licenciadas pelo Ibama.</p>
+                      <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
+                    <iframe name="login_Form_Empresa" src="' . base_url() . '/index.php/login/login_empresa" frameborder="0" style="width:100%; height: 135px;"></iframe>
+                    <div class="block text-center">
+                      <button id="btnCadastrar" class="btn btn-success span5" data-toggle="tab" disabled="disabled">Cadastrar</button>
+                      <button id="btnLogar" class="btn btn-success span5" onClick="window.top.login_Form_Empresa.document.loginForm.submit();">Logar</button>
+                    </div>
+                  </div>
+                  <div id="divDenuncia" class="span4">
+                    <h4 style="text-align:center;">Comunicado do Cidadão</h4>
                     <div style="margin-top: 10px;">
-                      <p style="font-size:11px; text-align:justify;">Esta opção não permite a revisão ou alteração do comunicado enviado.</p>
-                      <p style="font-size:11px; text-align:justify;">Ao optar pela denúncia anônima, o IBAMA não conseguirá entrar em contato para solicitar informações precisas sobre o acidente. Favor inserir o máximo de informações possíveis e completas.</p>
-                      <p style="text-align:center;"><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
+                      <p style="font-size:11px; text-align:justify;">Destinado aos cidadãos que queiram comunicar um acidente ambiental.</p>
+                      <p style="font-size:11px; text-align:justify;">O comunicante poderá identificar-se ou não. Favor inserir o máximo de informações.</p>
+                      <p style="text-align:center; margin-top:37%;"><a id="denunciaAnonima" class="btn" href="#tab2" data-toggle="tab">Clique aqui</a></p>
                     </div>
                   </div>
                 </div>
@@ -495,7 +508,7 @@
             <option value="Barragem">Barragem</option>
             <option value="Armazenamento/Depósito">Armazenamento/Depósito</option>
             <option value="Posto de combustível">Posto de combustível</option>
-            <option value="Outros">Outros</option>
+            <option value="Outro(s)">Outro(s)</option>
             <option value="Todos" selected="true">Todos</option>
           </select>
         </div>
@@ -503,19 +516,19 @@
 
           <label>Data Inicial</label>
               <div class="input-daterange pull-right" id="dtDataIni">
-                  <input class="input-small" name="dateStart" type="text" id="dateStart" placeholder="dd/mm/aaaa" disabled="true">
+                  <input class="input-small" name="dateStart" type="text" id="dateStart" placeholder="dd/mm/aaaa" >
               </div>
 
         </div>
         <div class="item">
           <label>Data Final</label>
           <div class="input-daterange pull-right" id="dtDataIni" style="float:left">
-             <input class="input-small" name="dateFinish" type="text" id="dateFinish" placeholder="dd/mm/aaaa" disabled="true">
+             <input class="input-small" name="dateFinish" type="text" id="dateFinish" placeholder="dd/mm/aaaa" >
           </div>
         </div>
         <div>
         <br />
-           <label><input type="checkbox" name="chkAllDates" value="1" checked="true" id="chkAllDates" class="pull-left">Todas as datas</label>
+           <label><input type="checkbox" name="chkAllDates" value="1" id="chkAllDates" class="pull-left">Todas as datas</label>
         </div>
 
         <!-- Button consultarDados on / modify h5home.coffe on assets/coffee-->
@@ -525,13 +538,13 @@
       </div>
 
     <div>
-      <div id="resultsConsult" style="overflow-y: auto; max-height: 500px">
+      <div id="resultsConsult" >
 
       </div>
-       <div id="optionsExport">
-            <a class="btn" style="margin-top: 10px;width: 10%;" >Exportar para XLS</a>
-            <a class="btn" style="margin-top: 10px;width: 10%;" >Exportar para PDF</a>
-        </div>
+       <div id="optionsExport" style="display:none">
+            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls" >Exportar para XLS</a>
+            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportPdf" >Exportar para PDF</a>
+        </div>       
 
     </div>
 
@@ -591,17 +604,9 @@
                   <input type="text" class="form-control" id="inputTelefone" placeholder="Telefone">
                 </div>
               </div>
+              <div class="form-group"></div>
               <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                  <div class="checkbox">
-                    <label style="margin: 1% 40% 1% 40%;">
-                      <input type="checkbox" style="margin: 5% 0% 0% -15%"> Lembrar-me
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
+                <div class="col-sm-offset-2 col-sm-10" style="margin: 0.5em">
                   <button type="submit" class="btn btn-default">Enviar</button>
                 </div>
               </div>

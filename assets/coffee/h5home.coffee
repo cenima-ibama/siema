@@ -81,52 +81,6 @@ $(document).ready ->
 
     $('.nav-collapse').collapse('hide')
 
-
-  # $("#chkAllDates").on "click", (event) ->
-  #   if $(@).is ":checked"
-  #     $("#dateStart").attr "disabled", "disabled"
-  #     $("#dateFinish").attr "disabled", "disabled"
-  #   else
-  #     $("#dateStart").removeAttr "disabled", "disabled"
-  #     $("#dateFinish").removeAttr "disabled", "disabled"
-
-  # $("#tipoProd").on "change", (event) ->
-  #   setFilter()
-
-  # $("#dropConsultUF").on "change", (event) ->
-  #   setFilter()
-
-  # $("#originsConsultSlct").on "change", (event) ->
-  #   setFilter()
-
-  # $("#dateFinish").on "change", (event) ->
-  #   setFilter()
-
-  # $("#chkAllDates").on "change", (event) ->
-  #   if $(@).is ":checked"
-  #     #Consultar.
-  #     setFilter()
-  #   else
-  #     if $("#dateStart").value() isnt "" and $("#dateFinish").value() isnt ""
-  #        #Consultar caso as datas estiverem preenchidas.
-  #        setFilter()
-
-
-
-  # ----------------- Consulta BTN -----------------------------------------
-
-  $("#dateStart").on "change", (event) ->
-    $("#chkAllDates").attr "unchecked", "unchecked"
-
-  $("#dateFinish").on "change", (event) ->
-    $("#chkAllDates").attr "unchecked", "unchecked"
-
-  $("#consultarDados").on "click", (event) ->
-    setFilter()
-
-  # ----------------- End Consulta BTN -------------------------------------
-
-
   #-------------------------------------------------------------------------
   # MISC
   #-------------------------------------------------------------------------
@@ -140,8 +94,17 @@ $(document).ready ->
   roundNumber = (number, digits) ->
     multiple = Math.pow(10, digits)
     rndedNum = Math.round(number * multiple) / multiple
-    rndedNum
+    rndedNum  
 
+  # Animate load screen
+  $("#dash").fadeOut(1)
+  $("#consultas").hide()
+  $(".loading").fadeOut(2000)
+
+#---------------------------------------------------------------------------------#
+#GUIA DE CONSULTAS:
+#---------------------------------------------------------------------------------#
+   
   #Configurar DatePicker para consulta de datas.
   $("#dateStart").datepicker(
     format: "dd/mm/yyyy"
@@ -163,18 +126,32 @@ $(document).ready ->
     endDate: "today"
   );
 
-  # Animate load screen
-  $("#dash").fadeOut(1)
-  $("#consultas").hide()
-  $(".loading").fadeOut(2000)
+  # ----------------- Consulta BTN -----------------------------------------
 
+  $("#chkAllDates").on "click", (event) ->
+    if $(@).is ":checked"
+      $("#dateStart").attr "disabled", "disabled"
+      $("#dateFinish").attr "disabled", "disabled"
+    else
+      $("#dateStart").removeAttr "disabled", "disabled"
+      $("#dateFinish").removeAttr "disabled", "disabled"
+  
+  $("#dateStart").on "change", (event) ->
+    $("#chkAllDates").attr "unchecked", "unchecked"
+
+  $("#dateFinish").on "change", (event) ->
+    $("#chkAllDates").attr "unchecked", "unchecked"
+
+  $("#consultarDados").on "click", (event) ->
+    setFilter()
+
+  # ----------------- End Consulta BTN -------------------------------------
 
 ###
-tpProd -> Tipo de produto(lista ONU)
-uf -> Estado
-origem -> Origem Acidente
-dtIni -> Data Inicial
-dfFim -> Data final
+Descrição: Pesquisa ocorrências cadastradas conforme os parâmetros específicados. 
+Função utilizada na guia de Consulta.
+Autor: Marcos Júnior Lopes. 
+Data: 14/07/2014
 ###
 consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
 
@@ -185,7 +162,7 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
 
   if uf isnt ""
     query += " AND " if query.length isnt 0
-    query += "sigla='"+uf+"'"
+    query += "uf='"+uf+"'"
 
   if origem isnt ""
     query += " AND " if query.length isnt 0
@@ -200,50 +177,78 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
 
   rest = new H5.Rest (
     url: H5.Data.restURL
-    table: "vw_ocorrencia"
-    fields: "id_ocorrencia,to_char(dt_registro,'DD/MM/YYYY') AS dt_registro,periodo_ocorrencia, regiao, sigla, array_to_string(origem,';') AS origem, array_to_string(tipos_danos_identificados,';') AS tipos_danos_identificados, array_to_string(institiuicoes_atuando_local,';') AS institiuicoes_atuando_local, array_to_string(tipos_fontes_informacoes,';') AS tipos_fontes_informacoes"
+    table: "vw_ocorrencia_consulta"
+    fields: 
+      "cast( id_ocorrencia AS text) AS id_ocorrencia,
+      to_char(dt_registro,'DD/MM/YYYY') AS dt_registro,
+      to_char(dt_ocorrencia,'DD/MM/YYYY') AS dt_ocorrencia,
+      to_char(dt_primeira_obs,'DD/MM/YYYY') AS dt_primeira_obs, 
+      municipio,
+      uf,
+      array_to_string(origem,';') AS origem,          
+      array_to_string(tipo_evento,';') AS tipo_evento, 
+      array_to_string(tipos_danos_identificados,';') AS tipos_danos_identificados,
+      array_to_string(institiuicoes_atuando_local,';') AS institiuicoes_atuando_local,
+      array_to_string(tipos_fontes_informacoes,';') AS tipos_fontes_informacoes,      
+      dia_semana,
+      dia_semana_primeira_obs,
+      dia_semana_registro,
+      periodo_ocorrencia,       
+      dt_ocorrencia_feriado"      
     parameters: query
-
   )
 
+  dataIncidente = ""
+  diaSemana = ""
+  dataCadastrada = false
+
+  #Montar array com os registros retornados pra passar para o datatable.
   $.each rest.data, (index,dt) ->
-     registroTemp[registroTemp.length] = new Array(dt.id_ocorrencia,dt.dt_registro,dt.periodo_ocorrencia, dt.regiao, dt.sigla, dt.origem, dt.tipos_danos_identificados, dt.institiuicoes_atuando_local, dt.tipos_fontes_informacoes);
+     #Data do Incidente.
+     dataIncCadastrada = !(dt.dt_ocorrencia is null or dt.dt_ocorrencia is "")
+
+     #Data da primeira observação.
+     dataObsCadastrada = !(dt.dt_primeira_obs is null or dt.dt_primeira_obs is "")
+
+     if dataIncCadastrada
+      dataIncidente = dt.dt_ocorrencia
+      diaSemana = dt.dia_semana
+     else if dataObsCadastrada
+      dataIncidente = dt.dt_primeira_obs
+      diaSemana = dt.dia_semana_primeira_obs
+     else
+      dataIncidente = dt.dt_registro
+      diaSemana = dt.dia_semana_registro
+
+     registroTemp[registroTemp.length] = new Array(
+        dt.id_ocorrencia        
+        dataIncidente
+        dt.municipio        
+        dt.uf
+        dt.origem
+        dt.tipo_evento
+        dt.tipos_danos_identificados
+        dt.institiuicoes_atuando_local
+        dt.tipos_fontes_informacoes        
+        diaSemana        
+        dt.periodo_ocorrencia
+        dt.dt_ocorrencia_feriado        
+      );
+
+  #Mostrar opções de exportação quando houver registro sendo mostrados.
+  if registroTemp.length > 0
+    $("#optionsExport").show();
+  else
+    $("#optionsExport").hide();  
+
+  headersTable = getHeadersColumnsResults()
 
   $('#resultsConsult').html '<table cellpadding="0" cellspacing="0" border="0"  id="resultTable"></table>';
 
   $('#resultTable').dataTable(
-    dom: "T<'clear'>lfrtip"
+    "dom": "T<'clear'>lfrtip"
     "data": registroTemp
-    "columns": [
-      { "title": "Código" }
-      { "title": "Data de Cadastro" }
-      { "title": "Período" }
-      { "title": "Região" }
-      { "title": "UF" }
-      { "title": "Origem" }
-      { "title": "Danos Identificados" }
-      { "title": "Inst. Atuando no Local" }
-      { "title": "Fontes de Informação" }
-    ]
-    ###
-    "oTableTools":
-        "sSwfPath": "http://" + document.domain + "/siema/assets/img/copy_csv_xls_pdf.swf"
-        "aButtons": [
-          {
-            "sExtends": "xls"
-            "sButtonText": "Exportar para XLS"
-            "sFileName": "*.xls"
-            "sFieldSeperator": ","
-            "sTitle": "Consulta de ocorrências SIEMA(Sistema Nacional de Emergências Ambientais)"
-          },
-          {
-            "sExtends": "pdf"
-            "sButtonText": "Exportar para PDF"
-            "sTitle": "Consulta de ocorrências SIEMA(Sistema Nacional de Emergências Ambientais)"
-            "sPdfOrientation": "landscape"
-          }
-        ]
-    ###
+    "columns": headersTable
     "oLanguage":
       {
         "sLengthMenu": "Mostrar _MENU_ registros por página"
@@ -275,4 +280,138 @@ setFilter = ->
     dtFim = $("#dateFinish").val()
 
   consultarOcorrencias(filterTipo,filterUF,filterOrigem,dtIni,dtFim)
+
+$("#btnExportPdf").on "click", (event) ->
+  #Get selected options for header pdf document.   
+  tpProdutoSelect = $("#tipoProd").val()
+  UfSelect = $("#dropConsultUF").val()
+  OrigemSelect = $("#originsConsultSlct").val()
+  qtdeReg = 0
+
+  datasPreenchidas = ($("#dateStart").val() isnt "" and $("#dateFinish").val() isnt "");
+
+  if $("#chkAllDates").is(":checked") or !datasPreenchidas
+    dtCadastro = "Todas"
+  else
+    dtCadastro = $("#dateStart").val()+" a "+$("#dateFinish").val()
+
+  #Get content of table results.
+  arrayResults = getContentExportConsult() 
+
+  #Total records is arrayResults out headers columns of table in position 0.
+  qtdeReg = arrayResults.length - 1 
+
+  #Define content PDF.
+  definationPdf = 
+    pageSize: "A4"      
+    pageOrientation: "landscape"      
+    footer: (currentPage, pageCount) -> 
+        { 
+          text: "Página "+currentPage.toString()+" de "+pageCount,
+          margin: [0, 10, 40, 0],
+          alignment: "right"
+        }
+    content: 
+        [
+          {text: "Relatório Sistema SIEMA",bold: true, fontSize: 18, margin: [0, 0, 0, 10]}
+          {text: ["Tipo de Produto: ", {text: tpProdutoSelect,bold: true}]}
+          {text: ["Estado(UF): ", {text: UfSelect,bold: true}]}
+          {text: ["Origem: ", {text: OrigemSelect,bold: true}]}
+          {text: ["Data de Cadastro: ", {text: dtCadastro,bold: true}],  margin: [0, 0, 0, 10]}
+          {text: [{text: "Total de registro(s): "+qtdeReg,bold: true}],  margin: [0, 0, 0, 10]}
+          table:  
+            widths: [50,65,50,20,80,70,70,70,70,45,45,38]                      
+            headerRows: 1              
+            body: ""          
+        ]
+    styles:
+      header:
+        bold: true               
+
+  #Set content for PDF.
+  definationPdf.content[6].table.body = arrayResults;
+
+  #Start view of PDF.
+  pdfMake.createPdf(definationPdf).open();
+
+$("#btnExportXls").on "click", (event) ->
+  csv = generateConsultCSV()
+  window.open "data:text/csv;charset:utf-8,"+escape(csv)
+ 
+generateConsultCSV = =>
+
+  str = ""
+  line = "" 
+  cont = 0
+
+  table = getContentExportConsult()
+
+  # get data for the rows
+  for row in table
+    line = ""
+    for col in row
+      #a primeira linha do array são os cabeçalhos da tabela estes são objetos, então buscar a propriedade text.
+      value = if cont is 0 then col.text else col              
+      line += "\"" + value + "\","
+    
+    str += line + "\r\n"
+
+    cont++
+
+  return str
+
+getContentExportConsult = ->  
+  
+  arrayTemp = new Array()
+
+  #Include header coluns for table results search.  
+  arrayResults = new Array [  
+      {text:"Número Registro", style: "header"},      
+      {text:"Data", style: "header"},
+      {text:"Município", style: "header"},
+      {text:"UF", style: "header"},
+      {text:"Origem", style: "header"},
+      {text:"Tipo Evento", style: "header"},
+      {text:"Ocorrências/Ambientes Atingidos", style: "header"},
+      {text:"Inst. Atuando no Local", style: "header"},
+      {text:"Fonte", style: "header"},
+      {text:"Dia", style: "header"},
+      {text:"Período", style: "header"},
+      {text:"Feriado", style: "header"}
+  ]
+  
+  #Add records of result search, add rows for table of results. 
+  $("#resultTable").DataTable().rows().data().each (row) ->     
+    arrayTemp = []
+    for col in row          
+      if col is null       
+        arrayTemp[arrayTemp.length] = ""
+      else
+        arrayTemp[arrayTemp.length] = if typeof(col) isnt "object" then col else col.text
+      
+    arrayResults[arrayResults.length] = arrayTemp
+
+  return arrayResults  
+
+getHeadersColumnsResults = ->
+  columnsResultsConsulta = new Array(
+      { "title": "Número de Registro" }      
+      { "title": "Data do Incidente" }
+      { "title": "Município" }
+      { "title": "UF" }           
+      { "title": "Origem" }
+      { "title": "Tipo de Evento" }
+      { "title": "Ocorrências/Ambientes Atingidos" }
+      { "title": "Inst. Atuando no Local" }
+      { "title": "Fontes de Informação" }
+      { "title": "Dia da Semana" } 
+      { "title": "Período" }
+      { "title": "Feriado" }      
+    )
+
+  return columnsResultsConsulta
+
+#---------------------------------------------------------------------------------#
+#FIM - GUIA DE CONSULTAS:
+#---------------------------------------------------------------------------------#
 
