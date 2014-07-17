@@ -205,11 +205,14 @@
 
       if isAtual
         if($("#inputRegistro").prop("value") isnt "")
-          defaultHtml = document.getElementById("defaultHtml")
-          if(defaultHtml.innerHTML is "")
-            defaultHtml.innerHTML = $("#formLoad").prop("action")
-          action = defaultHtml.innerHTML + "/" + $("#inputRegistro").prop("value")
-          $("#formLoad").prop "action", action
+          # defaultHtml = document.getElementById("defaultHtml")
+          # if(defaultHtml.innerHTML is "")
+          #   defaultHtml.innerHTML = $("#formLoad").prop("action")
+          # action = defaultHtml.innerHTML + "/" + $("#inputRegistro").prop("value")
+          # $("#formLoad").prop "action", action
+
+          nroOcorrencia = $("#inputRegistro").prop("value")
+          $("#nroOcorrenciaLoad").val(nroOcorrencia)
           $("#formLoad").submit()
         else
           $("#inputRegistro").focus()

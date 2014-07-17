@@ -27,6 +27,16 @@
             ?></span>
 
           </h4>
+          <div class="checkbox">
+        <div class="row-fluid">
+          <div class="span12">
+            <label class="checkbox pull-right" for="validado">
+              <?php echo form_checkbox($validado); ?>
+              Validado
+            </label>
+          </div>
+        </div>
+      </div>
           <input type="hidden" id="comunicado" name="comunicado"
             <?php
               if (isset($comunicado)) {
@@ -963,7 +973,7 @@ function showFileName(inputFile) {
 </script>
 
 <!-- BOTAO DE ADICIONAR ARQUIVOS SEM BOOTSTRAP CARREGADO / UPLOADFILE /-->
-        <?php 
+        <?php
             if (!($this->authldap->is_authenticated())){
               echo '
                <div class="accordion-group">
@@ -977,26 +987,26 @@ function showFileName(inputFile) {
                       <div class="row-fluid">
                         <div class="control-group">
                             <div class="input-append">
-                              <style type="text/css">                                           
+                              <style type="text/css">
                               .customFileInput input {
                                   position: absolute;
                                   visibility: hidden;
                                   right: 10px;
                               }
-                              </style>                     
+                              </style>
 
                               <form class="btn" action="upload.php" method="post" enctype="multipart/form-data">
                                   <label class="customFileInput">
                                       <div class="btn">Escolher um arquivo</div><div class="fileName" style="position:absolute; top: 17px; left: 175px"></div><input type="file" multiple name="uploadedFile[]" onchange="showFileName(this)">
-                                      
+
                                   </label>
-                              </form>              
+                              </form>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>'
-            ;} 
+            ;}
         ?>
 <!-- -->
 
@@ -1029,7 +1039,7 @@ function showFileName(inputFile) {
           }
         ?>
 
-        <?php 
+        <?php
           if ($this->authldap->is_authenticated()){
             echo '
              <div class="accordion-group">
@@ -1043,31 +1053,32 @@ function showFileName(inputFile) {
                     <div class="row-fluid">
                       <div class="control-group">
                           <div class="input-append">
-                            <style type="text/css">                                           
+                            <style type="text/css">
                             .customFileInput input {
                                 position: absolute;
                                 visibility: hidden;
                                 right: 10px;
                             }
-                            </style>                     
+                            </style>
 
                             <form class="btn" action="upload.php" method="post" enctype="multipart/form-data">
                                 <label class="customFileInput">
                                     <div class="btn">Escolher um arquivo</div><div class="fileName" style="position:absolute; top: 17px; left: 175px"></div><input type="file" multiple name="uploadedFile[]" onchange="showFileName(this)">
-                                    
+
                                 </label>
-                            </form>              
+                            </form>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>'
-          ;} 
+          ;}
       ?>
 
 
-        
+
       </div>
+
       <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
       <div class="checkbox" style="display:none;">
 
