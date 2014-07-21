@@ -710,10 +710,54 @@ footer a {
   width: 50%;
 }
 
-#table-ocorrencia{
-position: relative;
-height: 570px;
-overflow-y: scroll;
+/* Tabela de Ocorrências */
+
+.table-ocorrencia{
+  position: relative;
+  max-height: 570px;
+  overflow-y: scroll;
 }
 
+.table-ocorrencia th, .table-ocorrencia td{
+  text-align: center;
+}
+
+/* Input Search */
+
+#search-group
+{
+  margin: 25px 0;
+  color: #BEBEBE;
+}
+
+.icon-search-filter
+{
+  position:relative;
+  left:26px;
+  top:1px;
+  z-index:999;
+}
+
+input.search-query
+{
+  border: 1px solid #D1D1D1;
+  border-radius: 20px 20px 20px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) inset;
+  font: bold 13px Arial,Helvetica,Sans-serif;
+  padding: 6px 15px 6px 35px;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.7s ease 0s;
+  width: 150px;
+  margin: 0;
+  color: #BEBEBE;
+  /*margin-bottom: 25px;*/
+  /*height:30px;*/
+  /*padding-left:25px;*/
+}
+
+input.search-query:focus
+{
+  color: #555555;
+  width: 200px;
+}
 /**/

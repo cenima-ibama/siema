@@ -217,7 +217,7 @@ class Form extends CI_Controller {
 
         $form_data =  $this->input->post();
 
-        $this->loadForm($form_data["nro_ocorrencia"]);
+        $this->loadForm($form_data["nroOcorrencia"]);
     }
 
     private function loadForm($nro_ocorrencia)
@@ -1078,7 +1078,7 @@ class Form extends CI_Controller {
             'id'           => 'planoEmergSim',
             'name'         => 'planoEmergencia',
             'type'         => 'radio',
-            'value'        => set_value('planoEmergSim', 0)
+            'value'        => set_value('planoEmergSim', 1)
         );
         if(isset($formLoad['planoEmergencia']) && ($formLoad['planoEmergencia'] == '1')){
             $data['planoEmergSim'] += array(
@@ -1095,7 +1095,7 @@ class Form extends CI_Controller {
             'id'           => 'planoEmergNao',
             'name'         => 'planoEmergencia',
             'type'         => 'radio',
-            'value'        => set_value('planoEmergNao', 1)
+            'value'        => set_value('planoEmergNao', 0)
         );
         if(isset($formLoad['planoEmergencia']) && ($formLoad['planoEmergencia'] == '0')){
             $data['planoEmergNao'] += array(
@@ -1244,6 +1244,20 @@ class Form extends CI_Controller {
         // Checkbox Fonte Informação
         if (isset($formLoad['tipoFonteInformacao'])) {
             $data['tipoFonteInformacao'] = $formLoad['tipoFonteInformacao'];
+        }
+
+        // Checkbox Validado
+        $data['validado'] = array(
+            'id'          => 'validado',
+            'name'        => 'validado',
+            'type'        => 'checkbox',
+            'style'       => 'float: right; margin-left: 10px; margin-right:10px;'
+            // 'value'        => 'on'
+        );
+        if(isset($formLoad['validado'])){
+            $data['validado'] += array(
+                'checked'  => 'checked'
+            );
         }
 
         return $data;

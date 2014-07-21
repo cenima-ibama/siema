@@ -8,7 +8,8 @@ H5.Leaflet = {}
 # }}}
 # SCREEN SIZE {{{
 # update size of the map container
-$( '#map' ).width( $( window ).width() )
+# $( '#map' ).width( $( window ).width() )
+$( '#map' ).width( "100%" )
 $( '#map' ).height( $( window ).height() - $('#navbar').height())
 
 # Detect whether device supports orientationchange event,

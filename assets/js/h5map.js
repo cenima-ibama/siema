@@ -10,7 +10,7 @@
 
   H5.Leaflet = {};
 
-  $('#map').width($(window).width());
+  $('#map').width("100%");
 
   $('#map').height($(window).height() - $('#navbar').height());
 

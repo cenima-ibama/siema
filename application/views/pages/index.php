@@ -268,9 +268,10 @@
             ?>
           </label>
         <?php echo form_close(); ?>
-        <?php echo form_open('form/loadform', array('id' => 'formLoad', 'target' => 'form_frame')); ?>
+        <?php echo form_open('form/loadformcall', array('id' => 'formLoad', 'target' => 'form_frame')); ?>
           <label class="checkbox" style="display:none;">
             <input type="checkbox" id="hasOleo" name="hasOleo" value="S">
+            <input type="hidden" id="nroOcorrenciaLoad" name="nroOcorrencia" value="">
             <?php
               if($this->session->userdata('logged_in'))
                 echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA" checked>';
@@ -301,7 +302,7 @@
 </div>
 <div class="loading" id="loading">
   <!-- <img src="<?php echo base_url()?>assets/img/logo.png" id="loading_logo" style="display: inline;" title=""> -->
-  <img src="<?php echo base_url()?>assets/img/logo_ibama.png" id="loading_logo" style="display: inline;" title="">
+  <img src="<?php echo base_url()?>assets/img/logo_ibama.png" id="loading_logo" style="display: inline; overflow: hidden;" title="">
 </div>
 <?php
   if(!$logged_in) {
@@ -641,8 +642,27 @@
             </form>
           </div>
           <div id="manage2">
-            <h2 class="sub-header">Ocorrências</h2>
-            <div class="table-responsive" id="table-ocorrencia"></div>
+            <!-- <form id="search" action="/search" method="get">
+              <input id="searchInput" type="text" placeholder="Search..." size="40" name="q">
+            </form> -->
+
+            <form class="navbar-form form-search">
+              <div id="search-group" class="pull-right">
+                <i class="icon-search icon-search-filter"></i>
+                  <input id="searchInput" type="text" placeholder="Filtrar ocorrência..." class="search-query">
+                  <!-- <button class="btn">Search</button> -->
+              </div>
+            </form>
+
+            <h2 class="sub-header">Ocorrências Não Validadas</h2>
+            <!-- <input id="searchInput" type="text" value="Type To Filter"><span style="color:#0088CC;"><i class="icon-search icon-white"></i></span> -->
+            <div class="table-responsive table-ocorrencia" id="tableNaoValidado"></div>
+
+            <hr style="margin: 60px 0px;">
+
+            <h2 class="sub-header">Ocorrências Validadas</h2>
+            <!-- <input id="searchInput" value="Type To Filter"> -->
+            <div class="table-responsive table-ocorrencia" id="tableValidado"></div>
             <!-- <div id="editMeModal" class="login"> </div> -->
             <!-- Modal -->
             <div id="editMeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -660,10 +680,10 @@
                     <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                   </div>
                   <div class="modal-body" id="modal-body"> -->
-                    <?php echo form_open('form/loadformcall', array('id' => 'formLoadEdit', 'target' => 'form_frame_edit')); ?>
+                    <?php echo form_open('form/loadformcall', array('id' => 'formLoadAdmin', 'target' => 'form_frame_edit')); ?>
                       <label class="checkbox" style="display:none;">
                         <input type="checkbox" id="hasOleo" name="hasOleo" value="S">
-                        <input type="hidden" id="nro_ocorrencia" name="nro_ocorrencia" value="">
+                        <input type="hidden" id="nroOcorrenciaLoadAdmin" name="nroOcorrencia" value="">
                         <?php
                           if($this->session->userdata('logged_in'))
                             echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA" checked>';

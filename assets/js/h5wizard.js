@@ -121,7 +121,7 @@
   });
 
   $("#modalBtnNext").click(function(event) {
-    var action, btnLogout, checkedUser, containerProgress, defaultHtml, hasOleo, i, isAcidOleo, isAtual, isOutros, isPubExt, isServIBAMA, progressAnimetion, progressBar, rest, textProgress, tipoForm;
+    var btnLogout, checkedUser, containerProgress, hasOleo, i, isAcidOleo, isAtual, isOutros, isPubExt, isServIBAMA, nroOcorrencia, progressAnimetion, progressBar, rest, textProgress, tipoForm;
     event.preventDefault();
     history.push({
       tab: "#tab" + collapse,
@@ -178,12 +178,8 @@
       $("#modalBtnCancel").show();
       if (isAtual) {
         if ($("#inputRegistro").prop("value") !== "") {
-          defaultHtml = document.getElementById("defaultHtml");
-          if (defaultHtml.innerHTML === "") {
-            defaultHtml.innerHTML = $("#formLoad").prop("action");
-          }
-          action = defaultHtml.innerHTML + "/" + $("#inputRegistro").prop("value");
-          $("#formLoad").prop("action", action);
+          nroOcorrencia = $("#inputRegistro").prop("value");
+          $("#nroOcorrenciaLoad").val(nroOcorrencia);
           $("#formLoad").submit();
         } else {
           $("#inputRegistro").focus();

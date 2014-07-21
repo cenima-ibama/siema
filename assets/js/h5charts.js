@@ -345,12 +345,12 @@
       if (todosMeses) {
 
         /*
-        for day in [1..31]           
+        for day in [1..31]
            *Day (x);
           data[0] = day;
         
            *Qtde Ocorrências by month(y)
-          for m in [0..11] 
+          for m in [0..11]
             data[m+1] = 0;
          */
         data[0] = monthLoop[indexMes];
@@ -1071,7 +1071,7 @@
         }
       });
 
-      /*    
+      /*
       if firstPeriod > H5.Data.thisDate
         return 1
       else

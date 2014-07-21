@@ -27,6 +27,16 @@
             ?></span>
 
           </h4>
+          <div class="checkbox">
+        <div class="row-fluid">
+          <div class="span12">
+            <label class="checkbox pull-right" for="validado">
+              <?php echo form_checkbox($validado); ?>
+              Validado
+            </label>
+          </div>
+        </div>
+      </div>
           <input type="hidden" id="comunicado" name="comunicado"
             <?php
               if (isset($comunicado)) {
@@ -118,7 +128,6 @@
                         if (isset($semLocalizacao['checked'])) {
                           echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', $id_uf), 'id="dropdownUF" class="input-small" disabled="disabled"');
                           echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium" disabled="disabled"');
-
                         } else {
                           echo form_dropdown('dropdownUF', $dropdownUF, set_value('dropdownUF', $id_uf), 'id="dropdownUF" class="input-small"');
                           echo form_dropdown('dropdownMunicipio', $dropdownMunicipio, set_value('dropdownMunicipio', $id_municipio), 'id="dropdownMunicipio" class="input-medium"');
@@ -904,12 +913,11 @@
                 <div class="accordion-inner">
                   <div class="row-fluid">
                     <div class="controls span12">
-                      <label class="control-label span5" for="inputNomeInformante" >Nome completo:
+                      <label class="control-label span5" for="inputNomeInformante">Nome completo:
                       </label>
                       <div class="span6">';
-                        echo form_input($inputNomeInformante);;
+                        echo form_input($inputNomeInformante);
             echo '
-
                       </div>
                     </div>';
                       // if (isset($hasOleo) && isset($isServIBAMA)) {
@@ -957,7 +965,7 @@
                       </div>
                     </div>
                     <div class="controls span12">
-                      <label class="control-label span5" for="inputEmailInformante" >Email de contato:
+                      <label class="control-label span5" for="inputEmailInformante">Email de contato:
                       </label>
                       <div class="span6">';
                         echo form_input($inputEmailInformante);
@@ -971,8 +979,13 @@
           
         ?>
 
-
+<script type="text/javascript">
+function showFileName(inputFile) {
+    inputFile.offsetParent.getElementsByClassName('fileName')[0].innerHTML = inputFile.value.replace(/\\/g, '/').split('/').pop();
+}
 </script>
+
+
 
         <?php
           if($this->authldap->is_authenticated()) {

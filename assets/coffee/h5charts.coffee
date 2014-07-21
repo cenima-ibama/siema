@@ -175,8 +175,8 @@ chart1._originsSlct.options[12].selected = true
 $(chart1._monthsSlct).on "change", (event) ->
   H5.Data.selectedMonth = parseInt chart1._monthsSlct.value
   #SelectedIndex = 12 -> Todos.
-  if chart1._monthsSlct.value isnt "12" 
-    $("#knob1").show() 
+  if chart1._monthsSlct.value isnt "12"
+    $("#knob1").show()
     $("#knob2").show()
     $("#spark1").show()
     $("#chart8").show()
@@ -184,17 +184,17 @@ $(chart1._monthsSlct).on "change", (event) ->
     knob1.drawChart()
     knob2.drawChart()
     spark1.drawChart()
-    chart8.drawChart()    
+    chart8.drawChart()
 
-  else 
+  else
     $("#knob1").hide()
     $("#knob2").hide()
     $("#spark1").hide()
     $("#chart8").hide()
 
   chart1.drawChart()
-  chart3.drawChart()    
-  knob3.drawChart()  
+  chart3.drawChart()
+  knob3.drawChart()
   spark2.drawChart()
 
 $(chart1._yearsSlct).on "change", (event) ->
@@ -247,7 +247,7 @@ $(chart1._originsSlct).on "change", (event) ->
   spark2.drawChart()
 
 chart1.drawChart = ->
-  
+
   createTable = (region, type, origin, indexMonth) =>
 
     sum = 0 #number of acidentes of H5.Data.selectedType
@@ -260,7 +260,7 @@ chart1.drawChart = ->
     daysInMonth = 31 if todosMeses;
 
     for day in [1..daysInMonth]
-      
+
       $.each H5.DB.occurence.data.regions[region], (key, reg) -> #keý is the name of the register, reg is de data
         #if the date of the register is between the first day of the month and last day of the month
         #verify if the day is the day we want
@@ -271,19 +271,19 @@ chart1.drawChart = ->
             sum++
         else if firstPeriod <= reg.date <= secondPeriod and reg.day is day and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
           sum++
-      
+
       #column = if todosMeses then (indexMonth + 1) else 1;
 
       #setValue e getValue: apiGoogle - (row, collumn, value) sum with the value of the past day
       #@data.setValue (day - 1), column , @data.getValue((day - 1), column) + sum #Math.round((@data.getValue((day - 1), 1) + sum) * 100) / 100
       #Set for Day.
       if (not todosMeses)
-        @data.setValue (day - 1), 1 , @data.getValue((day - 1), 1) + sum #Math.round((@data.getValue((day - 1), 1) + sum) * 100) / 100     
-    
+        @data.setValue (day - 1), 1 , @data.getValue((day - 1), 1) + sum #Math.round((@data.getValue((day - 1), 1) + sum) * 100) / 100
+
     #Set for Month
     if todosMeses
         @data.setValue indexMes, 1 , @data.getValue(indexMes, 1) + sum
-        
+
 
   todosMeses = (H5.Data.selectedMonth is 12);
 
@@ -312,75 +312,75 @@ chart1.drawChart = ->
     @data.addColumn "string", "Mês"
   else
     @data.addColumn "number", "Dia"
-  
+
   #pega o ultimo dia do mes
   daysInMonth = new Date(H5.Data.selectedYear, H5.Data.selectedMonth + 1, 0).getDate()
   firstPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, 1)
   secondPeriod = new Date(H5.Data.selectedYear, H5.Data.selectedMonth, daysInMonth)
   data = []
 
-  monthLoop = new Array();    
+  monthLoop = new Array();
 
   # populate table with 0. Start table data base.
    #All Months, create base table.
   if (todosMeses)
-        
+
     for mes in [0..11]
       monthLoop[mes] = H5.Data.months[mes];
 
-    @data.addColumn "number", H5.Data.selectedYear;     
+    @data.addColumn "number", H5.Data.selectedYear;
 
     titleChart  = "Todos os meses";
-    
-  else    
+
+  else
     monthLoop[0] = H5.Data.selectedMonth;
     titleChart  = months[H5.Data.selectedMonth];
-    @data.addColumn "number", titleChart;   
+    @data.addColumn "number", titleChart;
 
   data = [];
   contMes = 1;
   indexMes = 0;
 
-  for mesIndex in monthLoop  
+  for mesIndex in monthLoop
 
     indexMes = if todosMeses then monthLoop.indexOf(mesIndex) else mesIndex;
 
     daysInMonth = new Date(H5.Data.selectedYear, indexMes + 1, 0).getDate();
     firstPeriod = new Date(H5.Data.selectedYear, indexMes, 1);
-    secondPeriod = new Date(H5.Data.selectedYear,indexMes, daysInMonth);          
+    secondPeriod = new Date(H5.Data.selectedYear,indexMes, daysInMonth);
 
     if todosMeses
 
       ##if monthLoop.length <= 0
 
         ###
-        for day in [1..31]           
+        for day in [1..31]
           #Day (x);
           data[0] = day;
 
           #Qtde Ocorrências by month(y)
-          for m in [0..11] 
+          for m in [0..11]
             data[m+1] = 0;
-        ### 
+        ###
         data[0] = monthLoop[indexMes];
-        data[1] = 0; 
+        data[1] = 0;
         @data.addRow data;
 
-    else    
+    else
 
       #Mês selecionado.
-      for day in [1..daysInMonth]                
+      for day in [1..daysInMonth]
         data[0] = day;
-        data[1] = 0; 
-        @data.addRow data;      
-        
+        data[1] = 0;
+        @data.addRow data;
+
     if H5.Data.region is "Todos"
 
       $.each H5.DB.occurence.data.regions, (region, value) ->
         createTable region, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin],indexMes;
 
     else
-      createTable H5.Data.region, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin],indexMes;  
+      createTable H5.Data.region, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin],indexMes;
 
   @changeTitle "Acidentes: Índice Diário [" + titleChart + "] - ["+H5.Data.selectedYear+"]"
 
@@ -395,7 +395,7 @@ chart1.drawChart = ->
     legend: {position: 'right'},
     chartArea:
       width: "70%"
-      height: "70%"    
+      height: "70%"
     vAxis:
       title: "Número de Ocorrências"
     hAxis:
@@ -484,7 +484,7 @@ chart2.drawChart = ->
       #not the same data from above
       #data[i] = sumValues(H5.Data.thisYear - i + 1, month, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
       data[i] = sumValues(H5.Data.selectedYear - i + 1, month, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
-      
+
     @data.addRow data
 
   options =
@@ -541,7 +541,7 @@ chart3.drawChart = ->
   # sum values
   sumValues = (firstPeriod, secondPeriod,type,origin) ->
     sum = 0
-    
+
     if H5.Data.region is "Todos"
       $.each H5.DB.occurence.data.regions, (key, region) ->
         $.each region, (key, reg) ->
@@ -573,7 +573,7 @@ chart3.drawChart = ->
   # sum average values
   sumAvgValues = (year) ->
     month = H5.Data.selectedMonth
-    
+
     #Para todos os meses: mes para secondPeriod é dezembro.
     month = 11 if month is 12;
 
@@ -585,7 +585,7 @@ chart3.drawChart = ->
       secondPeriod = new Date(year, month, H5.Data.thisDay) #goes until the current day
     else
       secondPeriod = new Date(year, month+1, 0) #get the last day of the selected month
-    ###  
+    ###
 
     sumValues firstPeriod, secondPeriod, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]
 
@@ -704,14 +704,14 @@ chart4.drawChart = ->
 
     data[0] = H5.Data.periodDay[countPeriod]
 
-    #sum for period. 
+    #sum for period.
     totalReg = 0;
 
     if H5.Data.region is "Todos"
-      
+
       $.each H5.DB.occurence.data.regions, (region, reg) =>
-        
-        for j in [1..@options.period] #gets the value of the years fo every region          
+
+        for j in [1..@options.period] #gets the value of the years fo every region
           totalReg = sumValues(period, region, H5.Data.selectedYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]);
           data[j] = if data[j] >= 0 then (data[j] + totalReg) else totalReg;
 
@@ -788,18 +788,18 @@ chart5.drawChart = ->
       # console.log reg.institution
       if reg.institution isnt null
         if type is "Todos" and origin is "Todos"
-          if firstPeriod <= reg.date <= secondPeriod 
+          if firstPeriod <= reg.date <= secondPeriod
 
             for t in reg.institution.split(",")
               if t is institution
-                sum++           
+                sum++
 
             # console.log "somando " + key
         else if firstPeriod <= reg.date <= secondPeriod  and (reg.type.indexOf(type) >= 0 or type is "Todos") and (reg.origin.indexOf(origin) >= 0 or origin is "Todos")
           #counter of the number of occurences
           for t in reg.institution.split(",")
               if t is institution
-                sum++ 
+                sum++
           # console.log "somando " + key
     #Math.round(sum * 100) / 100
     Math.round ((sum * 100) / 100)
@@ -822,14 +822,14 @@ chart5.drawChart = ->
     # console.log institution
     data[0] = institution
 
-    #sum for institution. 
+    #sum for institution.
     totalReg = 0;
 
     if H5.Data.region is "Todos"
       $.each H5.DB.occurence.data.regions, (region, reg) =>
         for j in [1..@options.period] #gets the value of the years fo every region
           totalReg = sumValues(institution, region, H5.Data.selectedYear - j + 1, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin])
-          data[j] = if data[j] >= 0 then (data[j] + totalReg) else totalReg 
+          data[j] = if data[j] >= 0 then (data[j] + totalReg) else totalReg
     else
       allData = [H5.Data.region] #gets the value of every period for only one region
       for j in [1..@options.period]
@@ -982,9 +982,9 @@ chart7._rightBtn.onclick = ->
 chart7.drawChart = ->
   # sum values
   sumValues = (region, year, type, origin) ->
-    
+
     sum = 0
-    
+
     firstPeriod = new Date(year, 0, 1)
     secondPeriod = new Date(year , 11, 31)
 
@@ -1076,11 +1076,11 @@ chart8.drawChart = ->
         #counter of ocurrences
         sum++
 
-    ###    
+    ###
     if firstPeriod > H5.Data.thisDate
       return 1
     else
-    ###  
+    ###
     Math.round((sum * 100) / 100)
 
   # create new chart
@@ -1314,7 +1314,7 @@ spark2.drawChart = ->
 
     month = parseInt month
     year = H5.Data.selectedYear
-    count = parseInt H5.Data.selectedMonth    
+    count = parseInt H5.Data.selectedMonth
 
 # #perguntar HELMUTH
 #     if count >= 7 then count-= 7 else count+= 5
@@ -1332,11 +1332,11 @@ spark2.drawChart = ->
     if value == 600
       alert value
       # ...
-    
+
 
 
     # ...
-  
+
 
   @updateInfo data, Math.round(value*100)/100
 #}}}
@@ -1386,7 +1386,7 @@ knob1.drawChart = ->
     if preValue is 0
       return 0
     else
-      return Math.round((curValue - preValue) / preValue * 100) 
+      return Math.round((curValue - preValue) / preValue * 100)
 
   value = periodDeforestationRate(
     H5.Data.selectedYear, H5.Data.selectedMonth, H5.Data.typesOfEvents[H5.Data.selectedType], H5.Data.originOfAccident[H5.Data.selectedOrigin]
