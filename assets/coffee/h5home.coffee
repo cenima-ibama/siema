@@ -1,3 +1,4 @@
+
 $(document).ready ->
   $("#login").load("http://" + document.domain + "/siema/index.php/login/login_window")
   $("#login").hide()
@@ -143,7 +144,18 @@ $(document).ready ->
     $("#chkAllDates").attr "unchecked", "unchecked"
 
   $("#consultarDados").on "click", (event) ->
-    setFilter()
+     setFilter()
+    
+        
+
+  $("#chkOCeano").on "click", (event) ->
+    if $(@).is ":checked"
+      $("#divBaciaSedimentar").show()
+    else
+      $("#divBaciaSedimentar").hide()
+
+  #Esta div será mostrada somente quando o checkbox 'Oceano' estiver selecionado.
+  $("#divBaciaSedimentar").hide()
 
   # ----------------- End Consulta BTN -------------------------------------
 
@@ -153,12 +165,20 @@ Função utilizada na guia de Consulta.
 Autor: Marcos Júnior Lopes. 
 Data: 14/07/2014
 ###
-consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
+consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar) ->
 
   registroTemp = new Array();
-  query = ""
+  query = "" 
 
-  query += " tipoProd = "+tpProd if tpProd isnt ""
+  switch tpProd
+    when "0" 
+      #Produtos da lista ONU.
+      query += "produtos_onu <> '{}'"
+    when "1" 
+      #Produtos da lista outro.
+      query += "produtos_outro <> '{}'"    
+    else
+      query = ""
 
   if uf isnt ""
     query += " AND " if query.length isnt 0
@@ -172,6 +192,13 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
     query += " AND " if query.length isnt 0
     query += " (dt_registro >= '"+dtIni+"' AND "+"dt_registro <= '"+dtFim+"')"
 
+  if eOceano
+    query += " AND " if query.length isnt 0
+    query += "bacia_sedimentar is not null"
+
+  if baciaSedimentar isnt "" and eOceano
+    query += " AND " if query.length isnt 0
+    query += "bacia_sedimentar='"+baciaSedimentar+"'"
 
   H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 
@@ -185,25 +212,34 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
       to_char(dt_primeira_obs,'DD/MM/YYYY') AS dt_primeira_obs, 
       municipio,
       uf,
-      array_to_string(origem,';') AS origem,          
-      array_to_string(tipo_evento,';') AS tipo_evento, 
-      array_to_string(tipos_danos_identificados,';') AS tipos_danos_identificados,
-      array_to_string(institiuicoes_atuando_local,';') AS institiuicoes_atuando_local,
-      array_to_string(tipos_fontes_informacoes,';') AS tipos_fontes_informacoes,      
+      array_to_string(origem,'; ') AS origem,          
+      array_to_string(tipo_evento,'; ') AS tipo_evento, 
+      array_to_string(tipos_danos_identificados,'; ') AS tipos_danos_identificados,
+      array_to_string(institiuicoes_atuando_local,'; ') AS institiuicoes_atuando_local,
+      array_to_string(tipos_fontes_informacoes,'; ') AS tipos_fontes_informacoes,      
       dia_semana,
       dia_semana_primeira_obs,
       dia_semana_registro,
       periodo_ocorrencia,       
-      dt_ocorrencia_feriado"      
-    parameters: query
+      dt_ocorrencia_feriado,
+      array_to_string(produtos_onu,'; ') AS produtos_onu,
+      array_to_string(produtos_outro,'; ') AS produtos_outro"      
+    parameters: query    
   )
 
   dataIncidente = ""
   diaSemana = ""
   dataCadastrada = false
+  municipioUf = "";
 
   #Montar array com os registros retornados pra passar para o datatable.
   $.each rest.data, (index,dt) ->
+
+     dataIncidente = ""
+     diaSemana = ""
+     dataCadastrada = false
+     municipioUf = "";
+
      #Data do Incidente.
      dataIncCadastrada = !(dt.dt_ocorrencia is null or dt.dt_ocorrencia is "")
 
@@ -220,19 +256,20 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
       dataIncidente = dt.dt_registro
       diaSemana = dt.dia_semana_registro
 
+     municipioUf = municipioUf.concat dt.municipio, " - ", dt.uf
+
      registroTemp[registroTemp.length] = new Array(
         dt.id_ocorrencia        
         dataIncidente
-        dt.municipio        
-        dt.uf
+        municipioUf               
         dt.origem
-        dt.tipo_evento
+        dt.tipo_evento        
         dt.tipos_danos_identificados
         dt.institiuicoes_atuando_local
         dt.tipos_fontes_informacoes        
         diaSemana        
         dt.periodo_ocorrencia
-        dt.dt_ocorrencia_feriado        
+        dt.dt_ocorrencia_feriado               
       );
 
   #Mostrar opções de exportação quando houver registro sendo mostrados.
@@ -265,10 +302,11 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
             "sLast": "Último"
           }
       }
-  )
+  )   
+
 
 setFilter = ->
-  filterTipo = if $("#tipoProd").val() is "Todos" then "" else $("#tipoProd").val()
+  filterTipo = $("#tipoProd").val()
   filterUF =  if $("#dropConsultUF").val() is "Todos" then "" else $("#dropConsultUF").val()
   filterOrigem = if $("#originsConsultSlct").val() is "Todos" then "" else $("#originsConsultSlct").val()
 
@@ -279,11 +317,14 @@ setFilter = ->
     dtIni = $("#dateStart").val()
     dtFim = $("#dateFinish").val()
 
-  consultarOcorrencias(filterTipo,filterUF,filterOrigem,dtIni,dtFim)
+  eOceano = $("#chkOCeano").is(":checked");
+  baciaSedimentar = if $("#baciaConsultSlct").val() is "Todos" then "" else $("#baciaConsultSlct").val()
+
+  consultarOcorrencias(filterTipo,filterUF,filterOrigem,dtIni,dtFim,eOceano,baciaSedimentar)
 
 $("#btnExportPdf").on "click", (event) ->
   #Get selected options for header pdf document.   
-  tpProdutoSelect = $("#tipoProd").val()
+  tpProdutoSelect = $("#tipoProd :selected").text()
   UfSelect = $("#dropConsultUF").val()
   OrigemSelect = $("#originsConsultSlct").val()
   qtdeReg = 0
@@ -319,8 +360,10 @@ $("#btnExportPdf").on "click", (event) ->
           {text: ["Origem: ", {text: OrigemSelect,bold: true}]}
           {text: ["Data de Cadastro: ", {text: dtCadastro,bold: true}],  margin: [0, 0, 0, 10]}
           {text: [{text: "Total de registro(s): "+qtdeReg,bold: true}],  margin: [0, 0, 0, 10]}
-          table:  
-            widths: [50,65,50,20,80,70,70,70,70,45,45,38]                      
+          table:
+            #Tamanho das colunas para o relatório. 
+            #Deve ser proporcional a qtde de colunas do grid de resultados.  
+            widths: [50,65,50,80,70,70,70,70,45,45,38]                      
             headerRows: 1              
             body: ""          
         ]
@@ -368,8 +411,7 @@ getContentExportConsult = ->
   arrayResults = new Array [  
       {text:"Número Registro", style: "header"},      
       {text:"Data", style: "header"},
-      {text:"Município", style: "header"},
-      {text:"UF", style: "header"},
+      {text:"Município/UF", style: "header"},      
       {text:"Origem", style: "header"},
       {text:"Tipo Evento", style: "header"},
       {text:"Ocorrências/Ambientes Atingidos", style: "header"},
@@ -397,10 +439,9 @@ getHeadersColumnsResults = ->
   columnsResultsConsulta = new Array(
       { "title": "Número de Registro" }      
       { "title": "Data do Incidente" }
-      { "title": "Município" }
-      { "title": "UF" }           
+      { "title": "Município/UF" }      
       { "title": "Origem" }
-      { "title": "Tipo de Evento" }
+      { "title": "Tipo de Evento" }      
       { "title": "Ocorrências/Ambientes Atingidos" }
       { "title": "Inst. Atuando no Local" }
       { "title": "Fontes de Informação" }

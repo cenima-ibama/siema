@@ -454,9 +454,9 @@
         <div class="item ">
           <label>Tipo de Produto</label>
           <select id="tipoProd" class="selectpicker" data-width="150px" data-size="auto" name="tipoProd">
-            <option value="Produtos na lista ONU">Produtos na lista ONU</option>
-            <option value="Produtos fora da lista ONU">Produtos fora da lista ONU</option>
-            <option value="Todos" selected="true">Todos</option>
+            <option value="0">Produtos na lista ONU</option>
+            <option value="1">Produtos fora da lista ONU</option>
+            <option value="2" selected="true">Todos</option>
           </select>
         </div>
         <div class="item">
@@ -526,8 +526,37 @@
           </div>
         </div>
         <div>
-        <br />
            <label><input type="checkbox" name="chkAllDates" value="1" id="chkAllDates" class="pull-left">Todas as datas</label>
+        </div>
+
+        <div class="item" id="divBaciaSedimentar">
+          <label>Bacia Sedimentar</label>
+
+          <select id="baciaConsultSlct" class="selectpicker" data-width="140px" data-size="6" name="bacia">
+            <option value="Foz do Amazonas">Foz do Amazonas</option>
+            <option value="Pará-Maranhão">Pará-Maranhão</option>
+            <option value="Barreirinhas">Barreirinhas</option>
+            <option value="Ceará (Mundão)">Ceará (Mundão)</option>
+            <option value="Potiguar">Potiguar</option>
+            <option value="Pernambuco-Paraíba">Pernambuco-Paraíba</option>
+            <option value="Alagoas">Alagoas</option>
+            <option value="Sergipe">Sergipe</option>
+            <option value="Jacuípe">Jacuípe</option>
+            <option value="Camamu">Camamu</option>
+            <option value="Almada">Almada</option>
+            <option value="Jequitinhonha">Jequitinhonha</option>
+            <option value="Cumuruxatiba">Cumuruxatiba</option>
+            <option value="Espírito-Santo">Espírito-Santo</option>
+            <option value="Campos">Campos</option>
+            <option value="Santos">Santos</option>
+            <option value="Pelotas">Pelotas</option>
+            <option value="Todos" selected="true">Todos</option>
+          </select>
+
+        </div>
+
+        <div class="item">        
+           <label><input type="checkbox" name="chkOCeano" value="1" id="chkOCeano" class="pull-left">Oceano</label>
         </div>
 
         <!-- Button consultarDados on / modify h5home.coffe on assets/coffee-->
@@ -543,7 +572,7 @@
        <div id="optionsExport" style="display:none">
             <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls" >Exportar para XLS</a>
             <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportPdf" >Exportar para PDF</a>
-        </div>       
+        </div>         
 
     </div>
 
