@@ -570,10 +570,11 @@
       <div id="resultsConsult" >
 
       </div>
-       <div id="optionsExport" style="display:none">
-            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls" >Exportar para XLS</a>
-            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportPdf" >Exportar para PDF</a>
-        </div>         
+      <div id="optionsExport" style="display:none">
+            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls">Exportar para XLS</a>
+            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportPdf">Exportar para PDF</a>
+      </div>    
+
 
     </div>
 
@@ -581,6 +582,38 @@
     </div>
 
   </div>
+
+ <div id="modalExport" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 500px">
+  <div class="modal-header">
+    <button id="btnXClose" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h5 id="myModalLabel">Selecionar Colunas</h5>
+  </div>
+  <div style="padding: 5%">
+    <div style="margin-bottom: 10px">
+      <span class="label label-info">Selecione as colunas que serão exportadas para o documento.</span>    
+    </div>
+    <div id="divOpColunas">
+        <label class="checkbox"><input type="checkbox" id="0" value="Número de Registro">Número de Registro</input></label>
+        <label class="checkbox"><input type="checkbox" id="1" value="Data do Incidente">Data do Incidente</input></label>
+        <label class="checkbox"><input type="checkbox" id="2" value="Município/UF">Município/UF</input></label>
+        <label class="checkbox"><input type="checkbox" id="3" value="Origem">Origem</input></label>
+        <label class="checkbox"><input type="checkbox" id="4" value="Tipo de Evento">Tipo de Evento</input></label>
+        <label class="checkbox"><input type="checkbox" id="5" value="Produtos ONU">Produtos ONU</input></label>
+        <label class="checkbox"><input type="checkbox" id="6" value="Produtos Outros">Produtos Outros</input></label>
+        <label class="checkbox"><input type="checkbox" id="7" value="Ocorrências/Ambientes Atingidos">Ocorrências/Ambientes Atingidos</input></label>
+        <label class="checkbox"><input type="checkbox" id="8" value="Inst. Atuando no Local">Inst. Atuando no Local</input></label>
+        <label class="checkbox"><input type="checkbox" id="9" value="Fontes de Informação">Fontes de Informação</input></label>
+        <label class="checkbox"><input type="checkbox" id="10" value="Dia da Semana">Dia da Semana</input></label>
+        <label class="checkbox"><input type="checkbox" id="11" value="Período">Período</input></label>
+        <label class="checkbox"><input type="checkbox" id="12" value="Feriado">Feriado</input></label>
+    </div>    
+  </div>
+  <div class="modal-footer" style="display:none;">
+      <a id="btnClose" class="btn" type="button" data-dismiss="modal"><i class="icon-remove"></i> Fechar</a>
+      <a id="btnExport" class="btn btn-primary" type="button" data-dismiss="modal"><i class="icon-ok"></i> Exportar</a>
+      <input type="hidden" id="tipoExport"></input>
+  </div>
+</div>
 
 </div>
 
