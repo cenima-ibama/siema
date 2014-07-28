@@ -179,6 +179,13 @@ class Form extends CI_Controller {
         // } else {
         //     $this->form_validation->set_rules('semNavioInstalacao', 'Informações sobre o navio/instalação', 'required');
         // }
+
+        if (! $this->do_upload($form_data)){
+            print_r($this->upload->display_errors());
+            exit(1);
+        } else
+            echo 'ok';
+
     }
 
     public function validate()
@@ -1312,39 +1319,72 @@ class Form extends CI_Controller {
 
 
 
-    public function uploadFile($name){
+    // public function uploadFile($name){
         
-        $fileName = $_FILES["userfile"]["name"];
-        $fileTmpLoc = $_FILES["userfile"]["tmp_name"];
-        $extensionAllowed = array("jpeg", "jpg", "pdf", "doc", "csv", "xls", "xlsx", "png", "pneg");
-        $path = '../../assets/uploads/';
-        $pathFix = $path . $name . '/';
-        $ext = end((explode(".", $fileName)));
+    //     $fileName = $_FILES["userfile"]["name"];
+    //     $fileTmpLoc = $_FILES["userfile"]["tmp_name"];
+    //     $extensionAllowed = array("jpeg", "jpg", "pdf", "doc", "csv", "xls", "xlsx", "png", "pneg");
+    //     $path = '../../assets/uploads/';
+    //     $pathFix = $path . $name . '/';
+    //     $ext = end((explode(".", $fileName)));
 
-        if (in_array($ext, $extensionAllowed))
-        {
-            if ($_FILES["userfile"]["size"] < 5*1024*1024)
-            { //5 MB
-                if(!is_dir($pathFix))
-                {
-                    mkdir ($pathFix, 0777);
-                    $pathAndName = $pathFix . $fileName;
-                    $moveResult = move_uploaded_file($fileTmpLoc, $pathAndName);
-                        if ($moveResult == true) 
-                        {
-                           echo "File has been moved from page to " . $pathAndName;
-                        }
-                } else 
-                    {
-                    echo "Registro existente!";
-                    } 
-            } else{
-                echo "Tamanho excede o total permitido.";
-                }
-        } else{
-                echo "Extensao nao permitida.";
+    //     if (in_array($ext, $extensionAllowed))
+    //     {
+    //         if ($_FILES["userfile"]["size"] < 5*1024*1024)
+    //         { //5 MB
+    //             if(!is_dir($pathFix))
+    //             {
+    //                 mkdir ($pathFix, 0777);
+    //                 $pathAndName = $pathFix . $fileName;
+    //                 $moveResult = move_uploaded_file($fileTmpLoc, $pathAndName);
+    //                     if ($moveResult == true) 
+    //                     {
+    //                        echo "File has been moved from page to " . $pathAndName;
+    //                     }
+    //             } else 
+    //                 {
+    //                 echo "Registro existente!";
+    //                 } 
+    //         } else{
+    //             echo "Tamanho excede o total permitido.";
+    //             }
+    //     } else{
+    //             echo "Extensao nao permitida.";
+    //         }
+
+    // }
+
+    function do_upload($form_data)
+    {
+        $path = $form_data['comunicado'];
+        $finalPath = "/var/www/uploads/" . $path;
+        
+        //verify if path already exists, remove and create folder.
+        if(is_dir($finalPath)){
+            $diretorio = dir($finalPath);
+            while($arquivo = $diretorio->read()){
+                if(($arquivo != '.') && ($arquivo != '..'))
+                    unlink($finalPath . '/' . $arquivo);
             }
 
+            rmdir($finalPath);
+                if (!is_dir($finalPath))
+                    mkdir($finalPath);
+
+
+            
+        } else
+            mkdir($finalPath);
+
+        $config['upload_path'] = $finalPath;
+        $config['allowed_types'] = 'gif|jpg|png|doc|jpeg|doc|xls|xlsx|pdf';
+        $config['max_size'] = '15000';        
+        $this->load->library('upload', $config);
+
+        $this->upload->do_upload();
+        
+
+        //%error = array('error' => $this->upload->display_errors());
     }
 
 
