@@ -149,6 +149,7 @@ class H5.Charts.Container
       tableBtn = document.createElement("button")
       tableBtn.id = @options.container + "-btn-table"
       tableBtn.className = "btn"
+      tableBtn.title = "Mostrar tabela"
       @_tableBtn = tableBtn
 
       tableIcon = document.createElement("i")
@@ -171,6 +172,7 @@ class H5.Charts.Container
       # add export button
       exportBtn = document.createElement("button")
       exportBtn.id = @options.container + "-btn-export"
+      exportBtn.title = "Exportar para arquivo"
       exportBtn.className = "btn"
       @_exportBtn = exportBtn
 
@@ -188,6 +190,7 @@ class H5.Charts.Container
       # add minimize button
       minBtn = document.createElement("button")
       minBtn.id = @options.container + "-btn-minimize"
+      minBtn.title = "Reduzir"
       minBtn.className = "btn"
       @_minBtn = minBtn
 
@@ -205,6 +208,7 @@ class H5.Charts.Container
       # add minimize button
       maxBtn = document.createElement("button")
       maxBtn.id = @options.container + "-btn-maximize"
+      maxBtn.title = "Maximizar" 
       maxBtn.className = "btn"
       @_maxBtn = maxBtn
 
@@ -240,6 +244,7 @@ class H5.Charts.Container
 
       if $(@_boxContent).is(":visible")
         @_minIcon.className = "icon-chevron-down"
+        @_minBtn.title = "Aumentar"
         if @options.buttons.minusplus
           $(@_addBtn).prop "disabled", true
           $(@_delBtn).prop "disabled", true
@@ -248,6 +253,7 @@ class H5.Charts.Container
           $(@_rightBtn).prop "disabled", true
       else
         @_minIcon.className = "icon-chevron-up"
+        @_minBtn.title = "Reduzir"
         if @options.buttons.minusplus
           $(@_addBtn).prop "disabled", false
           $(@_delBtn).prop "disabled", false
@@ -269,11 +275,13 @@ class H5.Charts.Container
         $(@_minBtn).prop "disabled", true
         $(@_closeBtn).prop "disabled", true
         @_maxIcon.className = "icon-resize-small"
+        @_maxIcon.title = "Minimizar"
         $("#navbar").hide()
       else
         $(@_minBtn).prop "disabled", false
         $(@_closeBtn).prop "disabled", false
         @_maxIcon.className = "icon-resize-full"
+        @_maxIcon.title = "Maximizar"
         $("#navbar").show()
 
       # always hide the charttable div
@@ -350,12 +358,14 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
       # update values
       if @_tableIcon.className is "icon-table"
         @_tableIcon.className = "icon-bar-chart"
+        @_tableBtn.title = "Mostrar gráfico"
         visualization = new google.visualization.Table(
           @_boxTable
         )
         visualization.draw @data, null
       else
         @_tableIcon.className = "icon-table"
+        @_tableBtn.title = "Mostrar tabela"
 
       $(@_leftBtn).add(@_rightBtn).add(@_addBtn).add(@_delBtn).on "click", (event) =>
         if $(@_boxTable).is(":visible")
