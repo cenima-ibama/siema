@@ -25,6 +25,7 @@ class H5.Rest
     url = @options.url + "v1/" + @options.restService
 
     if @options.table then query = "&table=" + @options.table
+    if @options.functionName then query = "&function=" + @options.functionName
     if @options.parameters then query += "&parameters=" + @options.parameters
     if @options.fields then query += "&fields=" + @options.fields
     if @options.order then query += "&order=" + @options.order

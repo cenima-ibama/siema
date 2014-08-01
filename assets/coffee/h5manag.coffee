@@ -236,10 +236,13 @@ $("a.removeOcorrencia").on "click", (event) ->
         # Send the request for the deletion
         rest = new H5.Rest (
           url: H5.Data.restURL
-          table: "ocorrencia"
-          parameters: "nro_ocorrencia%3D" + nroOcorrencia
-          restService: "ws_deletequery.php"
+          functionName: "f_deleteOcorrencia"
+          parameters: nroOcorrencia
+          # parameters: "nro_ocorrencia%3D" + nroOcorrencia
+          restService: "ws_functioncall.php"
         )
+
+        if rest.data.length is 1 then $(this).closest('tr').remove()
 
         # rest = new window.parent.H5.Rest (
         #   url: window.parent.H5.Data.restURL
