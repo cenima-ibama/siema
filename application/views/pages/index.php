@@ -623,15 +623,44 @@
     <div class="row-fluid">
       <div class="span3 col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar">
-          <li class="active"><a href="#" id="btn-manage1">Cadastro de Pessoas</a></li>
-          <li><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>
-          <li><a href="#" id="btn-manage3">Gerência de Regras</a></li>
-          <li><a href="#" id="btn-manage4">Cadastro de Órgão</a></li>
+        <?php
+
+          $profilUser = $this->session->userdata('profile_user');
+
+          //Only administrator users acess this option.
+          if($profilUser == 1)
+            echo '<li class="active"><a href="#" id="btn-manage1">Cadastro de Pessoas</a></li>';
+
+          //Active link if is administrator user.
+          if($profilUser == 1 || $profilUser == 2)
+          { 
+              //Is Administrator User.
+              if ($profilUser == 1)
+                echo '<li><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';                            
+              else
+                echo '<li class="active"><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';              
+          }
+          
+          //Only administrator users acess this option.
+          if($profilUser == 1)
+          {
+              echo '<li><a href="#" id="btn-manage3">Gerência de Regras</a></li>';
+              echo '<li><a href="#" id="btn-manage4">Cadastro de Órgão</a></li>';
+          }
+
+        ?>
         </ul>
       </div>
       <div class="span9 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <div class="row-fluid">
-          <div id="manage1">
+
+        <?php
+          //Only administrator users acess this option.
+          if ($profilUser == 1)
+          {
+        ?> 
+
+            <div id="manage1">
             <h2 class="sub-header">Cadastro de Pessoas</h2>
             <form class="form-horizontal" role="form" id="center-cadastro">
               <div class="form-group">
@@ -673,8 +702,18 @@
                 </div>
               </div>
             </form>
-          </div>
-          <div id="manage2">
+            </div>
+
+        <?php
+          }
+        ?>
+        
+        <?php
+          //Only administrator or validator users acess this option.
+          if ($profilUser == 1 || $profilUser == 2 )  
+          {
+        ?>          
+            <div id="manage2">
             <!-- <form id="search" action="/search" method="get">
               <input id="searchInput" type="text" placeholder="Search..." size="40" name="q">
             </form> -->
@@ -713,12 +752,12 @@
                     <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                   </div>
                   <div class="modal-body" id="modal-body"> -->
-                    <?php echo form_open('form/loadformcall', array('id' => 'formLoadAdmin', 'target' => 'form_frame_edit')); ?>
+                    <?php echo form_open("form/loadformcall", array("id" => "formLoadAdmin", "target" => "form_frame_edit")); ?>
                       <label class="checkbox" style="display:none;">
                         <input type="checkbox" id="hasOleo" name="hasOleo" value="S">
                         <input type="hidden" id="nroOcorrenciaLoadAdmin" name="nroOcorrencia" value="">
                         <?php
-                          if($this->session->userdata('logged_in'))
+                          if($this->session->userdata("logged_in"))
                             echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA" checked>';
                           else
                             echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA">';
@@ -747,15 +786,28 @@
                 </div> -->
               </div>
             </div>
-          </div>
-          <div id="manage3">
-            <h2 class="sub-header">Gerência de Regras</h2>
-            <div></div>
-          </div>
-          <div id="manage4">
-            <h2 class="sub-header">Cadastro de Órgão</h2>
-            <div></div>
-          </div>
+            </div>
+        <?php
+          }       
+        ?>
+        
+        <?php
+          //Only administrator users acess this options.
+          if ($profilUser == 1) { 
+        ?>                       
+            <div id="manage3">
+              <h2 class="sub-header">Gerência de Regras</h2>
+              <div></div>
+            </div>
+
+            <div id="manage4">
+              <h2 class="sub-header">Cadastro de Órgão</h2>
+              <div></div>
+            </div>
+        <?php        
+          }
+        ?>
+          
         </div>
       </div>
     </div>
