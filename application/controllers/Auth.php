@@ -32,6 +32,7 @@ class Auth extends CI_Controller {
         $this->load->library('AuthLDAP');
         $this->load->library('Firephp');
         $this->load->helper('url');
+        $this->load->model('Home_model');
     }
 
     function index() {
@@ -110,10 +111,23 @@ class Auth extends CI_Controller {
             $rules->set_rules('inputUsername', 'Username', 'required|alpha_dash');
             $rules->set_rules('inputPassword', 'Password', 'required');
 
+            //Start Session.
+            $this->session->set_userdata("profile_user",0);
+
             // Do the login...
             if($rules->run() && $this->authldap->login(
                 $rules->set_value('inputUsername'),
                 $rules->set_value('inputPassword'))) {
+                    
+                    //Get user name.
+                    $userName = $rules->set_value('inputUsername');
+
+                    //Get profile user.
+                    $profileUser = $this->Home_model->getProfileUser($userName);
+
+                    //Save profile in session.
+                    $this->session->set_userdata("profile_user",$profileUser);
+
                     // Login WIN!
                     if($this->session->flashdata('tried_to')) {
                         redirect($this->session->flashdata('tried_to'));
@@ -133,11 +147,14 @@ class Auth extends CI_Controller {
     }
 
     function logout() {
+
         if($this->session->userdata('logged_in')) {
             $this->authldap->logout();
         } else {
             $this->session->set_userdata(array('logged_in' => FALSE));
-        }
+            $this->session->set_userdata("profile_user",0);
+        }       
+
         redirect(base_url());
     }
 }

@@ -1330,9 +1330,9 @@ $(document).ready ->
     )
 
   #Upload file on form, getting value from 
-  $("#uploadButton").on 'click', (event) ->
-  sendNroComunicado = $('#nroComunicado').html()
-  $('#sendNroComunicado').val(sendNroComunicado);
+  $("#uploadButton").on 'click', () ->
+  # sendNroComunicado = $('#nroComunicado').html()
+    $('#inputFile').click();
   # sendNroComunicado = $('iframe[name=form_frame]').contents().find('#nroComunicado').html()
   # $('iframe[name=form_frame]').contents().find('#sendNroComunicado').val(sendNroComunicado)
 

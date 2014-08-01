@@ -455,9 +455,9 @@
         <div class="item ">
           <label>Tipo de Produto</label>
           <select id="tipoProd" class="selectpicker" data-width="150px" data-size="auto" name="tipoProd">
-            <option value="Produtos na lista ONU">Produtos na lista ONU</option>
-            <option value="Produtos fora da lista ONU">Produtos fora da lista ONU</option>
-            <option value="Todos" selected="true">Todos</option>
+            <option value="0">Produtos na lista ONU</option>
+            <option value="1">Produtos fora da lista ONU</option>
+            <option value="2" selected="true">Todos</option>
           </select>
         </div>
         <div class="item">
@@ -527,8 +527,37 @@
           </div>
         </div>
         <div>
-        <br />
            <label><input type="checkbox" name="chkAllDates" value="1" id="chkAllDates" class="pull-left">Todas as datas</label>
+        </div>
+
+        <div class="item" id="divBaciaSedimentar">
+          <label>Bacia Sedimentar</label>
+
+          <select id="baciaConsultSlct" class="selectpicker" data-width="140px" data-size="6" name="bacia">
+            <option value="Foz do Amazonas">Foz do Amazonas</option>
+            <option value="Pará-Maranhão">Pará-Maranhão</option>
+            <option value="Barreirinhas">Barreirinhas</option>
+            <option value="Ceará (Mundão)">Ceará (Mundão)</option>
+            <option value="Potiguar">Potiguar</option>
+            <option value="Pernambuco-Paraíba">Pernambuco-Paraíba</option>
+            <option value="Alagoas">Alagoas</option>
+            <option value="Sergipe">Sergipe</option>
+            <option value="Jacuípe">Jacuípe</option>
+            <option value="Camamu">Camamu</option>
+            <option value="Almada">Almada</option>
+            <option value="Jequitinhonha">Jequitinhonha</option>
+            <option value="Cumuruxatiba">Cumuruxatiba</option>
+            <option value="Espírito-Santo">Espírito-Santo</option>
+            <option value="Campos">Campos</option>
+            <option value="Santos">Santos</option>
+            <option value="Pelotas">Pelotas</option>
+            <option value="Todos" selected="true">Todos</option>
+          </select>
+
+        </div>
+
+        <div class="item">        
+           <label><input type="checkbox" name="chkOCeano" value="1" id="chkOCeano" class="pull-left">Oceano</label>
         </div>
 
         <!-- Button consultarDados on / modify h5home.coffe on assets/coffee-->
@@ -541,10 +570,11 @@
       <div id="resultsConsult" >
 
       </div>
-       <div id="optionsExport" style="display:none">
-            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls" >Exportar para XLS</a>
-            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportPdf" >Exportar para PDF</a>
-        </div>
+      <div id="optionsExport" style="display:none">
+            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls">Exportar para XLS</a>
+            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportPdf">Exportar para PDF</a>
+      </div>    
+
 
     </div>
 
@@ -552,6 +582,38 @@
     </div>
 
   </div>
+
+ <div id="modalExport" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="width: 500px">
+  <div class="modal-header">
+    <button id="btnXClose" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h5 id="myModalLabel">Selecionar Colunas</h5>
+  </div>
+  <div style="padding: 5%">
+    <div style="margin-bottom: 10px">
+      <span class="label label-info">Selecione as colunas que serão exportadas para o documento.</span>    
+    </div>
+    <div id="divOpColunas">
+        <label class="checkbox"><input type="checkbox" id="0" value="Número de Registro">Número de Registro</input></label>
+        <label class="checkbox"><input type="checkbox" id="1" value="Data do Incidente">Data do Incidente</input></label>
+        <label class="checkbox"><input type="checkbox" id="2" value="Município/UF">Município/UF</input></label>
+        <label class="checkbox"><input type="checkbox" id="3" value="Origem">Origem</input></label>
+        <label class="checkbox"><input type="checkbox" id="4" value="Tipo de Evento">Tipo de Evento</input></label>
+        <label class="checkbox"><input type="checkbox" id="5" value="Produtos ONU">Produtos ONU</input></label>
+        <label class="checkbox"><input type="checkbox" id="6" value="Produtos Outros">Produtos Outros</input></label>
+        <label class="checkbox"><input type="checkbox" id="7" value="Ocorrências/Ambientes Atingidos">Ocorrências/Ambientes Atingidos</input></label>
+        <label class="checkbox"><input type="checkbox" id="8" value="Inst. Atuando no Local">Inst. Atuando no Local</input></label>
+        <label class="checkbox"><input type="checkbox" id="9" value="Fontes de Informação">Fontes de Informação</input></label>
+        <label class="checkbox"><input type="checkbox" id="10" value="Dia da Semana">Dia da Semana</input></label>
+        <label class="checkbox"><input type="checkbox" id="11" value="Período">Período</input></label>
+        <label class="checkbox"><input type="checkbox" id="12" value="Feriado">Feriado</input></label>
+    </div>    
+  </div>
+  <div class="modal-footer" style="display:none;">
+      <a id="btnClose" class="btn" type="button" data-dismiss="modal"><i class="icon-remove"></i> Fechar</a>
+      <a id="btnExport" class="btn btn-primary" type="button" data-dismiss="modal"><i class="icon-ok"></i> Exportar</a>
+      <input type="hidden" id="tipoExport"></input>
+  </div>
+</div>
 
 </div>
 
@@ -561,15 +623,44 @@
     <div class="row-fluid">
       <div class="span3 col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar">
-          <li class="active"><a href="#" id="btn-manage1">Cadastro de Pessoas</a></li>
-          <li><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>
-          <li><a href="#" id="btn-manage3">Gerência de Regras</a></li>
-          <li><a href="#" id="btn-manage4">Cadastro de Órgão</a></li>
+        <?php
+
+          $profilUser = $this->session->userdata('profile_user');
+
+          //Only administrator users acess this option.
+          if($profilUser == 1)
+            echo '<li class="active"><a href="#" id="btn-manage1">Cadastro de Pessoas</a></li>';
+
+          //Active link if is administrator user.
+          if($profilUser == 1 || $profilUser == 2)
+          { 
+              //Is Administrator User.
+              if ($profilUser == 1)
+                echo '<li><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';                            
+              else
+                echo '<li class="active"><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';              
+          }
+          
+          //Only administrator users acess this option.
+          if($profilUser == 1)
+          {
+              echo '<li><a href="#" id="btn-manage3">Gerência de Regras</a></li>';
+              echo '<li><a href="#" id="btn-manage4">Cadastro de Órgão</a></li>';
+          }
+
+        ?>
         </ul>
       </div>
       <div class="span9 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <div class="row-fluid">
-          <div id="manage1">
+
+        <?php
+          //Only administrator users acess this option.
+          if ($profilUser == 1)
+          {
+        ?> 
+
+            <div id="manage1">
             <h2 class="sub-header">Cadastro de Pessoas</h2>
             <form class="form-horizontal" role="form" id="center-cadastro">
               <div class="form-group">
@@ -611,8 +702,18 @@
                 </div>
               </div>
             </form>
-          </div>
-          <div id="manage2">
+            </div>
+
+        <?php
+          }
+        ?>
+        
+        <?php
+          //Only administrator or validator users acess this option.
+          if ($profilUser == 1 || $profilUser == 2 )  
+          {
+        ?>          
+            <div id="manage2">
             <!-- <form id="search" action="/search" method="get">
               <input id="searchInput" type="text" placeholder="Search..." size="40" name="q">
             </form> -->
@@ -651,12 +752,12 @@
                     <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                   </div>
                   <div class="modal-body" id="modal-body"> -->
-                    <?php echo form_open('form/loadformcall', array('id' => 'formLoadAdmin', 'target' => 'form_frame_edit')); ?>
+                    <?php echo form_open("form/loadformcall", array("id" => "formLoadAdmin", "target" => "form_frame_edit")); ?>
                       <label class="checkbox" style="display:none;">
                         <input type="checkbox" id="hasOleo" name="hasOleo" value="S">
                         <input type="hidden" id="nroOcorrenciaLoadAdmin" name="nroOcorrencia" value="">
                         <?php
-                          if($this->session->userdata('logged_in'))
+                          if($this->session->userdata("logged_in"))
                             echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA" checked>';
                           else
                             echo '<input type="checkbox" id="isServIBAMA" name="isServIBAMA">';
@@ -685,15 +786,28 @@
                 </div> -->
               </div>
             </div>
-          </div>
-          <div id="manage3">
-            <h2 class="sub-header">Gerência de Regras</h2>
-            <div></div>
-          </div>
-          <div id="manage4">
-            <h2 class="sub-header">Cadastro de Órgão</h2>
-            <div></div>
-          </div>
+            </div>
+        <?php
+          }       
+        ?>
+        
+        <?php
+          //Only administrator users acess this options.
+          if ($profilUser == 1) { 
+        ?>                       
+            <div id="manage3">
+              <h2 class="sub-header">Gerência de Regras</h2>
+              <div></div>
+            </div>
+
+            <div id="manage4">
+              <h2 class="sub-header">Cadastro de Órgão</h2>
+              <div></div>
+            </div>
+        <?php        
+          }
+        ?>
+          
         </div>
       </div>
     </div>

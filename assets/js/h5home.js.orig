@@ -74,6 +74,8 @@
     });
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
     $("#chkAllDates").on("click", function(event) {
       if ($(this).is(":checked")) {
         $("#dateStart").attr("disabled", "disabled");
@@ -93,6 +95,7 @@
       return setFilter();
     });
 >>>>>>> d0c62769cde2005281a4d9cb474caca2d532cd74
+>>>>>>> 3933918622b9cff2c10d1d8b0968000296f48b92
     String.prototype.toProperCase = function() {
       return this.replace(/\w\S*/g, function(txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
@@ -140,9 +143,17 @@
     $("#dateFinish").on("change", function(event) {
       return $("#chkAllDates").attr("unchecked", "unchecked");
     });
-    return $("#consultarDados").on("click", function(event) {
+    $("#consultarDados").on("click", function(event) {
       return setFilter();
     });
+    $("#chkOCeano").on("click", function(event) {
+      if ($(this).is(":checked")) {
+        return $("#divBaciaSedimentar").show();
+      } else {
+        return $("#divBaciaSedimentar").hide();
+      }
+    });
+    return $("#divBaciaSedimentar").hide();
   });
 
 
@@ -153,12 +164,19 @@
   Data: 14/07/2014
    */
 
-  consultarOcorrencias = function(tpProd, uf, origem, dtIni, dtFim) {
-    var dataCadastrada, dataIncidente, diaSemana, headersTable, query, registroTemp, rest;
+  consultarOcorrencias = function(tpProd, uf, origem, dtIni, dtFim, eOceano, baciaSedimentar) {
+    var dataCadastrada, dataIncidente, diaSemana, headersTable, municipioUf, query, registroTemp, rest;
     registroTemp = new Array();
     query = "";
-    if (tpProd !== "") {
-      query += " tipoProd = " + tpProd;
+    switch (tpProd) {
+      case "0":
+        query += "produtos_onu <> '{}'";
+        break;
+      case "1":
+        query += "produtos_outro <> '{}'";
+        break;
+      default:
+        query = "";
     }
     if (uf !== "") {
       if (query.length !== 0) {
@@ -178,18 +196,35 @@
       }
       query += " (dt_registro >= '" + dtIni + "' AND " + "dt_registro <= '" + dtFim + "')";
     }
+    if (eOceano) {
+      if (query.length !== 0) {
+        query += " AND ";
+      }
+      query += "bacia_sedimentar is not null";
+    }
+    if (baciaSedimentar !== "" && eOceano) {
+      if (query.length !== 0) {
+        query += " AND ";
+      }
+      query += "bacia_sedimentar='" + baciaSedimentar + "'";
+    }
     H5.Data.restURL = "http://" + document.domain + "/siema/rest";
     rest = new H5.Rest({
       url: H5.Data.restURL,
       table: "vw_ocorrencia_consulta",
-      fields: "cast( id_ocorrencia AS text) AS id_ocorrencia, to_char(dt_registro,'DD/MM/YYYY') AS dt_registro, to_char(dt_ocorrencia,'DD/MM/YYYY') AS dt_ocorrencia, to_char(dt_primeira_obs,'DD/MM/YYYY') AS dt_primeira_obs, municipio, uf, array_to_string(origem,';') AS origem, array_to_string(tipo_evento,';') AS tipo_evento, array_to_string(tipos_danos_identificados,';') AS tipos_danos_identificados, array_to_string(institiuicoes_atuando_local,';') AS institiuicoes_atuando_local, array_to_string(tipos_fontes_informacoes,';') AS tipos_fontes_informacoes, dia_semana, dia_semana_primeira_obs, dia_semana_registro, periodo_ocorrencia, dt_ocorrencia_feriado",
+      fields: "cast( id_ocorrencia AS text) AS id_ocorrencia, to_char(dt_registro,'DD/MM/YYYY') AS dt_registro, to_char(dt_ocorrencia,'DD/MM/YYYY') AS dt_ocorrencia, to_char(dt_primeira_obs,'DD/MM/YYYY') AS dt_primeira_obs, municipio, uf, array_to_string(origem,'; ') AS origem, array_to_string(tipo_evento,'; ') AS tipo_evento, array_to_string(tipos_danos_identificados,'; ') AS tipos_danos_identificados, array_to_string(institiuicoes_atuando_local,'; ') AS institiuicoes_atuando_local, array_to_string(tipos_fontes_informacoes,'; ') AS tipos_fontes_informacoes, dia_semana, dia_semana_primeira_obs, dia_semana_registro, periodo_ocorrencia, dt_ocorrencia_feriado, array_to_string(produtos_onu,'; ') AS produtos_onu, array_to_string(produtos_outro,'; ') AS produtos_outro",
       parameters: query
     });
     dataIncidente = "";
     diaSemana = "";
     dataCadastrada = false;
+    municipioUf = "";
     $.each(rest.data, function(index, dt) {
       var dataIncCadastrada, dataObsCadastrada;
+      dataIncidente = "";
+      diaSemana = "";
+      dataCadastrada = false;
+      municipioUf = "";
       dataIncCadastrada = !(dt.dt_ocorrencia === null || dt.dt_ocorrencia === "");
       dataObsCadastrada = !(dt.dt_primeira_obs === null || dt.dt_primeira_obs === "");
       if (dataIncCadastrada) {
@@ -202,7 +237,8 @@
         dataIncidente = dt.dt_registro;
         diaSemana = dt.dia_semana_registro;
       }
-      return registroTemp[registroTemp.length] = new Array(dt.id_ocorrencia, dataIncidente, dt.municipio, dt.uf, dt.origem, dt.tipo_evento, dt.tipos_danos_identificados, dt.institiuicoes_atuando_local, dt.tipos_fontes_informacoes, diaSemana, dt.periodo_ocorrencia, dt.dt_ocorrencia_feriado);
+      municipioUf = municipioUf.concat(dt.municipio, " - ", dt.uf);
+      return registroTemp[registroTemp.length] = new Array(dt.id_ocorrencia, dataIncidente, municipioUf, dt.origem, dt.tipo_evento, dt.tipos_danos_identificados, dt.institiuicoes_atuando_local, dt.tipos_fontes_informacoes, diaSemana, dt.periodo_ocorrencia, dt.dt_ocorrencia_feriado);
     });
     if (registroTemp.length > 0) {
       $("#optionsExport").show();
@@ -233,8 +269,8 @@
   };
 
   setFilter = function() {
-    var dtFim, dtIni, filterOrigem, filterTipo, filterUF;
-    filterTipo = $("#tipoProd").val() === "Todos" ? "" : $("#tipoProd").val();
+    var baciaSedimentar, dtFim, dtIni, eOceano, filterOrigem, filterTipo, filterUF;
+    filterTipo = $("#tipoProd").val();
     filterUF = $("#dropConsultUF").val() === "Todos" ? "" : $("#dropConsultUF").val();
     filterOrigem = $("#originsConsultSlct").val() === "Todos" ? "" : $("#originsConsultSlct").val();
     if ($("#chkAllDates").is(":checked")) {
@@ -244,12 +280,14 @@
       dtIni = $("#dateStart").val();
       dtFim = $("#dateFinish").val();
     }
-    return consultarOcorrencias(filterTipo, filterUF, filterOrigem, dtIni, dtFim);
+    eOceano = $("#chkOCeano").is(":checked");
+    baciaSedimentar = $("#baciaConsultSlct").val() === "Todos" ? "" : $("#baciaConsultSlct").val();
+    return consultarOcorrencias(filterTipo, filterUF, filterOrigem, dtIni, dtFim, eOceano, baciaSedimentar);
   };
 
   $("#btnExportPdf").on("click", function(event) {
     var OrigemSelect, UfSelect, arrayResults, datasPreenchidas, definationPdf, dtCadastro, qtdeReg, tpProdutoSelect;
-    tpProdutoSelect = $("#tipoProd").val();
+    tpProdutoSelect = $("#tipoProd :selected").text();
     UfSelect = $("#dropConsultUF").val();
     OrigemSelect = $("#originsConsultSlct").val();
     qtdeReg = 0;
@@ -316,7 +354,7 @@
           margin: [0, 0, 0, 10]
         }, {
           table: {
-            widths: [50, 65, 50, 20, 80, 70, 70, 70, 70, 45, 45, 38],
+            widths: [50, 65, 50, 80, 70, 70, 70, 70, 45, 45, 38],
             headerRows: 1,
             body: ""
           }
@@ -371,10 +409,7 @@
         text: "Data",
         style: "header"
       }, {
-        text: "Município",
-        style: "header"
-      }, {
-        text: "UF",
+        text: "Município/UF",
         style: "header"
       }, {
         text: "Origem",
@@ -425,9 +460,7 @@
     }, {
       "title": "Data do Incidente"
     }, {
-      "title": "Município"
-    }, {
-      "title": "UF"
+      "title": "Município/UF"
     }, {
       "title": "Origem"
     }, {

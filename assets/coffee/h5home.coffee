@@ -1,3 +1,4 @@
+
 $(document).ready ->
   $("#login").load("http://" + document.domain + "/siema/index.php/login/login_window")
   $("#login").hide()
@@ -104,27 +105,33 @@ $(document).ready ->
 #---------------------------------------------------------------------------------#
 #GUIA DE CONSULTAS:
 #---------------------------------------------------------------------------------#
-   
-  #Configurar DatePicker para consulta de datas.
-  $("#dateStart").datepicker(
-    format: "dd/mm/yyyy"
-    language: "pt-BR"
-    autoclose: true
-    orientation: "auto right"
-    clearBtn: true
-    startView: 1
-    endDate: "today"
-  );
+  $("#modalExport").modal
+    keyboard: false
+    backdrop: false
+    show: false
 
-  $("#dateFinish").datepicker(
+  $("#modalExport").draggable
+    handle: ".modal-header"
+
+
+  #Configurar DatePicker para consulta de datas.
+  $("#dateStart").datepicker
     format: "dd/mm/yyyy"
     language: "pt-BR"
     autoclose: true
     orientation: "auto right"
     clearBtn: true
     startView: 1
-    endDate: "today"
-  );
+    endDate: "today"  
+
+  $("#dateFinish").datepicker
+    format: "dd/mm/yyyy"
+    language: "pt-BR"
+    autoclose: true
+    orientation: "auto right"
+    clearBtn: true
+    startView: 1
+    endDate: "today"  
 
   # ----------------- Consulta BTN -----------------------------------------
 
@@ -143,7 +150,17 @@ $(document).ready ->
     $("#chkAllDates").attr "unchecked", "unchecked"
 
   $("#consultarDados").on "click", (event) ->
-    setFilter()
+     setFilter()   
+        
+
+  $("#chkOCeano").on "click", (event) ->
+    if $(@).is ":checked"
+      $("#divBaciaSedimentar").show()
+    else
+      $("#divBaciaSedimentar").hide()
+
+  #Esta div será mostrada somente quando o checkbox 'Oceano' estiver selecionado.
+  $("#divBaciaSedimentar").hide()
 
   # ----------------- End Consulta BTN -------------------------------------
 
@@ -153,25 +170,44 @@ Função utilizada na guia de Consulta.
 Autor: Marcos Júnior Lopes. 
 Data: 14/07/2014
 ###
-consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
+consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar) ->
 
   registroTemp = new Array();
-  query = ""
+  query = "" 
 
-  query += " tipoProd = "+tpProd if tpProd isnt ""
-
+  switch tpProd
+    when "0" 
+      #Produtos da lista ONU.
+      query += "produtos_onu <> '{}'"
+    when "1" 
+      #Produtos da lista outro.
+      query += "produtos_outro <> '{}'"    
+    else
+      query = ""
+  #Adicioanr o filtro de UF
   if uf isnt ""
     query += " AND " if query.length isnt 0
     query += "uf='"+uf+"'"
 
+  #Adicionar o filtro de Origem
   if origem isnt ""
     query += " AND " if query.length isnt 0
     query += " origem = '{"+origem+"}'"
 
+  #Adicionar o filtro de Data do Incidente
   if (dtIni isnt "" and dtFim isnt "")
     query += " AND " if query.length isnt 0
     query += " (dt_registro >= '"+dtIni+"' AND "+"dt_registro <= '"+dtFim+"')"
 
+  #Adicionar o filtro de Oceano
+  if eOceano
+    query += " AND " if query.length isnt 0
+    query += "bacia_sedimentar is not null"
+
+  #Adicionar o filtro de Bacia sedimentar
+  if baciaSedimentar isnt "" and eOceano
+    query += " AND " if query.length isnt 0
+    query += "bacia_sedimentar='"+baciaSedimentar+"'"
 
   H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 
@@ -185,31 +221,41 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
       to_char(dt_primeira_obs,'DD/MM/YYYY') AS dt_primeira_obs, 
       municipio,
       uf,
-      array_to_string(origem,';') AS origem,          
-      array_to_string(tipo_evento,';') AS tipo_evento, 
-      array_to_string(tipos_danos_identificados,';') AS tipos_danos_identificados,
-      array_to_string(institiuicoes_atuando_local,';') AS institiuicoes_atuando_local,
-      array_to_string(tipos_fontes_informacoes,';') AS tipos_fontes_informacoes,      
+      array_to_string(origem,'; ') AS origem,          
+      array_to_string(tipo_evento,'; ') AS tipo_evento, 
+      array_to_string(tipos_danos_identificados,'; ') AS tipos_danos_identificados,
+      array_to_string(institiuicoes_atuando_local,'; ') AS institiuicoes_atuando_local,
+      array_to_string(tipos_fontes_informacoes,'; ') AS tipos_fontes_informacoes,      
       dia_semana,
       dia_semana_primeira_obs,
       dia_semana_registro,
       periodo_ocorrencia,       
-      dt_ocorrencia_feriado"      
-    parameters: query
+      dt_ocorrencia_feriado,
+      array_to_string(produtos_onu,'; ') AS produtos_onu,
+      array_to_string(produtos_outro,'; ') AS produtos_outro"      
+    parameters: query    
   )
 
   dataIncidente = ""
   diaSemana = ""
   dataCadastrada = false
+  municipioUf = "";
 
   #Montar array com os registros retornados pra passar para o datatable.
   $.each rest.data, (index,dt) ->
+
+     dataIncidente = ""
+     diaSemana = ""
+     dataCadastrada = false
+     municipioUf = "";
+
      #Data do Incidente.
      dataIncCadastrada = !(dt.dt_ocorrencia is null or dt.dt_ocorrencia is "")
 
      #Data da primeira observação.
      dataObsCadastrada = !(dt.dt_primeira_obs is null or dt.dt_primeira_obs is "")
 
+     #Mostrar uma das datas cadastradas.
      if dataIncCadastrada
       dataIncidente = dt.dt_ocorrencia
       diaSemana = dt.dia_semana
@@ -220,29 +266,35 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
       dataIncidente = dt.dt_registro
       diaSemana = dt.dia_semana_registro
 
+     municipioUf = municipioUf.concat dt.municipio, " - ", dt.uf
+     dataIncidente += " "
+
      registroTemp[registroTemp.length] = new Array(
         dt.id_ocorrencia        
         dataIncidente
-        dt.municipio        
-        dt.uf
+        municipioUf               
         dt.origem
         dt.tipo_evento
+        dt.produtos_onu
+        dt.produtos_outro
         dt.tipos_danos_identificados
         dt.institiuicoes_atuando_local
         dt.tipos_fontes_informacoes        
         diaSemana        
         dt.periodo_ocorrencia
-        dt.dt_ocorrencia_feriado        
+        dt.dt_ocorrencia_feriado               
       );
 
-  #Mostrar opções de exportação quando houver registro sendo mostrados.
+  #Mostrar opções de exportação quando houver registros no datatable.
   if registroTemp.length > 0
     $("#optionsExport").show();
   else
     $("#optionsExport").hide();  
 
+  #Obter os Headers para o grid de consulta.
   headersTable = getHeadersColumnsResults()
 
+  #Montar o DataTable
   $('#resultsConsult').html '<table cellpadding="0" cellspacing="0" border="0"  id="resultTable"></table>';
 
   $('#resultTable').dataTable(
@@ -265,10 +317,11 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim) ->
             "sLast": "Último"
           }
       }
-  )
+  )   
+
 
 setFilter = ->
-  filterTipo = if $("#tipoProd").val() is "Todos" then "" else $("#tipoProd").val()
+  filterTipo = $("#tipoProd").val()
   filterUF =  if $("#dropConsultUF").val() is "Todos" then "" else $("#dropConsultUF").val()
   filterOrigem = if $("#originsConsultSlct").val() is "Todos" then "" else $("#originsConsultSlct").val()
 
@@ -279,11 +332,35 @@ setFilter = ->
     dtIni = $("#dateStart").val()
     dtFim = $("#dateFinish").val()
 
-  consultarOcorrencias(filterTipo,filterUF,filterOrigem,dtIni,dtFim)
+  eOceano = $("#chkOCeano").is(":checked");
+  baciaSedimentar = if $("#baciaConsultSlct").val() is "Todos" then "" else $("#baciaConsultSlct").val()
+
+  consultarOcorrencias(filterTipo,filterUF,filterOrigem,dtIni,dtFim,eOceano,baciaSedimentar)
+
+$("#btnExport").on "click", (event) ->
+  if $("#tipoExport").val() is "0"
+    exportCSV()
+  else
+    exportPDF()
+  
+
+$("#btnExportXls").on "click", (event) ->
+  #Indicar que as colunas selecionadas serão para a exportação de csv.
+  $("#tipoExport").val("0");
+  $("#modalExport").modal();  
 
 $("#btnExportPdf").on "click", (event) ->
-  #Get selected options for header pdf document.   
-  tpProdutoSelect = $("#tipoProd").val()
+  #Indicar que as colunas selecionadas serão para a exportação de um documento PDF.
+  $("#tipoExport").val("1");
+  $("#modalExport").modal();  
+
+exportCSV = ->
+  csv = generateConsultCSV()
+  window.open "data:text/csv;charset:utf-8,"+escape(csv)
+
+exportPDF = ->
+  #Obter os filtros selecionados para serem mostrados no PDF.   
+  tpProdutoSelect = $("#tipoProd :selected").text()
   UfSelect = $("#dropConsultUF").val()
   OrigemSelect = $("#originsConsultSlct").val()
   qtdeReg = 0
@@ -295,13 +372,13 @@ $("#btnExportPdf").on "click", (event) ->
   else
     dtCadastro = $("#dateStart").val()+" a "+$("#dateFinish").val()
 
-  #Get content of table results.
+  #Array com o conteúdo para o documento.
   arrayResults = getContentExportConsult() 
 
-  #Total records is arrayResults out headers columns of table in position 0.
+  #Total de registros é o total de elementos do array menos as colunas(Headers) do documento.
   qtdeReg = arrayResults.length - 1 
 
-  #Define content PDF.
+  #Definir o conteúdo do PDF.
   definationPdf = 
     pageSize: "A4"      
     pageOrientation: "landscape"      
@@ -313,14 +390,17 @@ $("#btnExportPdf").on "click", (event) ->
         }
     content: 
         [
+          #Mostrar os filtros selecionados no documento.
           {text: "Relatório Sistema SIEMA",bold: true, fontSize: 18, margin: [0, 0, 0, 10]}
           {text: ["Tipo de Produto: ", {text: tpProdutoSelect,bold: true}]}
           {text: ["Estado(UF): ", {text: UfSelect,bold: true}]}
           {text: ["Origem: ", {text: OrigemSelect,bold: true}]}
           {text: ["Data de Cadastro: ", {text: dtCadastro,bold: true}],  margin: [0, 0, 0, 10]}
           {text: [{text: "Total de registro(s): "+qtdeReg,bold: true}],  margin: [0, 0, 0, 10]}
-          table:  
-            widths: [50,65,50,20,80,70,70,70,70,45,45,38]                      
+          table:
+            #Tamanho das colunas para o relatório. 
+            #Deve ser proporcional a qtde de colunas do grid de resultados.  
+            #widths: []                      
             headerRows: 1              
             body: ""          
         ]
@@ -328,25 +408,23 @@ $("#btnExportPdf").on "click", (event) ->
       header:
         bold: true               
 
-  #Set content for PDF.
+  #Setar o conteúdo para PDF.
   definationPdf.content[6].table.body = arrayResults;
+  #definationPdf.content[6].table.widths = [50,65,50,80,70,70,70,70,45,45,38]
 
-  #Start view of PDF.
+  #Iniciar a visualização do PDF.
   pdfMake.createPdf(definationPdf).open();
 
-$("#btnExportXls").on "click", (event) ->
-  csv = generateConsultCSV()
-  window.open "data:text/csv;charset:utf-8,"+escape(csv)
- 
 generateConsultCSV = =>
 
   str = ""
   line = "" 
   cont = 0
 
+  #Resgatar o array com o conteúdo para a exportação.
   table = getContentExportConsult()
 
-  # get data for the rows
+  #Montar o conteúdo do documento.
   for row in table
     line = ""
     for col in row
@@ -361,46 +439,60 @@ generateConsultCSV = =>
   return str
 
 getContentExportConsult = ->  
-  
+  #Array com as linhas a serem exportadas.
   arrayTemp = new Array()
 
-  #Include header coluns for table results search.  
-  arrayResults = new Array [  
-      {text:"Número Registro", style: "header"},      
-      {text:"Data", style: "header"},
-      {text:"Município", style: "header"},
-      {text:"UF", style: "header"},
-      {text:"Origem", style: "header"},
-      {text:"Tipo Evento", style: "header"},
-      {text:"Ocorrências/Ambientes Atingidos", style: "header"},
-      {text:"Inst. Atuando no Local", style: "header"},
-      {text:"Fonte", style: "header"},
-      {text:"Dia", style: "header"},
-      {text:"Período", style: "header"},
-      {text:"Feriado", style: "header"}
-  ]
+  #Cabeçalhos que estarão presentes no documento.
+  arrayHeaders = new Array()  
   
-  #Add records of result search, add rows for table of results. 
-  $("#resultTable").DataTable().rows().data().each (row) ->     
+  #Array com os IDs das colunas a serem exportadas. 
+  #São referências para os conteúdos no documento.
+  arrayColunasExport = new Array()
+
+  #Array com as linhas do conteúdo do documento. 
+  arrayResults = new Array()
+
+  #Definir as colunas a serem exportadas e guardar seus IDs.
+  $("#divOpColunas input[type='checkbox']").each (index,checkbox) ->
+    if $(@).is ":checked"
+      arrayHeaders[arrayHeaders.length] = {text:$(@).val(), style: "header"}
+      arrayColunasExport[arrayColunasExport.length] = $(@).attr("id")
+
+  #Todas as colunas caso nenhuma esteja selecionada.
+  if arrayHeaders.length is 0     
+    $("#divOpColunas input[type='checkbox']").each (index,checkbox) ->
+      arrayHeaders[arrayHeaders.length] = {text:$(@).val(), style: "header"}
+      arrayColunasExport[arrayColunasExport.length] = $(@).attr("id")
+
+  #Setar os cabeçalhos do documento.
+  arrayResults[arrayResults.length] = arrayHeaders
+  
+  #Adicionar as linhas com as colunas selecionadas para a exportação.
+  $("#resultTable").DataTable().rows().data().each (row,index) ->     
     arrayTemp = []
-    for col in row          
-      if col is null       
-        arrayTemp[arrayTemp.length] = ""
-      else
-        arrayTemp[arrayTemp.length] = if typeof(col) isnt "object" then col else col.text
+    $(row).each (indexCol,col) ->
+      #Importar a coluna selecionada.
+      if $.inArray(indexCol.toString(), arrayColunasExport) isnt -1
+        #Evitar colunas nulas que pode causar problemas na visualização do conteúdo em PDF.
+        if col is null       
+          arrayTemp[arrayTemp.length] = ""
+        else
+          arrayTemp[arrayTemp.length] = if typeof(col) isnt "object" then col else col.text
       
-    arrayResults[arrayResults.length] = arrayTemp
+    arrayResults[arrayResults.length] = arrayTemp    
 
   return arrayResults  
 
 getHeadersColumnsResults = ->
+  #Colunas para a grid de consulta.
   columnsResultsConsulta = new Array(
       { "title": "Número de Registro" }      
       { "title": "Data do Incidente" }
-      { "title": "Município" }
-      { "title": "UF" }           
+      { "title": "Município/UF" }      
       { "title": "Origem" }
-      { "title": "Tipo de Evento" }
+      { "title": "Tipo de Evento" }      
+      { "title": "Produtos ONU" }
+      { "title": "Outros Produtos" }
       { "title": "Ocorrências/Ambientes Atingidos" }
       { "title": "Inst. Atuando no Local" }
       { "title": "Fontes de Informação" }

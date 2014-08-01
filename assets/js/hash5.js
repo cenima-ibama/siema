@@ -241,6 +241,7 @@
         tableBtn = document.createElement("button");
         tableBtn.id = this.options.container + "-btn-table";
         tableBtn.className = "btn";
+        tableBtn.title = "Mostrar tabela";
         this._tableBtn = tableBtn;
         tableIcon = document.createElement("i");
         tableIcon.className = "icon-table";
@@ -257,6 +258,7 @@
       if (this.options.buttons["export"]) {
         exportBtn = document.createElement("button");
         exportBtn.id = this.options.container + "-btn-export";
+        exportBtn.title = "Exportar para arquivo";
         exportBtn.className = "btn";
         this._exportBtn = exportBtn;
         exportIcon = document.createElement("i");
@@ -269,6 +271,7 @@
       if (this.options.buttons.minimize) {
         minBtn = document.createElement("button");
         minBtn.id = this.options.container + "-btn-minimize";
+        minBtn.title = "Reduzir";
         minBtn.className = "btn";
         this._minBtn = minBtn;
         minIcon = document.createElement("i");
@@ -281,6 +284,7 @@
       if (this.options.buttons.maximize) {
         maxBtn = document.createElement("button");
         maxBtn.id = this.options.container + "-btn-maximize";
+        maxBtn.title = "Maximizar";
         maxBtn.className = "btn";
         this._maxBtn = maxBtn;
         maxIcon = document.createElement("i");
@@ -310,6 +314,7 @@
           event.preventDefault();
           if ($(_this._boxContent).is(":visible")) {
             _this._minIcon.className = "icon-chevron-down";
+            _this._minBtn.title = "Aumentar";
             if (_this.options.buttons.minusplus) {
               $(_this._addBtn).prop("disabled", true);
               $(_this._delBtn).prop("disabled", true);
@@ -319,6 +324,7 @@
             }
           } else {
             _this._minIcon.className = "icon-chevron-up";
+            _this._minBtn.title = "Reduzir";
             if (_this.options.buttons.minusplus) {
               $(_this._addBtn).prop("disabled", false);
               $(_this._delBtn).prop("disabled", false);
@@ -344,11 +350,13 @@
             $(_this._minBtn).prop("disabled", true);
             $(_this._closeBtn).prop("disabled", true);
             _this._maxIcon.className = "icon-resize-small";
+            _this._maxIcon.title = "Minimizar";
             $("#navbar").hide();
           } else {
             $(_this._minBtn).prop("disabled", false);
             $(_this._closeBtn).prop("disabled", false);
             _this._maxIcon.className = "icon-resize-full";
+            _this._maxIcon.title = "Maximizar";
             $("#navbar").show();
           }
           $(_this._boxTable).hide();
@@ -435,10 +443,12 @@
           $(_this._boxTable).fadeToggle('fast', 'linear');
           if (_this._tableIcon.className === "icon-table") {
             _this._tableIcon.className = "icon-bar-chart";
+            _this._tableBtn.title = "Mostrar gráfico";
             visualization = new google.visualization.Table(_this._boxTable);
             visualization.draw(_this.data, null);
           } else {
             _this._tableIcon.className = "icon-table";
+            _this._tableBtn.title = "Mostrar tabela";
           }
           return $(_this._leftBtn).add(_this._rightBtn).add(_this._addBtn).add(_this._delBtn).on("click", function(event) {
             if ($(_this._boxTable).is(":visible")) {

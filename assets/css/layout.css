@@ -699,6 +699,7 @@ footer a {
   /*margin: 10px;*/
   float: left;
   width: 100%;
+
 }
 
 .form-control{
@@ -760,4 +761,16 @@ input.search-query:focus
   color: #555555;
   width: 200px;
 }
-/**/
+/*Upload File */
+
+.customFileInput input {
+  position: absolute;
+  visibility: hidden;
+  right: 10px;
+}
+.fileName{
+  max-width: 10em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
