@@ -64,6 +64,9 @@
       if (this.options.table) {
         query = "&table=" + this.options.table;
       }
+      if (this.options.functionName) {
+        query = "&function=" + this.options.functionName;
+      }
       if (this.options.parameters) {
         query += "&parameters=" + this.options.parameters;
       }

@@ -204,12 +204,15 @@
     event.preventDefault();
     if (confirm("Você deseja excluir essa linha do banco de dados?")) {
       nroOcorrencia = $(this).attr("data-ocorrencia");
-      return rest = new H5.Rest({
+      rest = new H5.Rest({
         url: H5.Data.restURL,
-        table: "ocorrencia",
-        parameters: "nro_ocorrencia%3D" + nroOcorrencia,
-        restService: "ws_deletequery.php"
+        functionName: "f_deleteOcorrencia",
+        parameters: nroOcorrencia,
+        restService: "ws_functioncall.php"
       });
+      if (rest.data.length === 1) {
+        return $(this).closest('tr').remove();
+      }
     } else {
       return alert("Operação cancelada");
     }
