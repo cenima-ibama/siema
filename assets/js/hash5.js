@@ -458,7 +458,7 @@
     };
 
     GoogleCharts.prototype._enableExport = function() {
-      var generateCSV;
+      var generateCSV, getTitle;
       generateCSV = (function(_this) {
         return function() {
           var col, line, row, str, title, value, _i, _j, _k, _ref, _ref1, _ref2;
@@ -480,10 +480,27 @@
           return str;
         };
       })(this);
+      getTitle = (function(_this) {
+        return function() {
+          if (_this._boxHeader.childNodes["1"].childNodes["0"].data) {
+            return _this._boxHeader.childNodes["1"].childNodes["0"].data + ".csv";
+          } else if (_this._boxHeader.childNodes["1"].childNodes["1"].data) {
+            return _this._boxHeader.childNodes["1"].childNodes["1"].data + ".csv";
+          } else {
+            return _this.options.title + ".csv";
+          }
+        };
+      })(this);
       return $(this._exportBtn).click(function() {
-        var csv;
+        var csv, downloadLink, uri;
         csv = generateCSV();
-        return window.open("data:text/csv;charset=utf-8," + escape(csv));
+        uri = "data:text/csv;charset=utf-8," + escape(csv);
+        downloadLink = document.createElement("a");
+        downloadLink.href = uri;
+        downloadLink.download = getTitle();
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        return document.body.removeChild(downloadLink);
       });
     };
 

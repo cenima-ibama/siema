@@ -401,9 +401,27 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
 
       return str
 
+    getTitle = =>
+      if @_boxHeader.childNodes["1"].childNodes["0"].data
+        return @_boxHeader.childNodes["1"].childNodes["0"].data + ".csv"
+      else if @_boxHeader.childNodes["1"].childNodes["1"].data
+        return @_boxHeader.childNodes["1"].childNodes["1"].data + ".csv"
+      else
+        return @options.title + ".csv"
+
     $(@_exportBtn).click ->
       csv = generateCSV()
-      window.open "data:text/csv;charset=utf-8," + escape(csv)
+      uri = "data:text/csv;charset=utf-8," + escape(csv)
+
+      downloadLink = document.createElement("a")
+      downloadLink.href = uri
+      downloadLink.download = getTitle()
+
+      document.body.appendChild(downloadLink)
+      downloadLink.click()
+      document.body.removeChild(downloadLink)
+
+
 
 class H5.Charts.SmallContainer
 
