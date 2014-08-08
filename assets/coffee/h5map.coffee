@@ -475,11 +475,11 @@ controlswitch = new L.control.switch(
     tab: "factory"
   "Terras Indígenas":
     layer: terrasIndigenas
-  "UC Uso Sustentavel":
+  "UC Uso Sustentável":
     layer: ucSustentavel
   "UC Proteção Integral":
     layer: ucIntegral
-  "UC Fedecarao":
+  "UC Federação":
     layer: ucFederacao
   "Bioma IBGE":
     layer: biomaIBGE

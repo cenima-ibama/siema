@@ -40,18 +40,23 @@ class Auth extends CI_Controller {
         $this->login();
     }
 
+  
     function login_ibama($errorMsg = NULL){
         $this->session->keep_flashdata('tried_to');
         if(!$this->authldap->is_authenticated()) {
             // Set up rules for form validation
             $rules = $this->form_validation;
             $rules->set_rules('inputUsername', 'Username', 'required|alpha_dash');
-            $rules->set_rules('inputPassword', 'Password', 'required');
+            $rules->set_rules('inputPassword', 'Password', 'required');          
 
             // Do the login...
             if($rules->run() && $this->authldap->login(
                 $rules->set_value('inputUsername'),
                 $rules->set_value('inputPassword'))) {
+
+                    //Save profiler(perfil) user in session.
+                    $this->save_profile_user($rules->set_value('inputUsername'));
+
                     // Login WIN!
                     if($this->session->flashdata('tried_to')) {
                         redirect($this->session->flashdata('tried_to'));
@@ -78,12 +83,16 @@ class Auth extends CI_Controller {
             // Set up rules for form validation
             $rules = $this->form_validation;
             $rules->set_rules('inputUsername', 'Username', 'required|alpha_dash');
-            $rules->set_rules('inputPassword', 'Password', 'required');
+            $rules->set_rules('inputPassword', 'Password', 'required');            
 
             // Do the login...
             if($rules->run() && $this->authldap->login(
                 $rules->set_value('inputUsername'),
-                $rules->set_value('inputPassword'))) {
+                $rules->set_value('inputPassword'))) {                    
+
+                    //Save profiler(perfil) user in session.
+                    $this->save_profile_user($rules->set_value('inputUsername'));
+
                     // Login WIN!
                     if($this->session->flashdata('tried_to')) {
                         redirect($this->session->flashdata('tried_to'));
@@ -109,24 +118,15 @@ class Auth extends CI_Controller {
             // Set up rules for form validation
             $rules = $this->form_validation;
             $rules->set_rules('inputUsername', 'Username', 'required|alpha_dash');
-            $rules->set_rules('inputPassword', 'Password', 'required');
-
-            //Start Session.
-            $this->session->set_userdata("profile_user",0);
+            $rules->set_rules('inputPassword', 'Password', 'required');            
 
             // Do the login...
             if($rules->run() && $this->authldap->login(
                 $rules->set_value('inputUsername'),
                 $rules->set_value('inputPassword'))) {
-                    
-                    //Get user name.
-                    $userName = $rules->set_value('inputUsername');
 
-                    //Get profile user.
-                    $profileUser = $this->Home_model->getProfileUser($userName);
-
-                    //Save profile in session.
-                    $this->session->set_userdata("profile_user",$profileUser);
+                    //Save profiler(perfil) user in session.
+                    $this->save_profile_user($rules->set_value('inputUsername'));
 
                     // Login WIN!
                     if($this->session->flashdata('tried_to')) {
@@ -157,4 +157,21 @@ class Auth extends CI_Controller {
 
         redirect(base_url());
     }
+
+       /*
+    Save in session the profile(perfil) of user.
+    */
+    function save_profile_user($userName)
+    {
+        //Start Session.
+        $this->session->set_userdata("profile_user",0);
+                    
+        //Get profile user.
+        $profileUser = $this->Home_model->getProfileUser($userName);
+
+        //Save profile in session.
+        $this->session->set_userdata("profile_user",$profileUser);
+    }
+    
+   
 }

@@ -13,7 +13,9 @@ class Form extends CI_Controller {
         // Enable firebug
         $this->load->library('Firephp');
 
-        $this->load->model('form_model');
+        $this->load->model('form_model');        
+
+        $this->load->model('form_validations_model');
 
         $this->firephp->setEnabled(TRUE);
     }
@@ -235,11 +237,53 @@ class Form extends CI_Controller {
 
         $form_data = $this->input->post();
 
-        $this->loadForm($form_data["nroOcorrencia"]);
+        $this->loadForm($form_data["nroOcorrencia"]); 
+    }
+
+    public function validateUpdate()
+    {
+        $numeroRegistro  = trim($_POST["id"]);
+        $validation_model = $this->form_validations_model;
+        $userIbamaNet = ($this->session->userdata("profile_user") == "3");        
+        $userName = $this->session->userdata("username");
+
+        $status = "";
+        $mensagem = "";        
+        
+        if($numeroRegistro == "")
+        {
+          $status = 'false';
+          $mensagem = "Número do Registro não informado.";        
+        }
+        else if (!$validation_model->numRegistroExists($numeroRegistro)) 
+        {
+          $status = 'false';
+          $mensagem = "Número do Registro não encontrado.";                            
+        }
+        else if ($validation_model->dadosLegados($numeroRegistro)) 
+        {   
+          $status = 'false';
+          $mensagem = "Dados Legados não podem ser alterados.";                                      
+        }        
+        else if ($userIbamaNet  && !$validation_model->userCadastrouOcorrencia($numeroRegistro,$userName))           
+        {   
+          $status = 'false';
+          $mensagem = "Alteração não pode ser realizada, porque a ocorrência não foi criada por este usuário.";
+        }          
+        else
+        {   
+          $status = 'true';
+          $mensagem = "Informações válidas.";                                      
+        }          
+
+        $result = array("status" => $status , "mensagem" => $mensagem); 
+
+         echo json_encode($result);
+               
     }
 
     private function loadForm($nro_ocorrencia) {
-        $this->load->helper('form');
+        $this->load->helper('form');           
 
         $formLoad = $this->form_model->load($nro_ocorrencia);
 

@@ -23,7 +23,7 @@ class Home_model extends CI_Model {
     //Return id of perfil of user or "0" case not user returned.
     if ($res->num_rows() > 0)
 	   	return $res->row()->id_perfil;
-	else
-		return "0";    
+	  else
+		  return "0";    
   }
 }

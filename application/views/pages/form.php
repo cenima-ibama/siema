@@ -9,7 +9,7 @@
     ?>
 
 
-  <div class="box-header"> </div>
+  <div class="box-header"></div>
   <div class="box-content">
 
     <?php echo form_open('form/validate', array('id' => 'formAcidentes', 'name' => 'formAcidentes', 'enctype' => 'multipart/form-data')); ?>
@@ -29,12 +29,22 @@
           </h4>
           <div class="checkbox">
         <div class="row-fluid">
+        <?php
+          //Get profile user.
+          $profileUser = $this->session->userdata('profile_user');         
+
+          //Checkbox visible only if administrator or validator user.
+          if ($profileUser == 1 || $profileUser == 2) { 
+        ?> 
           <div class="span12">
             <label class="checkbox pull-right" for="validado">
               <?php echo form_checkbox($validado); ?>
               Validado
             </label>
           </div>
+        <?php
+          }
+        ?>
         </div>
       </div>
           <input type="hidden" id="comunicado" name="comunicado"
@@ -625,8 +635,6 @@
                   </div>
                 ';
               }
-
-
               ?>
 
             </div>
@@ -1071,8 +1079,6 @@ function showFileName(inputFile) {
               </div>
             </div>
           </div>
-
-
 
       <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
       <div class="checkbox" style="display:none;">

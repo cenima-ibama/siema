@@ -198,26 +198,42 @@
 
     if ("#tab" + collapse) is "#tab8"
 
-      $("#submit").show()
-      $("#modalBtnNext").hide()
-      $("#modalBtnBack").hide()
-      $("#modalBtnCancel").show()
-
       if isAtual
-        if($("#inputRegistro").prop("value") isnt "")
+        #if($("#inputRegistro").prop("value") isnt "")
           # defaultHtml = document.getElementById("defaultHtml")
           # if(defaultHtml.innerHTML is "")
           #   defaultHtml.innerHTML = $("#formLoad").prop("action")
           # action = defaultHtml.innerHTML + "/" + $("#inputRegistro").prop("value")
           # $("#formLoad").prop "action", action
 
-          nroOcorrencia = $("#inputRegistro").prop("value")
+        #   nroOcorrencia = $("#inputRegistro").prop("value")
+        #   $("#nroOcorrenciaLoad").val(nroOcorrencia)
+        #   $("#formLoad").submit()
+        # else
+        #   $("#inputRegistro").focus()
+        # nroOcorrencia = $("#inputRegistro").prop("value")
+        # $("#nroOcorrenciaLoad").val(nroOcorrencia)       
+        validado = validateUpdate()
+
+        if(validado == "true")          
+          nroOcorrencia = $("#inputRegistro").prop("value")          
           $("#nroOcorrenciaLoad").val(nroOcorrencia)
+
+          showButtonsCadastro()
           $("#formLoad").submit()
+          $(@).tab('show')                    
         else
-          $("#inputRegistro").focus()
+           $(".modal-footer").show()
+           this.href = "#tab" + --collapse;
+           history.push(
+              tab: "#tab" + 2
+              collapse: 2
+           )                           
+
       else
         $("#formCreate").submit()
+        showButtonsCadastro()
+        $(@).tab('show')                     
 
       # Clean old cells on the temporary table (tmp_ocorrencia_produto)
       rest = new window.parent.H5.Rest (
@@ -251,7 +267,6 @@
       )
 
 
-    $(@).tab('show')
 
  # Dealing with the jump on the register part on the accident form
   $("#tipoForm").click (event) ->
@@ -336,3 +351,36 @@
       parameters: "nro_ocorrencia%3D" + nroOcorrencia
       restService: "ws_deletequery.php"
     )
+
+  validateUpdate = ->    
+    nroOcorrencia = $("#inputRegistro").prop("value")    
+    erroMsg = ""
+    validado = false
+
+    $.ajax({
+      url:"http://localhost/siema/index.php/form/validateUpdate",
+      data: {id: nroOcorrencia},
+      async: false,
+      type: "POST",
+      dataType: "json",          
+      success: (result) ->
+        validado = result.status
+        erroMsg = result.mensagem        
+      error: ->
+        validado = false
+        erroMsg = "A requisição falhou. Não foi possível validar a solicitação."
+    })
+   
+    #Show erro message.
+    if validado == "false"
+      $("#divErrorUpdate").show()      
+      $("#divErrorUpdate").html(erroMsg)      
+      $("#divErrorUpdate").fadeOut(8500)
+    
+    return validado;      
+
+  showButtonsCadastro = ->
+    $("#submit").show()
+    $("#modalBtnNext").hide()
+    $("#modalBtnBack").hide()
+    $("#modalBtnCancel").show()

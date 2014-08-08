@@ -1,29 +1,35 @@
 <div id="addMeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  
   <div class="modal-header">
     <button id="btnXClose" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h5 id="myModalLabel">Acidente Ambiental</h5>
   </div>
   <div class="modal-body" style="padding: 5%">
-    <div class="tab-content">
+    <div class="tab-content">      
       <div class="tab-pane active" id="tab1">
         <div class="row-fluid">
           <div class="span6" style="text-align:center;">
             <p style="text-align:justify; margin-top: 10px">
             <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0">
-            Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental,  ligue no Linha Verde (<strong>0800-618080</strong>) ou clique no botão abaixo.
-            <a class="btn btn-block" href="http://www.ibama.gov.br/cadastro-ocorrencias" style="margin-top: 10px" target="_blank">Denuncie Aqui</a>
+            Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental,  ligue no Linha Verde (<strong>0800-618080</strong>) ou clique no botão abaixo.            
             </p>
-          </div><!--/span-->
+            <div class="row-fluid">
+              <a class="btn btn-block" href="http://www.ibama.gov.br/cadastro-ocorrencias" style="margin-top: 10px" target="_blank">Denuncie Aqui</a>         
+            </div>
+          </div>
           <div class="span6" style="text-align:center;">
             <p style="text-align:justify; margin-top: 10px">
             <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0">
-            Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem, clique no botão abaixo.
-            <a id="btnBeginForm" class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 30px">Acidente Ambiental</a>
+            Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem, clique no botão abaixo.            
             </p>
-          </div><!--/span-->
-        </div><!--/row-->
+            <div class="row-fluid">
+              <a id="btnBeginForm" class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 10px">Acidente Ambiental</a>
+            </div>
+          </div>          
+        </div>                 
       </div>
       <div class="tab-pane" id="tab2">
+
         <div class="row-fluid">
             <?php
               if( $this->session->userdata('logged_in') ) {
@@ -95,7 +101,7 @@
               }
             ?>
         </div>
-      </div>
+      </div>     
       <div class="tab-pane" id="tab3">
         <h3>Tipo de conta</h3>
         <div class="media">
@@ -137,7 +143,7 @@
       </div>
       <div class="tab-pane" id="tab4">
         <div class="row-fluid">
-          <br />
+          <br/>
           <div class="form-horizontal">
             <div class="text-center">
               <h5> <strong>Identificação do Orgão/Empresa</strong></h5>
@@ -207,8 +213,12 @@
           <strong>Conta criada com sucesso!</strong><br/> Dados de sua conta foram enviados para seu e-mail.
         </div>
       </div>
+
       <div class="tab-pane" id="tab7">
-        <div class="media">
+        <div  id="divErrorUpdate" class="alert alert-block alert-error fade in" style="display:none;padding:7px">
+          <span id="msgErrorUpdate"></span>
+        </div>
+        <div class="media">      
           <div class="media-body">
             <label class="radio">
               <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOleo" value="1">
@@ -281,6 +291,7 @@
           </label>
         <?php echo form_close(); ?>
       </div>
+
       <div class="tab-pane" id="tab8">
         <!-- <div class="row-fluid"> -->
           <iframe name="form_frame" style="border: medium none white; height: 394px; width: 100%;"></iframe>
@@ -300,15 +311,39 @@
     <a id="btnClose" class="btn btn-primary" type="button" style="display:none;" data-dismiss="modal"><i class="icon-remove"></i>Fechar</a>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--  -->
+
 <div class="loading" id="loading">
   <!-- <img src="<?php echo base_url()?>assets/img/logo.png" id="loading_logo" style="display: inline;" title=""> -->
   <img src="<?php echo base_url()?>assets/img/logo_ibama.png" id="loading_logo" style="display: inline; overflow: hidden;" title="">
 </div>
+
 <?php
   if(!$logged_in) {
     echo '<div id="login" class="login"> </div>';
   }
 ?>
+
 <div id="map" class="map"></div>
 <div id="dash" class="dash">
   <div class="charts-content">
