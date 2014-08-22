@@ -466,12 +466,20 @@
     </div>
     <hr>
     <div id="charts" class="row-fluid">
+      <!-- FOI SOLICITADO A REMOÇÃO DO CHART 1 3 4 E 6 - 21/08/14 -->
+      <!--
       <div id="chart1" class="box"> </div>
+      -->
       <div id="chart2" class="box"> </div>
+      <!--
       <div id="chart3" class="box"> </div>
+      
       <div id="chart4" class="box"> </div>
+      -->
       <div id="chart5" class="box"> </div>
+      <!--
       <div id="chart6" class="box"> </div>
+      -->
       <!--<div id="chart9" class="box"> </div>-->
       <div id="chart7" class="box"> </div>
       <div id="chart8" class="box"> </div>
