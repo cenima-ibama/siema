@@ -411,7 +411,7 @@ class H5.Charts.GoogleCharts extends H5.Charts.Container
 
     $(@_exportBtn).click ->
       csv = generateCSV()
-      uri = "data:text/csv;charset=utf-8," + escape(csv)
+      uri = "data:text/csv;charset=ISO-8859-1," + escape(csv)
 
       downloadLink = document.createElement("a")
       downloadLink.href = uri

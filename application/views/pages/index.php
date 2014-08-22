@@ -614,7 +614,7 @@
 
       </div>
       <div id="optionsExport" style="display:none">
-            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls">Exportar para XLS</a>
+            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls">Exportar para Planilha</a>
             <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportPdf">Exportar para PDF</a>
       </div>    
 
