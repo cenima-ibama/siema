@@ -205,28 +205,31 @@ class Form_model extends CI_Model {
         $values = $values . "'" . $form["inputCausaProvavel"] . "',";
       }
     }
-    $fields = $fields . "situacao_atual_descarga,";
-    $this->firephp->log($form["SituacaoDescarga"]);
-    switch($form["SituacaoDescarga"]) {
-      case '1':
-        $this->firephp->log("P");
-        $values = $values . "'P',";
-        break;
-      case '2':
-        $this->firephp->log("N");
-        $values = $values . "'N',";
-        break;
-      case '3':
-        $this->firephp->log("S");
-        $values = $values . "'S',";
-        break;
-      case '4':
-        $this->firephp->log("A");
-        $values = $values . "'A',";
-        break;
+    
+    if (isset($form["hasOleo"])) {
+    
+        $fields = $fields . "situacao_atual_descarga,";
+        $this->firephp->log($form["SituacaoDescarga"]);
+        switch($form["SituacaoDescarga"]) {
+          case '1':
+            $this->firephp->log("P");
+            $values = $values . "'P',";
+            break;
+          case '2':
+            $this->firephp->log("N");
+            $values = $values . "'N',";
+            break;
+          case '3':
+            $this->firephp->log("S");
+            $values = $values . "'S',";
+            break;
+          case '4':
+            $this->firephp->log("A");
+            $values = $values . "'A',";
+            break;
+        }
     }
-
-
+    
     //
     // 7. Danos Identificados
     //

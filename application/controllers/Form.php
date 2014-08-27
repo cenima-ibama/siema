@@ -121,7 +121,8 @@ class Form extends CI_Controller {
         } else {
             $this->form_validation->set_rules('semCausa', 'Causa provável do acidente', 'required');
         }
-        if (!isset($form_data['SituacaoDescarga'])) {
+        
+        if (isset($form_data['hasOleo']) and $form_data['hasOleo'] == 'S' and !isset($form_data['SituacaoDescarga'])) {
             $this->form_validation->set_rules('SituacaoDescarga', 'Situação atual da descarga', 'required');
         }
 
@@ -1243,7 +1244,7 @@ class Form extends CI_Controller {
             'maxlength' => '150',
             'value' => set_value('inputCargoFunc', isset($formLoad['inputCargoFunc']) ? $formLoad['inputCargoFunc'] : '')
         );
-        // Input Funcão Navio Comunicante (Informante)
+        // Input Funcão Identificação Comunicante (Acidente Ambiental)
         $data['inputInstEmp'] = array(
             'id' => 'inputInstEmp',
             'name' => 'inputInstEmp',
@@ -1259,6 +1260,14 @@ class Form extends CI_Controller {
             'maxlength' => '150',
             'value' => set_value('inputEmailInformante', $this->session->userdata('mail')),
             'disabled' => 'disabled'
+        );
+        // Input Funcão Navio Comunicante (Informante)
+        $data['inputCargoFunc'] = array(
+            'id' => 'inputCargoFunc',
+            'name' => 'inputCargoFunc',
+            'class' => 'input-large',
+            'maxlength' => '150',
+            'value' => set_value('inputCargoFunc', isset($formLoad['inputCargoFunc']) ? $formLoad['inputCargoFunc'] : '')
         );
         // Input Telefone Comunicante (Informante)
         $data['inputTelInformante'] = array(

@@ -950,8 +950,9 @@
                         </div>
                       </div>
                       ';
-
-              echo '
+              
+            } else {
+                echo '
                       <div class="controls span12">
                         <label class="control-label span5" for="inputCargoFunc">Cargo / Função:
                         </label>
