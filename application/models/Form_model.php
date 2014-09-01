@@ -307,9 +307,12 @@ class Form_model extends CI_Model {
       $fields = $fields . "plano_emergencia,";
       if ($form["planoEmergencia"] == '1') {
         $values = $values . "'S',";
-      } else {
+      } else if ($form["planoEmergencia"] == '0'){
         $values = $values . "'N',";
+      } else {
+          $values = $values . "'0',";
       }
+      
       $fields = $fields . "plano_emergencia_acionado,";
       if (isset($form["planoAcionado"])) {
         $values = $values . "'S',";
@@ -942,9 +945,12 @@ class Form_model extends CI_Model {
       $fields = $fields . ",plano_emergencia=";
       if ($form["planoEmergencia"] == '1') {
         $fields = $fields . "'S'";
-      } else {
+      } else if ($form["planoEmergencia"] == '0') {
         $fields = $fields . "'N'";
+      } else {
+          $fields = $fields . "'0'";
       }
+      
       $fields = $fields . ",plano_emergencia_acionado=";
       if (isset($form["planoAcionado"])) {
         $fields = $fields . "'S'";
@@ -1449,8 +1455,10 @@ class Form_model extends CI_Model {
     //
     if ($dbResult['plano_emergencia'] == "S") {
       $form['planoEmergencia'] = "1";
-    } else {
+    } else if ($dbResult['plano_emergencia'] == "N") {
       $form['planoEmergencia'] = "0";
+    } else {
+      $form['planoEmergencia'] = "2";
     }
     if ($dbResult['plano_emergencia_acionado'] == "S") {
       $form['planoAcionado'] = "on";

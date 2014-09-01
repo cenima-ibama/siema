@@ -831,6 +831,11 @@
                           <?php echo form_radio($planoEmergSim); ?> Sim
                         </label>
                       </div>
+                        <div class="span6">
+                        <label class="radio">
+                          <?php echo form_radio($planoEmergSemInfo); ?> Sem informação
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -839,7 +844,7 @@
                 <div class="span12">
                   <label class="checkbox text-left">
                     <?php echo form_input($planoAcionado); ?>
-                    Acionado Plano de Emergência Individual
+                    Acionado plano individual de emergência
                   </label>
                 </div>
               </div>
@@ -860,7 +865,7 @@
                 <div class="span12">
                   <label class="checkbox text-left">
                     <?php echo form_checkbox($semProcedimentos, 'on'); ?>
-                    Sem informação sobre existência/acionamento de Plano de Emergência individual
+                    Sem evidência de ação ou ou providência até o momento
                   </label>
                 </div>
               </div>

@@ -131,9 +131,9 @@ class Form extends CI_Controller {
         // 7. Danos Identificados
         //
         if (!isset($form_data['semDanos'])) {
-            $this->form_validation->set_rules('tipoDanoIdentificado[]', 'Danos identificados', 'required');
+            $this->form_validation->set_rules('tipoDanoIdentificado[]', 'Ocorrências e/ou ambientes atingidos', 'required');
         } else {
-            $this->form_validation->set_rules('semDanos', 'Danos identificados', 'required');
+            $this->form_validation->set_rules('semDanos', 'Ocorrências e/ou ambientes atingidos', 'required');
         }
 
 
@@ -194,10 +194,11 @@ class Form extends CI_Controller {
 //                echo '</div>';
                 
             if (!(strcmp('<p>Você não selecionou um arquivo para envio.</p>', $this->upload->display_errors()))) {
-                echo '<div class="alert alert-block alert-warning fade in" style="display:inherit;">';
-                echo $this->upload->display_errors();
-                echo '</div>';
-                //echo 'Tem arquivo nao, seu noob';
+                  // PARA EXIBIR MENSAGEM ALERTANDO QUE NÃO FOI USADO O UPLOAD DE ARQUIVOS
+//                echo '<div class="alert alert-block alert-warning fade in" style="display:inherit;">';
+//                echo $this->upload->display_errors();
+//                echo '</div>';
+ 
             } else {
                 echo '<div class="alert alert-block alert-error fade in" style="display:inherit;">';
                 echo $this->upload->display_errors();
@@ -958,7 +959,7 @@ class Form extends CI_Controller {
 
 
         //
-        // 7. Danos identificados
+        // 7. Ocorrências e/ou ambientes atingidos
         //
         // Input Complemento Danos
         $data['inputCompDano'] = array(
@@ -1159,11 +1160,31 @@ class Form extends CI_Controller {
                 'checked' => 'checked'
             );
         }
+        
         if (isset($formLoad['semProcedimentos'])) {
             $data['planoEmergNao'] += array(
                 'disabled' => 'disabled'
             );
         }
+        
+        // Radio Plano Sem informação
+        $data['planoEmergSemInfo'] = array(
+            'id' => 'planoEmergSemInfo',
+            'name' => 'planoEmergencia',
+            'type' => 'radio',
+            'value' => set_value('planoEmergSemInfo', 2)
+        );
+        if (isset($formLoad['planoEmergencia']) && ($formLoad['planoEmergencia'] == '2')) {
+            $data['planoEmergSim'] += array(
+                'checked' => 'checked'
+            );
+        }
+        if (isset($formLoad['semProcedimentos'])) {
+            $data['planoEmergSemInfo'] += array(
+                'disabled' => 'disabled'
+            );
+        }
+        
         // Checkbox Plano Acionado
         $data['planoAcionado'] = array(
             'id' => 'planoAcionado',
