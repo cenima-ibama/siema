@@ -467,12 +467,20 @@
     </div>
     <hr>
     <div id="charts" class="row-fluid">
+      <!-- FOI SOLICITADO A REMOÇÃO DO CHART 1 3 4 E 6 - 21/08/14 -->
+      <!--
       <div id="chart1" class="box"> </div>
+      -->
       <div id="chart2" class="box"> </div>
+      <!--
       <div id="chart3" class="box"> </div>
+      
       <div id="chart4" class="box"> </div>
+      -->
       <div id="chart5" class="box"> </div>
+      <!--
       <div id="chart6" class="box"> </div>
+      -->
       <!--<div id="chart9" class="box"> </div>-->
       <div id="chart7" class="box"> </div>
       <div id="chart8" class="box"> </div>
@@ -607,13 +615,12 @@
 
       </div>
       <div id="optionsExport" style="display:none">
-            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls">Exportar para XLS</a>
+            <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls">Exportar para Planilha</a>
             <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportPdf">Exportar para PDF</a>
       </div>    
 
 
     </div>
-
 
     </div>
 
