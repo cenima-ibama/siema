@@ -10,8 +10,8 @@
   overflow: hidden;
 }
 .dash {
-  position: absolute;
-  top: 42px;
+  position: relative;
+  /*top: 42px;*/
   background-color: #F7F7F7;
   z-index: 2;
   width: 100%;

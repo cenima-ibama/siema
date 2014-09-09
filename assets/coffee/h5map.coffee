@@ -504,3 +504,11 @@ controlswitch = new L.control.switch(
 
 $(document).ready ()->
   legados.hideLayer()
+  #Atualizar a camada de acidentes a cada 30 segundos.
+  # setInterval  updateLayerByTimer, 10000
+
+updateLayerByTimer = ->
+  if acidentes isnt null
+    acidentes.redraw()
+
+

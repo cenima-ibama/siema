@@ -1,8 +1,9 @@
   <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
   <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-
+  <![endif]-->  
+  <script src="http://barra.brasil.gov.br/barra.js" type="text/javascript"></script>
+  
   <script src="<?= base_url()?>assets/js/jquery.min.js"></script>
   <script src="<?= base_url()?>assets/js/jquery-ui.min.js"></script>
   <!-- <script src="<?= base_url()?>assets/js/jquery.maskedinput.min.js"></script> -->

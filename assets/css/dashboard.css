@@ -1,14 +1,14 @@
 
-body {
+/*body {
     padding-top: 50px;
-}
+}*/
 .sub-header {
     border-bottom: 1px solid #EEEEEE;
     padding-bottom: 10px;
 }
-.navbar-fixed-top {
+/*.navbar-fixed-top {
     border: 0 none;
-}
+}*/
 .sidebar {
     display: none;
 }
