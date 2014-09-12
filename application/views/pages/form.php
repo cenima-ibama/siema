@@ -917,7 +917,7 @@
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse11">
                   12. Identificação do comunicante';
             if (isset($hasOleo))
-                echo "</br><i style=\"font-size: 9px\">(Item X do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)</i>";
+                echo "<br/><i style=\"font-size: 9px\">(Item X do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)</i>";
             echo '
                 </a>
               </div>
@@ -1026,79 +1026,69 @@
 
 
             <!--upload file button without strap-->
-            <div class="accordion-heading">
-                <div class="accordion-group">
-                    <div class="accordion-heading">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse14">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse14">
 
-                            <?php
-                            if ($this->authldap->is_authenticated())
-                                echo '14. Adicionar arquivos';
-                            else
-                                echo '13. Adicionar arquivos';
-                            ?>
-                        </a>
-                    </div>
-                    <div id="collapse14" class="accordion-body collapse">
-                        <div class="accordion-inner">
-                            <div class="row-fluid">
-                                <div class="control-group">
-                                    <div class="input-append">
+                        <?php
+                        if ($this->authldap->is_authenticated())
+                            echo '14. Adicionar arquivos';
+                        else
+                            echo '13. Adicionar arquivos';
+                        ?>
+                    </a>
+                </div>
+                <div id="collapse14" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <div class="row-fluid">
+                            <div class="control-group">
+                                <div class="input-append">
 
-                                        <style type="text/css">                                           
-                                            .customFileInput input {
-                                                position: absolute;
-                                                visibility: hidden;
-                                                right: 10px;
-                                            }
-                                            .fileName{
-                                                max-width: 10em;
-                                                white-space: nowrap;
-                                                overflow: hidden;
-                                                text-overflow: ellipsis;
-                                            }
-                                        </style>                     
+                                    <style type="text/css">                                           
+                                        .customFileInput input {
+                                            position: absolute;
+                                            visibility: hidden;
+                                            right: 10px;
+                                        }
+                                        .fileName{
+                                            max-width: 10em;
+                                            white-space: nowrap;
+                                            overflow: hidden;
+                                            text-overflow: ellipsis;
+                                        }
+                                    </style>                     
 
-                                        <form class="btn" method="post" enctype="multipart/form-data" />
+                                    <form class="btn" method="post" enctype="multipart/form-data">
                                         <label class="customFileInput">
                                             <div class="btn">Escolher um arquivo</div>
                                             <div class="fileName" style="position:absolute; top: 1em; left: 13em"></div>
                                             <input type="file" name="userfile" onchange="showFileName(this)" class="boxname" />
                                             <br /><small> *jpg, doc, pdf, xls, até 5MB</small>
                                         </label>
-
-                                        </form>
-                                        <!-- 
-                                                                    <a class="btn" id="uploadButton" onclick="$('#inputFile').click()" >Escolher Arquivo</a>
-                                                                    <div class="fileName" ></div>
-                                                                    <input type="file" name="userfile" size="20" style="visibility:hidden" onchange="showFileName(this)" id="inputFile"/>
-                                                                    <br /><p style="font-size: 11px"> jpg, png, doc, xls, pdf*  max 15 MB*</p> 
-                                        -->                          
-                                    </div>
+                                    </form>                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
+            <div class="checkbox" style="display:none;">
+
+                <?php
+                if (isset($hasOleo)) {
+                    echo form_input($hasOleo);
+                }
+
+                if (isset($isServIBAMA)) {
+                    echo form_input($isServIBAMA);
+                }
+                ?>
+
+            </div>
+
+            <?php echo form_close(); ?>
         </div>
-        <!--    </div>-->
-
-        <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
-        <div class="checkbox" style="display:none;">
-
-            <?php
-            if (isset($hasOleo)) {
-                echo form_input($hasOleo);
-            }
-
-            if (isset($isServIBAMA)) {
-                echo form_input($isServIBAMA);
-            }
-            ?>
-
-        </div>
-
-        <?php echo form_close(); ?>
     </div>
 </div>
