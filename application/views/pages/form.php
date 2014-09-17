@@ -1004,20 +1004,11 @@
                     <div class="row-fluid">
                       <div id="tipoFonteInformacao" class="span12">
                         <div style="display:none;">';
-<<<<<<< HEAD
-            foreach ($tipoFonteInformacao as $id) {
-              echo
-                          '<span data-id="postTFI">' . $id . '</span>';                          
-                            
-            }
-            echo '
-=======
-                foreach ($tipoFonteInformacao as $id) {
-                    echo
-                    '<span data-id="postTFI">' . $id . '</span>';
-                }
-                echo '
->>>>>>> 5423b577d9bfd0a623746bf251cdf8a4fba5ef26
+		        foreach ($tipoFonteInformacao as $id) {
+		            echo
+		            '<span data-id="postTFI">' . $id . '</span>';
+		        }
+		        echo '
                         </div>
 
                       </div>
@@ -1032,16 +1023,6 @@
                     </div>
                   </div>
                 </div>
-<<<<<<< HEAD
-              </div>';
-          }
-        ?>
-<script type="text/javascript">
-function showFileName(inputFile) {
-    inputFile.offsetParent.getElementsByClassName('fileName')[0].innerHTML = inputFile.value.replace(/\\/g, '/').split('/').pop();
-}
-</script>
-=======
               </div>
             ';
             }
@@ -1051,7 +1032,6 @@ function showFileName(inputFile) {
                     inputFile.offsetParent.getElementsByClassName('fileName')[0].innerHTML = inputFile.value.replace(/\\/g, '/').split('/').pop();
                 }
             </script>
->>>>>>> 5423b577d9bfd0a623746bf251cdf8a4fba5ef26
 
 
             <!--upload file button without strap-->
