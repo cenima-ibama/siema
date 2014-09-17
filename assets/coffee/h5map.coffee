@@ -28,7 +28,7 @@ bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h"
 
 bingaerial = new L.BingLayer(bingKey,
   type: "Aerial"
-  attribution: ""
+  attribution: "MarcosLindo.com"
 )
 
 bingroad = new L.BingLayer(bingKey,

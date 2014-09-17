@@ -1,6 +1,8 @@
 H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 $(document).ready ->
 
+ 
+
   _tipoLocalizacao = null
   _tipoEvento = null
   _tipoDanoIdentificado  = null
@@ -650,6 +652,10 @@ $(document).ready ->
         if (@.innerHTML is input.value)
           input.checked = "checked"
           $(@).remove()
+          
+          #Mostrar a caixa de texto com a descrição da outra fonte de informação.
+          if  input.value == "5"
+            $("#descOutrasFontInfo").show()         
 
 
       span = document.createElement("span")
@@ -823,6 +829,12 @@ $(document).ready ->
         $("#inputCausaProvavel").attr("disabled","disabled")
       else
         $("#inputCausaProvavel").removeAttr("disabled")
+
+    $("#TFI5").on 'click', ()->
+      if $(this).is(":checked")
+        $("#descOutrasFontInfo").show()
+      else
+        $("#descOutrasFontInfo").hide()
 
     $("#semDanos").on 'click', ()->
       if $(this).is(":checked")
@@ -1340,4 +1352,11 @@ $(document).ready ->
 
   if !parent.H5.logged_in
     $("#inputNomeInformante").removeAttr("disabled")
-    $("#inputEmailInformante").removeAttr("disabled")
+    $("#inputEmailInformante").removeAttr("disabled")  
+
+
+
+
+
+      
+    

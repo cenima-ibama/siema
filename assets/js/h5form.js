@@ -508,7 +508,10 @@
         $("span[data-id='postTFI']").each(function() {
           if (this.innerHTML === input.value) {
             input.checked = "checked";
-            return $(this).remove();
+            $(this).remove();
+            if (input.value === "5") {
+              return $("#descOutrasFontInfo").show();
+            }
           }
         });
         span = document.createElement("span");
@@ -654,6 +657,13 @@
           return $("#inputCausaProvavel").attr("disabled", "disabled");
         } else {
           return $("#inputCausaProvavel").removeAttr("disabled");
+        }
+      });
+      $("#TFI5").on('click', function() {
+        if ($(this).is(":checked")) {
+          return $("#descOutrasFontInfo").show();
+        } else {
+          return $("#descOutrasFontInfo").hide();
         }
       });
       $("#semDanos").on('click', function() {

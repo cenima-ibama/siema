@@ -9,7 +9,7 @@
 
 
   $('#addMeModal').on 'showed', ->
-    $(".modal-footer").hide()
+    $(".modal-footer").hide()    
 
 
   $('#addMeModal').on 'hidden', ->

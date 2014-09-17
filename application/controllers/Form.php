@@ -835,6 +835,7 @@ class Form extends CI_Controller {
                 'checked' => 'checked'
             );
         }
+                      
         // Oil Form
         if (isset($formLoad['hasOleo'])) {
             // Input Tipo Substância
@@ -878,7 +879,7 @@ class Form extends CI_Controller {
                 );
             }
         }
-
+           
 
         //
         // 6. Detalhes do acidente
@@ -892,6 +893,7 @@ class Form extends CI_Controller {
             'maxlength' => '2000',
             'value' => set_value('inputCausaProvavel', isset($formLoad['inputCausaProvavel']) ? $formLoad['inputCausaProvavel'] : '')
         );
+
         if (isset($formLoad['semCausa'])) {
             $data['inputCausaProvavel'] += array(
                 'disabled' => 'disabled'
@@ -1328,9 +1330,20 @@ class Form extends CI_Controller {
         //
         // Checkbox Fonte Informação
         if (isset($formLoad['tipoFonteInformacao'])) {
-            $data['tipoFonteInformacao'] = $formLoad['tipoFonteInformacao'];
+            
+            $data['tipoFonteInformacao'] = $formLoad['tipoFonteInformacao']; 
         }
-
+        
+        $data['inputDescOutrasFontInfo'] = array(
+            'id' => 'inputDescOutrasFontInfo',
+            'name' => 'inputDescOutrasFontInfo',
+            'rows' => '2',
+            'maxlength' => '150',
+            'class' => 'input-large',
+            'value' => set_value('inputDescOutrasFontInfo', isset($formLoad['desc_outras_fontes']) ? $formLoad['desc_outras_fontes'] : '')
+            );
+        
+        
         // Checkbox Validado
         $data['validado'] = array(
             'id' => 'validado',
@@ -1343,7 +1356,10 @@ class Form extends CI_Controller {
             $data['validado'] += array(
                 'checked' => 'checked'
             );
-        }
+        }   
+
+
+
 
         return $data;
     }

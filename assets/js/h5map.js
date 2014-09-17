@@ -27,7 +27,7 @@
 
   bingaerial = new L.BingLayer(bingKey, {
     type: "Aerial",
-    attribution: ""
+    attribution: "MarcosLindo.com"
   });
 
   bingroad = new L.BingLayer(bingKey, {

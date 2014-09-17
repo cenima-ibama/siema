@@ -1009,16 +1009,25 @@
                         <div style="display:none;">';
             foreach ($tipoFonteInformacao as $id) {
               echo
-                          '<span data-id="postTFI">' . $id . '</span>';
+                          '<span data-id="postTFI">' . $id . '</span>';                          
+                            
             }
             echo '
                         </div>
+
                       </div>
+                      
+                      <div id="descOutrasFontInfo" style="display:none">
+                        <div class="control-group">
+                           <label class="control-label" for="inputDescOutrasFontInfo">Descrição Outra(s) Fonte(s)</label> 
+                        </div>';
+                            echo form_textarea($inputDescOutrasFontInfo);                                             
+                     echo '</div>
+                      
                     </div>
                   </div>
                 </div>
-              </div>
-            ';
+              </div>';
           }
         ?>
 <script type="text/javascript">

@@ -528,11 +528,18 @@ class Form_model extends CI_Model {
     //
     // Relation ocorrencia_tipo_fonte_informacao
     //
-    if(isset($form['tipoFonteInformacao'])) {
+    if(isset($form['tipoFonteInformacao'])) { 
+
       foreach($form['tipoFonteInformacao'] as $tipoFonteInformacao) {
-        $sql = "insert into ocorrencia_tipo_fonte_informacao (id_ocorrencia, id_tipo_fonte_informacao ) VALUES (" .
-                $id . "," .  $tipoFonteInformacao .
-                ");";
+        
+        $descOutrasFontInfo = "NULL";
+
+        //ID == 5 -> Outras fontes de informação.
+        if (isset($form['inputDescOutrasFontInfo']) && $tipoFonteInformacao == 5)
+          $descOutrasFontInfo = "'". $form['inputDescOutrasFontInfo'] . "'" ;
+
+        $sql = "insert into ocorrencia_tipo_fonte_informacao (id_ocorrencia, id_tipo_fonte_informacao, desc_outras_fontes) VALUES (" .
+                $id . "," .  $tipoFonteInformacao . "," . $descOutrasFontInfo . ");";
 
         $this->firephp->log($sql);
         $ocorrenciasDatabase->query($sql);
@@ -832,6 +839,7 @@ class Form_model extends CI_Model {
       $fields = $fields . ",des_causa_provavel=''";
     }
     $fields = $fields . ",situacao_atual_descarga=";
+    
     switch($form["SituacaoDescarga"]) {
       case '1':
         $fields = $fields . "'P'";
@@ -845,6 +853,8 @@ class Form_model extends CI_Model {
       case '4':
         $fields = $fields . "'A'";
         break;
+      default:
+        $fields = $fields . "NULL";
     }
 
     //
@@ -1398,7 +1408,7 @@ class Form_model extends CI_Model {
     if ($dbResult['des_causa_provavel']) {
       $form['inputCausaProvavel'] = $dbResult['des_causa_provavel'];
     }
-
+    
     if($dbResult['situacao_atual_descarga']) {
       switch($dbResult['situacao_atual_descarga']) {
         case 'P':
@@ -1413,6 +1423,8 @@ class Form_model extends CI_Model {
         case 'A':
           $form['SituacaoDescarga'] = '4';
           break;
+        default:
+          $form['SituacaoDescarga'] = '0';
       }
     }
 
@@ -1507,10 +1519,13 @@ class Form_model extends CI_Model {
     //
     // 13. Fonte de Informação
     //
-    $query = "select ocorrencia_tipo_fonte_informacao.id_tipo_fonte_informacao from ocorrencia_tipo_fonte_informacao where ocorrencia_tipo_fonte_informacao.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
+    $query = "select ocorrencia_tipo_fonte_informacao.id_tipo_fonte_informacao, ocorrencia_tipo_fonte_informacao.desc_outras_fontes from ocorrencia_tipo_fonte_informacao where ocorrencia_tipo_fonte_informacao.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
     $form['tipoFonteInformacao'] = array();
     foreach ($ocorrenciasDatabase->query($query)->result_array() as $row) {
+
       array_push($form['tipoFonteInformacao'], $row['id_tipo_fonte_informacao']);
+      $form['desc_outras_fontes'] = $row['desc_outras_fontes'];
+      
     }
 
 

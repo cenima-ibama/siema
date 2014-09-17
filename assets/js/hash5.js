@@ -497,7 +497,7 @@
       return $(this._exportBtn).click(function() {
         var csv, downloadLink, uri;
         csv = generateCSV();
-        uri = "data:text/csv;charset=utf-8," + escape(csv);
+        uri = "data:text/csv;charset=ISO-8859-1," + escape(csv);
         downloadLink = document.createElement("a");
         downloadLink.href = uri;
         downloadLink.download = getTitle();
