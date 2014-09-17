@@ -12,7 +12,7 @@
 
   $('#map').width("100%");
 
-  $('#map').height($(window).height() - $('#navbar').height());
+  $('#map').height($(window).height() -  $('#navbar').height() - $('#barra-brasil').height());
 
   supportsOrientationChange = "onorientationchange" in window;
 
@@ -75,7 +75,7 @@
     autoToggleDisplay: false
   }).addTo(H5.Map.base);
 
-  H5.Map.base.attributionControl.setPrefix("Hexgis Hash5");
+  H5.Map.base.attributionControl.setPrefix("Desenvolvido com: &copy; Leaflet | Hexgis Hash5. map data: &copy; OpenStreetMap</a> contributors | Image courtesy of, Earthstar Geographics  SIO, | &copy; 2014 Microsoft Corporation, &copy; 2014 Nokia");
 
   geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms";
 

@@ -82,8 +82,13 @@ $query_builder = TRUE;
 $db['emergencias'] = array(
 	'dsn'	=> '',
 	'hostname' => '10.1.8.45',
+<<<<<<< HEAD
 	'username' => 'development',
 	'password' => 'development',
+=======
+	'username' => 'emergencias',
+	'password' => '3m3rg3nc14s',
+>>>>>>> 5423b577d9bfd0a623746bf251cdf8a4fba5ef26
 	'database' => 'emergencias_test',
 	'dbdriver' => 'postgre',
 	'dbprefix' => '',

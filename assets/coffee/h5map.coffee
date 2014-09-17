@@ -10,7 +10,7 @@ H5.Leaflet = {}
 # update size of the map container
 # $( '#map' ).width( $( window ).width() )
 $( '#map' ).width( "100%" )
-$( '#map' ).height( $( window ).height() - $('#navbar').height())
+$( '#map' ).height( $( window ).height() - $('#navbar').height() - $('#barra-brasil').height())
 
 # Detect whether device supports orientationchange event,
 # otherwise fall back to the resize event.
@@ -75,7 +75,7 @@ H5.Map.minimap = new L.Control.MiniMap(bingMini,
 ).addTo(H5.Map.base)
 
 # add custom attribution
-H5.Map.base.attributionControl.setPrefix "Hexgis Hash5"
+H5.Map.base.attributionControl.setPrefix "Desenvolvido com: &copy; Leaflet | Hexgis Hash5. map data: &copy; OpenStreetMap</a> contributors | Image courtesy of, Earthstar Geographics  SIO, | &copy; 2014 Microsoft Corporation, &copy; 2014 Nokia"
 # }}}
 # OVERLAYER {{{
 geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms"

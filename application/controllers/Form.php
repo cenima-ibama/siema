@@ -1170,19 +1170,19 @@ class Form extends CI_Controller {
         }
         
         // Radio Plano Sem informação
-        $data['planoEmergSemInfo'] = array(
-            'id' => 'planoEmergSemInfo',
+        $data['planoEmergSemInformacao'] = array(
+            'id' => 'planoEmergSemInformacao',
             'name' => 'planoEmergencia',
             'type' => 'radio',
-            'value' => set_value('planoEmergSemInfo', 2)
+            'value' => set_value('planoEmergSemInformacao', -1)
         );
-        if (isset($formLoad['planoEmergencia']) && ($formLoad['planoEmergencia'] == '2')) {
-            $data['planoEmergSim'] += array(
+        if (isset($formLoad['planoEmergencia']) && ($formLoad['planoEmergencia'] == '-1')) {
+            $data['planoEmergSemInformacao'] += array(
                 'checked' => 'checked'
             );
         }
         if (isset($formLoad['semProcedimentos'])) {
-            $data['planoEmergSemInfo'] += array(
+            $data['planoEmergSemInformacao'] += array(
                 'disabled' => 'disabled'
             );
         }
