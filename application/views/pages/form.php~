@@ -372,13 +372,15 @@
                       <br />
                       <div class="control-group">
                         <label class="radio">';
-                             if (isset($inputNomeNavio) and trim($inputNomeNavio['value']) != "") {
-                               echo '  <input type="hidden" id="typeOfOrigin" name="typeOfOrigin" value="navio" ';
-                             } else {
-                               echo '  <input type="hidden" id="typeOfOrigin" name="typeOfOrigin" value="instalacao"';
-                             }
-                             
-                             echo '/>';
+                            // if (isset($inputNomeNavio) and $inputNomeNavio['value'] != "") {
+                            //   echo '  <input type="radio" id="navio" name="typeOfOrigin" value="navio" checked="checked"';
+                            // } else {
+                            //   echo '  <input type="radio" id="navio" name="typeOfOrigin" value="navio"';
+                            // }
+                            // if (isset($semNavioInstalacao['checked'])) {
+                            //   echo 'disabled="disabled"';
+                            // }
+                            // echo '/>';
                             echo '
                           &nbsp; Nome do navio:
                         </label>
@@ -514,8 +516,7 @@
                         <div class="row-fluid">
                             <div class="span12">
                                 <label class="checkbox text-left">
-                                    <?php echo form_checkbox($semProduto, 'on'); ?>                                    
-                                    Sem informação sobre o tipo do produto
+                                    <input id="semProduto" type="checkbox" name="semProduto"> Sem informação sobre o tipo do produto
                                 </label>
                             </div>
                         </div>
@@ -1003,11 +1004,20 @@
                     <div class="row-fluid">
                       <div id="tipoFonteInformacao" class="span12">
                         <div style="display:none;">';
-		        foreach ($tipoFonteInformacao as $id) {
-		            echo
-		            '<span data-id="postTFI">' . $id . '</span>';
-		        }
-		        echo '
+<<<<<<< HEAD
+            foreach ($tipoFonteInformacao as $id) {
+              echo
+                          '<span data-id="postTFI">' . $id . '</span>';                          
+                            
+            }
+            echo '
+=======
+                foreach ($tipoFonteInformacao as $id) {
+                    echo
+                    '<span data-id="postTFI">' . $id . '</span>';
+                }
+                echo '
+>>>>>>> 5423b577d9bfd0a623746bf251cdf8a4fba5ef26
                         </div>
 
                       </div>
@@ -1022,6 +1032,16 @@
                     </div>
                   </div>
                 </div>
+<<<<<<< HEAD
+              </div>';
+          }
+        ?>
+<script type="text/javascript">
+function showFileName(inputFile) {
+    inputFile.offsetParent.getElementsByClassName('fileName')[0].innerHTML = inputFile.value.replace(/\\/g, '/').split('/').pop();
+}
+</script>
+=======
               </div>
             ';
             }
@@ -1031,6 +1051,7 @@
                     inputFile.offsetParent.getElementsByClassName('fileName')[0].innerHTML = inputFile.value.replace(/\\/g, '/').split('/').pop();
                 }
             </script>
+>>>>>>> 5423b577d9bfd0a623746bf251cdf8a4fba5ef26
 
 
             <!--upload file button without strap-->

@@ -734,15 +734,26 @@ $(document).ready ->
       if $(@).is ":checked"
         $("#inputNomeNavio").attr("disabled","disabled")
         $("#inputNomeInstalacao").attr("disabled","disabled")
-        $("#navio").attr("disabled","disabled")
-        $("#instalacao").attr("disabled","disabled")
+        # $("#navio").attr("disabled","disabled")
+        # $("#instalacao").attr("disabled","disabled")
+        $("#typeOfOrigin").val("");
       else
-        if(!$("#instalacao").is(":checked"))
+        # if(!$("#instalacao").is(":checked"))
+        #   $("#inputNomeNavio").removeAttr("disabled")
+        # if(!$("#navio").is(":checked"))
+        #   $("#inputNomeInstalacao").removeAttr("disabled")
+        # $("#navio").removeAttr("disabled")
+        # $("#instalacao").removeAttr("disabled")       
+        
+        if $("#inputNomeNavio").val().trim() != ""
+          $("#typeOfOrigin").val("navio")
           $("#inputNomeNavio").removeAttr("disabled")
-        if(!$("#navio").is(":checked"))
+        else if $("#inputNomeInstalacao").val().trim() != ""
+          $("#typeOfOrigin").val("instalacao")
           $("#inputNomeInstalacao").removeAttr("disabled")
-        $("#navio").removeAttr("disabled")
-        $("#instalacao").removeAttr("disabled")
+        else
+          $("#inputNomeNavio").removeAttr("disabled")
+          $("#inputNomeInstalacao").removeAttr("disabled")
 
     $("#semDataObs").on 'click', ()->
       if $(this).is(":checked")
@@ -998,16 +1009,19 @@ $(document).ready ->
   $("#inputNomeNavio").on 'change', ->
     if $(this).val() is ""
       $("#inputNomeInstalacao").removeAttr("disabled")
+      $("#typeOfOrigin").val("")
     else
       $("#inputNomeInstalacao").attr("disabled","disabled")
-      $("#inputNomeNavio").removeAttr("disabled")
+      $("#typeOfOrigin").val("navio")
 
   $("#inputNomeInstalacao").on 'change', ->
     if $(this).val() is ""
       $("#inputNomeNavio").removeAttr("disabled")
+      $("#typeOfOrigin").val("")
     else
       $("#inputNomeNavio").attr("disabled","disabled")
       $("#inputNomeInstalacao").removeAttr("disabled")
+      $("#typeOfOrigin").val("instalacao")
 
 
   # They'll soon ask to change. I bet on it.

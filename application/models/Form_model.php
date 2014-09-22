@@ -779,7 +779,7 @@ class Form_model extends CI_Model {
     //
     // 4. Tipo de Evento
     //
-    if (!isset($fomr['semEvento'])) {
+    if (!isset($form['semEvento'])) {
       if (isset($form["inputCompEvento"])) {
         $fields = $fields . ",des_complemento_tipo_evento='" . $form["inputCompEvento"] . "'";
       }
@@ -1337,6 +1337,12 @@ class Form_model extends CI_Model {
         $form['PeriodoObs'] = 'obsMatutino';
         break;
     }
+    
+    //Data e hora da primeira observação não foi informada.
+    if(!isset($dbResult['dt_primeira_obs']))
+       $form['semDataObs'] = 'checked';       
+        
+    
     $form['inputDataInci'] = date('d/m/Y', strtotime($dbResult['dt_ocorrencia']));
     $form['inputHoraInci'] = $dbResult['hr_ocorrencia'];
     switch ($dbResult['periodo_ocorrencia']) {
@@ -1353,6 +1359,11 @@ class Form_model extends CI_Model {
         $form['PeriodoInci'] = 'inciMadrugada';
         break;
     }
+    
+    //Data e hora da ocorrencia não foi informada.
+    if(!isset($dbResult['dt_ocorrencia']))
+       $form['semDataInci'] = 'checked'; 
+    
     if (isset($dbResult['dt_ocorrencia_feriado'])) {
       $form['dtFeriado'] = $dbResult['dt_ocorrencia_feriado'];
     }
@@ -1366,15 +1377,25 @@ class Form_model extends CI_Model {
       array_push($form['tipoLocalizacao'], $row['id_tipo_localizacao']);
     }
     $form['inputCompOrigem'] = $dbResult['des_complemento_tipo_localizaca'];
-
+    
+    //Sem Origem do Acidente.
+    if (sizeof($form['tipoLocalizacao']) == 0)
+        $form["semOrigem"] = "checked";
+    
+    
     if($dbResult['ocorrencia_oleo']) {
       if ($infoOil['des_navio'] == NULL) {
         $form['inputNomeInstalacao'] = $infoOil['des_instalacao'];
         $form['typeOfOrigin'] = 'instalacao';
       } else {
         $form['inputNomeNavio'] = $infoOil['des_navio'];
-      $form['typeOfOrigin'] = 'navio';
+        $form['typeOfOrigin'] = 'navio';
       }
+      
+      //Sem informação do navio ou da instalação.
+      if(!isset($infoOil['des_navio']) && !isset($infoOil['des_instalacao']))
+         $form['semNavioInstalacao'] = 'checked';
+      
     }
 
 
@@ -1387,15 +1408,31 @@ class Form_model extends CI_Model {
       array_push($form['tipoEvento'], $row['id_tipo_evento']);
     }
     $form['inputCompEvento'] = $dbResult['des_complemento_tipo_evento'];
-
+    
+    //Sem Tipo de Evento.
+    if (sizeof($form['tipoEvento']) == 0)
+        $form["semEvento"] = "checked";
 
     //
     // 5. Tipo do produto
     //
+    
+    //Ver se há produtos cadastrados.
+    $query = "select ocorrencia_produto.id_ocorrencia from ocorrencia_produto where ocorrencia_produto.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
+    $hasProducts = ($ocorrenciasDatabase->query($query)->num_rows() > 0);  
+    
     $form['produtoNaoPerigoso'] = $dbResult['produto_perigoso'];
     $form['produtoNaoAplica'] = $dbResult['produto_nao_se_aplica'];
     $form['produtoNaoEspecificado'] = $dbResult['produto_nao_especificado'];
-
+    
+    $form['semProduto'] = 'checked';
+    
+    //Status Produto.
+//    $statusProduct = (isset($form['produtoNaoPerigoso']) || isset($form['produtoNaoAplica']) || isset($form['produtoNaoEspecificado']));
+//    
+//    if (!$hasProducts && !$statusProduct)
+//       $form['semProduto'] = 'checked';
+    
     if($dbResult['ocorrencia_oleo']) {
       $form['inputTipoSubstancia'] = $dbResult['tipo_substancia'];
       $form['inputVolumeEstimado'] = $dbResult['volume_estimado'];

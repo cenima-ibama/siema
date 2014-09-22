@@ -358,7 +358,7 @@
     validado = false
 
     $.ajax({
-      url:"http://localhost/siema/index.php/form/validateUpdate",
+      url:"../siema/index.php/form/validateUpdate",
       data: {id: nroOcorrencia},
       async: false,
       type: "POST",
