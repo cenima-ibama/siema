@@ -728,7 +728,9 @@
           $("#planoEmergSemInformacao").removeAttr("disabled");
           $("#planoAcionado").removeAttr("disabled");
           $("#outrasMedidas").removeAttr("disabled");
-          return $("#inputMedidasTomadas").removeAttr("disabled");
+          if ($("#outrasMedidas").is(":checked")) {
+            return $("#inputMedidasTomadas").removeAttr("disabled");
+          }
         }
       });
     });
@@ -1218,6 +1220,23 @@
     $("#uploadButton").on('click', function() {
       return $('#inputFile').click();
     });
+    $("#outrasMedidas").on('click', function() {
+      if ($(this).is(":checked")) {
+        return $("#inputMedidasTomadas").removeAttr("disabled");
+      } else {
+        return $("#inputMedidasTomadas").attr("disabled", "disabled");
+      }
+    });
+    if ($("#inputMedidasTomadas").val().trim() === "") {
+      $("#inputMedidasTomadas").attr("disabled", "disabled");
+    }
+    if ($("#semProduto").is(":checked")) {
+      $("#myTable").attr("style", "display:none");
+      $("#productsInfo").attr("style", "display:none");
+    } else {
+      $("#myTable").removeAttr("style");
+      $("#productsInfo").removeAttr("style");
+    }
     if (!parent.H5.logged_in) {
       $("#inputNomeInformante").removeAttr("disabled");
       return $("#inputEmailInformante").removeAttr("disabled");

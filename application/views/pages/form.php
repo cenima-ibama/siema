@@ -794,7 +794,7 @@
                         <div class="row-fluid">
                             <div class="span12">
                                 <label class="checkbox text-left">
-                                    <?php echo form_checkbox($semInstituicao, 'on'); ?>
+                                    <?php echo form_checkbox($semInstituicao,'on'); ?>
                                     Sem informação sobre instituição/empresa atuando no local
                                 </label>
                             </div>

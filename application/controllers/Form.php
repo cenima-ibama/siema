@@ -834,18 +834,19 @@ class Form extends CI_Controller {
             $data['produtoNaoEspecificado'] += array(
                 'checked' => 'checked'
             );
-        }
+        }             
         
         $data['semProduto'] = array(
             'id' => 'semProduto',
             'name' => 'semProduto',
             'type' => 'checkbox',
-        );
+        );        
                         
         if (isset($formLoad['semProduto'])) {
                 $data['semProduto'] += array(
                     'checked' => 'checked'
-                );
+                );             
+                
             }      
         
         // Oil Form
@@ -1091,7 +1092,7 @@ class Form extends CI_Controller {
             'maxlength' => '128',
             'value' => set_value('inputInfoInstituicaoNome', isset($formLoad['inputInfoInstituicaoNome']) ? $formLoad['inputInfoInstituicaoNome'] : "")
         );
-        if (set_value('semInstituicao') == "on") {
+        if (isset($formLoad['semInstituicao'])) {
             $data['inputInfoInstituicaoNome'] += array(
                 'disabled' => 'disabled'
             );
@@ -1106,7 +1107,7 @@ class Form extends CI_Controller {
             'maxlength' => '12',
             'value' => set_value('inputInfoInstituicaoTelefone', isset($formLoad['inputInfoInstituicaoTelefone']) ? $formLoad['inputInfoInstituicaoTelefone'] : "")
         );
-        if (set_value('semInstituicao') == "on") {
+        if (isset($formLoad['semInstituicao'])) {
             $data['inputInfoInstituicaoTelefone'] += array(
                 'disabled' => 'disabled'
             );
@@ -1118,7 +1119,7 @@ class Form extends CI_Controller {
             'rows' => '2',
             'class' => 'input-large',
             'maxlength' => '150',
-            'value' => set_value('inputCompInstituicao')
+            'value' => set_value('inputCompInstituicao',isset($formLoad['inputCompInstituicao']) ? $formLoad['inputCompInstituicao'] : "")
         );
         if (isset($formLoad['semInstituicao'])) {
             $data['inputCompInstituicao'] += array(
@@ -1239,7 +1240,7 @@ class Form extends CI_Controller {
             'rows' => '2',
             'class' => 'input-large',
             'maxlength' => '1000',
-            'value' => set_value('inputMedidasTomadas')
+            'value' => set_value('inputMedidasTomadas', isset($formLoad['inputMedidasTomadas']) ? $formLoad['inputMedidasTomadas'] : '')
         );
         if (isset($formLoad['semProcedimentos'])) {
             $data['inputMedidasTomadas'] += array(

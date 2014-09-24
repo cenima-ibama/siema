@@ -729,7 +729,7 @@ $(document).ready ->
     #     $("#btnAddToMap").removeAttr("disabled")
     #     $("#dropdownMunicipio").removeAttr("disabled")
     #     $("#dropdownUF").removeAttr("disabled")
-
+    
     $("#semNavioInstalacao").on 'click', () ->
       if $(@).is ":checked"
         $("#inputNomeNavio").attr("disabled","disabled")
@@ -744,7 +744,7 @@ $(document).ready ->
         #   $("#inputNomeInstalacao").removeAttr("disabled")
         # $("#navio").removeAttr("disabled")
         # $("#instalacao").removeAttr("disabled")       
-        
+
         if $("#inputNomeNavio").val().trim() != ""
           $("#typeOfOrigin").val("navio")
           $("#inputNomeNavio").removeAttr("disabled")
@@ -907,7 +907,9 @@ $(document).ready ->
         $("#planoEmergSemInformacao").removeAttr("disabled")
         $("#planoAcionado").removeAttr("disabled")
         $("#outrasMedidas").removeAttr("disabled")
-        $("#inputMedidasTomadas").removeAttr("disabled")
+        #Habilitar somente quando o checkbox estiver marcado.
+        if $("#outrasMedidas").is ":checked"
+          $("#inputMedidasTomadas").removeAttr("disabled")
 
     # if $("#semResponsavel").is(":checked")
     #   $("button[data-id='slctLicenca']").addClass("disabled")
@@ -1364,7 +1366,23 @@ $(document).ready ->
   # sendNroComunicado = $('iframe[name=form_frame]').contents().find('#nroComunicado').html()
   # $('iframe[name=form_frame]').contents().find('#sendNroComunicado').val(sendNroComunicado)
 
+  $("#outrasMedidas").on 'click', () ->
+    if $(@).is ":checked"
+      $("#inputMedidasTomadas").removeAttr("disabled")
+    else      
+      $("#inputMedidasTomadas").attr("disabled", "disabled")
+  
+  #Disabilitado por padrão, caso não preenchido.
+  if $("#inputMedidasTomadas").val().trim() == ""
+    $("#inputMedidasTomadas").attr("disabled", "disabled")  
 
+  #Não mostrar as opções de produtos caso estes não estiver cadastrado.
+  if $("#semProduto").is ":checked"
+    $("#myTable").attr "style" , "display:none"
+    $("#productsInfo").attr "style" , "display:none"
+  else
+    $("#myTable").removeAttr "style" 
+    $("#productsInfo").removeAttr "style"   
 
   if !parent.H5.logged_in
     $("#inputNomeInformante").removeAttr("disabled")
