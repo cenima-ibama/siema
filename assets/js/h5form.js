@@ -884,7 +884,7 @@
       }
     });
     $("#inputTelInformante").mask("(99)999999999");
-    $('#inputCompOrigem').add('#inputCompEvento').add('#inputCompInstituicao').add('#inputCompDano').add('#inputCausaProvavel').add('#inputMedidasTomadas').add('#inputDesOcorrencia').add('#inputDesObs').add('#inputDesDanos').maxlength({
+    $('#inputCompOrigem').add('#inputCompEvento').add('#inputCompInstituicao').add('#inputCompDano').add('#inputCausaProvavel').add('#inputMedidasTomadas').add('#inputDesOcorrencia').add('#inputDesObs').add('#inputDesDanos').add('#inputDescOutrasFontInfo').maxlength({
       alwaysShow: true,
       threshold: 10,
       warningClass: "label label-info",

@@ -1083,6 +1083,7 @@ $(document).ready ->
     .add('#inputDesOcorrencia')
     .add('#inputDesObs')
     .add('#inputDesDanos')
+    .add('#inputDescOutrasFontInfo')
     .maxlength(
       alwaysShow: true,
       threshold: 10,
