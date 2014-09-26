@@ -12,7 +12,7 @@
 
   $('#map').width("100%");
 
-  $('#map').height($(window).height() -  $('#navbar').height() - $('#barra-brasil').height());
+  $('#map').height($(window).height() - $('#navbar').height() - $('#barra-brasil').height());
 
   supportsOrientationChange = "onorientationchange" in window;
 

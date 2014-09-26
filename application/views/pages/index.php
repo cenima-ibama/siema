@@ -1,33 +1,33 @@
 
 <div id="addMeModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  
+
   <div class="modal-header">
     <button id="btnXClose" type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h5 id="myModalLabel">Acidente Ambiental</h5>
   </div>
   <div class="modal-body" style="padding: 5%">
-    <div class="tab-content">      
+    <div class="tab-content">
       <div class="tab-pane active" id="tab1">
         <div class="row-fluid">
           <div class="span6" style="text-align:center;">
             <p style="text-align:justify; margin-top: 10px">
             <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0">
-            Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental,  ligue no Linha Verde (<strong>0800-618080</strong>) ou clique no botão abaixo.            
+            Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental,  ligue no Linha Verde (<strong>0800-618080</strong>) ou clique no botão abaixo.
             </p>
             <div class="row-fluid">
-              <a class="btn btn-block" href="http://www.ibama.gov.br/cadastro-ocorrencias" style="margin-top: 10px" target="_blank">Denuncie Aqui</a>         
+              <a class="btn btn-block" href="http://www.ibama.gov.br/cadastro-ocorrencias" style="margin-top: 10px" target="_blank">Denuncie Aqui</a>
             </div>
           </div>
           <div class="span6" style="text-align:center;">
             <p style="text-align:justify; margin-top: 10px">
             <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0">
-            Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem, clique no botão abaixo.            
+            Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem, clique no botão abaixo.
             </p>
             <div class="row-fluid">
               <a id="btnBeginForm" class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 10px">Acidente Ambiental</a>
             </div>
-          </div>          
-        </div>                 
+          </div>
+        </div>
       </div>
       <div class="tab-pane" id="tab2">
 
@@ -59,7 +59,7 @@
                       <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
                     <iframe name="login_Form_Ibama" src="' . base_url() . '/index.php/login/login_ibama" frameborder="0" style="width:100%; height: 135px;"></iframe>
                     <div class="block text-center">
-                      <button id="btnCadastrar" class="btn btn-success span5" data-toggle="tab" disabled="disabled">Cadastrar</button>
+                      <a id="btnCadastrarIbama" class="btn btn-success span5" data-toggle="tab" style="font-size:small;" disabled="disabled">Cadastrar</a>
                       <button id="btnLogar" class="btn btn-success span5" onClick="window.top.login_Form_Ibama.document.loginForm.submit();">Logar</button>
                     </div>
                   </div>
@@ -69,7 +69,7 @@
                       <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
                     <iframe name="login_Form_Empresa" src="' . base_url() . '/index.php/login/login_empresa" frameborder="0" style="width:100%; height: 135px;"></iframe>
                     <div class="block text-center">
-                      <button id="btnCadastrar" class="btn btn-success span5" data-toggle="tab" disabled="disabled">Cadastrar</button>
+                      <a id="btnCadastrarCTF" class="btn btn-success span5" data-toggle="tab" style="font-size:small;" disabled="disabled">Cadastrar</a>
                       <button id="btnLogar" class="btn btn-success span5" onClick="window.top.login_Form_Empresa.document.loginForm.submit();">Logar</button>
                     </div>
                   </div>
@@ -102,7 +102,7 @@
               }
             ?>
         </div>
-      </div>     
+      </div>
       <div class="tab-pane" id="tab3">
         <h3>Tipo de conta</h3>
         <div class="media">
@@ -175,16 +175,29 @@
               </div>
             </div>
             <div class="control-group">
-              <label class="control-label" for="inputCPF">CPF:</label>
+              <label class="control-label span4" style="display:inline;">
+                <input type="radio" name="optionCPFCNPJ" id="optionCPF" value="0" checked>CPF:
+              </label>
+              <label class="control-label span4" style="display:inline;">
+                <input type="radio" name="optionCPFCNPJ" id="optionCNPJ" value="1">CNPJ:
+              </label>
+            </div>
+            <div id="fieldCPF" class="control-group">
               <div class="controls">
-                <input id="inputCPF" class="input-large" type="text" name="inputCPF" placeholder="000.000.000-00">
+                <input id="inputCPF" class="input-large" type="text" name="inputCPF">
+              </div>
+            </div>
+            <div id="fieldCNPJ" class="control-group" style="display:none;">
+              <div class="controls">
+                <input id="inputCNPJ" class="input-large" type="text" name="inputCPF">
               </div>
             </div>
             <div class="control-group">
               <label class="control-label" for="inputSenha">Senha:</label>
-              <div class="controls">
-                <input id="inputSenha" class="input-large" type="password" name="inputSenha" placeholder="">
-              </div>
+                <div class="controls">
+                  <input id="inputSenha" class="input-large" type="password" name="inputSenha" placeholder="">
+                </div>
+              </label>
             </div>
             <div class="control-group">
               <label class="control-label" for="inputConfirmarSenha">Confirmar senha:</label>
@@ -219,7 +232,7 @@
         <div  id="divErrorUpdate" class="alert alert-block alert-error fade in" style="display:none;padding:7px">
           <span id="msgErrorUpdate"></span>
         </div>
-        <div class="media">      
+        <div class="media">
           <div class="media-body">
             <label class="radio">
               <input type="radio" name="optionsTipoAcidente" id="optionsAcidenteOleo" value="1">
@@ -474,7 +487,7 @@
       <div id="chart2" class="box"> </div>
       <!--
       <div id="chart3" class="box"> </div>
-      
+
       <div id="chart4" class="box"> </div>
       -->
       <div id="chart5" class="box"> </div>
@@ -600,7 +613,7 @@
 
         </div>
 
-        <div class="item">        
+        <div class="item">
            <label><input type="checkbox" name="chkOCeano" value="1" id="chkOCeano" class="pull-left">Oceano</label>
         </div>
 
@@ -617,7 +630,7 @@
       <div id="optionsExport" style="display:none">
             <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportXls">Exportar para Planilha</a>
             <a class="btn" style="margin-top: 10px;width: 10%;" id="btnExportPdf">Exportar para PDF</a>
-      </div>    
+      </div>
 
 
     </div>
@@ -633,7 +646,7 @@
   </div>
   <div style="padding: 5%">
     <div style="margin-bottom: 10px">
-      <span class="label label-info">Selecione as colunas que serão exportadas para o documento.</span>    
+      <span class="label label-info">Selecione as colunas que serão exportadas para o documento.</span>
     </div>
     <div id="divOpColunas">
         <label class="checkbox"><input type="checkbox" id="0" value="Número de Registro">Número de Registro</input></label>
@@ -649,7 +662,7 @@
         <label class="checkbox"><input type="checkbox" id="10" value="Dia da Semana">Dia da Semana</input></label>
         <label class="checkbox"><input type="checkbox" id="11" value="Período">Período</input></label>
         <label class="checkbox"><input type="checkbox" id="12" value="Feriado">Feriado</input></label>
-    </div>    
+    </div>
   </div>
   <div class="modal-footer" style="display:none;">
       <a id="btnClose" class="btn" type="button" data-dismiss="modal"><i class="icon-remove"></i> Fechar</a>
@@ -676,14 +689,14 @@
 
           //Active link if is administrator user.
           if($profilUser == 1 || $profilUser == 2)
-          { 
+          {
               //Is Administrator User.
               if ($profilUser == 1)
-                echo '<li><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';                            
+                echo '<li><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';
               else
-                echo '<li class="active"><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';              
+                echo '<li class="active"><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';
           }
-          
+
           //Only administrator users acess this option.
           if($profilUser == 1)
           {
@@ -701,7 +714,7 @@
           //Only administrator users acess this option.
           if ($profilUser == 1)
           {
-        ?> 
+        ?>
 
             <div id="manage1">
             <h2 class="sub-header">Cadastro de Pessoas</h2>
@@ -750,12 +763,12 @@
         <?php
           }
         ?>
-        
+
         <?php
           //Only administrator or validator users acess this option.
-          if ($profilUser == 1 || $profilUser == 2 )  
+          if ($profilUser == 1 || $profilUser == 2 )
           {
-        ?>          
+        ?>
             <div id="manage2">
             <!-- <form id="search" action="/search" method="get">
               <input id="searchInput" type="text" placeholder="Search..." size="40" name="q">
@@ -831,13 +844,13 @@
             </div>
             </div>
         <?php
-          }       
+          }
         ?>
-        
+
         <?php
           //Only administrator users acess this options.
-          if ($profilUser == 1) { 
-        ?>                       
+          if ($profilUser == 1) {
+        ?>
             <div id="manage3">
               <h2 class="sub-header">Gerência de Regras</h2>
               <div></div>
@@ -847,10 +860,10 @@
               <h2 class="sub-header">Cadastro de Órgão</h2>
               <div></div>
             </div>
-        <?php        
+        <?php
           }
         ?>
-          
+
         </div>
       </div>
     </div>

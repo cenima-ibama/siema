@@ -9,7 +9,7 @@
 
 
   $('#addMeModal').on 'showed', ->
-    $(".modal-footer").hide()    
+    $(".modal-footer").hide()
 
 
   $('#addMeModal').on 'hidden', ->
@@ -212,28 +212,28 @@
         # else
         #   $("#inputRegistro").focus()
         # nroOcorrencia = $("#inputRegistro").prop("value")
-        # $("#nroOcorrenciaLoad").val(nroOcorrencia)       
+        # $("#nroOcorrenciaLoad").val(nroOcorrencia)
         validado = validateUpdate()
 
-        if(validado == "true")          
-          nroOcorrencia = $("#inputRegistro").prop("value")          
+        if(validado == "true")
+          nroOcorrencia = $("#inputRegistro").prop("value")
           $("#nroOcorrenciaLoad").val(nroOcorrencia)
 
           showButtonsCadastro()
           $("#formLoad").submit()
-          $(@).tab('show')                    
+          $(@).tab('show')
         else
            $(".modal-footer").show()
            this.href = "#tab" + --collapse;
            history.push(
               tab: "#tab" + 2
               collapse: 2
-           )                           
+           )
 
       else
         $("#formCreate").submit()
         showButtonsCadastro()
-        $(@).tab('show')                     
+        $(@).tab('show')
 
       # Clean old cells on the temporary table (tmp_ocorrencia_produto)
       rest = new window.parent.H5.Rest (
@@ -301,7 +301,7 @@
     $(@).tab('show')
 
   # Dealing with the register part on the accident form
-  $("#btnCadastrar").click (event) ->
+  $("#btnCadastrarCTF").click (event) ->
     event.preventDefault()
 
     history.push(
@@ -309,12 +309,22 @@
       collapse: collapse
     )
 
-    this.href = "#tab3"
-    collapse = 3
+    this.href = "#tab5"
+    collapse = 5
 
     $(".modal-footer").show()
 
     $(@).tab('show')
+
+  $("#optionCPF").on 'click',(event) ->
+    $("#fieldCPF").prop 'style', ''
+    $("#fieldCNPJ").prop 'style', 'display:none;'
+    $("#inputCNPJ").val("")
+
+  $("#optionCNPJ").on 'click',(event) ->
+    $("#fieldCNPJ").prop 'style', ''
+    $("#fieldCPF").prop 'style', 'display:none;'
+    $("#inputCPF").val("")
 
   deleteTempData = ->
 
@@ -352,8 +362,8 @@
       restService: "ws_deletequery.php"
     )
 
-  validateUpdate = ->    
-    nroOcorrencia = $("#inputRegistro").prop("value")    
+  validateUpdate = ->
+    nroOcorrencia = $("#inputRegistro").prop("value")
     erroMsg = ""
     validado = false
 
@@ -362,22 +372,22 @@
       data: {id: nroOcorrencia},
       async: false,
       type: "POST",
-      dataType: "json",          
+      dataType: "json",
       success: (result) ->
         validado = result.status
-        erroMsg = result.mensagem        
+        erroMsg = result.mensagem
       error: ->
         validado = false
         erroMsg = "A requisição falhou. Não foi possível validar a solicitação."
     })
-   
+
     #Show erro message.
     if validado == "false"
-      $("#divErrorUpdate").show()      
-      $("#divErrorUpdate").html(erroMsg)      
+      $("#divErrorUpdate").show()
+      $("#divErrorUpdate").html(erroMsg)
       $("#divErrorUpdate").fadeOut(8500)
-    
-    return validado;      
+
+    return validado;
 
   showButtonsCadastro = ->
     $("#submit").show()

@@ -1,7 +1,7 @@
 <header id="navbar" class="navbar navbar-inverse">
-    <div id="barra-brasil" style="background:#7F7F7F; height: 20px; padding:0 0 0 10px;display:block;"> 
+    <div id="barra-brasil" style="background:#7F7F7F; height: 20px; padding:0 0 0 10px;display:block;">
         <ul id="menu-barra-temp" style="list-style:none;">
-            <li style="display:inline; float:left;padding-right:10px; margin-right:10px; border-right:1px solid #EDEDED"><a href="http://brasil.gov.br" style="font-family:sans,sans-serif; text-decoration:none; color:white;">Portal do Governo Brasileiro</a></li> 
+            <li style="display:inline; float:left;padding-right:10px; margin-right:10px; border-right:1px solid #EDEDED"><a href="http://brasil.gov.br" style="font-family:sans,sans-serif; text-decoration:none; color:white;">Portal do Governo Brasileiro</a></li>
             <li><a style="font-family:sans,sans-serif; text-decoration:none; color:white;" href="http://epwg.governoeletronico.gov.br/barra/atualize.html">Atualize sua Barra de Governo</a></li>
         </ul>
     </div>
@@ -29,8 +29,8 @@
                 if ($this->session->userdata('logged_in')/* and in_array($this->session->userdata('username'), $this->userEnableList) */) {
                     echo '<li class=""><a id="btn-consult" href="#"><i class="icon-search icon-white"></i> Consultas </a></li>';
 
-                    if ($profileUser == 1 || $profileUser == 2)
-                        echo '<li><a id="btn-manag" href="#"><i class="icon-list-alt icon-white"></i> Cadastros </a></li>';
+                    // if ($profileUser == 1 || $profileUser == 2)
+                        // echo '<li><a id="btn-manag" href="#"><i class="icon-list-alt icon-white"></i> Cadastros </a></li>';
                 }
                 //  else  {
                 //   echo '<li class="" style="display:none;"><a id="btn-consult" href="#"><i class="icon-search icon-white"></i> Consultas </a></li>';
