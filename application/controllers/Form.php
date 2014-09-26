@@ -1365,7 +1365,7 @@ class Form extends CI_Controller {
             'style' => 'float: right; margin-left: 10px; margin-right:10px;'
                 // 'value'        => 'on'
         );
-        if (isset($formLoad['validado'])) {
+        if (isset($formLoad['validado']) && $formLoad['validado'] == 'S' ) {
             $data['validado'] += array(
                 'checked' => 'checked'
             );

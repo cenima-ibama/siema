@@ -1035,7 +1035,8 @@ class Form_model extends CI_Model {
     //
     // Complete the query
     //
-    $sqlOcorrencias =  "update ocorrencia set " . $fields . " where nro_ocorrencia='" . $form['comunicado'] . "';";               
+    $sqlOcorrencias =  "update ocorrencia set " . $fields . " where nro_ocorrencia='" . $form['comunicado'] . "';";                  
+    
     
     // Saves on the Database the new entry
     $ocorrenciasDatabase->query($sqlOcorrencias);
