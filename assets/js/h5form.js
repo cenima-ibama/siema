@@ -555,17 +555,18 @@
         if ($(this).is(":checked")) {
           $("#inputNomeNavio").attr("disabled", "disabled");
           $("#inputNomeInstalacao").attr("disabled", "disabled");
-          $("#navio").attr("disabled", "disabled");
-          return $("#instalacao").attr("disabled", "disabled");
+          return $("#typeOfOrigin").val("");
         } else {
-          if (!$("#instalacao").is(":checked")) {
+          if ($("#inputNomeNavio").val().trim() !== "") {
+            $("#typeOfOrigin").val("navio");
+            return $("#inputNomeNavio").removeAttr("disabled");
+          } else if ($("#inputNomeInstalacao").val().trim() !== "") {
+            $("#typeOfOrigin").val("instalacao");
+            return $("#inputNomeInstalacao").removeAttr("disabled");
+          } else {
             $("#inputNomeNavio").removeAttr("disabled");
+            return $("#inputNomeInstalacao").removeAttr("disabled");
           }
-          if (!$("#navio").is(":checked")) {
-            $("#inputNomeInstalacao").removeAttr("disabled");
-          }
-          $("#navio").removeAttr("disabled");
-          return $("#instalacao").removeAttr("disabled");
         }
       });
       $("#semDataObs").on('click', function() {
@@ -727,7 +728,9 @@
           $("#planoEmergSemInformacao").removeAttr("disabled");
           $("#planoAcionado").removeAttr("disabled");
           $("#outrasMedidas").removeAttr("disabled");
-          return $("#inputMedidasTomadas").removeAttr("disabled");
+          if ($("#outrasMedidas").is(":checked")) {
+            return $("#inputMedidasTomadas").removeAttr("disabled");
+          }
         }
       });
     });
@@ -825,18 +828,21 @@
     }
     $("#inputNomeNavio").on('change', function() {
       if ($(this).val() === "") {
-        return $("#inputNomeInstalacao").removeAttr("disabled");
+        $("#inputNomeInstalacao").removeAttr("disabled");
+        return $("#typeOfOrigin").val("");
       } else {
         $("#inputNomeInstalacao").attr("disabled", "disabled");
-        return $("#inputNomeNavio").removeAttr("disabled");
+        return $("#typeOfOrigin").val("navio");
       }
     });
     $("#inputNomeInstalacao").on('change', function() {
       if ($(this).val() === "") {
-        return $("#inputNomeNavio").removeAttr("disabled");
+        $("#inputNomeNavio").removeAttr("disabled");
+        return $("#typeOfOrigin").val("");
       } else {
         $("#inputNomeNavio").attr("disabled", "disabled");
-        return $("#inputNomeInstalacao").removeAttr("disabled");
+        $("#inputNomeInstalacao").removeAttr("disabled");
+        return $("#typeOfOrigin").val("instalacao");
       }
     });
     validationString = "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" + "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" + "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
@@ -878,7 +884,7 @@
       }
     });
     $("#inputTelInformante").mask("(99)999999999");
-    $('#inputCompOrigem').add('#inputCompEvento').add('#inputCompInstituicao').add('#inputCompDano').add('#inputCausaProvavel').add('#inputMedidasTomadas').add('#inputDesOcorrencia').add('#inputDesObs').add('#inputDesDanos').maxlength({
+    $('#inputCompOrigem').add('#inputCompEvento').add('#inputCompInstituicao').add('#inputCompDano').add('#inputCausaProvavel').add('#inputMedidasTomadas').add('#inputDesOcorrencia').add('#inputDesObs').add('#inputDesDanos').add('#inputDescOutrasFontInfo').maxlength({
       alwaysShow: true,
       threshold: 10,
       warningClass: "label label-info",
@@ -1214,6 +1220,23 @@
     $("#uploadButton").on('click', function() {
       return $('#inputFile').click();
     });
+    $("#outrasMedidas").on('click', function() {
+      if ($(this).is(":checked")) {
+        return $("#inputMedidasTomadas").removeAttr("disabled");
+      } else {
+        return $("#inputMedidasTomadas").attr("disabled", "disabled");
+      }
+    });
+    if ($("#inputMedidasTomadas").val().trim() === "") {
+      $("#inputMedidasTomadas").attr("disabled", "disabled");
+    }
+    if ($("#semProduto").is(":checked")) {
+      $("#myTable").attr("style", "display:none");
+      $("#productsInfo").attr("style", "display:none");
+    } else {
+      $("#myTable").removeAttr("style");
+      $("#productsInfo").removeAttr("style");
+    }
     if (!parent.H5.logged_in) {
       $("#inputNomeInformante").removeAttr("disabled");
       return $("#inputEmailInformante").removeAttr("disabled");

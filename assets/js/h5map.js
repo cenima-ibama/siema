@@ -27,7 +27,7 @@
 
   bingaerial = new L.BingLayer(bingKey, {
     type: "Aerial",
-    attribution: "MarcosLindo.com"
+    attribution: ""
   });
 
   bingroad = new L.BingLayer(bingKey, {
@@ -79,8 +79,8 @@
 
   geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms";
 
-  terrasIndigenas = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:terra_indigena",
+  terrasIndigenas = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/web/", {
+    layers: "cgema:Terras_Indigenas",
     format: "image/png",
     transparent: true
   });
@@ -217,8 +217,8 @@
     transparent: true
   });
 
-  marTerritorial = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:mar_territorial",
+  marTerritorial = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/web/", {
+    layers: " cgema:Mar_Territorial",
     format: "image/png",
     transparent: true
   });
