@@ -69,7 +69,7 @@
                       <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
                     <iframe name="login_Form_Empresa" src="' . base_url() . '/index.php/login/login_empresa" frameborder="0" style="width:100%; height: 135px;"></iframe>
                     <div class="block text-center">
-                      <a id="btnCadastrarCTF" class="btn btn-success span5" data-toggle="tab" style="font-size:small;" disabled="disabled">Cadastrar</a>
+                      <a id="btnCadastrarCTF" class="btn btn-success span5" data-toggle="tab" style="font-size:small;" enabled="enabled">Acessar</a>
                       <button id="btnLogar" class="btn btn-success span5" onClick="window.top.login_Form_Empresa.document.loginForm.submit();">Logar</button>
                     </div>
                   </div>
@@ -165,63 +165,72 @@
           <br />
         </div>
       </div>
+
+
+
+
       <div class="tab-pane" id="tab5">
-        <div class="row-fluid">
-          <div class="span6">
-            <div class="control-group">
-              <label class="control-label" for="inputNome">Nome:</label>
-              <div class="controls">
-                <input id="inputNome" class="input-large" type="text" name="inputNome" placeholder="Nome">
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label span4" style="display:inline;">
-                <input type="radio" name="optionCPFCNPJ" id="optionCPF" value="0" checked>CPF:
-              </label>
-              <label class="control-label span4" style="display:inline;">
-                <input type="radio" name="optionCPFCNPJ" id="optionCNPJ" value="1">CNPJ:
-              </label>
-            </div>
-            <div id="fieldCPF" class="control-group">
-              <div class="controls">
-                <input id="inputCPF" class="input-large" type="text" name="inputCPF">
-              </div>
-            </div>
-            <div id="fieldCNPJ" class="control-group" style="display:none;">
-              <div class="controls">
-                <input id="inputCNPJ" class="input-large" type="text" name="inputCPF">
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label" for="inputSenha">Senha:</label>
-                <div class="controls">
-                  <input id="inputSenha" class="input-large" type="password" name="inputSenha" placeholder="">
-                </div>
-              </label>
-            </div>
-            <div class="control-group">
-              <label class="control-label" for="inputConfirmarSenha">Confirmar senha:</label>
-              <div class="controls">
-                <input id="inputConfirmarSenha" class="input-large" type="password" name="inputConfirmarSenha" placeholder="">
-              </div>
-            </div>
-          </div>
-          <div class="span6">
-            <div class="control-group">
-              <label class="control-label" for="inputEmail">Email:</label>
-              <div class="controls">
-                <input id="inputEmail" class="input-large" type="text" name="inputEmail" placeholder="nome@email.com">
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label" for="inputTelefone">Telefone:</label>
-              <div class="controls">
-                <input id="inputTelefone" class="input-large" type="text" name="inputTelefone" placeholder="(00) 0000-0000">
-              </div>
-            </div>
-          </div>
-        </div>
+        <?php
+          echo '<iframe name="form_access" src="' . base_url() . '/index.php/login/primeiro_acesso" frameborder="0" style="width: 100%; height: 15em;"></iframe>';
+        ?>
       </div>
+
+
+<!--            
+        <div class="tab-pane" id="tab5">
+          <form id='teste'>
+
+          <div class="row-fluid">
+
+            <div class="span6">
+              <div class="control-group">
+                <label class="control-label span4" style="display:inline;">
+                  <input type="radio" name="optionCPFCNPJ" id="optionCPF" value="0" checked>CPF:
+                </label>
+                <label class="control-label span4" style="display:inline;">
+                  <input type="radio" name="optionCPFCNPJ" id="optionCNPJ" value="1">CNPJ:
+                </label>
+              </div>
+              <div id="fieldCPF" class="control-group">
+                <div class="controls">
+                  <input id="inputCPF" class="input-large" type="text" name="inputCPF">
+                </div>
+              </div>
+              <div id="fieldCNPJ" class="control-group" style="display:none;">
+                <div class="controls">
+                  <input id="inputCNPJ" class="input-large" type="text" name="inputCPF">
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="span4">
+              <div class="control-group">
+                <label class="control-label" for="inputEmail">Email:</label>
+                <div class="controls">
+                  <input id="inputEmail" class="input-large" type="text" name="inputEmail" placeholder="nome@email.com">
+                </div>
+              </div>
+            </div>
+            <div class="span4">
+              <div class="control-group">
+                <label class="control-label" for="inputDate">Data de Nascimento:</label>
+                <div class="controls">
+                  <input id="inputDate" class="input-large" type="date" name="inputDate" >
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        <button type="submit" onclick="submitUser()" class="btn btn-primary">send This</button>
+      </form>
+    </div>
+
+ -->
+
+
       <div class="tab-pane" id="tab6">
         <div class="alert alert-info fade in" style="margin: 100px 120px">
           <strong>Conta criada com sucesso!</strong><br/> Dados de sua conta foram enviados para seu e-mail.
@@ -317,12 +326,16 @@
     <a id="modalBtnBack" href="" class="btn" data-toggle="tab">Voltar</a>
     <a id="modalBtnNext" href="#tab1" class="btn" data-toggle="tab">Avançar</a>
     <a id="modalBtnCancel" href="#tab2" class="btn" data-toggle="tab" style="display:none;"><i class="icon-trash"></i> Cancelar</a>
+
+    <a id="btnSendCTF" class="btn btn-primary" type="button" style="display:none;" onClick="window.top.form_access.document.formAccess.submit()">Registrar</a>
+
     <a id="submit" class="btn btn-primary" type="button" style="display:none;" onClick="window.top.form_frame.document.formAcidentes.submit()">
       <i class="icon-ok icon-white"></i>
       Enviar
     </a>
     <!-- Creating the new buttons Cancelar and Fechar - both hidden -->
     <a id="btnClose" class="btn btn-primary" type="button" style="display:none;" data-dismiss="modal"><i class="icon-remove"></i>Fechar</a>
+
   </div>
 </div>
 

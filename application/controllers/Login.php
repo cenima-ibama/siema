@@ -74,4 +74,15 @@ class Login extends CI_Controller {
             $this->load->view('pages/login_empresa');
         }
     }
+
+    public function primeiro_acesso()
+    {
+        if (! file_exists('application/views/pages/empresa.php')){
+            show_404();
+        }
+        else {
+            $this->load->view('pages/empresa');
+        }
+
+    }
 }

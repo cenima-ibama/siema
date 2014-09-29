@@ -31,6 +31,16 @@
 
     $(".modal-footer").show()
 
+  #Hide 'Avançar' button and Show 'Registrar' button when first access 'Empresas'
+  $("#btnCadastrarCTF").click (event) ->
+    $("#btnSendCTF").show()
+
+
+  $("#btnSendCTF").click (event)->
+    $("#btnSendCTF").hide()
+    $("#btnClose").show()
+
+
 
   #hide footer o form when click on topbar
   $("#btn-form").click (event) ->
@@ -39,6 +49,9 @@
   # Dealing with going backwards on the form and possibles jumps
   $("#modalBtnBack").click (event) ->
     event.preventDefault()
+    $("#btnSendCTF").hide()
+    $("#btnClose").hide()
+    $("#modalBtnNext").show()
 
     btnNext = document.getElementById("modalBtnNext")
 
@@ -140,6 +153,7 @@
   # Dealing with going foward on the form and possibles jumps
   $("#modalBtnNext").click (event) ->
     event.preventDefault()
+
 
     # if ("#tab" + collapse) isnt "#tab8"
     history.push(
@@ -313,6 +327,9 @@
     collapse = 5
 
     $(".modal-footer").show()
+    $("#modalBtnNext").hide()
+
+
 
     $(@).tab('show')
 
@@ -394,3 +411,5 @@
     $("#modalBtnNext").hide()
     $("#modalBtnBack").hide()
     $("#modalBtnCancel").show()
+
+
