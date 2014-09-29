@@ -333,15 +333,9 @@
 
     $(@).tab('show')
 
-  $("#optionCPF").on 'click',(event) ->
-    $("#fieldCPF").prop 'style', ''
-    $("#fieldCNPJ").prop 'style', 'display:none;'
-    $("#inputCNPJ").val("")
-
-  $("#optionCNPJ").on 'click',(event) ->
-    $("#fieldCNPJ").prop 'style', ''
-    $("#fieldCPF").prop 'style', 'display:none;'
-    $("#inputCPF").val("")
+  $("#btnCadastrarCTF").on 'click', (evt) ->
+    frame = window.top.document.getElementsByName('form_access')[0]
+    frame.contentWindow.location.replace(frame.src)
 
   deleteTempData = ->
 

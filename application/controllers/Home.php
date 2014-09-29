@@ -27,6 +27,8 @@ class Home extends CI_Controller {
 
         // $this->oracleDB();
 
+        // $this->primeiro_acesso();
+
         $this->load->view('templates/home', $data);
 
     }
@@ -56,7 +58,7 @@ class Home extends CI_Controller {
         };
 
         // $p_cpf_cnpj_nome = $_POST[ 'cpf_cnpj_nome' ];
-        $p_cpf_cnpj_nome = '01433540355';
+        $p_cpf_cnpj_nome = '1811126693';
 
         // Bind dos dados de entrada
         oci_bind_by_name( $p_str, ":p_cpf_cnpj_nome", $p_cpf_cnpj_nome );
@@ -325,9 +327,9 @@ class Home extends CI_Controller {
         // $this->firephp->log($p_seq_app_modulo);
 
 
-
         oci_free_statement($p_str);
         oci_close($conn);
 
     }
+
 }

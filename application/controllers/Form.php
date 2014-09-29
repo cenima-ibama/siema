@@ -13,7 +13,7 @@ class Form extends CI_Controller {
         // Enable firebug
         $this->load->library('Firephp');
 
-        $this->load->model('form_model');        
+        $this->load->model('form_model');
 
         $this->load->model('form_validations_model');
 
@@ -89,7 +89,7 @@ class Form extends CI_Controller {
             } else {
                 $this->form_validation->set_rules('semNavioInstalacao', 'Nome do navio ou nome da instalação', 'required');
             }
-        }    
+        }
 
         //
         // 4. Tipo de Evento
@@ -120,7 +120,7 @@ class Form extends CI_Controller {
         } else {
             $this->form_validation->set_rules('semCausa', 'Causa provável do acidente', 'required');
         }
-        
+
         if (isset($form_data['hasOleo']) and $form_data['hasOleo'] == 'S' and !isset($form_data['SituacaoDescarga'])) {
             $this->form_validation->set_rules('SituacaoDescarga', 'Situação atual da descarga', 'required');
         }
@@ -191,13 +191,13 @@ class Form extends CI_Controller {
 //            echo '<div class="alert alert-block alert-error fade in" style="display:inherit;">';
 //                echo $this->upload->display_errors();
 //                echo '</div>';
-                
+
             if (!(strcmp('<p>Você não selecionou um arquivo para envio.</p>', $this->upload->display_errors()))) {
                   // PARA EXIBIR MENSAGEM ALERTANDO QUE NÃO FOI USADO O UPLOAD DE ARQUIVOS
 //                echo '<div class="alert alert-block alert-warning fade in" style="display:inherit;">';
 //                echo $this->upload->display_errors();
 //                echo '</div>';
- 
+
             } else {
                 echo '<div class="alert alert-block alert-error fade in" style="display:inherit;">';
                 echo $this->upload->display_errors();
@@ -208,8 +208,8 @@ class Form extends CI_Controller {
 
     public function validate() {
         $this->load->helper('form');
-        $form_data = $this->input->post();       
-        
+        $form_data = $this->input->post();
+
         // Set the rules for validating the form
         $this->formSetRules($form_data);
 
@@ -238,53 +238,53 @@ class Form extends CI_Controller {
 
         $form_data = $this->input->post();
 
-        $this->loadForm($form_data["nroOcorrencia"]); 
+        $this->loadForm($form_data["nroOcorrencia"]);
     }
 
     public function validateUpdate()
     {
         $numeroRegistro  = trim($_POST["id"]);
         $validation_model = $this->form_validations_model;
-        $userIbamaNet = ($this->session->userdata("profile_user") == "3");        
+        $userIbamaNet = ($this->session->userdata("profile_user") == "3");
         $userName = $this->session->userdata("username");
 
         $status = "";
-        $mensagem = "";        
-        
+        $mensagem = "";
+
         if($numeroRegistro == "")
         {
           $status = 'false';
-          $mensagem = "Número do Registro não informado.";        
+          $mensagem = "Número do Registro não informado.";
         }
-        else if (!$validation_model->numRegistroExists($numeroRegistro)) 
+        else if (!$validation_model->numRegistroExists($numeroRegistro))
         {
           $status = 'false';
-          $mensagem = "Número do Registro não encontrado.";                            
+          $mensagem = "Número do Registro não encontrado.";
         }
-        else if ($validation_model->dadosLegados($numeroRegistro)) 
-        {   
+        else if ($validation_model->dadosLegados($numeroRegistro))
+        {
           $status = 'false';
-          $mensagem = "Dados Legados não podem ser alterados.";                                      
-        }        
-        else if ($userIbamaNet  && !$validation_model->userCadastrouOcorrencia($numeroRegistro,$userName))           
-        {   
+          $mensagem = "Dados Legados não podem ser alterados.";
+        }
+        else if ($userIbamaNet  && !$validation_model->userCadastrouOcorrencia($numeroRegistro,$userName))
+        {
           $status = 'false';
           $mensagem = "Alteração não pode ser realizada, porque a ocorrência não foi criada por este usuário.";
-        }          
+        }
         else
-        {   
+        {
           $status = 'true';
-          $mensagem = "Informações válidas.";                                      
-        }          
+          $mensagem = "Informações válidas.";
+        }
 
-        $result = array("status" => $status , "mensagem" => $mensagem); 
+        $result = array("status" => $status , "mensagem" => $mensagem);
 
          echo json_encode($result);
-               
+
     }
 
     private function loadForm($nro_ocorrencia) {
-        $this->load->helper('form');           
+        $this->load->helper('form');
 
         $formLoad = $this->form_model->load($nro_ocorrencia);
 
@@ -701,7 +701,7 @@ class Form extends CI_Controller {
             'rows' => '2',
             'class' => 'input-large',
             'maxlength' => '150',
-            'value' => set_value('inputCompOrigem', isset($formLoad['inputCompOrigem']) ? $formLoad['inputCompOrigem'] : '')            
+            'value' => set_value('inputCompOrigem', isset($formLoad['inputCompOrigem']) ? $formLoad['inputCompOrigem'] : '')
         );
         if (isset($formLoad['semOrigem'])) {
             $data['inputCompOrigem'] += array(
@@ -800,7 +800,7 @@ class Form extends CI_Controller {
 
         //
         // 5. Tipo de Produto
-        //                        
+        //
         //  Checkbox Produto Não Perigoso
         $data['produtoNaoPerigoso'] = array(
             'id' => 'produtoNaoPerigoso',
@@ -823,7 +823,7 @@ class Form extends CI_Controller {
                 'checked' => 'checked'
             );
         }
-        
+
         // Checkbox Produto Não Especificado
         $data['produtoNaoEspecificado'] = array(
             'id' => 'produtoNaoEspecificado',
@@ -834,21 +834,21 @@ class Form extends CI_Controller {
             $data['produtoNaoEspecificado'] += array(
                 'checked' => 'checked'
             );
-        }             
-        
+        }
+
         $data['semProduto'] = array(
             'id' => 'semProduto',
             'name' => 'semProduto',
             'type' => 'checkbox',
-        );        
-                        
+        );
+
         if (isset($formLoad['semProduto'])) {
                 $data['semProduto'] += array(
                     'checked' => 'checked'
-                );             
-                
-            }      
-        
+                );
+
+            }
+
         // Oil Form
         if (isset($formLoad['hasOleo'])) {
             // Input Tipo Substância
@@ -892,7 +892,7 @@ class Form extends CI_Controller {
                 );
             }
         }
-           
+
 
         //
         // 6. Detalhes do acidente
@@ -1175,13 +1175,13 @@ class Form extends CI_Controller {
                 'checked' => 'checked'
             );
         }
-        
+
         if (isset($formLoad['semProcedimentos'])) {
             $data['planoEmergNao'] += array(
                 'disabled' => 'disabled'
             );
         }
-        
+
         // Radio Plano Sem informação
         $data['planoEmergSemInformacao'] = array(
             'id' => 'planoEmergSemInformacao',
@@ -1199,7 +1199,7 @@ class Form extends CI_Controller {
                 'disabled' => 'disabled'
             );
         }
-        
+
         // Checkbox Plano Acionado
         $data['planoAcionado'] = array(
             'id' => 'planoAcionado',
@@ -1343,10 +1343,10 @@ class Form extends CI_Controller {
         //
         // Checkbox Fonte Informação
         if (isset($formLoad['tipoFonteInformacao'])) {
-            
-            $data['tipoFonteInformacao'] = $formLoad['tipoFonteInformacao']; 
+
+            $data['tipoFonteInformacao'] = $formLoad['tipoFonteInformacao'];
         }
-        
+
         $data['inputDescOutrasFontInfo'] = array(
             'id' => 'inputDescOutrasFontInfo',
             'name' => 'inputDescOutrasFontInfo',
@@ -1355,8 +1355,8 @@ class Form extends CI_Controller {
             'class' => 'input-large',
             'value' => set_value('inputDescOutrasFontInfo', isset($formLoad['desc_outras_fontes']) ? $formLoad['desc_outras_fontes'] : '')
             );
-        
-        
+
+
         // Checkbox Validado
         $data['validado'] = array(
             'id' => 'validado',
@@ -1369,7 +1369,7 @@ class Form extends CI_Controller {
             $data['validado'] += array(
                 'checked' => 'checked'
             );
-        }   
+        }
 
 
 
@@ -1396,7 +1396,7 @@ class Form extends CI_Controller {
             'smtp_port' => 25,
             'smtp_user' => "ibama.siema@gmail.com",
             'smtp_pass' => "ibama@siema",
-            'charset' => "iso-8859-1"
+            'charset' => "utf-8"
         );
 
         $this->load->library("email", $config);
@@ -1422,37 +1422,6 @@ class Form extends CI_Controller {
         // $this->firephp->log($this->email->print_debugger());
     }
 
-    // public function uploadFile($name){
-    //     $fileName = $_FILES["userfile"]["name"];
-    //     $fileTmpLoc = $_FILES["userfile"]["tmp_name"];
-    //     $extensionAllowed = array("jpeg", "jpg", "pdf", "doc", "csv", "xls", "xlsx", "png", "pneg");
-    //     $path = '../../assets/uploads/';
-    //     $pathFix = $path . $name . '/';
-    //     $ext = end((explode(".", $fileName)));
-    //     if (in_array($ext, $extensionAllowed))
-    //     {
-    //         if ($_FILES["userfile"]["size"] < 5*1024*1024)
-    //         { //5 MB
-    //             if(!is_dir($pathFix))
-    //             {
-    //                 mkdir ($pathFix, 0777);
-    //                 $pathAndName = $pathFix . $fileName;
-    //                 $moveResult = move_uploaded_file($fileTmpLoc, $pathAndName);
-    //                     if ($moveResult == true) 
-    //                     {
-    //                        echo "File has been moved from page to " . $pathAndName;
-    //                     }
-    //             } else 
-    //                 {
-    //                 echo "Registro existente!";
-    //                 } 
-    //         } else{
-    //             echo "Tamanho excede o total permitido.";
-    //             }
-    //     } else{
-    //             echo "Extensao nao permitida.";
-    //         }
-    // }
 
     function do_upload($form_data) {
         $path = $form_data['comunicado'];

@@ -21,7 +21,7 @@
 
   <body>
 
-	<?php echo form_open('Auth/primeiro_acesso', array('id' => 'formAccess',  'name' => 'formAccess')); ?>
+	<?php echo form_open('Auth/primeiro_acesso', array('id' => 'formAccess',  'name' => 'formAccess', 'method' => 'post')); ?>
 
 		<div class="row-fluid">
 			<div class="span4">
@@ -35,17 +35,35 @@
 				</div>
 				<div id="fieldCPF" class="control-group">
 					<div class="controls">
-						<input id="inputCPF" class="input-large" type="text" name="inputCPF" style="width: 17em">
+						<input id="inputCPF" class="input-large" type="text" name="inputCPF" style="width: 17em" maxlength='11'>
 					</div>
 				</div>
 				<div id="fieldCNPJ" class="control-group " style="display:none;">
 					<div class="controls">
-						<input id="inputCNPJ" class="input-large" type="text" name="inputCPF" style="width: 17em">
+						<input id="inputCNPJ" class="input-large" type="text" name="inputCNPJ" style="width: 17em" maxlength='14'>
 					</div>
 				</div>
 			</div>
 		</div>
 	<?php echo form_close(); ?>
+
+  <script src="<?= base_url()?>assets/js/jquery.min.js"></script>
+  <script type="text/javascript">
+
+    $("#optionCPF").on('click',function (event){
+
+      $("#fieldCPF").prop('style', '');
+      $("#fieldCNPJ").prop('style', 'display:none;');
+      return $("#inputCNPJ").val("");
+    });
+
+    $("#optionCNPJ").on('click',function (event){
+      $("#fieldCNPJ").prop('style', '');
+      $("#fieldCPF").prop('style', 'display:none;');
+      return $("#inputCPF").val("");
+    });
+
+  </script>
 
 
   </body>
