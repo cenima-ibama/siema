@@ -244,16 +244,28 @@
     return $(this).tab('show');
   });
 
-  $("#btnCadastrar").click(function(event) {
+  $("#btnCadastrarCTF").click(function(event) {
     event.preventDefault();
     history.push({
       tab: "#tab2",
       collapse: collapse
     });
-    this.href = "#tab3";
-    collapse = 3;
+    this.href = "#tab5";
+    collapse = 5;
     $(".modal-footer").show();
     return $(this).tab('show');
+  });
+
+  $("#optionCPF").on('click', function(event) {
+    $("#fieldCPF").prop('style', '');
+    $("#fieldCNPJ").prop('style', 'display:none;');
+    return $("#inputCNPJ").val("");
+  });
+
+  $("#optionCNPJ").on('click', function(event) {
+    $("#fieldCNPJ").prop('style', '');
+    $("#fieldCPF").prop('style', 'display:none;');
+    return $("#inputCPF").val("");
   });
 
   deleteTempData = function() {
@@ -291,7 +303,7 @@
     erroMsg = "";
     validado = false;
     $.ajax({
-      url: "http://localhost/siema/index.php/form/validateUpdate",
+      url: "../siema/index.php/form/validateUpdate",
       data: {
         id: nroOcorrencia
       },

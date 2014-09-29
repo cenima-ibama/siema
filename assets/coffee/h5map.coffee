@@ -28,7 +28,7 @@ bingKey = "AsyRHq25Hv8jQbrAIVSeZEifWbP6s1nq1RQfDeUf0ycdHogebEL7W2dxgFmPJc9h"
 
 bingaerial = new L.BingLayer(bingKey,
   type: "Aerial"
-  attribution: "MarcosLindo.com"
+  attribution: ""
 )
 
 bingroad = new L.BingLayer(bingKey,
@@ -80,8 +80,8 @@ H5.Map.base.attributionControl.setPrefix "Desenvolvido com: &copy; Leaflet | Hex
 # OVERLAYER {{{
 geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms"
 
-terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
-  layers: "cemam:terra_indigena"
+terrasIndigenas = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/web/",
+  layers: "cgema:Terras_Indigenas"
   format: "image/png"
   transparent: true
 )
@@ -221,8 +221,8 @@ ponteTunel = new L.TileLayer.WMS(geoserverUrl,
   transparent: true
 )
 
-marTerritorial = new L.TileLayer.WMS(geoserverUrl,
-  layers: "cemam:mar_territorial"
+marTerritorial = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/web/",
+  layers: " cgema:Mar_Territorial"
   format: "image/png"
   transparent: true
 )

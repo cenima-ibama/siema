@@ -199,8 +199,8 @@ $("#editMeModal").draggable(
 # Event to create the modal
 $("a.editOcorrencia").on "click", (event) ->
   nroOcorrencia = $(this).attr("data-ocorrencia")
-  $("#nroOcorrenciaLoadAdmin").val(nroOcorrencia)
-  $("#formLoadAdmin").submit()
+  $("#nroOcorrenciaLoadAdmin").val(nroOcorrencia)  
+  $("#formLoadAdmin").submit()  
 
 # Event to remove records
 $("a.removeOcorrencia").on "click", (event) ->
@@ -256,4 +256,6 @@ $("a.removeOcorrencia").on "click", (event) ->
 
   #makes mangage area invisible after loading
 $("#manag").hide()
+
+
 # }}}

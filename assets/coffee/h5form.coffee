@@ -729,20 +729,31 @@ $(document).ready ->
     #     $("#btnAddToMap").removeAttr("disabled")
     #     $("#dropdownMunicipio").removeAttr("disabled")
     #     $("#dropdownUF").removeAttr("disabled")
-
+    
     $("#semNavioInstalacao").on 'click', () ->
       if $(@).is ":checked"
         $("#inputNomeNavio").attr("disabled","disabled")
         $("#inputNomeInstalacao").attr("disabled","disabled")
-        $("#navio").attr("disabled","disabled")
-        $("#instalacao").attr("disabled","disabled")
+        # $("#navio").attr("disabled","disabled")
+        # $("#instalacao").attr("disabled","disabled")
+        $("#typeOfOrigin").val("");
       else
-        if(!$("#instalacao").is(":checked"))
+        # if(!$("#instalacao").is(":checked"))
+        #   $("#inputNomeNavio").removeAttr("disabled")
+        # if(!$("#navio").is(":checked"))
+        #   $("#inputNomeInstalacao").removeAttr("disabled")
+        # $("#navio").removeAttr("disabled")
+        # $("#instalacao").removeAttr("disabled")       
+
+        if $("#inputNomeNavio").val().trim() != ""
+          $("#typeOfOrigin").val("navio")
           $("#inputNomeNavio").removeAttr("disabled")
-        if(!$("#navio").is(":checked"))
+        else if $("#inputNomeInstalacao").val().trim() != ""
+          $("#typeOfOrigin").val("instalacao")
           $("#inputNomeInstalacao").removeAttr("disabled")
-        $("#navio").removeAttr("disabled")
-        $("#instalacao").removeAttr("disabled")
+        else
+          $("#inputNomeNavio").removeAttr("disabled")
+          $("#inputNomeInstalacao").removeAttr("disabled")
 
     $("#semDataObs").on 'click', ()->
       if $(this).is(":checked")
@@ -896,7 +907,9 @@ $(document).ready ->
         $("#planoEmergSemInformacao").removeAttr("disabled")
         $("#planoAcionado").removeAttr("disabled")
         $("#outrasMedidas").removeAttr("disabled")
-        $("#inputMedidasTomadas").removeAttr("disabled")
+        #Habilitar somente quando o checkbox estiver marcado.
+        if $("#outrasMedidas").is ":checked"
+          $("#inputMedidasTomadas").removeAttr("disabled")
 
     # if $("#semResponsavel").is(":checked")
     #   $("button[data-id='slctLicenca']").addClass("disabled")
@@ -998,16 +1011,19 @@ $(document).ready ->
   $("#inputNomeNavio").on 'change', ->
     if $(this).val() is ""
       $("#inputNomeInstalacao").removeAttr("disabled")
+      $("#typeOfOrigin").val("")
     else
       $("#inputNomeInstalacao").attr("disabled","disabled")
-      $("#inputNomeNavio").removeAttr("disabled")
+      $("#typeOfOrigin").val("navio")
 
   $("#inputNomeInstalacao").on 'change', ->
     if $(this).val() is ""
       $("#inputNomeNavio").removeAttr("disabled")
+      $("#typeOfOrigin").val("")
     else
       $("#inputNomeNavio").attr("disabled","disabled")
       $("#inputNomeInstalacao").removeAttr("disabled")
+      $("#typeOfOrigin").val("instalacao")
 
 
   # They'll soon ask to change. I bet on it.
@@ -1067,6 +1083,7 @@ $(document).ready ->
     .add('#inputDesOcorrencia')
     .add('#inputDesObs')
     .add('#inputDesDanos')
+    .add('#inputDescOutrasFontInfo')
     .maxlength(
       alwaysShow: true,
       threshold: 10,
@@ -1350,7 +1367,23 @@ $(document).ready ->
   # sendNroComunicado = $('iframe[name=form_frame]').contents().find('#nroComunicado').html()
   # $('iframe[name=form_frame]').contents().find('#sendNroComunicado').val(sendNroComunicado)
 
+  $("#outrasMedidas").on 'click', () ->
+    if $(@).is ":checked"
+      $("#inputMedidasTomadas").removeAttr("disabled")
+    else      
+      $("#inputMedidasTomadas").attr("disabled", "disabled")
+  
+  #Disabilitado por padrão, caso não preenchido.
+  if $("#inputMedidasTomadas").val().trim() == ""
+    $("#inputMedidasTomadas").attr("disabled", "disabled")  
 
+  #Não mostrar as opções de produtos caso estes não estiver cadastrado.
+  if $("#semProduto").is ":checked"
+    $("#myTable").attr "style" , "display:none"
+    $("#productsInfo").attr "style" , "display:none"
+  else
+    $("#myTable").removeAttr "style" 
+    $("#productsInfo").removeAttr "style"   
 
   if !parent.H5.logged_in
     $("#inputNomeInformante").removeAttr("disabled")

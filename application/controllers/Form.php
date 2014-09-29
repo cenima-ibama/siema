@@ -89,8 +89,7 @@ class Form extends CI_Controller {
             } else {
                 $this->form_validation->set_rules('semNavioInstalacao', 'Nome do navio ou nome da instalação', 'required');
             }
-        }
-
+        }    
 
         //
         // 4. Tipo de Evento
@@ -209,8 +208,8 @@ class Form extends CI_Controller {
 
     public function validate() {
         $this->load->helper('form');
-        $form_data = $this->input->post();
-
+        $form_data = $this->input->post();       
+        
         // Set the rules for validating the form
         $this->formSetRules($form_data);
 
@@ -702,7 +701,7 @@ class Form extends CI_Controller {
             'rows' => '2',
             'class' => 'input-large',
             'maxlength' => '150',
-            'value' => set_value('inputCompOrigem')
+            'value' => set_value('inputCompOrigem', isset($formLoad['inputCompOrigem']) ? $formLoad['inputCompOrigem'] : '')            
         );
         if (isset($formLoad['semOrigem'])) {
             $data['inputCompOrigem'] += array(
@@ -775,7 +774,7 @@ class Form extends CI_Controller {
             'rows' => '2',
             'class' => 'input-large',
             'maxlength' => '150',
-            'value' => set_value('inputCompEvento')
+            'value' => set_value('inputCompEvento', isset($formLoad['inputCompEvento'])?$formLoad['inputCompEvento']:'')
         );
         if (isset($formLoad['semEvento'])) {
             $data['inputCompEvento'] += array(
@@ -801,7 +800,7 @@ class Form extends CI_Controller {
 
         //
         // 5. Tipo de Produto
-        //
+        //                        
         //  Checkbox Produto Não Perigoso
         $data['produtoNaoPerigoso'] = array(
             'id' => 'produtoNaoPerigoso',
@@ -824,6 +823,7 @@ class Form extends CI_Controller {
                 'checked' => 'checked'
             );
         }
+        
         // Checkbox Produto Não Especificado
         $data['produtoNaoEspecificado'] = array(
             'id' => 'produtoNaoEspecificado',
@@ -834,8 +834,21 @@ class Form extends CI_Controller {
             $data['produtoNaoEspecificado'] += array(
                 'checked' => 'checked'
             );
-        }
-                      
+        }             
+        
+        $data['semProduto'] = array(
+            'id' => 'semProduto',
+            'name' => 'semProduto',
+            'type' => 'checkbox',
+        );        
+                        
+        if (isset($formLoad['semProduto'])) {
+                $data['semProduto'] += array(
+                    'checked' => 'checked'
+                );             
+                
+            }      
+        
         // Oil Form
         if (isset($formLoad['hasOleo'])) {
             // Input Tipo Substância
@@ -1079,7 +1092,7 @@ class Form extends CI_Controller {
             'maxlength' => '128',
             'value' => set_value('inputInfoInstituicaoNome', isset($formLoad['inputInfoInstituicaoNome']) ? $formLoad['inputInfoInstituicaoNome'] : "")
         );
-        if (set_value('semInstituicao') == "on") {
+        if (isset($formLoad['semInstituicao'])) {
             $data['inputInfoInstituicaoNome'] += array(
                 'disabled' => 'disabled'
             );
@@ -1094,7 +1107,7 @@ class Form extends CI_Controller {
             'maxlength' => '12',
             'value' => set_value('inputInfoInstituicaoTelefone', isset($formLoad['inputInfoInstituicaoTelefone']) ? $formLoad['inputInfoInstituicaoTelefone'] : "")
         );
-        if (set_value('semInstituicao') == "on") {
+        if (isset($formLoad['semInstituicao'])) {
             $data['inputInfoInstituicaoTelefone'] += array(
                 'disabled' => 'disabled'
             );
@@ -1106,7 +1119,7 @@ class Form extends CI_Controller {
             'rows' => '2',
             'class' => 'input-large',
             'maxlength' => '150',
-            'value' => set_value('inputCompInstituicao')
+            'value' => set_value('inputCompInstituicao',isset($formLoad['inputCompInstituicao']) ? $formLoad['inputCompInstituicao'] : "")
         );
         if (isset($formLoad['semInstituicao'])) {
             $data['inputCompInstituicao'] += array(
@@ -1227,7 +1240,7 @@ class Form extends CI_Controller {
             'rows' => '2',
             'class' => 'input-large',
             'maxlength' => '1000',
-            'value' => set_value('inputMedidasTomadas')
+            'value' => set_value('inputMedidasTomadas', isset($formLoad['inputMedidasTomadas']) ? $formLoad['inputMedidasTomadas'] : '')
         );
         if (isset($formLoad['semProcedimentos'])) {
             $data['inputMedidasTomadas'] += array(
@@ -1352,7 +1365,7 @@ class Form extends CI_Controller {
             'style' => 'float: right; margin-left: 10px; margin-right:10px;'
                 // 'value'        => 'on'
         );
-        if (isset($formLoad['validado'])) {
+        if (isset($formLoad['validado']) && $formLoad['validado'] == 'S' ) {
             $data['validado'] += array(
                 'checked' => 'checked'
             );

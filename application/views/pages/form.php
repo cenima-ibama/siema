@@ -372,15 +372,13 @@
                       <br />
                       <div class="control-group">
                         <label class="radio">';
-                            // if (isset($inputNomeNavio) and $inputNomeNavio['value'] != "") {
-                            //   echo '  <input type="radio" id="navio" name="typeOfOrigin" value="navio" checked="checked"';
-                            // } else {
-                            //   echo '  <input type="radio" id="navio" name="typeOfOrigin" value="navio"';
-                            // }
-                            // if (isset($semNavioInstalacao['checked'])) {
-                            //   echo 'disabled="disabled"';
-                            // }
-                            // echo '/>';
+                             if (isset($inputNomeNavio) and trim($inputNomeNavio['value']) != "") {
+                               echo '  <input type="hidden" id="typeOfOrigin" name="typeOfOrigin" value="navio" ';
+                             } else {
+                               echo '  <input type="hidden" id="typeOfOrigin" name="typeOfOrigin" value="instalacao"';
+                             }
+                             
+                             echo '/>';
                             echo '
                           &nbsp; Nome do navio:
                         </label>
@@ -516,7 +514,8 @@
                         <div class="row-fluid">
                             <div class="span12">
                                 <label class="checkbox text-left">
-                                    <input id="semProduto" type="checkbox" name="semProduto"> Sem informação sobre o tipo do produto
+                                    <?php echo form_checkbox($semProduto, 'on'); ?>                                    
+                                    Sem informação sobre o tipo do produto
                                 </label>
                             </div>
                         </div>
@@ -795,7 +794,7 @@
                         <div class="row-fluid">
                             <div class="span12">
                                 <label class="checkbox text-left">
-                                    <?php echo form_checkbox($semInstituicao, 'on'); ?>
+                                    <?php echo form_checkbox($semInstituicao,'on'); ?>
                                     Sem informação sobre instituição/empresa atuando no local
                                 </label>
                             </div>

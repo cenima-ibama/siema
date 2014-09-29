@@ -34,15 +34,15 @@
     <?php echo form_open('auth/login_empresa', array('id' => 'loginForm', 'class' => 'form-horizontal', 'name' => 'loginForm')); ?>
       <!-- <h4 style="margin:0;">Login</h4> -->
       <div class="control-group" style="margin-bottom:5px;">
-          <?php echo form_label('Usuário:', 'inputUsername', array('class' => 'control-label', 'for' => 'username')); ?>
+          <?php echo form_label('Usuário:', 'labelUsername', array('class' => 'control-label', 'for' => 'inputUsername')); ?>
           <div class="controls">
-              <?php echo form_input(array('name' => 'inputUsername', 'id' => 'username', 'class' => 'formfield login-input', 'type', 'number')); ?>
+              <?php echo form_input(array('maxlength' => '14', 'name' => 'inputUsername', 'id' => 'inputUsername', 'class' => 'formfield login-input',)); ?>
           </div>
       </div>
       <div class="control-group" style="margin-bottom:5px;">
-          <?php echo form_label('Senha:', 'inputPassword', array('class' => 'control-label', 'for' => 'password')) ?>
+          <?php echo form_label('Senha:', 'labelPassword', array('class' => 'control-label', 'for' => 'inputPassword')) ?>
           <div class="controls">
-              <?php echo form_password(array('name' => 'inputPassword', 'id' => 'password','class' => 'formfield login-input')); ?>
+              <?php echo form_password(array('name' => 'inputPassword', 'id' => 'inputPassword','class' => 'formfield login-input')); ?>
           </div>
       </div>
       <?php echo form_checkbox(array('name' => 'loginSite', 'id' => 'loginSite', 'type' => 'hidden'), 1,  FALSE);?>
