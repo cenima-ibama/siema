@@ -1623,6 +1623,7 @@
     };
 
     Draw.prototype._addDrawButtonActions = function() {
+<<<<<<< HEAD
       var _this = this;
       return this.options.map.on('draw:created', function(e) {
         var columns, firstPoint, layer, rest, sql, type, values;
@@ -1736,6 +1737,75 @@
         } else if (type === 'marker') {
           if ((!(_this.options.uniquePoint != null)) || (_this.options.uniquePoint === true)) {
             layer._leaflet_id = ++_this.idMarker;
+=======
+      return this.options.map.on('draw:created', (function(_this) {
+        return function(e) {
+          var columns, firstPoint, layer, popup, rest, sql, type, values;
+          type = e.layerType;
+          layer = e.layer;
+          if (type === 'polygon') {
+            firstPoint = "";
+            layer._leaflet_id = ++_this.idPolygon;
+            columns = "";
+            values = "";
+            $.each(_this.options.tables[type].fields, function(key, field) {
+              if (_this.options.tables[type].defaultValues[field]) {
+                columns = columns + field + ",";
+                return values = values + _this.options.tables[type].defaultValues[field] + ",";
+              }
+            });
+            columns = columns + "shape,dt_registro";
+            values = values + "ST_MakePolygon(ST_GeomFromText('LINESTRING(";
+            $.each(layer._latlngs, function() {
+              if (firstPoint === "") {
+                firstPoint = this;
+              }
+              values = values + this.lng + " " + this.lat;
+              return values = values + ",";
+            });
+            values = values + firstPoint.lng + " " + firstPoint.lat + ")', " + _this.options.srid + "))";
+            values = values + ",now()";
+            sql = "(" + columns + ") values (" + values + ")";
+            rest = new H5.Rest({
+              url: H5.Data.restURL,
+              fields: sql,
+              table: "tmp_pol",
+              restService: "ws_insertquery.php"
+            });
+          } else if (type === 'polyline') {
+            firstPoint = "";
+            layer._leaflet_id = ++_this.idPolyline;
+            columns = "";
+            values = "";
+            $.each(_this.options.tables[type].fields, function(key, field) {
+              if (_this.options.tables[type].defaultValues[field]) {
+                columns = columns + field + ",";
+                return values = values + _this.options.tables[type].defaultValues[field] + ",";
+              }
+            });
+            columns = columns + "shape,dt_registro";
+            values = values + "ST_GeomFromText('LINESTRING(";
+            $.each(layer._latlngs, function() {
+              if (firstPoint === "") {
+                firstPoint = true;
+                return values = values + this.lng + " " + this.lat;
+              } else {
+                return values = values + "," + this.lng + " " + this.lat;
+              }
+            });
+            values = values + ")', " + _this.options.srid + ")";
+            values = values + ",now()";
+            sql = "(" + columns + ") values (" + values + ")";
+            rest = new H5.Rest({
+              url: H5.Data.restURL,
+              fields: sql,
+              table: "tmp_lin",
+              restService: "ws_insertquery.php"
+            });
+          } else if (type === 'rectangle') {
+            type = 'polygon';
+            layer._leaflet_id = ++_this.idPolygon;
+>>>>>>> 8c554e867c5156c5981f63bf0329cdd76317001a
             columns = "";
             values = "";
             $.each(_this.options.tables[type].fields, function(key, field) {
@@ -1766,10 +1836,75 @@
               parameters: "id_tmp_pon%3D" + layer._leaflet_id,
               restService: "ws_updatequery.php"
             });
+<<<<<<< HEAD
           }
           if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
             $("#inputLat").val(_this.decimalDegree2DMS(layer._latlng.lat));
             $("#inputLng").val(_this.decimalDegree2DMS(layer._latlng.lng));
+=======
+          } else if (type === 'marker') {
+            if ((_this.options.uniquePoint == null) || (_this.options.uniquePoint === true)) {
+              layer._leaflet_id = ++_this.idMarker;
+              columns = "";
+              values = "";
+              $.each(_this.options.tables[type].fields, function(key, field) {
+                if (_this.options.tables[type].defaultValues[field]) {
+                  columns = columns + field + ",";
+                  return values = values + _this.options.tables[type].defaultValues[field] + ",";
+                }
+              });
+              columns = columns + "shape,dt_registro";
+              values = values + "ST_SetSRID(ST_MakePoint(";
+              values = values + layer._latlng.lng + "," + layer._latlng.lat + ")," + _this.options.srid + ")";
+              values = values + ",now()";
+              sql = "(" + columns + ") values (" + values + ")";
+              rest = new H5.Rest({
+                url: H5.Data.restURL,
+                fields: sql,
+                table: "tmp_pon",
+                restService: "ws_insertquery.php"
+              });
+            } else {
+              layer._leaflet_id = _this.options.uniquePoint._leaflet_id;
+              sql = "shape=ST_SetSRID(ST_MakePoint(" + layer._latlng.lng + "," + layer._latlng.lat + ")," + _this.options.srid + ")";
+              sql = sql + ",dt_registro=now()";
+              rest = new H5.Rest({
+                url: H5.Data.restURL,
+                fields: sql,
+                table: "tmp_pon",
+                parameters: "id_tmp_pon%3D" + layer._leaflet_id,
+                restService: "ws_updatequery.php"
+              });
+            }
+            sql = "ST_Intersects(br_mar.geom, ST_SetSRID(ST_MakePoint(";
+            sql = sql + layer._latlng.lng + "," + layer._latlng.lat + ")," + _this.options.srid + "))";
+            rest = new H5.Rest({
+              url: H5.Data.restURL,
+              fields: sql,
+              table: "br_mar"
+            });
+            if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
+              if (rest.data[0].st_intersects) {
+                $("#inputLat").val(_this.decimalDegree2DMS(layer._latlng.lat));
+                $("#inputLng").val(_this.decimalDegree2DMS(layer._latlng.lng));
+              } else {
+                $("#inputLat").val("");
+                $("#inputLng").val("");
+                $('#dropdownUF option:eq(0)').prop('selected', true);
+                $('#dropdownMunicipio option:eq(0)').prop('selected', true);
+                $('#inputEndereco').val("");
+              }
+            }
+          }
+          if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
+            return _this.drawnItems.addLayer(layer);
+          } else if (rest.data[0].st_intersects) {
+            _this.drawnItems.removeLayer(_this.options.uniquePoint);
+            _this.options.uniquePoint = layer;
+            return _this.drawnItems.addLayer(_this.options.uniquePoint);
+          } else {
+            return popup = L.popup().setLatLng(layer._latlng).setContent('<p>O ponto está fora da área limite do Brasil!</p>').openOn(_this.options.map);
+>>>>>>> 8c554e867c5156c5981f63bf0329cdd76317001a
           }
         }
         if (!(_this.options.uniquePoint != null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
@@ -1813,12 +1948,36 @@
               $.each(_this.options.tables['marker'].defaultValues, function(key, field) {
                 return sqlPon = sqlPon + "and " + key + "='" + field + "'";
               });
+<<<<<<< HEAD
               if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
                 $("#inputLat").val('');
                 $("#inputLng").val('');
               }
               if (_this.options.uniquePoint != null) {
                 return _this.options.uniquePoint = true;
+=======
+            } else if (type === 'Point') {
+              if (layer._mRadius != null) {
+                sqlPol = sqlPol + "or id_tmp_pol=" + key + " ";
+                return $.each(_this.options.tables['polygon'].defaultValues, function(key, field) {
+                  return sqlPol = sqlPol + "and " + key + "='" + field + "'";
+                });
+              } else {
+                sqlPon = sqlPon + "or id_tmp_pon=" + key + " ";
+                $.each(_this.options.tables['marker'].defaultValues, function(key, field) {
+                  return sqlPon = sqlPon + "and " + key + "='" + field + "'";
+                });
+                if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
+                  $("#inputLat").val("");
+                  $("#inputLng").val("");
+                  $('#dropdownUF option:eq(0)').prop('selected', true);
+                  $('#dropdownMunicipio option:eq(0)').prop('selected', true);
+                  $('#inputEndereco').val("");
+                }
+                if (_this.options.uniquePoint != null) {
+                  return _this.options.uniquePoint = true;
+                }
+>>>>>>> 8c554e867c5156c5981f63bf0329cdd76317001a
               }
             }
           }

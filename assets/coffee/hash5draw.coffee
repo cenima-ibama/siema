@@ -308,18 +308,39 @@ class H5.Draw
             restService: "ws_updatequery.php"
           )
 
+        sql = "ST_Intersects(br_mar.geom, ST_SetSRID(ST_MakePoint("
+        sql = sql + layer._latlng.lng + "," + layer._latlng.lat + ")," + @.options.srid + "))"
+
+        rest = new H5.Rest (
+          url: H5.Data.restURL
+          fields: sql
+          table: "br_mar"
+        )
 
         if document.getElementById('inputLat')? and document.getElementById('inputLng')?
-          $("#inputLat").val(@decimalDegree2DMS(layer._latlng.lat))
-          $("#inputLng").val(@decimalDegree2DMS(layer._latlng.lng))
+          if rest.data[0].st_intersects
+            $("#inputLat").val(@decimalDegree2DMS(layer._latlng.lat))
+            $("#inputLng").val(@decimalDegree2DMS(layer._latlng.lng))
+          else
+            $("#inputLat").val ""
+            $("#inputLng").val ""
+            $('#dropdownUF option:eq(0)').prop 'selected', true
+            $('#dropdownMunicipio option:eq(0)').prop 'selected', true
+            $('#inputEndereco').val ""
           # $("#inputLng").val(layer._latlng.lng).trigger('change')
+
 
       if (!@.options.uniquePoint? || (@.options.uniquePoint? and type isnt 'marker'))
         @drawnItems.addLayer(layer)
-      else
+      else if rest.data[0].st_intersects
         @drawnItems.removeLayer(@.options.uniquePoint)
         @.options.uniquePoint = layer
         @drawnItems.addLayer(@.options.uniquePoint)
+      else
+        popup = L.popup()
+        .setLatLng(layer._latlng)
+        .setContent('<p>O ponto está fora da área limite do Brasil!</p>')
+        .openOn(@options.map);
 
 
 
@@ -413,8 +434,11 @@ class H5.Draw
               sqlPon = sqlPon + "and " + key + "='" + field + "'"
 
             if document.getElementById('inputLat')? and document.getElementById('inputLng')?
-              $("#inputLat").val('')
-              $("#inputLng").val('')
+              $("#inputLat").val ""
+              $("#inputLng").val ""
+              $('#dropdownUF option:eq(0)').prop 'selected', true
+              $('#dropdownMunicipio option:eq(0)').prop 'selected', true
+              $('#inputEndereco').val ""
               # $("#inputLng").val('').trigger('change')
 
             if @.options.uniquePoint?
