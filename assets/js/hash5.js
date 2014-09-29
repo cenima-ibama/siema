@@ -1642,7 +1642,7 @@
     Draw.prototype._addDrawButtonActions = function() {
       return this.options.map.on('draw:created', (function(_this) {
         return function(e) {
-          var columns, firstPoint, layer, rest, sql, type, values;
+          var columns, firstPoint, layer, popup, rest, sql, type, values;
           type = e.layerType;
           layer = e.layer;
           if (type === 'polygon') {
@@ -1784,17 +1784,34 @@
                 restService: "ws_updatequery.php"
               });
             }
+            sql = "ST_Intersects(br_mar.geom, ST_SetSRID(ST_MakePoint(";
+            sql = sql + layer._latlng.lng + "," + layer._latlng.lat + ")," + _this.options.srid + "))";
+            rest = new H5.Rest({
+              url: H5.Data.restURL,
+              fields: sql,
+              table: "br_mar"
+            });
             if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
-              $("#inputLat").val(_this.decimalDegree2DMS(layer._latlng.lat));
-              $("#inputLng").val(_this.decimalDegree2DMS(layer._latlng.lng));
+              if (rest.data[0].st_intersects) {
+                $("#inputLat").val(_this.decimalDegree2DMS(layer._latlng.lat));
+                $("#inputLng").val(_this.decimalDegree2DMS(layer._latlng.lng));
+              } else {
+                $("#inputLat").val("");
+                $("#inputLng").val("");
+                $('#dropdownUF option:eq(0)').prop('selected', true);
+                $('#dropdownMunicipio option:eq(0)').prop('selected', true);
+                $('#inputEndereco').val("");
+              }
             }
           }
           if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
             return _this.drawnItems.addLayer(layer);
-          } else {
+          } else if (rest.data[0].st_intersects) {
             _this.drawnItems.removeLayer(_this.options.uniquePoint);
             _this.options.uniquePoint = layer;
             return _this.drawnItems.addLayer(_this.options.uniquePoint);
+          } else {
+            return popup = L.popup().setLatLng(layer._latlng).setContent('<p>O ponto está fora da área limite do Brasil!</p>').openOn(_this.options.map);
           }
         };
       })(this));
@@ -1832,8 +1849,11 @@
                   return sqlPon = sqlPon + "and " + key + "='" + field + "'";
                 });
                 if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
-                  $("#inputLat").val('');
-                  $("#inputLng").val('');
+                  $("#inputLat").val("");
+                  $("#inputLng").val("");
+                  $('#dropdownUF option:eq(0)').prop('selected', true);
+                  $('#dropdownMunicipio option:eq(0)').prop('selected', true);
+                  $('#inputEndereco').val("");
                 }
                 if (_this.options.uniquePoint != null) {
                   return _this.options.uniquePoint = true;

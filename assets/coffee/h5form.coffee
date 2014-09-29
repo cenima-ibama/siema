@@ -1,7 +1,7 @@
 H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 $(document).ready ->
 
- 
+
 
   _tipoLocalizacao = null
   _tipoEvento = null
@@ -652,10 +652,10 @@ $(document).ready ->
         if (@.innerHTML is input.value)
           input.checked = "checked"
           $(@).remove()
-          
+
           #Mostrar a caixa de texto com a descrição da outra fonte de informação.
           if  input.value == "5"
-            $("#descOutrasFontInfo").show()         
+            $("#descOutrasFontInfo").show()
 
 
       span = document.createElement("span")
@@ -1343,7 +1343,7 @@ $(document).ready ->
       #   if ()
     )
 
-  #Upload file on form, getting value from 
+  #Upload file on form, getting value from
   $("#uploadButton").on 'click', () ->
   # sendNroComunicado = $('#nroComunicado').html()
     $('#inputFile').click();
@@ -1354,11 +1354,11 @@ $(document).ready ->
 
   if !parent.H5.logged_in
     $("#inputNomeInformante").removeAttr("disabled")
-    $("#inputEmailInformante").removeAttr("disabled")  
+    $("#inputEmailInformante").removeAttr("disabled")
 
 
 
 
 
-      
-    
+
+
