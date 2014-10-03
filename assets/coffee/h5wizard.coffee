@@ -7,6 +7,11 @@
   # Stores the next tab to be accessed
   collapse=2
 
+
+  $('#addMeModal').on 'showed', ->
+    $(".modal-footer").hide()
+
+
   $('#addMeModal').on 'hidden', ->
     history = []
     collapse = 2
@@ -20,7 +25,22 @@
     $("#submit").hide()
     $("#modalBtnCancel").hide()
     $("#btnClose").hide()
+
+    #Deletar dados temporários ao fechar o form de cadastro.
+    deleteTempData();
+
     $(".modal-footer").show()
+
+  #Hide 'Avançar' button and Show 'Registrar' button when first access 'Empresas'
+  $("#btnCadastrarCTF").click (event) ->
+    $("#btnSendCTF").show()
+
+
+  $("#btnSendCTF").click (event)->
+    $("#btnSendCTF").hide()
+    $("#btnClose").show()
+
+
 
   #hide footer o form when click on topbar
   $("#btn-form").click (event) ->
@@ -29,6 +49,9 @@
   # Dealing with going backwards on the form and possibles jumps
   $("#modalBtnBack").click (event) ->
     event.preventDefault()
+    $("#btnSendCTF").hide()
+    $("#btnClose").hide()
+    $("#modalBtnNext").show()
 
     btnNext = document.getElementById("modalBtnNext")
 
@@ -48,6 +71,8 @@
     btnNext = document.getElementById("modalBtnNext")
     btnBack = document.getElementById("modalBtnBack")
 
+    nroOcorrencia = $(window.top.form_frame.document.getElementById("comunicado")).val()
+
     if history.length > 0
       tab = history.pop()
       @.href = tab.tab
@@ -59,37 +84,36 @@
     $("#submit").hide()
     $(@).hide()
 
-    nroOcorrencia = $(window.top.form_frame.document.getElementById("comunicado")).val()
-
     # Clean the temporary produt table (tmp_ocorrencia_produto)
     rest = new window.parent.H5.Rest (
-     url: window.parent.H5.Data.restURL
-     table: "tmp_ocorrencia_produto"
-     restService: "ws_deletequery.php"
+      url: window.parent.H5.Data.restURL
+      table: "tmp_ocorrencia_produto"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
     )
 
     # Clean the temporary polygon table (tmp_pol)
     rest = new window.parent.H5.Rest (
-     url: window.parent.H5.Data.restURL
-     table: "tmp_pol"
-     parameters: "nro_ocorrencia%3D" + nroOcorrencia
-     restService: "ws_deletequery.php"
+      url: window.parent.H5.Data.restURL
+      table: "tmp_pol"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
     )
 
     # Clean the temporary polyline table (tmp_lin)
     rest = new window.parent.H5.Rest (
-     url: window.parent.H5.Data.restURL
-     table: "tmp_lin"
-     parameters: "nro_ocorrencia%3D" + nroOcorrencia
-     restService: "ws_deletequery.php"
+      url: window.parent.H5.Data.restURL
+      table: "tmp_lin"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
     )
 
     # Clean the temporary point table (tmp_pon)
     rest = new window.parent.H5.Rest (
-     url: window.parent.H5.Data.restURL
-     table: "tmp_pon"
-     parameters: "nro_ocorrencia%3D" + nroOcorrencia
-     restService: "ws_deletequery.php"
+      url: window.parent.H5.Data.restURL
+      table: "tmp_pon"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
     )
 
     $(@).tab('show')
@@ -102,7 +126,9 @@
       containerProgress = document.getElementById("containerProgress")
       checkedUser = document.getElementById("checkedUser")
       tipoForm = document.getElementById("tipoForm")
-      btnLogout = document.getElementById("btnLogout")
+      btnLogout = document.getElementById("btnSair")
+      consultTab = document.getElementById("btn-consult")
+      manageTab = document.getElementById("btn-manag")
 
       $(tipoForm).hide()
       $(btnLogout).hide()
@@ -127,6 +153,7 @@
   # Dealing with going foward on the form and possibles jumps
   $("#modalBtnNext").click (event) ->
     event.preventDefault()
+
 
     # if ("#tab" + collapse) isnt "#tab8"
     history.push(
@@ -185,26 +212,75 @@
 
     if ("#tab" + collapse) is "#tab8"
 
-      $("#submit").show()
-      $("#modalBtnNext").hide()
-      $("#modalBtnBack").hide()
-      $("#modalBtnCancel").show()
-
       if isAtual
-        if($("#inputRegistro").prop("value") isnt "")
-          defaultHtml = document.getElementById("defaultHtml")
-          if(defaultHtml.innerHTML is "")
-            defaultHtml.innerHTML = $("#formLoad").prop("action")
-          action = defaultHtml.innerHTML + "/" + $("#inputRegistro").prop("value")
-          $("#formLoad").prop "action", action
+        #if($("#inputRegistro").prop("value") isnt "")
+          # defaultHtml = document.getElementById("defaultHtml")
+          # if(defaultHtml.innerHTML is "")
+          #   defaultHtml.innerHTML = $("#formLoad").prop("action")
+          # action = defaultHtml.innerHTML + "/" + $("#inputRegistro").prop("value")
+          # $("#formLoad").prop "action", action
+
+        #   nroOcorrencia = $("#inputRegistro").prop("value")
+        #   $("#nroOcorrenciaLoad").val(nroOcorrencia)
+        #   $("#formLoad").submit()
+        # else
+        #   $("#inputRegistro").focus()
+        # nroOcorrencia = $("#inputRegistro").prop("value")
+        # $("#nroOcorrenciaLoad").val(nroOcorrencia)
+        validado = validateUpdate()
+
+        if(validado == "true")
+          nroOcorrencia = $("#inputRegistro").prop("value")
+          $("#nroOcorrenciaLoad").val(nroOcorrencia)
+
+          showButtonsCadastro()
           $("#formLoad").submit()
+          $(@).tab('show')
         else
-          $("#inputRegistro").focus()
+           $(".modal-footer").show()
+           this.href = "#tab" + --collapse;
+           history.push(
+              tab: "#tab" + 2
+              collapse: 2
+           )
+
       else
-
         $("#formCreate").submit()
+        showButtonsCadastro()
+        $(@).tab('show')
 
-    $(@).tab('show')
+      # Clean old cells on the temporary table (tmp_ocorrencia_produto)
+      rest = new window.parent.H5.Rest (
+        url: window.parent.H5.Data.restURL
+        table: "tmp_ocorrencia_produto"
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0"
+        restService: "ws_deletequery.php"
+      )
+
+      # Clean old cells on the temporary table (tmp_pon)
+      rest = new window.parent.H5.Rest (
+        url: window.parent.H5.Data.restURL
+        table: "tmp_pon"
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0"
+        restService: "ws_deletequery.php"
+      )
+
+      # Clean old cells on the temporary table (tmp_pol)
+      rest = new window.parent.H5.Rest (
+        url: window.parent.H5.Data.restURL
+        table: "tmp_pol"
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0"
+        restService: "ws_deletequery.php"
+      )
+      # Clean old cells on the temporary table (tmp_lin)
+      rest = new window.parent.H5.Rest (
+        url: window.parent.H5.Data.restURL
+        table: "tmp_lin"
+        parameters: "date_part\(\'day\'\,now\(\)\-dt_registro\)\>0"
+        restService: "ws_deletequery.php"
+      )
+
+
 
  # Dealing with the jump on the register part on the accident form
   $("#tipoForm").click (event) ->
@@ -239,7 +315,7 @@
     $(@).tab('show')
 
   # Dealing with the register part on the accident form
-  $("#btnCadastrar").click (event) ->
+  $("#btnCadastrarCTF").click (event) ->
     event.preventDefault()
 
     history.push(
@@ -247,9 +323,87 @@
       collapse: collapse
     )
 
-    this.href = "#tab3"
-    collapse = 3
+    this.href = "#tab5"
+    collapse = 5
 
     $(".modal-footer").show()
+    $("#modalBtnNext").hide()
+
+
 
     $(@).tab('show')
+
+  $("#btnCadastrarCTF").on 'click', (evt) ->
+    frame = window.top.document.getElementsByName('form_access')[0]
+    frame.contentWindow.location.replace(frame.src)
+
+  deleteTempData = ->
+
+    nroOcorrencia = $(window.top.form_frame.document.getElementById("comunicado")).val()
+
+    # Clean the temporary produt table (tmp_ocorrencia_produto)
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
+      table: "tmp_ocorrencia_produto"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
+    )
+
+    # Clean the temporary polygon table (tmp_pol)
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
+      table: "tmp_pol"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
+    )
+
+    # Clean the temporary polyline table (tmp_lin)
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
+      table: "tmp_lin"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
+    )
+
+    # Clean the temporary point table (tmp_pon)
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
+      table: "tmp_pon"
+      parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_deletequery.php"
+    )
+
+  validateUpdate = ->
+    nroOcorrencia = $("#inputRegistro").prop("value")
+    erroMsg = ""
+    validado = false
+
+    $.ajax({
+      url:"../siema/index.php/form/validateUpdate",
+      data: {id: nroOcorrencia},
+      async: false,
+      type: "POST",
+      dataType: "json",
+      success: (result) ->
+        validado = result.status
+        erroMsg = result.mensagem
+      error: ->
+        validado = false
+        erroMsg = "A requisição falhou. Não foi possível validar a solicitação."
+    })
+
+    #Show erro message.
+    if validado == "false"
+      $("#divErrorUpdate").show()
+      $("#divErrorUpdate").html(erroMsg)
+      $("#divErrorUpdate").fadeOut(8500)
+
+    return validado;
+
+  showButtonsCadastro = ->
+    $("#submit").show()
+    $("#modalBtnNext").hide()
+    $("#modalBtnBack").hide()
+    $("#modalBtnCancel").show()
+
+

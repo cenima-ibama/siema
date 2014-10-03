@@ -10,8 +10,8 @@
   overflow: hidden;
 }
 .dash {
-  position: absolute;
-  top: 42px;
+  position: relative;
+  /*top: 42px;*/
   background-color: #F7F7F7;
   z-index: 2;
   width: 100%;
@@ -353,10 +353,10 @@
   }
 }
 @media (max-width: 767px) {
-  
+
 }
 @media (max-height: 360px) {
-  
+
 }
 .quick-btn .item:last-child {
   border-radius: 0px 4px 4px 0px;
@@ -367,10 +367,10 @@
   }
 }
 @media (max-width: 767px) {
-  
+
 }
 @media (max-height: 360px) {
-  
+
 }
 .quick-btn .item a {
   outline: none;
@@ -476,8 +476,10 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 45%;
+  bottom: 30%;
   margin: 0 auto;
+  margin: 0 auto;
+  height: 44%
 }
 @media (max-width: 979px) {
   #loading img {

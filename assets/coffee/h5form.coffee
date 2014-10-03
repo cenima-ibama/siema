@@ -1,12 +1,16 @@
 H5.Data.restURL = "http://" + document.domain + "/siema/rest"
 $(document).ready ->
 
+
+
   _tipoLocalizacao = null
   _tipoEvento = null
   _tipoDanoIdentificado  = null
   _tipoInstituicaoAtuando = null
   _tipoFonteInformacao = null
-  _tipoProduto = null
+  _tipoProdutoOnu = null
+  _tipoProdutoOutro = null
+  _municipios = null
 
   idOcorrencia = null
 
@@ -28,6 +32,8 @@ $(document).ready ->
     limit: "1"
   )
   idLin = rest.data[0].lastval
+
+  _shownAccordion = null
 
   if !$("#comunicado").val()
     date = new Date()
@@ -53,26 +59,46 @@ $(document).ready ->
   # Get the product name from the database, by ajax
   rest = new H5.Rest (
     url: H5.Data.restURL
-    table: "produto"
-    fields: "id_produto,nome,num_onu,classe_risco"
+    table: "produto_onu"
+    fields: "id_produto_onu,nome,num_onu,classe_risco"
     order: "nome"
   )
+  _tipoProdutoOnu = rest.data
+
+  # Get the product name from the database, by ajax
+  rest = new H5.Rest (
+    url: H5.Data.restURL
+    table: "produto_outro"
+    fields: "id_produto_outro,nome"
+    order: "nome"
+  )
+  _tipoProdutoOutro = rest.data
 
   nroOcorrencia = $("#comunicado").val()
 
-  _tipoProduto = rest.data
+  # Get all "Municipio" from database to limit the access to the DB
+  rest = new H5.Rest (
+    url: H5.Data.restURL
+    table: "municipio"
+    fields: "id_municipio as id, nome as value, id_uf"
+    order: "value"
+  )
+  _municipios = rest.data
+
 
   #-------------------------------------------------------------------------
   # COLAPSE BOOTSTRAP
   #-------------------------------------------------------------------------
 
   $(".accordion-body").on "shown", ->
-    stop = $(this).offset().top - 55
-    delay = 300
-    $("body, html").animate
-      scrollTop: stop
-    , delay
-    return false
+    if _shownAccordion isnt @
+      _shownAccordion = @
+      stop = $(this).offset().top - 40
+      delay = 300
+      $("body, html").animate
+        scrollTop: stop
+      , delay
+      return false
 
   #-------------------------------------------------------------------------
   # MINIMAP
@@ -97,17 +123,26 @@ $(document).ready ->
 
   Marker = new L.Marker([0 ,0], {draggable:true})
 
+  doubleClick = true
+  if window.parent.H5.isMobile.any()
+    doubleClick = false
+
   minimapView = new L.Map("minimap",
     center: new L.LatLng(-10.0, -50.0)
     zoom: 3
     layers: [binghybrid]
     zoomControl: true
+    doubleClickZoom: doubleClick
     )
+
+  isLoadForm = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
+  shapeLoadedFromDB = $("#shapeLoaded").prop "checked"
 
   drawAPI = new H5.Draw(
     map: minimapView
     url: H5.Data.restURL
     uniquePoint: true
+    reloadShape: shapeLoadedFromDB
     # srid: $("#inputEPSG").val()
     srid: '4674'
     buttons:
@@ -139,271 +174,43 @@ $(document).ready ->
           nro_ocorrencia: nroOcorrencia
   )
 
-
-  # Add draw functionality to a map
-  # drawnItems = new L.FeatureGroup()
-  # minimapView.addLayer(drawnItems)
-
-  # drawControl = new L.Control.Draw({
-  #     draw: {
-  #       marker: false
-  #     },
-  #     edit: {
-  #       featureGroup: drawnItems,
-  #       edit: false
-  #     }
-  # })
-  # minimapView.addControl(drawControl)
-
-  # minimapView.on 'draw:created', (e)->
-  #   type = e.layerType
-
-  #   layer = e.layer
-
-  #   if (type is 'polygon')
-  #     # Saves a polygon
-  #     firstPoint = ""
-
-  #     layer._leaflet_id = ++idPol
-
-  #     sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakePolygon(ST_GeomFromText('LINESTRING("
-
-  #     $.each layer._latlngs, ->
-  #       if firstPoint is ""
-  #         firstPoint = @
-
-  #       sql = sql + @.lat + " " + @.lng
-
-  #       sql = sql +  ","
-
-  #     sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + ")))"
-
-  #     console.log(sql)
-
-  #     # Insert the figure in a temporary table.
-  #     rest = new H5.Rest (
-  #      url: H5.Data.restURL
-  #      fields: sql
-  #      table: "tmp_pol"
-  #      restService: "ws_insertquery.php"
-  #     )
-  #   else if (type is 'polyline')
-  #     # Saves a polyline
-  #     firstPoint = ""
-
-  #     layer._leaflet_id = ++idLin
-
-  #     sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_GeomFromText('LINESTRING("
-
-  #     $.each layer._latlngs, ->
-  #       if firstPoint is ""
-  #         firstPoint = true
-  #         sql = sql + @.lat + " " + @.lng
-  #       else
-  #         sql = sql + "," + @.lat + " " + @.lng
-
-  #     sql = sql + ")', " + $("#inputEPSG").val() + "))"
-
-  #     console.log(sql)
-
-  #     # Insert the figure in a temporary table.
-  #     rest = new H5.Rest (
-  #      url: H5.Data.restURL
-  #      fields: sql
-  #      table: "tmp_lin"
-  #      restService: "ws_insertquery.php"
-  #     )
-  #   else if (type is 'rectangle')
-
-  #     layer._leaflet_id = ++idPol
-
-  #     sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ",ST_MakeEnvelope("
-
-  #     sql = sql +
-  #           layer._latlngs[0].lat + "," + layer._latlngs[0].lng + ", " +
-  #           layer._latlngs[2].lat + "," + layer._latlngs[2].lng
-
-  #     sql = sql + ", " + $("#inputEPSG").val() + "))"
-
-  #     console.log sql
-
-  #     # Insert the figure in a temporary table.
-  #     rest = new H5.Rest (
-  #       url: H5.Data.restURL
-  #       fields: sql
-  #       table: "tmp_pol"
-  #       restService: "ws_insertquery.php"
-  #     )
-  #   else if (type is 'circle')
-
-  #     console.log layer
-
-  #     layer._leaflet_id = ++idPol
-
-  #     sql = "(nro_ocorrencia, shape) values ( " + nroOcorrencia + ", ST_Buffer(ST_GeomFromText('POINT(" +
-  #           layer._latlng.lat + " " + layer._latlng.lng + ")'," + $("#inputEPSG").val() + "),"
-
-  #     sql = sql + layer._mRadius/100010 + "))"
-
-  #     console.log sql
-
-  #     rest = new H5.Rest (
-  #       url: H5.Data.restURL
-  #       fields: sql
-  #       table: "tmp_pol"
-  #       restService: "ws_insertquery.php"
-  #     )
-
-  #   drawnItems.addLayer(layer)
-
-  # minimapView.on 'draw:deleted', (e)->
-
-  #   type = ""
-  #   sqlPon = "id_tmp_pol=0 "
-  #   sqlLin = "id_tmp_lin=0 "
-
-  #   $.each e.layers._layers, ->
-
-  #     type = @.toGeoJSON().geometry.type
-
-  #     if type is 'Polygon'
-  #       sqlPon = sqlPon + "or id_tmp_pol=" + @._leaflet_id + " "
-  #     else if type is 'LineString'
-  #       sqlLin = sqlLin + "or id_tmp_lin=" + @._leaflet_id + " "
-  #     else if type is 'Point'
-  #       sqlPon = sqlPon + "or id_tmp_pol=" + @._leaflet_id + " "
-
-  #   if type is 'Polygon'
-  #     sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'"
-
-  #     # Remove lines
-  #     rest = new H5.Rest (
-  #       url: H5.Data.restURL
-  #       table: "tmp_pol"
-  #       parameters: sqlPon
-  #       restService: "ws_deletequery.php"
-  #     )
-
-  #   else if type is 'LineString'
-  #     sqlLin = sqlLin + "and nro_ocorrencia='" + nroOcorrencia + "'"
-
-  #     # Remove lines
-  #     rest = new H5.Rest (
-  #       url: H5.Data.restURL
-  #       table: "tmp_lin"
-  #       parameters: sqlLin
-  #       restService: "ws_deletequery.php"
-  #     )
-  #   else if type is 'Point'
-  #     sqlPon = sqlPon + "and nro_ocorrencia='" + nroOcorrencia + "'"
-
-  #     # Remove lines
-  #     rest = new H5.Rest (
-  #       url: H5.Data.restURL
-  #       table: "tmp_pol"
-  #       parameters: sqlPon
-  #       restService: "ws_deletequery.php"
-  #     )
-
-
-  # minimapView.on 'draw:edited', (e)->
-
-  #   type = ""
-  #   sqlPon = ""
-  #   sqlLin = ""
-  #   this._map=minimapView
-
-  #   $.each e.layers._layers, ->
-
-  #     firstPoint = ""
-
-  #     type = @.toGeoJSON().geometry.type
-
-  #     if type is 'Polygon'
-  #       sql = "shape%3DST_MakePolygon(ST_GeomFromText('LINESTRING("
-
-  #       $.each @._latlngs, ->
-  #         if firstPoint is ''
-  #           firstPoint = @
-
-  #         sql = sql + "" + @.lat + " " + @.lng
-
-  #         sql = sql + ","
-
-  #       sql = sql + firstPoint.lat + " " + firstPoint.lng + ")', " + $("#inputEPSG").val() + "))"
-
-  #       # # Remove lines
-  #       rest = new H5.Rest (
-  #         url: H5.Data.restURL
-  #         table: "tmp_pol"
-  #         fields: sql
-  #         parameters: "id_tmp_pol%3D" + @._leaflet_id
-  #         restService: "ws_updatequery.php"
-  #       )
-  #     else if type is 'LineString'
-  #       sqlLin = sqlLin + "or id_tmp_lin=" + @._leaflet_id + " "
-  #       sql = "shape%3DST_Envelope(ST_GeomFromText('LINESTRING("
-
-  #       sql = sql +
-  #             layer._latlngs[0].lat + " " + layer._latlngs[0].lng + ", " +
-  #             layer._latlngs[2].lat + " " + layer._latlngs[2].lng
-
-  #       sql = sql + ")', " + $("#inputEPSG").val() + ")))"
-
-  # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
-  # Search on database vectors already on the tmp_pol table
-  # rest = new H5.Rest (
-  #   url: H5.Data.restURL
-  #   fields: 'id_tmp_lin, ST_AsGeoJson(shape) as shape'
-  #   table: "tmp_lin"
-  #   parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
-  # )
-  # polylineList = rest.data
-
-  # $.each polylineList, ()->
-
-  #   element = JSON.parse(@.shape)
-
-  #   polyline = new L.Polyline(element.coordinates)
-  #   polyline._leaflet_id = @.id_tmp_lin
-  #   drawnItems.addLayer(polyline)
-
-  # # Add possibles vectors already created (be when reloading the page, be when loading a saved report)
-  # # Search on database vectors already on the tmp_pol table
-  # rest = new H5.Rest (
-  #   url: H5.Data.restURL
-  #   fields: 'id_tmp_pol, ST_AsGeoJson(shape) as shape'
-  #   table: "tmp_pol"
-  #   parameters: "nro_ocorrencia='" + nroOcorrencia + "'"
-  # )
-  # polygonList = rest.data
-
-  # $.each polygonList, ()->
-
-  #   element = JSON.parse(@.shape)
-
-  #   polygon = new L.Polygon(element.coordinates)
-  #   polygon._leaflet_id = @.id_tmp_pol
-  #   drawnItems.addLayer(polygon)
-
-  # drawAPI.reloadShape()
-
+  if isLoadForm and !shapeLoadedFromDB
+
+    pointTable = {
+      fields: ['id_ocorrencia_pon as id_tmp_pon','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
+      name: 'ocorrencia_pon'
+      parameters:
+        field: 'id_ocorrencia'
+        value: idOcorrencia
+      }
+    polygonTable = {
+      fields: ['id_ocorrencia_pol as id_tmp_pol','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
+      name: 'ocorrencia_pol'
+      parameters:
+        field: 'id_ocorrencia'
+        value: idOcorrencia
+      }
+    lineTable = {
+      fields: ['id_ocorrencia_lin as id_tmp_lin','descricao','shape',nroOcorrencia + ' as nro_ocorrencia']
+      name: 'ocorrencia_lin'
+      parameters:
+        field: 'id_ocorrencia'
+        value: idOcorrencia
+      }
+
+    drawAPI.editShapes(pointTable, polygonTable,lineTable)
 
   #add search for the address inputText
   GeoSearch =
     _provider: new L.GeoSearch.Provider.Google
     _geosearch: (qry, showAddress) ->
       try
-        # console.log @_provider
-        console.log qry
         if typeof @_provider.GetLocations is "function"
           # console.log "Is function"
           results = @_provider.GetLocations(qry, ((results) ->
-            console.log results
             @_processResults results, showAddress
           ).bind(this))
         else
-          # console.log "Not a Function"
           url = @_provider.GetServiceUrl(qry)
           $.getJSON url, (data) (->
             try
@@ -434,12 +241,10 @@ $(document).ready ->
       $("#inputLng").val location.X
 
     _showAddres: (label) ->
-      console.log label
       $("#inputMunicipio").val ""
       $("#inputUF").val ""
       $("#inputEndereco").val ""
       address = @_parseLabel label
-      console.log address
 
 
     _parseLabel: (label) ->
@@ -460,7 +265,7 @@ $(document).ready ->
       else
         indexCity = labelParts.length - 2
 
-      @_parseCidade labelParts[indexCity]
+      ret = @_parseCidade labelParts[indexCity]
       strAdd = ""
       for i in [0...indexCity] by 1
         strAdd += (labelParts[i] + " ")
@@ -472,63 +277,105 @@ $(document).ready ->
       subCidade = string.split(" - ")
       if subCidade.length > 1
       #case with the city name
-        $("#inputMunicipio").val subCidade[0]
+        # $("#inputMunicipio").val subCidade[0]
         @_parseEstado subCidade[1]
+        _this = this
+        $('#dropdownMunicipio option').filter ->
+          return $(this).text().latinise() == subCidade[0].latinise()
+        .prop 'selected', true
       else
       #case with only the state name of abbreviation
-        $("#inputMunicipio").val ""
+        # $("#inputMunicipio").val ""
         @_parseEstado string
+        $("#dropdownMunicipio").val "0"
+      $("#dropdownMunicipio").trigger('change')
 
     _parseEstado: (string) ->
-        estados = ["Acre","Alagoas","Amapá","Amazonas","Bahia","Ceará","Distrito Federal","Espírito Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso do Sul","Minas Gerais","Pará","Paraíba","Paraná","Pernambuco","Piauí","Rio de Janeiro","Rio Grande do Norte","Rio Grande do Sul","Rondônia","Roraima","Santa Catarina","São Paulo","Sergipe","Tocantins"]
-        uf = ["AC","AL","AP","AM","BA","CE","DF","E","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]
+        estados = ["Acre","Alagoas","Amapá","Amazonas","Bahia","Ceará","Distrito Federal","Espirito Santo","Goiás","Maranhão","Mato Grosso","Mato Grosso do Sul","Minas Gerais","Pará","Paraíba","Paraná","Pernambuco","Piauí","Rio de Janeiro","Rio Grande do Norte","Rio Grande do Sul","Rondônia","Roraima","Santa Catarina","São Paulo","Sergipe","Tocantins"]
+        uf = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"]
         if string in estados or string in uf
           if string.length > 2
-            $("#inputUF").val uf[estados.indexOf(string)]
+            # $("#inputUF").val uf[estados.indexOf(string)]
+            $('#dropdownUF option').filter ->
+              return $(this).text() == uf[estados.indexOf(string)]
+            .prop 'selected', true
           else
-            $("#inputUF").val string
+            # $("#inputUF").val string
+            $('#dropdownUF option').filter ->
+              return $(this).text() == string
+            .prop 'selected', true
+
+          $("#dropdownUF").trigger('change')
 
     _printError: (error) ->
       alert "Erro na Busca: " + error
 
 
   # Update marker from changed inputs
-  $("#inputLat, #inputLng").on 'change', (event) ->
-    if (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
+  minimapView.on 'draw:created', (event) ->
+    type = event.layerType
+    layer = event.layer;
+
+    if (type is 'marker') and (($("#inputLat").prop "value" ) isnt "") and (($("#inputLng").prop "value" ) isnt "")
       qry = ($("#inputLat").prop "value" ) + "," + ($("#inputLng").prop "value")
       GeoSearch._geosearch qry,true
-    else
-      $("#inputMunicipio").val ""
-      $("#inputUF").val ""
-      $("#inputEndereco").val ""
-    #   latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
-    #   if (!minimapView.hasLayer(Marker))
-  #   #     minimapView.addLayer(Marker)
+  #   else
+  #     $("#inputMunicipio").val ""
+  #     $("#inputUF").val ""
+  #     $("#inputEndereco").val ""
+  #     latlng = new L.LatLng(($("#inputLat").prop "value" ) ,($("#inputLng").prop "value" ))
+  #     if (!minimapView.hasLayer(Marker))
+  #       minimapView.addLayer(Marker)
 
-  #   #   Marker.setLatLng(latlng).update()
-  #   #   minimapView.setView(latlng, 8, false)
+  #     Marker.setLatLng(latlng).update()
+  #     minimapView.setView(latlng, 8, false)
 
-  #   # #link the big map with the form map
-  #   # if not window.parent.H5.isMobile.any()
-  #   #   window.parent.H5.Map.base.setView(latlng, 8, false)
+  #   #link the big map with the form map
+  #   if not window.parent.H5.isMobile.any()
+  #     window.parent.H5.Map.base.setView(latlng, 8, false)
 
   #   drawAPI.setPoint($("#inputLat").val(), $("#inputLng").val())
 
   #   # $("#inputEPSG").val ""
   #   # $("#inputEPSG").removeAttr("disabled")
 
+  # in case the latlng is passed on insertion, instead on the framework
+  $("#inputLat").add("#inputLng").on "change", ()->
+    if ($("#inputLat").val() isnt "") && ($("#inputLng").val() isnt "")
+      # transform latitude and longitute from degrees minutes and seconds (pattern) into decimal degrees
+      lat = drawAPI.DMS2DecimalDegree($("#inputLat").val())
+      lng = drawAPI.DMS2DecimalDegree($("#inputLng").val())
+      latlng = new L.LatLng(lat,lng)
+      # console.log latlng
+      drawAPI.setPoint(latlng, '4674')
+
+
   #connect the GeoSearch to the inputAddress
   $("#inputEndereco").on 'keyup', (event) ->
-    # console.log "Entrei no key pressed"
     enterKey = 13
+
+    if $(this).val() isnt ""
+      if $("#oceano").is(":checked")
+        $("#oceano").click()
+      $("#oceano").attr "disabled","disabled"
+      $("#dropdownBaciaSedimentar").val("")
+    else
+      $("#oceano").removeAttr "disabled"
+
+
     if event.keyCode is enterKey
-      # console.log this.value
-      municipio = $("#inputMunicipio").val()
-      uf = $("#inputUF").val()
-      if municipio.length is 0 and uf.length is 0
+      # municipio = $("#inputMunicipio").val()
+      municipioVal = document.getElementById('dropdownMunicipio').value
+      municipio = $("#dropdownMunicipio option[value='" + municipioVal + "']")
+      # uf = $("#inputUF").val()
+      ufVal = document.getElementById('dropdownUF').value
+      uf = $("#dropdownUF option[value='" + ufVal + "']")
+      if municipio.html().length is 0 and uf.html().length is 0
         GeoSearch._geosearch(this.value)
       else
-        GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf)
+        #GeoSearch._geosearch(this.value + ", " + municipio + " - " + uf)
+        GeoSearch._geosearch(this.value + ", " + municipio.html() + " - " + uf.html())
+
 
   # Add a move property to the marker
   # Marker.on "move", (event) ->
@@ -558,8 +405,8 @@ $(document).ready ->
   #   # $("#inputEPSG").prop "disabled", "disabled"
 
   # Sets the zoom on the big map accordingly to the minimap
-  minimapView.on "move zoom", (event) ->
-    window.parent.H5.Map.base.setView(minimapView.getCenter(), minimapView.getZoom(), false)
+  # minimapView.on "move zoom", (event) ->
+  #   window.parent.H5.Map.base.setView(minimapView.getCenter(), minimapView.getZoom(), false)
 
   # Create a marker from input values on the page's reload
   # if (($("#inputLat").prop "value" ) isnt "" ) and (($("#inputLng").prop "value" ) isnt "")
@@ -612,11 +459,6 @@ $(document).ready ->
         if (@.innerHTML is input.value)
           input.checked = "checked"
           $(@).remove()
-          addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
-
-      $(input).click ()->
-        if $(this).is(":checked")
-          addSelection('labelInputCompOrigem',value.des_tipo_localizacao)
 
       span = document.createElement("span")
       span.innerHTML = value.des_tipo_localizacao
@@ -811,6 +653,10 @@ $(document).ready ->
           input.checked = "checked"
           $(@).remove()
 
+          #Mostrar a caixa de texto com a descrição da outra fonte de informação.
+          if  input.value == "5"
+            $("#descOutrasFontInfo").show()
+
 
       span = document.createElement("span")
       span.innerHTML = value.nome
@@ -832,12 +678,12 @@ $(document).ready ->
 
     # PRODUTO
 
-    subjects = []
+    productsOnu = []
 
-    $.each _tipoProduto, ()->
-      subjects.push(@nome)
+    $.each _tipoProdutoOnu, ()->
+      productsOnu.push(@nome)
 
-    $("#nomeProduto").typeahead({source: subjects})
+    # $("#nomeProduto").typeahead({source: productsOnu})
 
 
     # $("#inputEPSG").on 'change', ()->
@@ -846,35 +692,68 @@ $(document).ready ->
 
   #-------------------------------------------------------------------------
   # DISABLE SELECTED INPUTS
-  #-------------------------------------------------------------------------
+  #--------------------------------------------------------------------------------------------------------------------------------------------------
+    $("#dropdownUF").on 'change', () ->
+      if $(@).val() isnt ''
+        $("#dropdownMunicipio").find('option').remove()
+        $('<option>').val("0").text("Sem Município").appendTo('#dropdownMunicipio');
+        $.each _municipios, ()->
+          value = $("#dropdownUF").val()
+          if @.id_uf.toString() is value
+            $('<option>').val(@.id).text(@.value).appendTo('#dropdownMunicipio');
 
-    $("#semLocalizacao").on 'click', ()->
-      if $(this).is(":checked")
-        $("#inputLat").attr("disabled","disabled")
-        $("#inputLng").attr("disabled","disabled")
-        # $("#inputEPSG").attr("disabled","disabled")
-        $("#inputMunicipio").attr("disabled","disabled")
-        $("#inputUF").attr("disabled","disabled")
-        $("#inputEndereco").attr("disabled","disabled")
-        $("#btnAddToMap").attr("disabled","disabled")
-        $("button[data-id='slctLicenca']").attr("disabled", "disabled")
+    $("#oceano").on 'click', () ->
+      if $(@).is ":checked"
+        $("#spanBaciaSed").removeAttr("style")
       else
-        $("#inputLat").removeAttr("disabled")
-        $("#inputLng").removeAttr("disabled")
-        # $("#inputEPSG").removeAttr("disabled")
-        $("#inputMunicipio").removeAttr("disabled")
-        $("#inputUF").removeAttr("disabled")
-        $("#inputEndereco").removeAttr("disabled")
-        $("#btnAddToMap").removeAttr("disabled")
-        $("button[data-id='slctLicenca']").removeAttr("disabled")
+        $("#spanBaciaSed").attr("style","display:none;")
 
+    # $("#semLocalizacao").on 'click', ()->
+    #   if $(this).is(":checked")
+    #     $("#inputLat").attr("disabled","disabled")
+    #     $("#inputLng").attr("disabled","disabled")
+    #     # $("#inputEPSG").attr("disabled","disabled")
+    #     $("#inputMunicipio").attr("disabled","disabled")
+    #     $("#inputUF").attr("disabled","disabled")
+    #     $("#inputEndereco").attr("disabled","disabled")
+    #     $("#btnAddToMap").attr("disabled","disabled")
+    #     $("#dropdownMunicipio").attr("disabled","disabled")
+    #     $("#dropdownUF").attr("disabled","disabled")
+    #   else
+    #     $("#inputLat").removeAttr("disabled")
+    #     $("#inputLng").removeAttr("disabled")
+    #     # $("#inputEPSG").removeAttr("disabled")
+    #     $("#inputMunicipio").removeAttr("disabled")
+    #     $("#inputUF").removeAttr("disabled")
+    #     $("#inputEndereco").removeAttr("disabled")
+    #     $("#btnAddToMap").removeAttr("disabled")
+    #     $("#dropdownMunicipio").removeAttr("disabled")
+    #     $("#dropdownUF").removeAttr("disabled")
+    
     $("#semNavioInstalacao").on 'click', () ->
       if $(@).is ":checked"
         $("#inputNomeNavio").attr("disabled","disabled")
         $("#inputNomeInstalacao").attr("disabled","disabled")
+        # $("#navio").attr("disabled","disabled")
+        # $("#instalacao").attr("disabled","disabled")
+        $("#typeOfOrigin").val("");
       else
-        $("#inputNomeNavio").removeAttr("disabled")
-        $("#inputNomeInstalacao").removeAttr("disabled")
+        # if(!$("#instalacao").is(":checked"))
+        #   $("#inputNomeNavio").removeAttr("disabled")
+        # if(!$("#navio").is(":checked"))
+        #   $("#inputNomeInstalacao").removeAttr("disabled")
+        # $("#navio").removeAttr("disabled")
+        # $("#instalacao").removeAttr("disabled")       
+
+        if $("#inputNomeNavio").val().trim() != ""
+          $("#typeOfOrigin").val("navio")
+          $("#inputNomeNavio").removeAttr("disabled")
+        else if $("#inputNomeInstalacao").val().trim() != ""
+          $("#typeOfOrigin").val("instalacao")
+          $("#inputNomeInstalacao").removeAttr("disabled")
+        else
+          $("#inputNomeNavio").removeAttr("disabled")
+          $("#inputNomeInstalacao").removeAttr("disabled")
 
     $("#semDataObs").on 'click', ()->
       if $(this).is(":checked")
@@ -900,6 +779,7 @@ $(document).ready ->
         $("#PerInciVesper").attr("disabled","disabled")
         $("#PerInciNotu").attr("disabled","disabled")
         $("#PerInciMadru").attr("disabled","disabled")
+        $("#dtFeriado").attr("disabled","disabled")
       else
         $("#inputDataInci").removeAttr("disabled")
         $("#inputHoraInci").removeAttr("disabled")
@@ -907,6 +787,7 @@ $(document).ready ->
         $("#PerInciVesper").removeAttr("disabled")
         $("#PerInciNotu").removeAttr("disabled")
         $("#PerInciMadru").removeAttr("disabled")
+        $("#dtFeriado").removeAttr("disabled")
 
 
     $("#semOrigem").on 'click', ()->
@@ -949,16 +830,22 @@ $(document).ready ->
     $("#semSubstancia").on 'click', ()->
       if $(this).is(":checked")
         $("#inputTipoSubstancia").attr("disabled","disabled")
-        $("#inputValorEstimado").attr("disabled","disabled")
+        $("#inputVolumeEstimado").attr("disabled","disabled")
       else
         $("#inputTipoSubstancia").removeAttr("disabled")
-        $("#inputValorEstimado").removeAttr("disabled")
+        $("#inputVolumeEstimado").removeAttr("disabled")
 
     $("#semCausa").on 'click', ()->
       if $(this).is(":checked")
         $("#inputCausaProvavel").attr("disabled","disabled")
       else
         $("#inputCausaProvavel").removeAttr("disabled")
+
+    $("#TFI5").on 'click', ()->
+      if $(this).is(":checked")
+        $("#descOutrasFontInfo").show()
+      else
+        $("#descOutrasFontInfo").hide()
 
     $("#semDanos").on 'click', ()->
       if $(this).is(":checked")
@@ -1010,52 +897,107 @@ $(document).ready ->
       if $(this).is(":checked")
         $("#planoEmergNao").attr("disabled","disabled")
         $("#planoEmergSim").attr("disabled","disabled")
+        $("#planoEmergSemInformacao").attr("disabled","disabled")
         $("#planoAcionado").attr("disabled","disabled")
         $("#outrasMedidas").attr("disabled","disabled")
         $("#inputMedidasTomadas").attr("disabled","disabled")
       else
         $("#planoEmergNao").removeAttr("disabled")
         $("#planoEmergSim").removeAttr("disabled")
+        $("#planoEmergSemInformacao").removeAttr("disabled")
         $("#planoAcionado").removeAttr("disabled")
         $("#outrasMedidas").removeAttr("disabled")
-        $("#inputMedidasTomadas").removeAttr("disabled")
+        #Habilitar somente quando o checkbox estiver marcado.
+        if $("#outrasMedidas").is ":checked"
+          $("#inputMedidasTomadas").removeAttr("disabled")
 
     # if $("#semResponsavel").is(":checked")
     #   $("button[data-id='slctLicenca']").addClass("disabled")
     # else
     #   $("button[data-id='slctLicenca']").removeClass("disabled")
 
+  $("#inputDataObs").on 'change', ->
+    if ($(this).val() isnt "")
+      dia = $(this).val().split("/")[0]
+      mes = $(this).val().split("/")[1]
+      ano = $(this).val().split("/")[2]
+
+      date = new Date(mes + "/" + dia + "/" + ano)
+      actualDate = new Date()
+
+      valiDate = $.datepicker.formatDate('dd/mm/yy',date)
+
+      if (valiDate is $(this).val()) and (actualDate.getFullYear() is date.getFullYear())
+        $("#diaObsSemana").val(date.getDay())
+      else
+        $(this).val("")
+        $("#diaObsSemana").val("")
+
+  $("#inputDataInci").on 'change', ->
+    if $(this).val() isnt ""
+      dia = $(this).val().split("/")[0]
+      mes = $(this).val().split("/")[1]
+      ano = $(this).val().split("/")[2]
+
+      date = new Date(mes + "/" + dia + "/" + ano)
+      actualDate = new Date()
+
+      valiDate = $.datepicker.formatDate('dd/mm/yy',date)
+
+      if (valiDate is $(this).val())  and (actualDate.getFullYear() is date.getFullYear())
+        $("#diaInciSemana").val(date.getDay())
+      else
+        $(this).val("")
+        $("#diaInciSemana").val("")
+
+  $("#inputDataObs").change()
+  $("#inputDataInci").change()
+
   $("#inputHoraObs").on 'change', ->
     if ($(@).prop 'value') isnt ""
-      obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
-      if obsHour < 6
-        $("#PerObsMadru").prop('checked', 'checked')
-      else if obsHour < 12
-        $("#PerObsMatu").prop('checked', 'checked')
-      else if obsHour < 18
-        $("#PerObsVesper").prop('checked', 'checked')
+      hora = $(this).val().split(":")[0]
+      minuto = $(this).val().split(":")[1]
+
+      if (-1 < hora < 23) && (-1 < minuto < 60)
+        obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
+        if obsHour < 6
+          $("#PerObsMadru").prop('checked', 'checked')
+        else if obsHour < 12
+          $("#PerObsMatu").prop('checked', 'checked')
+        else if obsHour < 18
+          $("#PerObsVesper").prop('checked', 'checked')
+        else
+          $("#PerObsNotu").prop('checked', 'checked')
+
+          $("#divPeriodoObs").css('display','none')
       else
-        $("#PerObsNotu").prop('checked', 'checked')
-
-      $("#divPeriodoObs").prop('style','display:none;')
-
+        $("#divPeriodoObs").prop('style','')
+        $(this).val("")
     else
       $("#divPeriodoObs").prop('style','')
 
   $("#inputHoraInci").on 'change', ->
     if ($(@).prop 'value') isnt ""
-      obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
+      hora = $(this).val().split(":")[0]
+      minuto = $(this).val().split(":")[1]
 
-      if obsHour < 6
-        $("#PerInciMadru").prop('checked', 'checked')
-      else if obsHour < 12
-        $("#PerInciMatu").prop('checked', 'checked')
-      else if obsHour < 18
-        $("#PerInciVesper").prop('checked', 'checked')
+      if (-1 < hora < 23) or (-1 < minuto < 60)
+        obsHour = parseInt($(this).prop('value').split(':')[0] , 10)
+
+        if obsHour < 6
+          $("#PerInciMadru").prop('checked', 'checked')
+        else if obsHour < 12
+          $("#PerInciMatu").prop('checked', 'checked')
+        else if obsHour < 18
+          $("#PerInciVesper").prop('checked', 'checked')
+        else
+          $("#PerInciNotu").prop('checked', 'checked')
+
+          $("#divPeriodoInci").css('display','none')
       else
-        $("#PerInciNotu").prop('checked', 'checked')
+        $("#divPeriodoInci").css('display','auto;')
+        $(this).val("")
 
-      $("#divPeriodoInci").prop('style','display:none;')
     else
       $("#divPeriodoInci").prop('style','display:auto;')
 
@@ -1065,14 +1007,72 @@ $(document).ready ->
   if ($("#inputHoraInci").prop 'value') isnt ''
     $("#divPeriodoInci").prop('style','display:none;')
 
+
+  $("#inputNomeNavio").on 'change', ->
+    if $(this).val() is ""
+      $("#inputNomeInstalacao").removeAttr("disabled")
+      $("#typeOfOrigin").val("")
+    else
+      $("#inputNomeInstalacao").attr("disabled","disabled")
+      $("#typeOfOrigin").val("navio")
+
+  $("#inputNomeInstalacao").on 'change', ->
+    if $(this).val() is ""
+      $("#inputNomeNavio").removeAttr("disabled")
+      $("#typeOfOrigin").val("")
+    else
+      $("#inputNomeNavio").attr("disabled","disabled")
+      $("#inputNomeInstalacao").removeAttr("disabled")
+      $("#typeOfOrigin").val("instalacao")
+
+
+  # They'll soon ask to change. I bet on it.
+  # $("#navio").on 'click', ->
+  #   if $(this).is(":checked")
+  #     $("#inputNomeInstalacao").attr("disabled","disabled")
+  #     $("#inputNomeNavio").removeAttr("disabled")
+
+  # $("#instalacao").on 'click', ->
+  #   if $(this).is(":checked")
+  #     $("#inputNomeNavio").attr("disabled","disabled")
+  #     $("#inputNomeInstalacao").removeAttr("disabled")
+
+  # $("#instalacao").trigger('click')
+  # $("#navio").click()
+
   #-------------------------------------------------------------------------
   # MASK FOR FIELDS
   #-------------------------------------------------------------------------
+
+  validationString =  "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" +
+               "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW" +
+               "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+
+
+  $("#inputLat").mask("S99\°99\'99.99999999999",
+    {'translation': {S: {pattern: /^-/, optional: true}}})
+  $("#inputLng").mask("S99\°99\'99.99999999999",
+    {'translation': {S: {pattern: /^-/, optional: true}}})
+  # $("#inputBaciaSed").mask(validationString,
+  #   {'translation': {W: {pattern: /[A-Za-z ]/}}})
 
   $("#inputDataObs").mask("99/99/9999")
   $("#inputHoraObs").mask("99:99")
   $("#inputDataInci").mask("99/99/9999")
   $("#inputHoraInci").mask("99:99")
+
+  $("#inputInfoInstituicaoNome").mask(validationString,
+    {'translation': {W: {pattern: /[A-Za-z ]/}}})
+  # $("#inputInfoInstituicaoNome").mask("S")
+  $("#inputInfoInstituicaoTelefone").mask("(99)999999999")
+
+  $("#inputCPFCNPJ").mask("99999999999999")
+
+  $("#inputVolumeEstimado").mask("9999999999999999999999999999")
+
+  $("#inputNomeInformante").mask(validationString,
+    {'translation': {W: {pattern: /[A-Za-z ]/}}})
+  $("#inputTelInformante").mask("(99)999999999")
 
   $('#inputCompOrigem')
     .add('#inputCompEvento')
@@ -1083,6 +1083,7 @@ $(document).ready ->
     .add('#inputDesOcorrencia')
     .add('#inputDesObs')
     .add('#inputDesDanos')
+    .add('#inputDescOutrasFontInfo')
     .maxlength(
       alwaysShow: true,
       threshold: 10,
@@ -1098,88 +1099,299 @@ $(document).ready ->
   # FORM DATA TABLE
   #-------------------------------------------------------------------------
 
-  subjects = []
+  productsOnu = []
 
-  $.each _tipoProduto, ()->
+  $.each _tipoProdutoOnu, ()->
 
     element =
-      value: @id_produto
+      value: @id_produto_onu
       text: $.trim(@nome) + '-' + $.trim(@num_onu) + '-' + $.trim(@classe_risco)
-    subjects.push(element)
+    productsOnu.push(element)
 
     # subjects.push(@nome)
 
-  if $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
-    table = new H5.Table (
-      container: "myTable"
+  productsOutro = []
+
+  $.each _tipoProdutoOutro, ()->
+
+    element =
+      value: @id_produto_outro
+      text: $.trim(@nome)
+    productsOutro.push(element)
+
+    # subjects.push(@nome)
+
+  if isLoadForm
+    onuTable = new H5.Table (
+      container: "productOnuTable"
       url: H5.Data.restURL
-      table: "ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Docorrencia_produto.id_produto)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
+      table: "ocorrencia_produto%20join%20produto_onu%20on%20(produto_onu.id_produto_onu%3Docorrencia_produto.id_produto_onu)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
       primaryTable: 'ocorrencia_produto'
       parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'"
       fields:
         id_ocorrencia_produto:
           columnName: "Identificador"
-          tableName: "id_ocorrencia_produto"
           isVisible: false
-          validation: null
         nome:
-          columnName: "Substância - Nº Onu - CR"
+          columnName: "Substância - Nº ONU - CR"
           tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
-          primaryField: "id_produto"
-          validation: null
-          searchData: subjects
+          primaryField: "id_produto_onu"
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+          searchData: productsOnu
         quantidade:
           columnName: "Qtd."
-          tableName: "quantidade"
-          validation: null
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            else if isNaN(value)
+              text = 'Não é permitido letras ou caracteres especiais.'
+            return text
         unidade_medida:
           columnName: "Unidade"
-          tableName: "unidade_medida"
-          validation: null
+          selectArray:[
+            value :"m3"
+            text: "Metro Cúbico (m3)"
+          ,
+            value : "l"
+            text : "Litro (L)"
+          ,
+            value: "t"
+            text: "Tonelada (T)"
+          ,
+            value:"kg"
+            text: "Quilograma (Kg)"
+          ]
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
         id_ocorrencia:
           columnName: "Nro. Ocorrencia"
           tableName: "ocorrencia_produto.id_ocorrencia"
           defaultValue: idOcorrencia
-          validation: null
           isVisible: false
 
       uniqueField:
         field: "id_ocorrencia_produto"
-        insertable: false
     )
-  else
-    table = new H5.Table (
-      container: "myTable"
+
+    otherTable = new H5.Table (
+      container: "productOutroTable"
       url: H5.Data.restURL
-      table: "tmp_ocorrencia_produto%20left%20join%20produto%20on%20(produto.id_produto%3Dtmp_ocorrencia_produto.id_produto)"
-      primaryTable: 'tmp_ocorrencia_produto'
+      table: "ocorrencia_produto%20join%20produto_outro%20on%20(produto_outro.id_produto_outro%3Docorrencia_produto.id_produto_outro)%20left%20join%20ocorrencia%20on%20(ocorrencia_produto.id_ocorrencia%3Docorrencia.id_ocorrencia)"
+      primaryTable: 'ocorrencia_produto'
+      parameters: "ocorrencia_produto.id_ocorrencia%3D'" + idOcorrencia + "'"
+      insertNewType: 'produto_outro'
       fields:
         id_ocorrencia_produto:
           columnName: "Identificador"
-          tableName: "id_ocorrencia_produto"
           isVisible: false
-          validation: null
-        nro_ocorrencia:
-          columnName: " "
-          tableName: "nro_ocorrencia"
-          defaultValue: nroOcorrencia
-          isVisible: false
-          validation: null
         nome:
-          columnName: "Substância - Nº Onu - CR"
-          tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
-          primaryField: "id_produto"
-          validation: null
-          searchData: subjects
+          columnName: "Substância"
+          tableName: "trim(nome) as nome"
+          primaryField: "id_produto_outro"
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+          searchData: productsOutro
         quantidade:
           columnName: "Qtd."
-          tableName: "quantidade"
-          validation: null
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            else if isNaN(value)
+              text = 'Não é permitido letras ou caracteres especiais.'
+            return text
         unidade_medida:
           columnName: "Unidade"
-          tableName: "unidade_medida"
-          validation: null
+          selectArray:[
+            value :"m3"
+            text: "Metro Cúbico (m3)"
+          ,
+            value : "l"
+            text : "Litro (L)"
+          ,
+            value: "t"
+            text: "Tonelada (T)"
+          ,
+            value:"kg"
+            text: "Quilograma (Kg)"
+          ]
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+        id_ocorrencia:
+          columnName: "Nro. Ocorrencia"
+          tableName: "ocorrencia_produto.id_ocorrencia"
+          defaultValue: idOcorrencia
+          isVisible: false
+
       uniqueField:
         field: "id_ocorrencia_produto"
-        insertable: false
     )
+  else
+    onuTable = new H5.Table (
+      container: "productOnuTable"
+      url: H5.Data.restURL
+      registUpdate: true
+      table: "tmp_ocorrencia_produto%20join%20produto_onu%20on%20(produto_onu.id_produto_onu%3Dtmp_ocorrencia_produto.id_produto_onu)"
+      primaryTable: 'tmp_ocorrencia_produto'
+      parameters: "nro_ocorrencia%3D'" + nroOcorrencia + "'"
+      fields:
+        id_ocorrencia_produto:
+          columnName: "Identificador"
+          isVisible: false
+        nro_ocorrencia:
+          columnName: " "
+          defaultValue: nroOcorrencia
+          isVisible: false
+        nome:
+          columnName: "Substância - Nº ONU - CR"
+          tableName: "trim(nome) || '-' || trim(num_onu) || '-' || trim(classe_risco) as nome"
+          primaryField: "id_produto_onu"
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+          searchData: productsOnu
+        quantidade:
+          columnName: "Qtd."
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            else if isNaN(value)
+              text = 'Não é permitido letras ou caracteres especiais.'
+            return text
+        unidade_medida:
+          columnName: "Unidade"
+          selectArray:[
+            value :"m3"
+            text: "Metro Cúbico (m3)"
+          ,
+            value : "l"
+            text : "Litro (L)"
+          ,
+            value: "t"
+            text: "Tonelada (T)"
+          ,
+            value:"kg"
+            text: "Quilograma (Kg)"
+          ]
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+      uniqueField:
+        field: "id_ocorrencia_produto"
+    )
+
+    otherTable = new H5.Table (
+      container: "productOutroTable"
+      url: H5.Data.restURL
+      registUpdate: true
+      table: "tmp_ocorrencia_produto%20join%20produto_outro%20on%20(produto_outro.id_produto_outro%3Dtmp_ocorrencia_produto.id_produto_outro)"
+      primaryTable: 'tmp_ocorrencia_produto'
+      parameters: "nro_ocorrencia%3D'" + nroOcorrencia + "'"
+      insertNewType: 'produto_outro'
+      fields:
+        id_ocorrencia_produto:
+          columnName: "Identificador"
+          isVisible: false
+        nro_ocorrencia:
+          columnName: " "
+          defaultValue: nroOcorrencia
+          isVisible: false
+        nome:
+          columnName: "Substância"
+          tableName: "trim(nome) as nome"
+          primaryField: "id_produto_outro"
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+          searchData: productsOutro
+        quantidade:
+          columnName: "Qtd."
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            else if isNaN(value)
+              text = 'Não é permitido letras ou caracteres especiais.'
+            return text
+        unidade_medida:
+          columnName: "Unidade"
+          selectArray:[
+            value :"m3"
+            text: "Metro Cúbico (m3)"
+          ,
+            value : "l"
+            text : "Litro (L)"
+          ,
+            value: "t"
+            text: "Tonelada (T)"
+          ,
+            value:"kg"
+            text: "Quilograma (Kg)"
+          ]
+          validation: (value)->
+            text = ''
+            if value is '' or value is 'Empty'
+              text = 'Valor não pode ser vazio'
+            return text
+      uniqueField:
+        field: "id_ocorrencia_produto"
+      # afterFinish: ()->
+      #   if ()
+    )
+
+  #Upload file on form, getting value from
+  $("#uploadButton").on 'click', () ->
+  # sendNroComunicado = $('#nroComunicado').html()
+    $('#inputFile').click();
+  # sendNroComunicado = $('iframe[name=form_frame]').contents().find('#nroComunicado').html()
+  # $('iframe[name=form_frame]').contents().find('#sendNroComunicado').val(sendNroComunicado)
+
+  $("#outrasMedidas").on 'click', () ->
+    if $(@).is ":checked"
+      $("#inputMedidasTomadas").removeAttr("disabled")
+    else      
+      $("#inputMedidasTomadas").attr("disabled", "disabled")
+  
+  #Disabilitado por padrão, caso não preenchido.
+  if $("#inputMedidasTomadas").val().trim() == ""
+    $("#inputMedidasTomadas").attr("disabled", "disabled")  
+
+  #Não mostrar as opções de produtos caso estes não estiver cadastrado.
+  if $("#semProduto").is ":checked"
+    $("#myTable").attr "style" , "display:none"
+    $("#productsInfo").attr "style" , "display:none"
+  else
+    $("#myTable").removeAttr "style" 
+    $("#productsInfo").removeAttr "style"   
+
+  if !parent.H5.logged_in
+    $("#inputNomeInformante").removeAttr("disabled")
+    $("#inputEmailInformante").removeAttr("disabled")
+
+
+
+
+
+
+

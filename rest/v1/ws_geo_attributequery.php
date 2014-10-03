@@ -21,11 +21,12 @@ error_reporting(E_ERROR);
 $table = $_REQUEST['table'];
 $fields = isset($_REQUEST['fields']) ? $_REQUEST['fields'] : '*';
 $parameters = isset($_REQUEST['parameters']) ? !empty($_REQUEST['parameters']) ? " where " . $_REQUEST['parameters'] : '' : '';
+$group = isset($_REQUEST['group']) ? " group by " . $_REQUEST['group'] : '';
 $order = isset($_REQUEST['order']) ? " order by " . $_REQUEST['order'] : '';
 $limit = isset($_REQUEST['limit']) ? " limit " . $_REQUEST['limit'] : '';
 
 # Perform the query
-$sql = "select " . $fields . " from " . $table . $parameters . $order . $limit;
+$sql = "select " . $fields . " from " . $table . $parameters . $group . $order . $limit;
 $db = pgConnection();
 $statement=$db->prepare( $sql );
 $statement->execute();

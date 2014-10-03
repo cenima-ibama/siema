@@ -5,8 +5,11 @@ body {
   margin: 0px;
   font-size: 12px;
   padding: 0px;
+  width: 100%;
+  height: 100%;
   /*-webkit-font-smoothing: antialiased;*/
 }
+
 h1,h2,h3,h4,h5 {
   margin: 0;
   line-height: inherit;
@@ -82,7 +85,7 @@ input.search{
   color: #9ba3ad;
 }
 .navbar-inverse .notification-dropdown .count {
-  position: absolute;
+  position: relative;
   top: 1px;
   left: 58%;
   background: rgb(53, 186, 196);
@@ -494,8 +497,6 @@ input.search{
 }
 /* end skin changer*/
 
-
-
 /* responsive */
 @media (max-width: 1020px) {
   .content {
@@ -573,13 +574,203 @@ input.search{
     transition: none;
 }
 
-.modal
-{
+.modal {
     overflow: hidden;
     bottom: auto;
     right: auto;
 }
-.modal-dialog{
+.modal-dialog {
     margin-right: 0;
     margin-left: 0;
+}
+
+.input-nano {
+  width: 25px;
+}
+
+.input-micro {
+  width: 42px;
+}
+
+hr {
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-color: #E0DFDF -moz-use-text-color #FEFEFE;
+  border-image: none;
+  border-left: 0 none;
+  border-right: 0 none;
+  border-style: solid none;
+  border-width: 1px 0;
+  margin: 20px 0;
+}
+footer {
+  background-color: #111111;
+  border-radius: 0 0 0 0;
+  min-height: 24px;
+  padding: 10px 20px;
+  margin: 20px 0 0;
+  position: relative;
+  bottom:-2px;
+  left:0;
+  right:0;
+  z-index: 20;
+}
+footer a {
+  color: #FCFCFC;
+}
+
+#navbar {
+  z-index: 1030;
+  margin: 0 auto;
+  /*position: absolute;*/
+  .brand {
+    padding: 8px 30px;
+  }
+}
+
+.login {
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  top: 0;
+}
+
+.form-login {
+  background: #FFF;
+  border-radius: 6px;
+  box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.25);
+  padding: 20px 30px;
+  color: #000000;
+  margin: 100px auto;
+  overflow: hidden;
+  max-width: 300px;
+}
+
+.radio input[type="radio"], .checkbox input[type="checkbox"] {
+  float: left;
+  margin: 0 -20px;
+}
+
+.form-login legend {
+  text-align: center;
+  font-weight: bold;
+  color: #111;
+}
+
+@media (min-width: 768px) {
+  .form-horizontal .control-label {
+    width: 0;
+  }
+
+  .form-horizontal .controls {
+    margin-left: 70px;
+  }
+}
+
+.consultas {
+  position: relative;
+  /*top: 42px;*/
+  background-color: #F7F7F7;
+  z-index: 2;
+  width: 100%;
+}
+@media (max-width: 979px) {
+  .consultas {
+    top: 53px;
+  }
+}
+
+.consultas-content {
+  text-align: center;
+  margin: 2% 2% 4%;
+}
+@media (max-width: 979px) {
+  .consultas-content {
+    margin: 6% 2% 4%;
+  }
+}
+
+/*Manager button*/
+
+#manage1{
+  /*margin: 10px;*/
+  float: left;
+  width: 100%;
+
+}
+
+.form-control{
+  margin: 3px;
+}
+
+#center-cadastro{
+  margin: 3% -30% 0 25%;
+  width: 50%;
+}
+
+/* Tabela de Ocorrências */
+
+.table-ocorrencia{
+  position: relative;
+  max-height: 570px;
+  overflow-y: scroll;
+}
+
+.table-ocorrencia th, .table-ocorrencia td{
+  text-align: center;
+}
+
+/* Input Search */
+
+#search-group
+{
+  margin: 25px 0;
+  color: #BEBEBE;
+}
+
+.icon-search-filter
+{
+  position:relative;
+  left:26px;
+  top:1px;
+  z-index:999;
+}
+
+input.search-query
+{
+  border: 1px solid #D1D1D1;
+  border-radius: 20px 20px 20px 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) inset;
+  font: bold 13px Arial,Helvetica,Sans-serif;
+  padding: 6px 15px 6px 35px;
+  text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.7s ease 0s;
+  width: 150px;
+  margin: 0;
+  color: #BEBEBE;
+  /*margin-bottom: 25px;*/
+  /*height:30px;*/
+  /*padding-left:25px;*/
+}
+
+input.search-query:focus
+{
+  color: #555555;
+  width: 200px;
+}
+/*Upload File */
+
+.customFileInput input {
+  position: absolute;
+  visibility: hidden;
+  right: 10px;
+}
+.fileName{
+  max-width: 10em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

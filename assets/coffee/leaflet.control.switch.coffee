@@ -82,8 +82,8 @@ L.control.switch = L.Control.extend (
       if L.Browser.touch
         L.DomEvent
           .on(link, "click", L.DomEvent.stop)
-          .on(link, "click", @_expand, this)
           .on(link, "click", @_activeTab, this)
+          .on(link, "click", @_expand, this)
       else
         L.DomEvent
           .on(link, "mouseover", @_activeTab, this)
@@ -147,6 +147,13 @@ L.control.switch = L.Control.extend (
         @_selectedTab = newTabName
         @_selectedTabContent = newTabContent
       ), this)
+
+    # Correcting a bug on android chrome and firefox browsers, that scrolls the page down, focusing tab contents
+    if L.Browser.touch
+      L.DomEvent
+        .on(newTabName, "click", L.DomEvent.stop)
+        .on(newTabName, "click", @_activeTab, this)
+        .on(newTabName, "click", @_expand, this)
 
     return
 
@@ -283,7 +290,11 @@ L.control.switch = L.Control.extend (
 
   _expand: ->
     L.DomUtil.addClass @_form, "switch-control-layers-expanded"
+    if (H5.Map.minimap)
+      H5.Map.minimap.toggleMinimap(false);
 
   _collapse: ->
     @_form.className = @_form.className.replace(" switch-control-layers-expanded", "")
+    if (H5.Map.minimap)
+      H5.Map.minimap.toggleMinimap(true);
 )

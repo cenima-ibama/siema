@@ -10,9 +10,9 @@ width: 150,
 height: 150
   },
 
-hideText: 'Hide MiniMap',
+hideText: 'Esconder Minimapa',
 
-showText: 'Show MiniMap',
+showText: 'Mostrar Minimapa',
 
 //layer is the map layer to be shown in the minimap
 initialize: function (layer, options) {
@@ -251,6 +251,14 @@ initialize: function (layer, options) {
     }
 
     return this._minimized;
+  },
+
+  toggleMinimap: function (toggle){
+    if (toggle) {
+        this._restore();
+    } else {
+      this._minimize();
+    }
   }
 });
 
