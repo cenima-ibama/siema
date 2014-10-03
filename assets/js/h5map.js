@@ -77,148 +77,150 @@
 
   H5.Map.base.attributionControl.setPrefix("Desenvolvido com: &copy; Leaflet | Hexgis Hash5. map data: &copy; OpenStreetMap</a> contributors | Image courtesy of, Earthstar Geographics  SIO, | &copy; 2014 Microsoft Corporation, &copy; 2014 Nokia");
 
-  geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms";
+  geoserverUrl = "http://siscom.ibama.gov.br/geoserver/cgema/wms";
+  geoserverUrl2 = "http://siscom.ibama.gov.br/geoserver/csr/wms";
+  
 
-  terrasIndigenas = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/web/", {
-    layers: "cgema:Terras_Indigenas",
+  terrasIndigenas = new L.TileLayer.WMS(geoserverUrl, {
+    layers: "cgema:terras_indigenas",
     format: "image/png",
     transparent: true
   });
 
-  ucSustentavel = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms", {
-    layers: "csr:unidade_uso_sustentavel",
+  ucSustentavel = new L.TileLayer.WMS(geoserverUrl2, {
+    layers: "csr:unidades_uso_sustentavel",
     format: "image/png",
     transparent: true
   });
 
-  ucIntegral = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms", {
-    layers: "csr:unidade_protecao_integral",
+  ucIntegral = new L.TileLayer.WMS(geoserverUrl2, {
+    layers: "csr:unidades_protecao_integral",
     format: "image/png",
     transparent: true
   });
 
-  ucFederacao = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms", {
-    layers: "csr:unidade_federacao",
+  ucFederacao = new L.TileLayer.WMS(geoserverUrl2, {
+    layers: "csr:unidades_federacao",
     format: "image/png",
     transparent: true
   });
 
   blocoExploratorio = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:bloco_exploratorio",
+    layers: "cgema:blocos_exploratorios",
     format: "image/png",
     transparent: true
   });
 
   biomaIBGE = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:bioma_ibge",
+    layers: "cgema:bioma_IBGE",
     format: "image/png",
     transparent: true
   });
 
   portoTerminal = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:porto_terminal",
+    layers: "cgema:portos_e_terminais",
     format: "image/png",
     transparent: true
   });
 
   marisma = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:marisma",
+    layers: "cgema:marisma",
     format: "image/png",
     transparent: true
   });
 
   restinga = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:restinga",
+    layers: "cgema:restinga",
     format: "image/png",
     transparent: true
   });
 
   recifes = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:recife_total",
+    layers: "cgema:recifes",
     format: "image/png",
     transparent: true
   });
 
   mangues = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:mangue_siema",
+    layers: "cgema:mangues_SIEMA",
     format: "image/png",
     transparent: true
   });
 
   lagunas = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:laguna",
+    layers: "cgema:lagunas",
     format: "image/png",
     transparent: true
   });
 
   estuario = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:estuario",
+    layers: "cgema:estuarios",
     format: "image/png",
     transparent: true
   });
 
   duna = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:duna",
+    layers: "cgema:dunas",
     format: "image/png",
     transparent: true
   });
 
   costao = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:costao",
+    layers: "cgema:costao",
     format: "image/png",
     transparent: true
   });
 
   banhado = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:banhado",
+    layers: "cgema:banhado",
     format: "image/png",
     transparent: true
   });
 
   hidrografia = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:Hidrografia",
+    layers: "cgema:hidrografia",
     format: "image/png",
     transparent: true
   });
 
   eixoDutoviario = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:eixo_dutoviario",
+    layers: "cgema:eixos_dutoviarios",
     format: "image/png",
     transparent: true
   });
 
   eixoFerroviario = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:eixo_ferroviario",
+    layers: "cgema:eixos_ferroviarios",
     format: "image/png",
     transparent: true
   });
 
   eixoRodoviario = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:eixo_rodoviario",
+    layers: "cgema:eixos_rodoviarios",
     format: "image/png",
     transparent: true
   });
 
   estacaoFerroviaria = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:estacao_ferroviaria",
+    layers: "cgema:estacoes_ferroviarias",
     format: "image/png",
     transparent: true
   });
 
   refinaria = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:refinaria",
+    layers: "cgema:refinaria",
     format: "image/png",
     transparent: true
   });
 
   ponteTunel = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cemam:ponte_tunel",
+    layers: "cgema:pontes_e_tuneis",
     format: "image/png",
     transparent: true
   });
 
-  marTerritorial = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/web/", {
-    layers: " cgema:Mar_Territorial",
+  marTerritorial = new L.TileLayer.WMS(geoserverUrl, {
+    layers: "cgema:mar_territorial",
     format: "image/png",
     transparent: true
   });
