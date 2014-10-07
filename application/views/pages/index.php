@@ -69,8 +69,8 @@
                       <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
                     <iframe name="login_Form_Empresa" src="' . base_url() . '/index.php/login/login_empresa" frameborder="0" style="width:100%; height: 135px;"></iframe>
                     <div class="block text-center">
-                      <a id="btnCadastrarCTF" class="btn btn-success span5" data-toggle="tab" style="font-size:small;" enabled="enabled">Acessar</a>
-                      <button id="btnLogar" class="btn btn-success span5" onClick="window.top.login_Form_Empresa.document.loginForm.submit();">Logar</button>
+                      <button id="btnLogar" class="btn btn-success span5" onClick="window.top.login_Form_Empresa.document.loginForm.submit();" style="left: 51%; position: relative;">Logar</button>
+                      <br /><a id="btnCadastrarCTF" data-toggle="tab" style="position: relative; left: -47%; top: -1em">Primeiro acesso</a>
                     </div>
                   </div>
                   <div id="divDenuncia" class="span4">
