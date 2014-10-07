@@ -11,7 +11,9 @@
         <div class="row-fluid">
           <div class="span6" style="text-align:center;">
             <p style="text-align:justify; margin-top: 10px">
-            <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0">
+            <!-- <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0"> -->
+            <img class="pull-left" src="../siema/assets/img/logo_image.jpg" style="margin: 10px 10px 2px 0">
+
             Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental,  ligue no Linha Verde (<strong>0800-618080</strong>) ou clique no botão abaixo.
             </p>
             <div class="row-fluid">
@@ -19,12 +21,12 @@
             </div>
           </div>
           <div class="span6" style="text-align:center;">
-            <p style="text-align:justify; margin-top: 10px">
-            <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0">
+            <p style="text-align:justify; margin-top: 40px; margin-bottom: 40px">
+            <!-- <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0"> -->
             Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem, clique no botão abaixo.
             </p>
             <div class="row-fluid">
-              <a id="btnBeginForm" class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 10px">Acidente Ambiental</a>
+              <a id="btnBeginForm" class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 29px">Acidente Ambiental</a>
             </div>
           </div>
         </div>
