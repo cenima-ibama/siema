@@ -410,7 +410,8 @@
         <div class="item">
           <label>Ano</label>
           <select id="yearsSlct" class="selectpicker" data-width="80px" data-size="6" name="years">
-            <option value="2013" selected="selected">2013</option>
+            <option value="2014" selected="selected">2014</option>
+            <option value="2013">2013</option>
             <option value="2012">2012</option>
             <option value="2011">2011</option>
             <option value="2010">2010</option>
@@ -864,7 +865,7 @@
         <?php
           }
         ?>
-
+<!--
         <?php
           //Only administrator users acess this options.
           if ($profilUser == 1) {
@@ -881,7 +882,7 @@
         <?php
           }
         ?>
-
+-->
         </div>
       </div>
     </div>

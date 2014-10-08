@@ -22,7 +22,7 @@
   </head>
   <body>
     <?php
-      if(isset($login_fail_msg) and ($login_fail_msg) == 'Error with LDAP authentication.') {
+      if(isset($login_fail_msg) and ($login_fail_msg) == 'No user matched this CPF number.') {
         echo '<div class="alert alert-danger alert-block fade in" style="margin: 0 5% 10px">';
         echo '<button class="clos"e data-dismiss="alert">&times;</button>
         <p style="text-align: left;">
