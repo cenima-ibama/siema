@@ -11,9 +11,7 @@
         <div class="row-fluid">
           <div class="span6" style="text-align:center;">
             <p style="text-align:justify; margin-top: 10px">
-            <!-- <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0"> -->
-            <img class="pull-left" src="../siema/assets/img/logo_image.jpg" style="margin: 10px 10px 2px 0">
-
+            <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0">
             Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental,  ligue no Linha Verde (<strong>0800-618080</strong>) ou clique no botão abaixo.
             </p>
             <div class="row-fluid">
@@ -21,12 +19,12 @@
             </div>
           </div>
           <div class="span6" style="text-align:center;">
-            <p style="text-align:justify; margin-top: 40px; margin-bottom: 40px">
-            <!-- <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0"> -->
+            <p style="text-align:justify; margin-top: 10px">
+            <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0">
             Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem, clique no botão abaixo.
             </p>
             <div class="row-fluid">
-              <a id="btnBeginForm" class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 29px">Acidente Ambiental</a>
+              <a id="btnBeginForm" class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 10px">Acidente Ambiental</a>
             </div>
           </div>
         </div>
@@ -71,8 +69,8 @@
                       <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
                     <iframe name="login_Form_Empresa" src="' . base_url() . '/index.php/login/login_empresa" frameborder="0" style="width:100%; height: 135px;"></iframe>
                     <div class="block text-center">
-                      <button id="btnLogar" class="btn btn-success span5" onClick="window.top.login_Form_Empresa.document.loginForm.submit();" style="left: 51%; position: relative;">Logar</button>
-                      <br /><a id="btnCadastrarCTF" data-toggle="tab" style="position: relative; left: -47%; top: -1em">Primeiro acesso</a>
+                      <a id="btnCadastrarCTF" class="btn btn-success span5" data-toggle="tab" style="font-size:small;" enabled="enabled">Acessar</a>
+                      <button id="btnLogar" class="btn btn-success span5" onClick="window.top.login_Form_Empresa.document.loginForm.submit();">Logar</button>
                     </div>
                   </div>
                   <div id="divDenuncia" class="span4">
@@ -410,7 +408,8 @@
         <div class="item">
           <label>Ano</label>
           <select id="yearsSlct" class="selectpicker" data-width="80px" data-size="6" name="years">
-            <option value="2013" selected="selected">2013</option>
+            <option value="2014" selected="selected">2014</option>
+            <option value="2013">2013</option>
             <option value="2012">2012</option>
             <option value="2011">2011</option>
             <option value="2010">2010</option>
@@ -699,8 +698,8 @@
           $profilUser = $this->session->userdata('profile_user');
 
           // //Only administrator users acess this option.
-          // if($profilUser == 1)
-          //   echo '<li class="active"><a href="#" id="btn-manage1">Cadastro de Pessoas</a></li>';
+          if($profilUser == 1)
+            echo '<li class="active"><a href="#" id="btn-manage1">Cadastro de Pessoas</a></li>';
 
           //Active link if is administrator user.
           if($profilUser == 1 || $profilUser == 2)
