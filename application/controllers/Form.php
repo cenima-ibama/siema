@@ -1425,7 +1425,7 @@ class Form extends CI_Controller {
 
     function do_upload($form_data) {
         $path = $form_data['comunicado'];
-        $finalPath = "/var/www/uploads/" . $path;
+        $finalPath = "/var/www/siema/assets/uploads/" . $path;
 
         //verify if path already exists, remove and create folder.
         if (is_dir($finalPath)) {
@@ -1436,11 +1436,12 @@ class Form extends CI_Controller {
             }
 
             rmdir($finalPath);
-            if (!is_dir($finalPath))
+            if (!file_exists($finalPath)) {
                 mkdir($finalPath);
-        } else
+            }
+        } else {
             mkdir($finalPath);
-
+        }
         $config['upload_path'] = $finalPath;
         $config['allowed_types'] = 'gif|jpg|png|doc|jpeg|doc|xls|xlsx|pdf';
         $config['max_size'] = '15000';

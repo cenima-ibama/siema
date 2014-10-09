@@ -29,8 +29,8 @@
                 if ($this->session->userdata('logged_in')/* and in_array($this->session->userdata('username'), $this->userEnableList) */) {
                     echo '<li class=""><a id="btn-consult" href="#"><i class="icon-search icon-white"></i> Consultas </a></li>';
 
-                    // if ($profileUser == 1 || $profileUser == 2)
-                        // echo '<li><a id="btn-manag" href="#"><i class="icon-list-alt icon-white"></i> Cadastros </a></li>';
+                    if ($profileUser == 1 || $profileUser == 2)
+                        echo '<li><a id="btn-manag" href="#"><i class="icon-list-alt icon-white"></i> Cadastros </a></li>';
                 }
                 //  else  {
                 //   echo '<li class="" style="display:none;"><a id="btn-consult" href="#"><i class="icon-search icon-white"></i> Consultas </a></li>';

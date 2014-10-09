@@ -1668,7 +1668,7 @@
             values = values + firstPoint.lng + " " + firstPoint.lat + ")', " + _this.options.srid + "))";
             values = values + ",now()";
             sql = "(" + columns + ") values (" + values + ")";
-            rest = new H5.Rest({
+            return rest = new H5.Rest({
               url: H5.Data.restURL,
               fields: sql,
               table: "tmp_pol",
@@ -1698,7 +1698,7 @@
             values = values + ")', " + _this.options.srid + ")";
             values = values + ",now()";
             sql = "(" + columns + ") values (" + values + ")";
-            rest = new H5.Rest({
+            return rest = new H5.Rest({
               url: H5.Data.restURL,
               fields: sql,
               table: "tmp_lin",
@@ -1721,7 +1721,7 @@
             values = values + ", " + _this.options.srid + ")";
             values = values + ",now()";
             sql = "(" + columns + ") values (" + values + ")";
-            rest = new H5.Rest({
+            return rest = new H5.Rest({
               url: H5.Data.restURL,
               fields: sql,
               table: "tmp_pol",
@@ -1744,46 +1744,14 @@
             values = values + layer._mRadius / 100010 + ")";
             values = values + ",now()";
             sql = "(" + columns + ") values (" + values + ")";
-            rest = new H5.Rest({
+            return rest = new H5.Rest({
               url: H5.Data.restURL,
               fields: sql,
               table: "tmp_pol",
               restService: "ws_insertquery.php"
             });
           } else if (type === 'marker') {
-            if ((_this.options.uniquePoint == null) || (_this.options.uniquePoint === true)) {
-              layer._leaflet_id = ++_this.idMarker;
-              columns = "";
-              values = "";
-              $.each(_this.options.tables[type].fields, function(key, field) {
-                if (_this.options.tables[type].defaultValues[field]) {
-                  columns = columns + field + ",";
-                  return values = values + _this.options.tables[type].defaultValues[field] + ",";
-                }
-              });
-              columns = columns + "shape,dt_registro";
-              values = values + "ST_SetSRID(ST_MakePoint(";
-              values = values + layer._latlng.lng + "," + layer._latlng.lat + ")," + _this.options.srid + ")";
-              values = values + ",now()";
-              sql = "(" + columns + ") values (" + values + ")";
-              rest = new H5.Rest({
-                url: H5.Data.restURL,
-                fields: sql,
-                table: "tmp_pon",
-                restService: "ws_insertquery.php"
-              });
-            } else {
-              layer._leaflet_id = _this.options.uniquePoint._leaflet_id;
-              sql = "shape=ST_SetSRID(ST_MakePoint(" + layer._latlng.lng + "," + layer._latlng.lat + ")," + _this.options.srid + ")";
-              sql = sql + ",dt_registro=now()";
-              rest = new H5.Rest({
-                url: H5.Data.restURL,
-                fields: sql,
-                table: "tmp_pon",
-                parameters: "id_tmp_pon%3D" + layer._leaflet_id,
-                restService: "ws_updatequery.php"
-              });
-            }
+            layer._leaflet_id = ++_this.idMarker;
             sql = "ST_Intersects(br_mar.geom, ST_SetSRID(ST_MakePoint(";
             sql = sql + layer._latlng.lng + "," + layer._latlng.lat + ")," + _this.options.srid + "))";
             rest = new H5.Rest({
@@ -1791,27 +1759,59 @@
               fields: sql,
               table: "br_mar"
             });
-            if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
-              if (rest.data[0].st_intersects) {
+            if (rest.data[0].st_intersects) {
+              if ((_this.options.uniquePoint == null) || (_this.options.uniquePoint === true)) {
+                columns = "";
+                values = "";
+                $.each(_this.options.tables[type].fields, function(key, field) {
+                  if (_this.options.tables[type].defaultValues[field]) {
+                    columns = columns + field + ",";
+                    return values = values + _this.options.tables[type].defaultValues[field] + ",";
+                  }
+                });
+                columns = columns + "shape,dt_registro";
+                values = values + "ST_SetSRID(ST_MakePoint(";
+                values = values + layer._latlng.lng + "," + layer._latlng.lat + ")," + _this.options.srid + ")";
+                values = values + ",now()";
+                sql = "(" + columns + ") values (" + values + ")";
+                rest = new H5.Rest({
+                  url: H5.Data.restURL,
+                  fields: sql,
+                  table: "tmp_pon",
+                  restService: "ws_insertquery.php"
+                });
+              } else {
+                layer._leaflet_id = _this.options.uniquePoint._leaflet_id;
+                sql = "shape=ST_SetSRID(ST_MakePoint(" + layer._latlng.lng + "," + layer._latlng.lat + ")," + _this.options.srid + ")";
+                sql = sql + ",dt_registro=now()";
+                rest = new H5.Rest({
+                  url: H5.Data.restURL,
+                  fields: sql,
+                  table: "tmp_pon",
+                  parameters: "id_tmp_pon%3D" + layer._leaflet_id,
+                  restService: "ws_updatequery.php"
+                });
+              }
+              if ((document.getElementById('inputLat') != null) && (document.getElementById('inputLng') != null)) {
                 $("#inputLat").val(_this.decimalDegree2DMS(layer._latlng.lat));
                 $("#inputLng").val(_this.decimalDegree2DMS(layer._latlng.lng));
-              } else {
-                $("#inputLat").val("");
-                $("#inputLng").val("");
-                $('#dropdownUF option:eq(0)').prop('selected', true);
-                $('#dropdownMunicipio option:eq(0)').prop('selected', true);
-                $('#inputEndereco').val("");
               }
+              if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
+                return _this.drawnItems.addLayer(layer);
+              } else {
+                _this.drawnItems.removeLayer(_this.options.uniquePoint);
+                _this.options.uniquePoint = layer;
+                return _this.drawnItems.addLayer(_this.options.uniquePoint);
+              }
+            } else {
+              --_this.idMarker;
+              popup = L.popup().setLatLng(layer._latlng).setContent('<p>O ponto está fora da área limite do Brasil!</p>').openOn(_this.options.map);
+              $("#inputLat").val("");
+              $("#inputLng").val("");
+              $('#dropdownUF option:eq(0)').prop('selected', true);
+              $('#dropdownMunicipio option:eq(0)').prop('selected', true);
+              return $('#inputEndereco').val("");
             }
-          }
-          if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
-            return _this.drawnItems.addLayer(layer);
-          } else if (rest.data[0].st_intersects) {
-            _this.drawnItems.removeLayer(_this.options.uniquePoint);
-            _this.options.uniquePoint = layer;
-            return _this.drawnItems.addLayer(_this.options.uniquePoint);
-          } else {
-            return popup = L.popup().setLatLng(layer._latlng).setContent('<p>O ponto está fora da área limite do Brasil!</p>').openOn(_this.options.map);
           }
         };
       })(this));

@@ -85,118 +85,130 @@ class Auth extends CI_Controller {
             // CODE FOR ACCESSING CNT DATABASE
 
 
+            $data = array();
+
             // Selecting the num_pessoa from the cnt database
 
-            $conn = oci_connect('sisreg', 'sisregdes', 'exd01-scan.ibama.gov.br/dsnv_manut');
-            if (!$conn) {
-                $e = oci_error();
-                $this->firephp->log($e);
-            } // end iF;
+            if($_POST['inputUsername']) {
 
-            // Creating pl/sql function
-            $sql = 'begin
+                $conn = oci_connect('sisreg', 'sisregdes', 'exd01-scan.ibama.gov.br/dsnv_manut');
+                if (!$conn) {
+                    $e = oci_error();
+                    $this->firephp->log($e);
+                } // end iF;
 
-
-                        :erro := sisreg.pkg_pessoa_base.sel_pessoa( p_cursor        => :p_cursor
-                                                                   ,p_cpf_cnpj_nome => :p_cpf_cnpj_nome );
-                     end;';
-
-            if (!$p_str = oci_parse($conn,$sql)) {
-                $this->firephp->log(oci_error($conn));
-                oci_close($conn);
-            };
-
-            $p_cpf_cnpj_nome = $_POST[ 'inputUsername' ];
-
-            // Data Binding in variables
-            oci_bind_by_name( $p_str, ":p_cpf_cnpj_nome", $p_cpf_cnpj_nome, 20);
-
-            // Data Binding out variables
-            $p_cursor = oci_new_cursor($conn);
-            oci_bind_by_name($p_str,':p_cursor',$p_cursor,-1,OCI_B_CURSOR);
-            oci_bind_by_name($p_str,":erro",$erro,250);
-
-            // Execute
-            $r = oci_execute($p_str,OCI_DEFAULT);
-            if ( !$r ) {
-                $e = oci_error($p_str);
-                oci_close($conn);
-                $this->firephp->log($e);
-            }
-
-            //Execute Cursor
-            if ( !oci_execute($p_cursor,OCI_DEFAULT) ) {
-                $e = oci_error($p_str);
-                oci_free_statement($p_str);
-                oci_close($conn);
-                $this->firephp->log($e);
-            }
+                // Creating pl/sql function
+                $sql = 'begin
 
 
-            oci_fetch_all($p_cursor, $data);
+                            :erro := sisreg.pkg_pessoa_base.sel_pessoa( p_cursor        => :p_cursor
+                                                                       ,p_cpf_cnpj_nome => :p_cpf_cnpj_nome );
+                         end;';
 
-            $this->firephp->log($data);
+                if (!$p_str = oci_parse($conn,$sql)) {
+                    $this->firephp->log(oci_error($conn));
+                    oci_close($conn);
+                };
 
+                $p_cpf_cnpj_nome = $_POST[ 'inputUsername' ];
 
-            // Actually authenticating the user
+                // Data Binding in variables
+                oci_bind_by_name( $p_str, ":p_cpf_cnpj_nome", $p_cpf_cnpj_nome, 20);
 
-            $sql = 'begin
-                        :erro := sisreg.pkg_pessoa_base.autenticar( p_num_pessoa        => :p_num_pessoa
-                                                                   ,p_senha             => :p_senha
-                                                                   ,p_seq_app_modulo    => :p_seq_app_modulo);
-                     end;';
+                // Data Binding out variables
+                $p_cursor = oci_new_cursor($conn);
+                oci_bind_by_name($p_str,':p_cursor',$p_cursor,-1,OCI_B_CURSOR);
+                oci_bind_by_name($p_str,":erro",$erro,250);
 
-            if (!$p_str = oci_parse($conn,$sql)) {
-                $this->firephp->log(oci_error($conn));
-                oci_close($conn);
-            };
-
-            $p_senha = $_POST[ 'inputPassword' ];
-            $num_pessoa = (int) $data['NUM_PESSOA'][0];
-            $p_seq_app_modulo = 10144;  // Our app_modulo squence
-
-            // Data Binding in variables
-            oci_bind_by_name( $p_str, ":p_num_pessoa", $num_pessoa );
-            oci_bind_by_name( $p_str, ":p_senha", $p_senha );
-
-            // Data Binding out variables
-            oci_bind_by_name($p_str,':p_seq_app_modulo',$p_seq_app_modulo,25);
-            oci_bind_by_name($p_str,":erro",$erro,250);
-
-            // Execute
-            $r = oci_execute($p_str,OCI_DEFAULT);
-            if ( !$r ) {
-                $e = oci_error($p_str);
-                oci_close($conn);
-                $this->firephp->log($e);
-            }
-
-            // $this->firephp->log($p_seq_app_modulo);
-
-            oci_free_statement($p_cursor);
-            oci_free_statement($p_str);
-            oci_close($conn);
-
-
-            if($p_seq_app_modulo == 10144) {
-                $userArray = array(
-                    'logged_in' => TRUE,
-                    'name'      => ucwords(strtolower($data['Nome'][0])),
-                    'cpf'       => $data['CNPJ_CPF'][0]
-                    );
-                $this->session->set_userdata($userArray);
-                if($this->session->flashdata('tried_to')) {
-                    redirect($this->session->flashdata('tried_to'));
-                } else {
-                    $this->load->view('pages/login_ibama');
+                // Execute
+                $r = oci_execute($p_str,OCI_DEFAULT);
+                if ( !$r ) {
+                    $e = oci_error($p_str);
+                    oci_close($conn);
+                    $this->firephp->log($e);
                 }
 
-            } else {
-                $this->load->view('pages/login_empresa');
+                //Execute Cursor
+                if ( !oci_execute($p_cursor,OCI_DEFAULT) ) {
+                    $e = oci_error($p_str);
+                    oci_free_statement($p_str);
+                    oci_close($conn);
+                    $this->firephp->log($e);
+                }
+                oci_fetch_all($p_cursor, $data);
+
+                $this->firephp->log($data);
             }
 
-            // CODE FOR ACCESSING CNT DATABASE
+            if($data && $data['NUM_PESSOA'] && $data['NUM_PESSOA'][0]) {
 
+                // Actually authenticating the user
+
+                $sql = 'begin
+                            :erro := sisreg.pkg_pessoa_base.autenticar( p_num_pessoa        => :p_num_pessoa
+                                                                       ,p_senha             => :p_senha
+                                                                       ,p_seq_app_modulo    => :p_seq_app_modulo);
+                         end;';
+
+                if (!$p_str = oci_parse($conn,$sql)) {
+                    $this->firephp->log(oci_error($conn));
+                    oci_close($conn);
+                };
+
+                $p_senha = $_POST[ 'inputPassword' ];
+                $num_pessoa = (int) $data['NUM_PESSOA'][0];
+                $p_seq_app_modulo = 10144;  // Our app_modulo squence
+
+                // Data Binding in variables
+                oci_bind_by_name( $p_str, ":p_num_pessoa", $num_pessoa );
+                oci_bind_by_name( $p_str, ":p_senha", $p_senha );
+
+                // Data Binding out variables
+                oci_bind_by_name($p_str,':p_seq_app_modulo',$p_seq_app_modulo,25);
+                oci_bind_by_name($p_str,":erro",$erro,250);
+
+                // Execute
+                $r = oci_execute($p_str,OCI_DEFAULT);
+                if ( !$r ) {
+                    $e = oci_error($p_str);
+                    oci_close($conn);
+                    $this->firephp->log($e);
+                }
+
+                // $this->firephp->log($p_seq_app_modulo);
+
+                oci_free_statement($p_cursor);
+                oci_free_statement($p_str);
+                oci_close($conn);
+
+
+                if($p_seq_app_modulo == 10144) {
+                    $userArray = array(
+                        'logged_in' => TRUE,
+                        'name'      => ucwords(strtolower($data['Nome'][0])),
+                        'cpf'       => $data['CNPJ_CPF'][0],
+                        'ctf'       =>  TRUE
+                        );
+                    $this->session->set_userdata($userArray);
+                    if($this->session->flashdata('tried_to')) {
+                        $this->firephp->log($this->session->userdata('logged_in'));
+                        redirect($this->session->flashdata('tried_to'));
+                    } else {
+                        $this->firephp->log($this->session->userdata('logged_in'));
+                        $this->load->view('pages/login_empresa');
+                    }
+
+                } else {
+                    $this->load->view('pages/login_empresa', array('login_fail_msg'
+                    => 'No user matched this CPF number.'));
+                }
+
+                // CODE FOR ACCESSING CNT DATABASE
+            } else {
+                // Login FAIL
+                $this->load->view('pages/login_empresa', array('login_fail_msg'
+                    => 'No user matched this CPF number.'));
+            }
 
         } else {
             // Already logged in...
@@ -242,7 +254,7 @@ class Auth extends CI_Controller {
 
     function logout() {
 
-        if($this->session->userdata('logged_in')) {
+        if($this->session->userdata('logged_in') && !$this->session->userdata('ctf')) {
             $this->authldap->logout();
         } else {
             $this->session->set_userdata(array('logged_in' => FALSE));

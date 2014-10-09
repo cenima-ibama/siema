@@ -11,7 +11,9 @@
         <div class="row-fluid">
           <div class="span6" style="text-align:center;">
             <p style="text-align:justify; margin-top: 10px">
-            <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0">
+            <!-- <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0"> -->
+            <img class="pull-left" src="../siema/assets/img/logo_image.jpg" style="margin: 10px 10px 2px 0">
+
             Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental,  ligue no Linha Verde (<strong>0800-618080</strong>) ou clique no botão abaixo.
             </p>
             <div class="row-fluid">
@@ -19,12 +21,12 @@
             </div>
           </div>
           <div class="span6" style="text-align:center;">
-            <p style="text-align:justify; margin-top: 10px">
-            <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0">
+            <p style="text-align:justify; margin-top: 40px; margin-bottom: 40px">
+            <!-- <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0"> -->
             Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem, clique no botão abaixo.
             </p>
             <div class="row-fluid">
-              <a id="btnBeginForm" class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 10px">Acidente Ambiental</a>
+              <a id="btnBeginForm" class="btn btn-block" href="#tab2" data-toggle="tab" style="margin-top: 29px">Acidente Ambiental</a>
             </div>
           </div>
         </div>
@@ -56,7 +58,7 @@
                   <div class="span4">
                     <h4 style="text-align:center;">Comunicado do IBAMA</h4>
                     <p style="font-size:11px; text-align:justify;">Destinado aos usuários registrados no Sistema Ibama-Net.</p>
-                      <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
+                      <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p> <br />
                     <iframe name="login_Form_Ibama" src="' . base_url() . '/index.php/login/login_ibama" frameborder="0" style="width:100%; height: 135px;"></iframe>
                     <div class="block text-center">
                       <a id="btnCadastrarIbama" class="btn btn-success span5" data-toggle="tab" style="font-size:small;" disabled="disabled">Cadastrar</a>
@@ -65,12 +67,12 @@
                   </div>
                   <div class="span4">
                     <h4 style="text-align:center;">Comunicado das Empresas</h4>
-                    <p style="font-size:11px; text-align:justify;">Destinado as Empresas licenciadas pelo Ibama.</p>
+                    <p style="font-size:11px; text-align:justify;">Destinado as Empresas que queiram comunicar um acidente ambiental.</p>
                       <p style="font-size:11px; text-align:justify;">Os comunicados já enviados poderão ser atualizados a qualquer momento, para isso esteja com o n° de registro em mãos.</p>
                     <iframe name="login_Form_Empresa" src="' . base_url() . '/index.php/login/login_empresa" frameborder="0" style="width:100%; height: 135px;"></iframe>
                     <div class="block text-center">
-                      <a id="btnCadastrarCTF" class="btn btn-success span5" data-toggle="tab" style="font-size:small;" enabled="enabled">Acessar</a>
-                      <button id="btnLogar" class="btn btn-success span5" onClick="window.top.login_Form_Empresa.document.loginForm.submit();">Logar</button>
+                      <button id="btnLogar" class="btn btn-success span5" onClick="window.top.login_Form_Empresa.document.loginForm.submit();" style="left: 51%; position: relative;">Logar</button>
+                      <br /><a id="btnCadastrarCTF" data-toggle="tab" style="position: relative; left: -47%; top: -1em">Primeiro acesso</a>
                     </div>
                   </div>
                   <div id="divDenuncia" class="span4">
@@ -176,7 +178,7 @@
       </div>
 
 
-<!--            
+<!--
         <div class="tab-pane" id="tab5">
           <form id='teste'>
 
@@ -408,7 +410,8 @@
         <div class="item">
           <label>Ano</label>
           <select id="yearsSlct" class="selectpicker" data-width="80px" data-size="6" name="years">
-            <option value="2013" selected="selected">2013</option>
+            <option value="2014" selected="selected">2014</option>
+            <option value="2013">2013</option>
             <option value="2012">2012</option>
             <option value="2011">2011</option>
             <option value="2010">2010</option>
@@ -696,33 +699,33 @@
 
           $profilUser = $this->session->userdata('profile_user');
 
-          //Only administrator users acess this option.
-          if($profilUser == 1)
-            echo '<li class="active"><a href="#" id="btn-manage1">Cadastro de Pessoas</a></li>';
+          // //Only administrator users acess this option.
+          // if($profilUser == 1)
+          //   echo '<li class="active"><a href="#" id="btn-manage1">Cadastro de Pessoas</a></li>';
 
           //Active link if is administrator user.
           if($profilUser == 1 || $profilUser == 2)
           {
               //Is Administrator User.
-              if ($profilUser == 1)
-                echo '<li><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';
-              else
+              // if ($profilUser == 1)
+              //   echo '<li><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';
+              // else
                 echo '<li class="active"><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';
           }
 
           //Only administrator users acess this option.
-          if($profilUser == 1)
-          {
-              echo '<li><a href="#" id="btn-manage3">Gerência de Regras</a></li>';
-              echo '<li><a href="#" id="btn-manage4">Cadastro de Órgão</a></li>';
-          }
+          // if($profilUser == 1)
+          // {
+          //     echo '<li><a href="#" id="btn-manage3">Gerência de Regras</a></li>';
+          //     echo '<li><a href="#" id="btn-manage4">Cadastro de Órgão</a></li>';
+          // }
 
         ?>
         </ul>
       </div>
       <div class="span9 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <div class="row-fluid">
-
+<!--
         <?php
           //Only administrator users acess this option.
           if ($profilUser == 1)
@@ -731,8 +734,17 @@
 
             <div id="manage1">
             <h2 class="sub-header">Cadastro de Pessoas</h2>
-            <form class="form-horizontal" role="form" id="center-cadastro">
+
+            <?php echo form_open("Auth/sel_pessoa", array("id" => "sel_pessoa", "class" => "form-horizontal", "role" => "form")); ?>
+
               <div class="form-group">
+                <div class="col-sm-10">
+                  <label for="inputCPF" class="col-sm-2 control-label">CPF</label>
+                  <input id="searchCPF" type="text" placeholder="Verificar CPF" class="form-control">
+                  <a class="btn"> <i class="icon-search icon-search-filter"></i> </a>
+                </div>
+              </div>
+              <div class="form-group" readonly="readonly">
                 <div class="item">
                   <label for="inputNome" class="col-sm-2 control-label">Nome</label>
                   <div class="col-sm-10">
@@ -740,43 +752,36 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group">
-                <label for="inputCPF" class="col-sm-2 control-label">CPF</label>
-                <div class="col-sm-10">
-                  <input type="text" class="form-control" id="inputCPF" placeholder="CPF">
-                </div>
-              </div>
-              <div class="form-group">
+              <div class="form-group" readonly="readonly">
                 <label for="inputEmail" class="col-sm-2 control-label">Email</label>
                 <div class="col-sm-10">
                   <input type="email" class="form-control" id="inputEmail" placeholder="Email">
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" readonly="readonly">
                 <label for="inputOrgao" class="col-sm-2 control-label">Órgão</label>
                 <div class="col-sm-10">
                   <input type="text" class="form-control" id="inputOrgao" placeholder="Orgao">
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" readonly="readonly">
                 <label for="inputTelefone" class="col-sm-2 control-label">Telefone</label>
                 <div class="col-sm-10">
                   <input type="text" class="form-control" id="inputTelefone" placeholder="Telefone">
                 </div>
               </div>
-              <div class="form-group"></div>
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10" style="margin: 0.5em">
                   <button type="submit" class="btn btn-default">Enviar</button>
                 </div>
               </div>
-            </form>
+            <? echo form_close();?>
             </div>
 
         <?php
           }
         ?>
-
+-->
         <?php
           //Only administrator or validator users acess this option.
           if ($profilUser == 1 || $profilUser == 2 )
@@ -787,11 +792,12 @@
               <input id="searchInput" type="text" placeholder="Search..." size="40" name="q">
             </form> -->
 
+
             <form class="navbar-form form-search">
               <div id="search-group" class="pull-right">
                 <i class="icon-search icon-search-filter"></i>
-                  <input id="searchInput" type="text" placeholder="Filtrar ocorrência..." class="search-query">
-                  <!-- <button class="btn">Search</button> -->
+                <input id="searchInput" type="text" placeholder="Filtrar ocorrência..." class="search-query">
+                <!-- <button class="btn">Search</button> -->
               </div>
             </form>
 
@@ -859,7 +865,7 @@
         <?php
           }
         ?>
-
+<!--
         <?php
           //Only administrator users acess this options.
           if ($profilUser == 1) {
@@ -876,7 +882,7 @@
         <?php
           }
         ?>
-
+-->
         </div>
       </div>
     </div>
