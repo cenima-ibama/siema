@@ -268,45 +268,8 @@ class H5.Draw
           restService: "ws_insertquery.php"
         )
       else if (type is 'marker')
-        if (!@.options.uniquePoint?) or (@.options.uniquePoint is true)
-          layer._leaflet_id = ++@idMarker
 
-          columns = ""
-          values = ""
-
-          $.each @.options.tables[type].fields, (key,field)=>
-            if @.options.tables[type].defaultValues[field]
-              columns = columns + field + ","
-              values = values + @.options.tables[type].defaultValues[field] + ","
-
-          columns = columns + "shape,dt_registro"
-          values = values + "ST_SetSRID(ST_MakePoint("
-          values = values + layer._latlng.lng + "," + layer._latlng.lat + ")," + @.options.srid + ")"
-          values = values + ",now()"
-
-          sql = "(" + columns + ") values (" + values + ")"
-
-          rest = new H5.Rest (
-            url: H5.Data.restURL
-            fields: sql
-            table: "tmp_pon"
-            restService: "ws_insertquery.php"
-          )
-        else
-          layer._leaflet_id = @.options.uniquePoint._leaflet_id
-          sql = "shape=ST_SetSRID(ST_MakePoint(" +
-                layer._latlng.lng + "," + layer._latlng.lat + ")," +
-                @.options.srid + ")"
-
-          sql = sql + ",dt_registro=now()"
-
-          rest = new H5.Rest (
-            url: H5.Data.restURL
-            fields: sql
-            table: "tmp_pon"
-            parameters: "id_tmp_pon%3D" + layer._leaflet_id
-            restService: "ws_updatequery.php"
-          )
+        layer._leaflet_id = ++@idMarker
 
         sql = "ST_Intersects(br_mar.geom, ST_SetSRID(ST_MakePoint("
         sql = sql + layer._latlng.lng + "," + layer._latlng.lat + ")," + @.options.srid + "))"
@@ -317,30 +280,70 @@ class H5.Draw
           table: "br_mar"
         )
 
-        if document.getElementById('inputLat')? and document.getElementById('inputLng')?
-          if rest.data[0].st_intersects
+        if rest.data[0].st_intersects
+          if (!@.options.uniquePoint?) or (@.options.uniquePoint is true)
+
+            columns = ""
+            values = ""
+
+            $.each @.options.tables[type].fields, (key,field)=>
+              if @.options.tables[type].defaultValues[field]
+                columns = columns + field + ","
+                values = values + @.options.tables[type].defaultValues[field] + ","
+
+            columns = columns + "shape,dt_registro"
+            values = values + "ST_SetSRID(ST_MakePoint("
+            values = values + layer._latlng.lng + "," + layer._latlng.lat + ")," + @.options.srid + ")"
+            values = values + ",now()"
+
+            sql = "(" + columns + ") values (" + values + ")"
+
+            rest = new H5.Rest (
+              url: H5.Data.restURL
+              fields: sql
+              table: "tmp_pon"
+              restService: "ws_insertquery.php"
+            )
+          else
+            layer._leaflet_id = @.options.uniquePoint._leaflet_id
+            sql = "shape=ST_SetSRID(ST_MakePoint(" +
+                  layer._latlng.lng + "," + layer._latlng.lat + ")," +
+                  @.options.srid + ")"
+
+            sql = sql + ",dt_registro=now()"
+
+            rest = new H5.Rest (
+              url: H5.Data.restURL
+              fields: sql
+              table: "tmp_pon"
+              parameters: "id_tmp_pon%3D" + layer._leaflet_id
+              restService: "ws_updatequery.php"
+            )
+
+          if document.getElementById('inputLat')? and document.getElementById('inputLng')?
             $("#inputLat").val(@decimalDegree2DMS(layer._latlng.lat))
             $("#inputLng").val(@decimalDegree2DMS(layer._latlng.lng))
+
+
+          if (!@.options.uniquePoint? || (@.options.uniquePoint? and type isnt 'marker'))
+            @drawnItems.addLayer(layer)
           else
-            $("#inputLat").val ""
-            $("#inputLng").val ""
-            $('#dropdownUF option:eq(0)').prop 'selected', true
-            $('#dropdownMunicipio option:eq(0)').prop 'selected', true
-            $('#inputEndereco').val ""
-          # $("#inputLng").val(layer._latlng.lng).trigger('change')
+            @drawnItems.removeLayer(@.options.uniquePoint)
+            @.options.uniquePoint = layer
+            @drawnItems.addLayer(@.options.uniquePoint)
+        else
+          --@idMarker
 
+          popup = L.popup()
+          .setLatLng(layer._latlng)
+          .setContent('<p>O ponto está fora da área limite do Brasil!</p>')
+          .openOn(@options.map);
 
-      if (!@.options.uniquePoint? || (@.options.uniquePoint? and type isnt 'marker'))
-        @drawnItems.addLayer(layer)
-      else if rest.data[0].st_intersects
-        @drawnItems.removeLayer(@.options.uniquePoint)
-        @.options.uniquePoint = layer
-        @drawnItems.addLayer(@.options.uniquePoint)
-      else
-        popup = L.popup()
-        .setLatLng(layer._latlng)
-        .setContent('<p>O ponto está fora da área limite do Brasil!</p>')
-        .openOn(@options.map);
+          $("#inputLat").val ""
+          $("#inputLng").val ""
+          $('#dropdownUF option:eq(0)').prop 'selected', true
+          $('#dropdownMunicipio option:eq(0)').prop 'selected', true
+          $('#inputEndereco').val ""
 
 
 
