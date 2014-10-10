@@ -4,7 +4,7 @@ class Form_model extends CI_Model {
   function __construct()
   {
     parent::__construct();
-  }  
+  }
 
   public function save($form)
   {
@@ -181,9 +181,9 @@ class Form_model extends CI_Model {
       } else {
         $fields = $fields . "produto_nao_especificado,";
         $values = $values . "FALSE,";
-      }      
+      }
     }
-    
+
     if (isset($form["hasOleo"])) {
         if (isset($form['inputTipoSubstancia'])) {
           $fields = $fields . "tipo_substancia,";
@@ -204,9 +204,9 @@ class Form_model extends CI_Model {
         $values = $values . "'" . $form["inputCausaProvavel"] . "',";
       }
     }
-    
+
     if (isset($form["hasOleo"])) {
-    
+
         $fields = $fields . "situacao_atual_descarga,";
         $this->firephp->log($form["SituacaoDescarga"]);
         switch($form["SituacaoDescarga"]) {
@@ -228,7 +228,7 @@ class Form_model extends CI_Model {
             break;
         }
     }
-    
+
     //
     // 7. Danos Identificados
     //
@@ -304,7 +304,7 @@ class Form_model extends CI_Model {
     //
     if (!isset($form['semProcedimentos'])) {
       $fields = $fields . "plano_emergencia,";
-      
+
       if ($form["planoEmergencia"] == '1') {
         $values = $values . "'S',";
       } else if ($form["planoEmergencia"] == '0'){
@@ -312,14 +312,14 @@ class Form_model extends CI_Model {
       } else {
           $values = $values . "'I',";
       }
-      
+
       $fields = $fields . "plano_emergencia_acionado,";
       if (isset($form["planoAcionado"])) {
         $values = $values . "'S',";
       } else {
         $values = $values . "'N',";
       }
-      
+
       $fields = $fields ."iniciados_outras_providencias,";
       if (isset($form["outrasMedidas"])) {
         $values = $values . "'S',";
@@ -403,13 +403,13 @@ class Form_model extends CI_Model {
     //
   	$fields = $fields . ") ";
   	$values = $values . ") ";
-    
-    
-     
+
+
+
     // Executing query on database
-    $sqlOcorrencias =  "insert into ocorrencia" . $fields . " VALUES " . $values . ";";      
-    
-    
+    $sqlOcorrencias =  "insert into ocorrencia" . $fields . " VALUES " . $values . ";";
+
+
     // Saves on the Database the new entry
     $ocorrenciasDatabase->query($sqlOcorrencias);
 
@@ -531,10 +531,10 @@ class Form_model extends CI_Model {
     //
     // Relation ocorrencia_tipo_fonte_informacao
     //
-    if(isset($form['tipoFonteInformacao'])) { 
+    if(isset($form['tipoFonteInformacao'])) {
 
-      foreach($form['tipoFonteInformacao'] as $tipoFonteInformacao) {      
-        
+      foreach($form['tipoFonteInformacao'] as $tipoFonteInformacao) {
+
         $descOutrasFontInfo = "null";
 
         //ID == 5 -> Outras fontes de informação.
@@ -811,15 +811,15 @@ class Form_model extends CI_Model {
         $fields = $fields . ",produto_nao_especificado='t'";
       } else {
         $fields = $fields . ",produto_nao_especificado='f'";
-      }      
-     
+      }
+
     } else {
       $fields = $fields . ",produto_perigoso='f'";
       $fields = $fields . ",produto_nao_se_aplica='f'";
       $fields = $fields . ",produto_nao_especificado='f'";
     }
-       
-            
+
+
     if (isset($form['hasOleo'])) {
         if (isset($form["inputTipoSubstancia"])) {
           $fields = $fields . ",tipo_substancia='" . $form["inputTipoSubstancia"] . "'";
@@ -830,9 +830,9 @@ class Form_model extends CI_Model {
           $fields = $fields . ",volume_estimado='" . $form["inputVolumeEstimado"] . "'";
         } else {
           $fields = $fields . ",volume_estimado='0'";
-          
+
         }
-    }     
+    }
 
 
     //
@@ -845,7 +845,7 @@ class Form_model extends CI_Model {
     } else {
       $fields = $fields . ",des_causa_provavel=''";
     }
-    
+
     if (isset($form["hasOleo"]))
     {
         $fields = $fields . ",situacao_atual_descarga=";
@@ -971,7 +971,7 @@ class Form_model extends CI_Model {
       } else {
           $fields = $fields . "'I'";
       }
-      
+
       $fields = $fields . ",plano_emergencia_acionado=";
       if (isset($form["planoAcionado"])) {
         $fields = $fields . "'S'";
@@ -1035,9 +1035,9 @@ class Form_model extends CI_Model {
     //
     // Complete the query
     //
-    $sqlOcorrencias =  "update ocorrencia set " . $fields . " where nro_ocorrencia='" . $form['comunicado'] . "';";                  
-    
-    
+    $sqlOcorrencias =  "update ocorrencia set " . $fields . " where nro_ocorrencia='" . $form['comunicado'] . "';";
+
+
     // Saves on the Database the new entry
     $ocorrenciasDatabase->query($sqlOcorrencias);
 
@@ -1203,15 +1203,15 @@ class Form_model extends CI_Model {
 
     // Insert new relations
     if(isset($form['tipoFonteInformacao'])) {
-              
+
       foreach($form['tipoFonteInformacao'] as $tipoFonteInformacao) {
-        
+
           $descOutrasFontInfo = "null";
 
         //ID == 5 -> Outras fontes de informação.
         if (isset($form['inputDescOutrasFontInfo']) && $tipoFonteInformacao == 5)
           $descOutrasFontInfo = "'". $form['inputDescOutrasFontInfo'] . "'" ;
-        
+
         $sql = "insert into ocorrencia_tipo_fonte_informacao (id_ocorrencia, id_tipo_fonte_informacao, desc_outras_fontes ) VALUES (" .
                 $id . "," .  $tipoFonteInformacao . "," . $descOutrasFontInfo  . ");";
 
@@ -1356,12 +1356,12 @@ class Form_model extends CI_Model {
         $form['PeriodoObs'] = 'obsMatutino';
         break;
     }
-    
+
     //Data e hora da primeira observação não foi informada.
     if(!isset($dbResult['dt_primeira_obs']))
-       $form['semDataObs'] = 'checked';       
-        
-    
+       $form['semDataObs'] = 'checked';
+
+
     $form['inputDataInci'] = date('d/m/Y', strtotime($dbResult['dt_ocorrencia']));
     $form['inputHoraInci'] = $dbResult['hr_ocorrencia'];
     switch ($dbResult['periodo_ocorrencia']) {
@@ -1378,11 +1378,11 @@ class Form_model extends CI_Model {
         $form['PeriodoInci'] = 'inciMadrugada';
         break;
     }
-    
+
     //Data e hora da ocorrencia não foi informada.
     if(!isset($dbResult['dt_ocorrencia']))
-       $form['semDataInci'] = 'checked'; 
-    
+       $form['semDataInci'] = 'checked';
+
     if (isset($dbResult['dt_ocorrencia_feriado'])) {
       $form['dtFeriado'] = $dbResult['dt_ocorrencia_feriado'];
     }
@@ -1396,11 +1396,11 @@ class Form_model extends CI_Model {
       array_push($form['tipoLocalizacao'], $row['id_tipo_localizacao']);
     }
     $form['inputCompOrigem'] = $dbResult['des_complemento_tipo_localizaca'];
-    
+
     //Sem Origem do Acidente.
     if (sizeof($form['tipoLocalizacao']) == 0)
         $form["semOrigem"] = "checked";
-        
+
     if($dbResult['ocorrencia_oleo']) {
       if ($infoOil['des_navio'] == NULL) {
         $form['inputNomeInstalacao'] = $infoOil['des_instalacao'];
@@ -1409,11 +1409,11 @@ class Form_model extends CI_Model {
         $form['inputNomeNavio'] = $infoOil['des_navio'];
         $form['typeOfOrigin'] = 'navio';
       }
-      
+
       //Sem informação do navio ou da instalação.
       if(!isset($infoOil['des_navio']) && !isset($infoOil['des_instalacao']))
          $form['semNavioInstalacao'] = 'checked';
-      
+
     }
 
 
@@ -1426,40 +1426,40 @@ class Form_model extends CI_Model {
       array_push($form['tipoEvento'], $row['id_tipo_evento']);
     }
     $form['inputCompEvento'] = $dbResult['des_complemento_tipo_evento'];
-    
+
     //Sem Tipo de Evento.
     if (sizeof($form['tipoEvento']) == 0)
         $form["semEvento"] = "checked";
 
     //
     // 5. Tipo do produto
-    //    
+    //
     //Ver se há produtos cadastrados.
     $query = "select ocorrencia_produto.id_ocorrencia from ocorrencia_produto where ocorrencia_produto.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
-    $hasProducts = ($ocorrenciasDatabase->query($query)->num_rows() > 0);  
-    
+    $hasProducts = ($ocorrenciasDatabase->query($query)->num_rows() > 0);
+
     $form['produtoNaoPerigoso'] = $dbResult['produto_perigoso'];
     $form['produtoNaoAplica'] = $dbResult['produto_nao_se_aplica'];
-    $form['produtoNaoEspecificado'] = $dbResult['produto_nao_especificado'];       
-       
+    $form['produtoNaoEspecificado'] = $dbResult['produto_nao_especificado'];
+
     $prodNaoPerigoso = isset($form['produtoNaoPerigoso']) && !empty($form['produtoNaoPerigoso']) && $form['produtoNaoPerigoso'] == 't';
     $prodNaoAplica = isset($form['produtoNaoAplica']) && !empty($form['produtoNaoAplica']) && $form['produtoNaoAplica'] == 't';
-    $prodNaoEspecificado = isset($form['produtoNaoEspecificado']) && !empty($form['produtoNaoEspecificado']) && $form['produtoNaoEspecificado'] == 't';             
-    
+    $prodNaoEspecificado = isset($form['produtoNaoEspecificado']) && !empty($form['produtoNaoEspecificado']) && $form['produtoNaoEspecificado'] == 't';
+
     $statusProdSetado = ($prodNaoPerigoso || $prodNaoAplica || $prodNaoEspecificado)? true : false;
-    
+
     if (!$hasProducts && !$statusProdSetado)
-       $form['semProduto'] = 'checked';     
-    
-    
+       $form['semProduto'] = 'checked';
+
+
     if($dbResult['ocorrencia_oleo']) {
       $form['inputTipoSubstancia'] = $dbResult['tipo_substancia'];
       $form['inputVolumeEstimado'] = $dbResult['volume_estimado'];
-      
+
       //Substância não informada.
       if (!isset($form['inputTipoSubstancia']) || empty($form['inputTipoSubstancia']))
         $form['semSubstancia'] =  'checked';
-      
+
     }
 
 
@@ -1467,14 +1467,14 @@ class Form_model extends CI_Model {
     // 6. Detalhes do Acidente
     //
     if ($dbResult['des_causa_provavel']) {
-      $form['inputCausaProvavel'] = $dbResult['des_causa_provavel'];      
+      $form['inputCausaProvavel'] = $dbResult['des_causa_provavel'];
     }
     else
     {
         //Sem causa provável.
         $form['semCausa'] = 'checked';
     }
-    
+
     if($dbResult['situacao_atual_descarga']) {
       switch($dbResult['situacao_atual_descarga']) {
         case 'P':
@@ -1508,23 +1508,23 @@ class Form_model extends CI_Model {
       array_push($form['tipoDanoIdentificado'], $row['id_tipo_dano_identificado']);
     }
     // $form['inputDesDanos'] = $dbResult['des_danos'];
-    $form['inputCompDano'] = $dbResult['des_complemento_tipo_dano_ident'];         
-    
+    $form['inputCompDano'] = $dbResult['des_complemento_tipo_dano_ident'];
+
     if(sizeof($form['tipoDanoIdentificado']) == 0)
-        $form['semDanos'] = 'checked';  
-    
+        $form['semDanos'] = 'checked';
+
     //
     // 8. Identificacao Empresa/Orgao Responsavel
     //
     $form['inputResponsavel'] = $dbResult['nome'];
     $form['inputCPFCNPJ'] = $dbResult['cpf_cnpj'];
     $form['slctLicenca'] = $dbResult['des_licenca_ambiental'];
-    
+
     $semReponsavel = (!isset($form['inputResponsavel']));
-        
+
     if($semReponsavel)
-      $form['semResponsavel'] = 'checked';    
-        
+      $form['semResponsavel'] = 'checked';
+
 
     //
     // 9. Instituição/Empresa Atuando no Local
@@ -1537,7 +1537,7 @@ class Form_model extends CI_Model {
     $form['inputInfoInstituicaoNome'] = $dbResult['nome_instituicao_atuando'];
     $form['inputInfoInstituicaoTelefone'] = $dbResult['telefone_instituicao_atuando'];
     $form['inputCompInstituicao'] = $dbResult['des_complemento_instituicao_atu'];
-    
+
     if (sizeof($form['instituicaoAtuandoLocal']) == 0)
         $form['semInstituicao'] = 'checked';
 
@@ -1559,10 +1559,10 @@ class Form_model extends CI_Model {
       $form['outrasMedidas'] = "on";
       $form['inputMedidasTomadas'] = $dbResult['des_outras_providencias'];
     }
-    
+
     if (!isset($dbResult['plano_emergencia']))
        $form['semProcedimentos'] = 'checked';
-       
+
 
     //
     // 11. Informações gerais sobre a Ocorrência
@@ -1575,18 +1575,28 @@ class Form_model extends CI_Model {
     //
     // 12. Informações sobre o Informante
     //
+
+    $form['inputNomeInformante'] = "";
     if ($dbResult['nome_comunicante']) {
       $form['inputNomeInformante'] = $dbResult['nome_comunicante'];
     }
+
+    $form['inputInstEmp'] = "";
     if ($dbResult['des_instituicao_empresa']) {
       $form['inputInstEmp'] = $dbResult['des_instituicao_empresa'];
     }
+
+    $form['inputCargoFunc'] = "";
     if ($dbResult['des_funcao_comunicante']) {
       $form['inputCargoFunc'] = $dbResult['des_funcao_comunicante'];
     }
+
+    $form['inputTelInformante'] = "";
     if ($dbResult['telefone_contato']) {
       $form['inputTelInformante'] = $dbResult['telefone_contato'];
     }
+
+    $form['inputEmailInformante'] = "";
     if ($dbResult['email_comunicante']) {
       $form['inputEmailInformante'] = $dbResult['email_comunicante'];
     }
@@ -1608,7 +1618,7 @@ class Form_model extends CI_Model {
 
       array_push($form['tipoFonteInformacao'], $row['id_tipo_fonte_informacao']);
       $form['desc_outras_fontes'] = $row['desc_outras_fontes'];
-      
+
     }
 
 
