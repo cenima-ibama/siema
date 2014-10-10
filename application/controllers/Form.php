@@ -1269,7 +1269,7 @@ class Form extends CI_Controller {
             'name' => 'inputNomeInformante',
             'class' => 'input-large',
             'maxlength' => '150',
-            'value' => set_value('inputNomeInformante', $this->session->userdata('name')),
+            'value' => set_value('inputNomeInformante', isset($formLoad['inputNomeInformante']) ? $formLoad['inputNomeInformante'] : $this->session->userdata('name')),
             'disabled' => 'disabled'
         );
         // Input Funcão Navio Comunicante (Informante)
@@ -1294,7 +1294,7 @@ class Form extends CI_Controller {
             'name' => 'inputEmailInformante',
             'class' => 'input-large',
             'maxlength' => '150',
-            'value' => set_value('inputEmailInformante', $this->session->userdata('mail')),
+            'value' => set_value('inputEmailInformante', isset($formLoad['inputEmailInformante']) ? $formLoad['inputEmailInformante'] : $this->session->userdata('mail')),
             'disabled' => 'disabled'
         );
         // Input Funcão Navio Comunicante (Informante)
