@@ -1668,7 +1668,7 @@
             values = values + firstPoint.lng + " " + firstPoint.lat + ")', " + _this.options.srid + "))";
             values = values + ",now()";
             sql = "(" + columns + ") values (" + values + ")";
-            return rest = new H5.Rest({
+            rest = new H5.Rest({
               url: H5.Data.restURL,
               fields: sql,
               table: "tmp_pol",
@@ -1698,7 +1698,7 @@
             values = values + ")', " + _this.options.srid + ")";
             values = values + ",now()";
             sql = "(" + columns + ") values (" + values + ")";
-            return rest = new H5.Rest({
+            rest = new H5.Rest({
               url: H5.Data.restURL,
               fields: sql,
               table: "tmp_lin",
@@ -1721,7 +1721,7 @@
             values = values + ", " + _this.options.srid + ")";
             values = values + ",now()";
             sql = "(" + columns + ") values (" + values + ")";
-            return rest = new H5.Rest({
+            rest = new H5.Rest({
               url: H5.Data.restURL,
               fields: sql,
               table: "tmp_pol",
@@ -1744,7 +1744,7 @@
             values = values + layer._mRadius / 100010 + ")";
             values = values + ",now()";
             sql = "(" + columns + ") values (" + values + ")";
-            return rest = new H5.Rest({
+            rest = new H5.Rest({
               url: H5.Data.restURL,
               fields: sql,
               table: "tmp_pol",
@@ -1796,13 +1796,6 @@
                 $("#inputLat").val(_this.decimalDegree2DMS(layer._latlng.lat));
                 $("#inputLng").val(_this.decimalDegree2DMS(layer._latlng.lng));
               }
-              if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
-                return _this.drawnItems.addLayer(layer);
-              } else {
-                _this.drawnItems.removeLayer(_this.options.uniquePoint);
-                _this.options.uniquePoint = layer;
-                return _this.drawnItems.addLayer(_this.options.uniquePoint);
-              }
             } else {
               --_this.idMarker;
               popup = L.popup().setLatLng(layer._latlng).setContent('<p>O ponto está fora da área limite do Brasil!</p>').openOn(_this.options.map);
@@ -1810,8 +1803,15 @@
               $("#inputLng").val("");
               $('#dropdownUF option:eq(0)').prop('selected', true);
               $('#dropdownMunicipio option:eq(0)').prop('selected', true);
-              return $('#inputEndereco').val("");
+              $('#inputEndereco').val("");
             }
+          }
+          if ((_this.options.uniquePoint == null) || ((_this.options.uniquePoint != null) && type !== 'marker')) {
+            return _this.drawnItems.addLayer(layer);
+          } else if (_this.idMarker === layer._leaflet_id) {
+            _this.drawnItems.removeLayer(_this.options.uniquePoint);
+            _this.options.uniquePoint = layer;
+            return _this.drawnItems.addLayer(_this.options.uniquePoint);
           }
         };
       })(this));
