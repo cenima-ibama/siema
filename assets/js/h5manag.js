@@ -220,4 +220,55 @@
 
   $("#manag").hide();
 
+  $("#searchCPF").mask("99999999999");
+
+  $("#searchPerson").on("click", function() {
+    console.log("search for persons info");
+    return $.ajax({
+      url: window.location.href.replace("#", "") + "index.php/Auth/search_user",
+      dataType: 'json',
+      type: 'get',
+      data: {
+        'cpf': $("#searchCPF").val()
+      },
+      success: function(data) {
+        $("#inputNome").val(data.Nome);
+        $("#inputEmail").val(data.Desc_Email);
+        $("#inputEmail").val(data.Desc_Email);
+        return $("#inputTelefone").val(data.Telefone);
+      },
+      error: function(data, status) {
+        $("#inputNome").val("");
+        $("#inputEmail").val("");
+        $("#inputEmail").val("");
+        $("#inputTelefone").val("");
+        return console.log('CPF não encontrado!');
+      }
+    });
+  });
+
+  $("#storePerson").on("click", function() {
+    console.log("send form to save");
+    return $.ajax({
+      url: window.location.href.replace("#", "") + "index.php/Auth/create_intern_user",
+      dataType: 'json',
+      type: 'get',
+      data: {
+        'id_perfil': document.getElementById('selectPerfil').selectedIndex,
+        'cpf': $('#searchCPF').val(),
+        'nome': $('#inputNome').val()
+      },
+      success: function(data) {
+        return console.log("Enviado para o servidor!");
+      },
+      error: function(data, status) {
+        $("#inputNome").val("");
+        $("#inputEmail").val("");
+        $("#inputEmail").val("");
+        $("#inputTelefone").val("");
+        return console.log('CPF não encontrado!');
+      }
+    });
+  });
+
 }).call(this);

@@ -706,14 +706,14 @@
           //Active link if is administrator user.
           if($profilUser == 1 || $profilUser == 2)
           {
-              //Is Administrator User.
+              // //Is Administrator User.
               // if ($profilUser == 1)
               //   echo '<li><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';
               // else
                 echo '<li class="active"><a href="#" id="btn-manage2">Gerência de Acidentes</a></li>';
           }
 
-          //Only administrator users acess this option.
+          // //Only administrator users acess this option.
           // if($profilUser == 1)
           // {
           //     echo '<li><a href="#" id="btn-manage3">Gerência de Regras</a></li>';
@@ -741,21 +741,21 @@
                 <div class="col-sm-10">
                   <label for="inputCPF" class="col-sm-2 control-label">CPF</label>
                   <input id="searchCPF" type="text" placeholder="Verificar CPF" class="form-control">
-                  <a class="btn"> <i class="icon-search icon-search-filter"></i> </a>
+                  <a class="btn icon-search icon-search-filter" id="searchPerson"></a>
                 </div>
               </div>
               <div class="form-group" readonly="readonly">
                 <div class="item">
                   <label for="inputNome" class="col-sm-2 control-label">Nome</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputNome" placeholder="Nome">
+                    <input type="text" class="form-control" id="inputNome" placeholder="Nome" disabled="disabled">
                   </div>
                 </div>
               </div>
               <div class="form-group" readonly="readonly">
                 <label for="inputEmail" class="col-sm-2 control-label">Email</label>
                 <div class="col-sm-10">
-                  <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                  <input type="email" class="form-control" id="inputEmail" placeholder="Email" disabled="disabled">
                 </div>
               </div>
               <div class="form-group" readonly="readonly">
@@ -767,12 +767,21 @@
               <div class="form-group" readonly="readonly">
                 <label for="inputTelefone" class="col-sm-2 control-label">Telefone</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="inputTelefone" placeholder="Telefone">
+                  <input type="text" class="form-control" id="inputTelefone" placeholder="Telefone" disabled="disabled">
+                </div>
+              </div>
+              <div class="form-group" readonly="readonly">
+                <label for="selectPerfil" class="col-sm-2 control-label">Perfil</label>
+                <div class="col-sm-10">
+                  <select class="form-control selectpicker" id="selectPerfil" name="selectPerfil">
+                    <option id="1">Administrador</option>
+                    <option id="2" selected="selected">Validador</option>
+                  </select>
                 </div>
               </div>
               <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10" style="margin: 0.5em">
-                  <button type="submit" class="btn btn-default">Enviar</button>
+                  <a type="submit" class="btn btn-default" id="storePerson">Enviar</a>
                 </div>
               </div>
             <? echo form_close();?>

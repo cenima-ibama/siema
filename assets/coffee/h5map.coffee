@@ -233,7 +233,7 @@ restURL = "http://" + document.domain + "/siema/rest"
 acidentes = new L.VectorLayer.Postgis (
   url: restURL
   geotable: "vw_ocorrencia_mapa"
-  fields: "id_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, legado"
+  fields: "id_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, legado, validado"
   srid: 4326
   geomFieldName: "shape"
   showAll: true
@@ -272,7 +272,7 @@ acidentes = new L.VectorLayer.Postgis (
     html += '</tbody></table></div>'
     return html
   focus: false
-  where: 'legado IS FALSE'
+  where: "legado IS FALSE AND validado='S'"
   symbology:
     type: "single"
     vectorStyle:

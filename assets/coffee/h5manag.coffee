@@ -199,8 +199,8 @@ $("#editMeModal").draggable(
 # Event to create the modal
 $("a.editOcorrencia").on "click", (event) ->
   nroOcorrencia = $(this).attr("data-ocorrencia")
-  $("#nroOcorrenciaLoadAdmin").val(nroOcorrencia)  
-  $("#formLoadAdmin").submit()  
+  $("#nroOcorrenciaLoadAdmin").val(nroOcorrencia)
+  $("#formLoadAdmin").submit()
 
 # Event to remove records
 $("a.removeOcorrencia").on "click", (event) ->
@@ -258,4 +258,52 @@ $("a.removeOcorrencia").on "click", (event) ->
 $("#manag").hide()
 
 
+$("#searchCPF").mask("99999999999")
+
+
+$("#searchPerson").on "click", ()->
+  console.log "search for persons info"
+  $.ajax (
+    url: window.location.href.replace("#","") + "index.php/Auth/search_user"
+    dataType: 'json'
+    type: 'get'
+    data:
+      'cpf': $("#searchCPF").val()
+    success: (data) ->
+      $("#inputNome").val(data.Nome)
+      $("#inputEmail").val(data.Desc_Email)
+      $("#inputEmail").val(data.Desc_Email)
+      $("#inputTelefone").val(data.Telefone)
+
+
+    error: (data,status)->
+      $("#inputNome").val("")
+      $("#inputEmail").val("")
+      $("#inputEmail").val("")
+      $("#inputTelefone").val("")
+      console.log('CPF não encontrado!')
+  )
+  # $("#sel_pessoa").submit()
+
+
+$("#storePerson").on "click", ()->
+
+  console.log "send form to save"
+  $.ajax (
+    url: window.location.href.replace("#","") + "index.php/Auth/create_intern_user"
+    dataType: 'json'
+    type: 'get'
+    data:
+      'id_perfil': document.getElementById('selectPerfil').selectedIndex
+      'cpf': $('#searchCPF').val()
+      'nome': $('#inputNome').val()
+    success: (data) ->
+      console.log "Enviado para o servidor!"
+    error: (data,status)->
+      $("#inputNome").val("")
+      $("#inputEmail").val("")
+      $("#inputEmail").val("")
+      $("#inputTelefone").val("")
+      console.log 'CPF não encontrado!'
+  )
 # }}}
