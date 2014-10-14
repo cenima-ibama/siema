@@ -439,4 +439,83 @@ class Auth extends CI_Controller {
 
         $this->load->view('pages/email_send', $return);
     }
+
+    public function search_user() {
+
+        if($_GET['cpf']) {
+            $conn = oci_connect('sisreg', 'sisregdes', 'exd01-scan.ibama.gov.br/dsnv_manut');
+            if (!$conn) {
+                $e = oci_error();
+                // echo '<pre>'.__FILE__.': '.__LINE__.'<hr>';print_r($e['message']);echo'<hr></pre>';exit;
+                $this->firephp->log($e);
+            } // end iF;
+
+            // Montar pl/sql function
+            $sql = 'begin
+
+
+                        :erro := sisreg.pkg_pessoa_base.sel_pessoa( p_cursor        => :p_cursor
+                                                                   ,p_cpf_cnpj_nome => :p_cpf_cnpj_nome );
+                     end;';
+
+            if (!$p_str = oci_parse($conn,$sql)) {
+                // echo '<pre>'.__FILE__.': '.__LINE__.'<hr>';print_r(oci_error($conn));echo'<hr></pre>';exit;
+                $this->firephp->log(oci_error($conn));
+                oci_close($conn);
+            };
+
+            $p_cpf_cnpj_nome = $_GET['cpf'];
+            // $p_cpf_cnpj_nome = '1811126693';
+
+            // Bind dos dados de entrada
+            oci_bind_by_name( $p_str, ":p_cpf_cnpj_nome", $p_cpf_cnpj_nome );
+
+            // Bind dos variaveis de saida
+            $p_cursor = oci_new_cursor($conn);
+            oci_bind_by_name($p_str,':p_cursor',$p_cursor,-1,OCI_B_CURSOR);
+            oci_bind_by_name($p_str,":erro",$erro,250);
+
+            // Executar
+            $r = oci_execute($p_str,OCI_DEFAULT);
+            if ( !$r ) {
+                $e = oci_error($p_str);
+                oci_close($conn);
+                // echo '<pre>'.__FILE__.': '.__LINE__.'<hr>';print_r($e['message']);echo'<hr></pre>';exit;
+                $this->firephp->log($e);
+            }
+
+            //Executar Cursor
+            if ( !oci_execute($p_cursor,OCI_DEFAULT) ) {
+                $e = oci_error($p_str);
+                oci_free_statement($p_str);
+                oci_close($conn);
+                $this->firephp->log($e);
+            }
+
+            $data = oci_fetch_object($p_cursor);
+
+            foreach ($data as $field => $value) {
+                $data->$field = ucwords(strtolower($value));
+            }
+
+            // $this->firephp->log($data);
+
+            oci_free_statement($p_cursor);
+
+            echo json_encode($data);
+        } else {
+            return null;
+        }
+    }
+
+    public function create_intern_user () {
+
+        if ($_POST['searchCPF'] && $_POST['inputNome'] && $_POST['perfil']) {
+            $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
+
+            $_POST['inputNome'];
+            $_POST['searchCPF'];
+            $_POST['perfil'];
+        }
+    }
 }
