@@ -324,13 +324,6 @@ class H5.Draw
             $("#inputLat").val(@decimalDegree2DMS(layer._latlng.lat))
             $("#inputLng").val(@decimalDegree2DMS(layer._latlng.lng))
 
-
-          if (!@.options.uniquePoint? || (@.options.uniquePoint? and type isnt 'marker'))
-            @drawnItems.addLayer(layer)
-          else
-            @drawnItems.removeLayer(@.options.uniquePoint)
-            @.options.uniquePoint = layer
-            @drawnItems.addLayer(@.options.uniquePoint)
         else
           --@idMarker
 
@@ -344,6 +337,13 @@ class H5.Draw
           $('#dropdownUF option:eq(0)').prop 'selected', true
           $('#dropdownMunicipio option:eq(0)').prop 'selected', true
           $('#inputEndereco').val ""
+
+      if (!@.options.uniquePoint? || (@.options.uniquePoint? and type isnt 'marker'))
+        @drawnItems.addLayer(layer)
+      else if @idMarker == layer._leaflet_id
+        @drawnItems.removeLayer(@.options.uniquePoint)
+        @.options.uniquePoint = layer
+        @drawnItems.addLayer(@.options.uniquePoint)
 
 
 
