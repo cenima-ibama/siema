@@ -66,7 +66,7 @@ class Form_model extends CI_Model {
       }
       if(isset($form['inputEndereco'])) {
         $fields = $fields . "endereco_ocorrencia,";
-        $values = $values . "'" . $form['inputEndereco'] . "',";
+        $values = $values . "'" . pg_escape_string($form['inputEndereco']) . "',";
       }
     // }
 
@@ -143,7 +143,7 @@ class Form_model extends CI_Model {
     // Informação compelementar da origem do acidente
     if (isset($form["inputCompOrigem"])) {
       $fields = $fields . "des_complemento_tipo_localizaca,";
-      $values = $values . "'" . $form["inputCompOrigem"] . "',";
+      $values = $values . "'" . pg_escape_string($form["inputCompOrigem"]) . "',";
     }
 
 
@@ -153,7 +153,7 @@ class Form_model extends CI_Model {
     // Informação compelementar do tipo de evento
     if (isset($form["inputCompEvento"])) {
       $fields = $fields . "des_complemento_tipo_evento,";
-      $values = $values . "'" . $form["inputCompEvento"] . "',";
+      $values = $values . "'" . pg_escape_string($form["inputCompEvento"]) . "',";
     }
 
 
@@ -187,7 +187,7 @@ class Form_model extends CI_Model {
     if (isset($form["hasOleo"])) {
         if (isset($form['inputTipoSubstancia'])) {
           $fields = $fields . "tipo_substancia,";
-          $values = $values . "'" . $form['inputTipoSubstancia'] . "',";
+          $values = $values . "'" . pg_escape_string($form['inputTipoSubstancia']) . "',";
         }
         if (isset($form['inputVolumeEstimado'])) {
           $fields = $fields . "volume_estimado,";
@@ -201,7 +201,7 @@ class Form_model extends CI_Model {
     if(!isset($form['semCausa'])) {
       if (isset($form["inputCausaProvavel"])) {
         $fields = $fields . "des_causa_provavel,";
-        $values = $values . "'" . $form["inputCausaProvavel"] . "',";
+        $values = $values . "'" . pg_escape_string($form["inputCausaProvavel"]) . "',";
       }
     }
 
@@ -236,7 +236,7 @@ class Form_model extends CI_Model {
     if(!isset($form['semDanos'])) {
       if (isset($form["inputCompDano"])) {
         $fields = $fields . "des_complemento_tipo_dano_ident,";
-        $values = $values . "'" . $form["inputCompDano"] . "',";
+        $values = $values . "'" . pg_escape_string($form["inputCompDano"]) . "',";
       }
       // if (isset($form["inputDesDanos"])) {
       //   $fields = $fields . "des_danos,";
@@ -257,7 +257,7 @@ class Form_model extends CI_Model {
       $subfields = "insert into responsavel (nome, cpf_cnpj, des_licenca_ambiental) VALUES (";
 
       if(isset($form["inputResponsavel"])) {
-        $subfields = $subfields . "'" . $form["inputResponsavel"] . "',";
+        $subfields = $subfields . "'" . pg_escape_string($form["inputResponsavel"]) . "',";
       }
 
       if(isset($form["inputCPFCNPJ"])) {
@@ -286,7 +286,7 @@ class Form_model extends CI_Model {
     if (!isset($form['semInstituicao'])) {
       if (isset($form["inputInfoInstituicaoNome"])) {
         $fields = $fields . "nome_instituicao_atuando,";
-        $values = $values . "'" . $form["inputInfoInstituicaoNome"] . "',";
+        $values = $values . "'" . pg_escape_string($form["inputInfoInstituicaoNome"]) . "',";
       }
       if (isset($form["inputInfoInstituicaoTelefone"])) {
         $fields = $fields . "telefone_instituicao_atuando,";
@@ -294,7 +294,7 @@ class Form_model extends CI_Model {
       }
       if (isset($form["inputCompInstituicao"])) {
         $fields = $fields . "des_complemento_instituicao_atu,";
-        $values = $values . "'" . $form["inputCompInstituicao"] . "',";
+        $values = $values . "'" . pg_escape_string($form["inputCompInstituicao"]) . "',";
       }
     }
 
@@ -325,7 +325,7 @@ class Form_model extends CI_Model {
         $values = $values . "'S',";
 
         $fields = $fields . "des_outras_providencias,";
-        $values = $values . "'" . $form["inputMedidasTomadas"] . "',";
+        $values = $values . "'" . pg_escape_string($form["inputMedidasTomadas"]) . "',";
       } else {
         $values = $values . "'N',";
       }
@@ -344,7 +344,7 @@ class Form_model extends CI_Model {
     //
     if(isset($form["inputDesObs"])) {
       $fields = $fields . "des_obs,";
-      $values = $values . "'" . $form["inputDesObs"] . "',";
+      $values = $values . "'" . pg_escape_string($form["inputDesObs"]) . "',";
     }
 
 
@@ -353,17 +353,17 @@ class Form_model extends CI_Model {
     //
     if (isset($form["inputNomeInformante"])) {
       $fields = $fields . "nome_comunicante,";
-      $values = $values . "'" . $form["inputNomeInformante"] . "',";
+      $values = $values . "'" . pg_escape_string($form["inputNomeInformante"]) . "',";
     }
 
     if (isset($form['inputInstEmp'])) {
       $fields = $fields . "des_instituicao_empresa,";
-      $values = $values . "'" . $form['inputInstEmp'] . "',";
+      $values = $values . "'" . pg_escape_string($form['inputInstEmp']) . "',";
     }
 
     if (isset($form['inputCargoFunc'])) {
       $fields = $fields . "des_funcao_comunicante,";
-      $values = $values . "'" . $form['inputCargoFunc'] . "',";
+      $values = $values . "'" . pg_escape_string($form['inputCargoFunc']) . "',";
     }
 
     if (isset($form["inputTelInformante"])) {
@@ -373,7 +373,7 @@ class Form_model extends CI_Model {
 
     if (isset($form["inputEmailInformante"])) {
       $fields = $fields . "email_comunicante,";
-      $values = $values . "'" . $form["inputEmailInformante"] . "',";
+      $values = $values . "'" . pg_escape_string($form["inputEmailInformante"]) . "',";
     }
 
 
@@ -539,7 +539,7 @@ class Form_model extends CI_Model {
 
         //ID == 5 -> Outras fontes de informação.
         if (isset($form['inputDescOutrasFontInfo']) && $tipoFonteInformacao == 5)
-          $descOutrasFontInfo = "'". $form['inputDescOutrasFontInfo'] . "'" ;
+          $descOutrasFontInfo = "'". pg_escape_string($form['inputDescOutrasFontInfo']) . "'" ;
 
         $sql = "insert into ocorrencia_tipo_fonte_informacao (id_ocorrencia, id_tipo_fonte_informacao, desc_outras_fontes) VALUES (" .
                 $id . "," .  $tipoFonteInformacao . "," . $descOutrasFontInfo . ");";
@@ -607,10 +607,10 @@ class Form_model extends CI_Model {
 
       if(isset($form['inputNomeNavio']))  {
         $fields = $fields . ",des_navio";
-        $values = $values . ",'" . $form['inputNomeNavio'] . "'";
+        $values = $values . ",'" . pg_escape_string($form['inputNomeNavio']) . "'";
       } else if(isset($form['inputNomeInstalacao']))  {
         $fields = $fields . ",des_instalacao";
-        $values = $values . ",'" . $form['inputNomeInstalacao'] . "'";
+        $values = $values . ",'" . pg_escape_string($form['inputNomeInstalacao']) . "'";
       }
 
       $sql = "insert into detalhamento_ocorrencia (" . $fields . ") VALUES (" . $values . ")";
