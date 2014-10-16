@@ -1,7 +1,7 @@
 <div class="container">
     <div class="form-login">
     <a id="close-btn-login" name="close-btn-login" class="close" onclick="$('#login').hide(); $('#btn-map').click()">×</a>
-        <?php echo form_fieldset('<img src="' . base_url() . '/assets/img/ibama_inv.png"> <span class="label label-inverse">Login</span>'); ?>
+        <?php echo form_fieldset('<img src="' . base_url() . '/assets/img/logo_ibama_icone.png"> <span class="label label-inverse">Login</span>'); ?>
         <?php
             if (validation_errors()) {
                 echo '<div class="alert alert-block alert-error fade in">';

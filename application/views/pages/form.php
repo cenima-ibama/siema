@@ -35,7 +35,7 @@
 
                         //Checkbox visible only if administrator or validator user.
                         if ($profileUser == 1 || $profileUser == 2) {
-                            ?> 
+                            ?>
                             <div class="span12">
                                 <label class="checkbox pull-right" for="validado">
                                     <?php echo form_checkbox($validado); ?>
@@ -123,7 +123,7 @@
                                     // if (isset($semLocalizacao['checked']))
                                     //   echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small" disabled="disabled"');
                                     // else
-                                    // echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small"');                           
+                                    // echo form_dropdown('inputEPSG', $inputEPSG, isset($inputEPSG_Selected) ? $inputEPSG_Selected : set_value('inputEPSG'), 'id="inputEPSG" class="input-small"');
                                     ?>
                                         </div>
                                       </div>
@@ -377,7 +377,7 @@
                              } else {
                                echo '  <input type="hidden" id="typeOfOrigin" name="typeOfOrigin" value="instalacao"';
                              }
-                             
+
                              echo '/>';
                             echo '
                           &nbsp; Nome do navio:
@@ -514,7 +514,7 @@
                         <div class="row-fluid">
                             <div class="span12">
                                 <label class="checkbox text-left">
-                                    <?php echo form_checkbox($semProduto, 'on'); ?>                                    
+                                    <?php echo form_checkbox($semProduto, 'on'); ?>
                                     Sem informação sobre o tipo do produto
                                 </label>
                             </div>
@@ -1011,14 +1011,14 @@
                         </div>
 
                       </div>
-                      
-                      <div id="descOutrasFontInfo" style="display:none">
+
+                      <div id="descOutrasFontInfo" style="display:none;">
                         <div class="control-group">
-                           <label class="control-label" for="inputDescOutrasFontInfo">Descrição Outra(s) Fonte(s)</label> 
+                           <label class="control-label" for="inputDescOutrasFontInfo">Descrição Outra(s) Fonte(s)</label>
                         </div>';
-                            echo form_textarea($inputDescOutrasFontInfo);                                             
+                            echo form_textarea($inputDescOutrasFontInfo);
                      echo '</div>
-                      
+
                     </div>
                   </div>
                 </div>
@@ -1052,7 +1052,7 @@
                             <div class="control-group">
                                 <div class="input-append">
 
-                                    <style type="text/css">                                           
+                                    <style type="text/css">
                                         .customFileInput input {
                                             position: absolute;
                                             visibility: hidden;
@@ -1064,7 +1064,7 @@
                                             overflow: hidden;
                                             text-overflow: ellipsis;
                                         }
-                                    </style>                     
+                                    </style>
 
                                     <form class="btn" method="post" enctype="multipart/form-data">
                                         <label class="customFileInput">
@@ -1073,7 +1073,7 @@
                                             <input type="file" name="userfile" onchange="showFileName(this)" class="boxname" />
                                             <br /><small> *jpg, doc, pdf, xls, até 5MB</small>
                                         </label>
-                                    </form>                    
+                                    </form>
                                 </div>
                             </div>
                         </div>
