@@ -1265,13 +1265,16 @@ class Form extends CI_Controller {
         //
         // Input Nome Comunicante (Informante)
         $data['inputNomeInformante'] = array(
+            'readonly' => 'readonly',
             'id' => 'inputNomeInformante',
             'name' => 'inputNomeInformante',
             'class' => 'input-large',
             'maxlength' => '150',
-            'value' => set_value('inputNomeInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('name') : $formLoad['inputNomeInformante']),
-            'disabled' => 'disabled'
+            'value' => set_value('inputNomeInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('name') : $formLoad['inputNomeInformante'])
         );
+
+        $this->firephp->log($data['inputNomeInformante']);
+
         // Input Funcão Navio Comunicante (Informante)
         $data['inputCargoFunc'] = array(
             'id' => 'inputCargoFunc',
@@ -1290,21 +1293,24 @@ class Form extends CI_Controller {
         );
         // Input Email Comunicante (Informante)
         $data['inputEmailInformante'] = array(
+            'readonly' => 'readonly',
             'id' => 'inputEmailInformante',
             'name' => 'inputEmailInformante',
             'class' => 'input-large',
             'maxlength' => '150',
-            'value' => set_value('inputEmailInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('mail') : $formLoad['inputEmailInformante']),
-            'disabled' => 'disabled'
+            'value' => set_value('inputEmailInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('mail') : $formLoad['inputEmailInformante'])
         );
-        // Input Funcão Navio Comunicante (Informante)
-        $data['inputCargoFunc'] = array(
-            'id' => 'inputCargoFunc',
-            'name' => 'inputCargoFunc',
-            'class' => 'input-large',
-            'maxlength' => '150',
-            'value' => set_value('inputCargoFunc', isset($formLoad['inputCargoFunc']) ? $formLoad['inputCargoFunc'] : '')
-        );
+
+        $this->firephp->log($data['inputNomeInformante']);
+
+        // // Input Funcão Navio Comunicante (Informante)
+        // $data['inputCargoFunc'] = array(
+        //     'id' => 'inputCargoFunc',
+        //     'name' => 'inputCargoFunc',
+        //     'class' => 'input-large',
+        //     'maxlength' => '150',
+        //     'value' => set_value('inputCargoFunc', isset($formLoad['inputCargoFunc']) ? $formLoad['inputCargoFunc'] : '')
+        // );
         // Input Telefone Comunicante (Informante)
         $data['inputTelInformante'] = array(
             'id' => 'inputTelInformante',

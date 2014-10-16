@@ -729,7 +729,7 @@ $(document).ready ->
     #     $("#btnAddToMap").removeAttr("disabled")
     #     $("#dropdownMunicipio").removeAttr("disabled")
     #     $("#dropdownUF").removeAttr("disabled")
-    
+
     $("#semNavioInstalacao").on 'click', () ->
       if $(@).is ":checked"
         $("#inputNomeNavio").attr("disabled","disabled")
@@ -743,7 +743,7 @@ $(document).ready ->
         # if(!$("#navio").is(":checked"))
         #   $("#inputNomeInstalacao").removeAttr("disabled")
         # $("#navio").removeAttr("disabled")
-        # $("#instalacao").removeAttr("disabled")       
+        # $("#instalacao").removeAttr("disabled")
 
         if $("#inputNomeNavio").val().trim() != ""
           $("#typeOfOrigin").val("navio")
@@ -1370,20 +1370,20 @@ $(document).ready ->
   $("#outrasMedidas").on 'click', () ->
     if $(@).is ":checked"
       $("#inputMedidasTomadas").removeAttr("disabled")
-    else      
+    else
       $("#inputMedidasTomadas").attr("disabled", "disabled")
-  
+
   #Disabilitado por padrão, caso não preenchido.
   if $("#inputMedidasTomadas").val().trim() == ""
-    $("#inputMedidasTomadas").attr("disabled", "disabled")  
+    $("#inputMedidasTomadas").attr("disabled", "disabled")
 
   #Não mostrar as opções de produtos caso estes não estiver cadastrado.
   if $("#semProduto").is ":checked"
     $("#myTable").attr "style" , "display:none"
     $("#productsInfo").attr "style" , "display:none"
   else
-    $("#myTable").removeAttr "style" 
-    $("#productsInfo").removeAttr "style"   
+    $("#myTable").removeAttr "style"
+    $("#productsInfo").removeAttr "style"
 
   if !parent.H5.logged_in
     $("#inputNomeInformante").removeAttr("disabled")
