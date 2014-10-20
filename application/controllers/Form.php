@@ -1272,9 +1272,6 @@ class Form extends CI_Controller {
             'maxlength' => '150',
             'value' => set_value('inputNomeInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('name') : $formLoad['inputNomeInformante'])
         );
-
-        $this->firephp->log($data['inputNomeInformante']);
-
         // Input Funcão Navio Comunicante (Informante)
         $data['inputCargoFunc'] = array(
             'id' => 'inputCargoFunc',
@@ -1300,9 +1297,6 @@ class Form extends CI_Controller {
             'maxlength' => '150',
             'value' => set_value('inputEmailInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('mail') : $formLoad['inputEmailInformante'])
         );
-
-        $this->firephp->log($data['inputNomeInformante']);
-
         // // Input Funcão Navio Comunicante (Informante)
         // $data['inputCargoFunc'] = array(
         //     'id' => 'inputCargoFunc',

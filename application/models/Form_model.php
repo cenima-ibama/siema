@@ -1294,6 +1294,8 @@ class Form_model extends CI_Model {
 
   public function convertDBtoForm($dbResult)
   {
+
+    $this->firephp->log($dbResult);
     //
     // Setting up the default database
     //
@@ -1347,13 +1349,13 @@ class Form_model extends CI_Model {
         $form['PeriodoObs'] = 'obsMatutino';
         break;
       case 'V':
-        $form['PeriodoObs'] = 'obsMatutino';
+        $form['PeriodoObs'] = 'obsVespertino';
         break;
       case 'N':
-        $form['PeriodoObs'] = 'obsMatutino';
+        $form['PeriodoObs'] = 'obsNoturno';
         break;
       case 'S':
-        $form['PeriodoObs'] = 'obsMatutino';
+        $form['PeriodoObs'] = 'obsMadrugada';
         break;
     }
 
@@ -1383,8 +1385,8 @@ class Form_model extends CI_Model {
     if(!isset($dbResult['dt_ocorrencia']))
        $form['semDataInci'] = 'checked';
 
-    if (isset($dbResult['dt_ocorrencia_feriado'])) {
-      $form['dtFeriado'] = $dbResult['dt_ocorrencia_feriado'];
+    if (isset($dbResult['dt_ocorrencia_feriado']) && $dbResult['dt_ocorrencia_feriado'] == 't') {
+      $form['dtFeriado'] = 'checked';
     }
 
     //
@@ -1448,8 +1450,10 @@ class Form_model extends CI_Model {
 
     $statusProdSetado = ($prodNaoPerigoso || $prodNaoAplica || $prodNaoEspecificado)? true : false;
 
+    $this->firephp->log($hasProducts);
+
     if (!$hasProducts && !$statusProdSetado)
-       $form['semProduto'] = 'checked';
+      $form['semProduto'] = 'checked';
 
 
     if($dbResult['ocorrencia_oleo']) {
@@ -1555,7 +1559,6 @@ class Form_model extends CI_Model {
       $form['planoAcionado'] = "on";
     }
     if ($dbResult['iniciados_outras_providencias'] == "S") {
-      $form['planoAcionado'] = "on";
       $form['outrasMedidas'] = "on";
       $form['inputMedidasTomadas'] = $dbResult['des_outras_providencias'];
     }

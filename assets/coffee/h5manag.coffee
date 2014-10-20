@@ -200,6 +200,8 @@ $("#editMeModal").draggable(
 $("a.editOcorrencia").on "click", (event) ->
   nroOcorrencia = $(this).attr("data-ocorrencia")
   $("#nroOcorrenciaLoadAdmin").val(nroOcorrencia)
+  # Sets the form type used: validate, load or create
+  H5.formType = 'validation'
   $("#formLoadAdmin").submit()
 
 # Event to remove records
