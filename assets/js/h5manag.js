@@ -196,6 +196,7 @@
     var nroOcorrencia;
     nroOcorrencia = $(this).attr("data-ocorrencia");
     $("#nroOcorrenciaLoadAdmin").val(nroOcorrencia);
+    H5.formType = 'validation';
     return $("#formLoadAdmin").submit();
   });
 

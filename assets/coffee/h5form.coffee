@@ -135,7 +135,12 @@ $(document).ready ->
     doubleClickZoom: doubleClick
     )
 
-  isLoadForm = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
+  # Validates which type is called: validation, load or create
+  if window.top.H5.formType != 'validation'
+    isLoadForm = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked")
+  else
+    isLoadForm = true
+
   shapeLoadedFromDB = $("#shapeLoaded").prop "checked"
 
   drawAPI = new H5.Draw(
@@ -1392,6 +1397,7 @@ $(document).ready ->
 
 
 
-
+# Returns the formType used
+H5.formType = ''
 
 

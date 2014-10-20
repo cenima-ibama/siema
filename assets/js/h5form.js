@@ -105,7 +105,11 @@
       zoomControl: true,
       doubleClickZoom: doubleClick
     });
-    isLoadForm = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked");
+    if (window.top.H5.formType !== 'validation') {
+      isLoadForm = $(window.top.document.getElementById("optionsAtualizarAcidente")).is(":checked");
+    } else {
+      isLoadForm = true;
+    }
     shapeLoadedFromDB = $("#shapeLoaded").prop("checked");
     drawAPI = new H5.Draw({
       map: minimapView,
@@ -1242,5 +1246,7 @@
       return $("#inputEmailInformante").removeAttr("disabled");
     }
   });
+
+  H5.formType = '';
 
 }).call(this);
