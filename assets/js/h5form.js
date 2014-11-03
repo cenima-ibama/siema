@@ -66,7 +66,7 @@
     rest = new H5.Rest({
       url: H5.Data.restURL,
       table: "municipio",
-      fields: "id_municipio as id, nome as value, id_uf",
+      fields: "cod_ibge as id, nome as value, id_uf",
       order: "value"
     });
     _municipios = rest.data;

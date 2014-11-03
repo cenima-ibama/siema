@@ -196,6 +196,48 @@ $("#editMeModal").draggable(
   handle: ".modal-header"
 )
 
+$('#editMeModal').on 'hidden', ->
+  #Deletar dados temporários ao fechar o form de cadastro.
+  deleteTempData();
+
+
+
+deleteTempData = ->
+
+  nroOcorrencia = $(window.top.form_frame_edit.document.getElementById("comunicado")).val()
+
+  # Clean the temporary produt table (tmp_ocorrencia_produto)
+  rest = new window.parent.H5.Rest (
+    url: window.parent.H5.Data.restURL
+    table: "tmp_ocorrencia_produto"
+    parameters: "nro_ocorrencia%3D" + nroOcorrencia
+    restService: "ws_deletequery.php"
+  )
+
+  # Clean the temporary polygon table (tmp_pol)
+  rest = new window.parent.H5.Rest (
+    url: window.parent.H5.Data.restURL
+    table: "tmp_pol"
+    parameters: "nro_ocorrencia%3D" + nroOcorrencia
+    restService: "ws_deletequery.php"
+  )
+
+  # Clean the temporary polyline table (tmp_lin)
+  rest = new window.parent.H5.Rest (
+    url: window.parent.H5.Data.restURL
+    table: "tmp_lin"
+    parameters: "nro_ocorrencia%3D" + nroOcorrencia
+    restService: "ws_deletequery.php"
+  )
+
+  # Clean the temporary point table (tmp_pon)
+  rest = new window.parent.H5.Rest (
+    url: window.parent.H5.Data.restURL
+    table: "tmp_pon"
+    parameters: "nro_ocorrencia%3D" + nroOcorrencia
+    restService: "ws_deletequery.php"
+  )
+
 # Event to create the modal
 $("a.editOcorrencia").on "click", (event) ->
   nroOcorrencia = $(this).attr("data-ocorrencia")
@@ -309,3 +351,30 @@ $("#storePerson").on "click", ()->
       console.log 'CPF não encontrado!'
   )
 # }}}
+
+$("#validationSubmit").on 'click', ()->
+  # $.ajax (
+  #   url: window.location.href.replace("#","") + "index.php/Form/generatePDFForm"
+  #   dataType: 'json'
+  #   type: 'get'
+  #   data:
+  #     'html':
+  #       window.top.form_frame_edit.document.getElementById('formAcidentes')
+  #   success: (data) ->
+  #     console.log "Enviado para o servidor!"
+  #   error: (data,status)->
+  #     $("#inputNome").val("")
+  #     $("#inputEmail").val("")
+  #     $("#inputEmail").val("")
+  #     $("#inputTelefone").val("")
+  #     console.log 'CPF não encontrado!'
+  # )
+
+  input = document.createElement('input')
+  input.style = 'display:none;'
+  input.id = 'generatepdf'
+  input.name = 'generatepdf'
+  input.value = 'true'
+  window.top.form_frame_edit.document.formAcidentes.appendChild(input)
+
+  window.top.form_frame_edit.document.formAcidentes.submit()

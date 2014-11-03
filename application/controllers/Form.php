@@ -29,8 +29,6 @@ class Form extends CI_Controller {
 
             $this->form_model->update($form_data);
         }
-
-        $this->load->view('templates/form_success');
     }
 
     public function formSetRules($form_data) {
@@ -217,8 +215,17 @@ class Form extends CI_Controller {
             $this->validateForm($form_data);
         } else {
             $this->insertDB($form_data);
+
             if ($this->session->userdata('logged_in'))
                 $this->sendMail($form_data);
+
+            $data['comunicado'] = $form_data['comunicado'];
+            $this->load->view('templates/form_success', $data);
+
+            // if($form_data['generatepdf']) {
+            //     $this->generatePDFForm($form_data['comunicado']);
+            // }
+
         }
     }
 
@@ -295,7 +302,7 @@ class Form extends CI_Controller {
 
             $form['data'] = $data;
 
-            $this->load->view('templates/form', $form);
+            $validadedForm = $this->load->view('templates/form', $form);
         } else {
             $this->load->view('templates/form_fail');
         }
@@ -1427,6 +1434,7 @@ class Form extends CI_Controller {
         $path = $form_data['comunicado'];
         $finalPath = "/var/www/siema/assets/uploads/" . $path;
 
+
         //verify if path already exists, remove and create folder.
         if (is_dir($finalPath)) {
             $diretorio = dir($finalPath);
@@ -1453,4 +1461,30 @@ class Form extends CI_Controller {
         //%error = array('error' => $this->upload->display_errors());
     }
 
+
+    public function generatePDFForm() {
+
+        $nro_ocorrencia = $_POST['nro_ocorrencia'];
+
+        $this->load->helper('form');
+
+        // $this->form_model->generatePdfData($nro_ocorrencia);
+
+        $formLoad = $this->form_model->generatePdfData($nro_ocorrencia);
+
+        if ($formLoad != "") {
+            $formLoad['typeOfForm'] = "load";
+
+            // $data = $this->dataForm($formLoad);
+            // $form['data'] = $data;
+
+            $form['data'] = $formLoad;
+
+            $this->load->helper(array('dompdf', 'file'));
+            $validadedForm = $this->load->view('templates/generate_pdf', $form, true);
+            // $validadedForm = $this->load->view('templates/form', $form, true);
+            pdf_create($validadedForm, $nro_ocorrencia);
+
+        }
+    }
 }
