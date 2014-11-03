@@ -1434,6 +1434,7 @@ class Form extends CI_Controller {
         $path = $form_data['comunicado'];
         $finalPath = "/var/www/siema/assets/uploads/" . $path;
 
+
         //verify if path already exists, remove and create folder.
         if (is_dir($finalPath)) {
             $diretorio = dir($finalPath);
