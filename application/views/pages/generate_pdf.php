@@ -207,9 +207,7 @@
       if($semCausa == 'checked'){
         echo '<div>&nbsp;&nbsp; Sem condições de informar</div>';
       } else {
-        foreach ($infoProd as $tipo) {
-          echo '<div>&nbsp;&nbsp;- ' . ucfirst(strtolower($tipo['nome'])) . ' - ' . $tipo['quantidade'] . ' ' . $tipo['unidade_medida'] . '</div>';
-        }
+        echo '<div>&nbsp;&nbsp;<strong>Causa provável do acidente:</strong> '. $causa_provavel . '</div>';
       }
     ?>
 
