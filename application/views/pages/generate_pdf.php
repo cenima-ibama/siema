@@ -1,22 +1,24 @@
-<h3 style="margin-bottom:5px;"><center> FORMULÁRIO DE VALIDAÇÃO DE EMERGÊNCIAS <center></h3>
-<!-- <h3><center> FORMULÁRIO DE VALIDAÇÂO DE EMERGENCIAS <center></h3> -->
+<h3 style="margin-bottom:5px;"><center> COMUNICADO DE ACIDENTE AMBIENTAL <center></h3>
 
 <!-- <h4 style="color:#0088cc;padding: 0 10px 0 0;"> -->
-<h4 style="padding-bottom: 50px;">
+<h4 style="padding-bottom: 30px;">
   <center>
     <strong><u>NÚMERO DE REGISTRO</u>:</strong>
     <span><?php echo $comunicado;?></span>
   <center>
+  <h5>
+    <center>
+      <span>Data de envio: <?php echo date('d/m/Y H:i:s');?></span>
+    </center>
+  <h5 />
 </h4>
-
-<br />
 
 <div class="span2">
   <?php
-    if ($validado == 'S'){
-      echo '<input id="validado" type="checkbox" value="" name="validado" checked="checked"> Validado';
-    }else {
-      echo '<input id="validado" type="checkbox" value="" name="validado"> Validado';
+    if ($validado == 'S') {
+      echo ' <strong>Validado</strong><input id="validado" type="checkbox" value="" name="validado" checked="checked">';
+    } else {
+      echo ' <strong>Validado</strong><input id="validado" type="checkbox" value="" name="validado">';
     }
   ?>
 </div>
@@ -37,13 +39,13 @@
       if($oceano == 'on') {
         echo
             '<div>' .
-            '&nbsp;&nbsp;<input type="checkbox" checked="checked"/>' .
-            '&nbsp;&nbsp;Oceano <br />' .
+            '<strong>&nbsp;&nbsp;Oceano</strong> ' .
+            '&nbsp;&nbsp;<input type="checkbox" checked="checked"/><br />' .
             '&nbsp;&nbsp;<span> <strong>Bacia Sedimentar:</strong>' . $bacia_nome . '</span>' .
             '</div>';
       } else {
         echo '<div>' .
-             '&nbsp;&nbsp;<input type="checkbox"> &nbsp;&nbsp;Oceano' .
+             '<strong>&nbsp;&nbsp;Oceano</strong> &nbsp;&nbsp;<input type="checkbox">' .
              '</div>';
       }
     ?>
@@ -51,7 +53,7 @@
     <br />
 
     <div>&nbsp;&nbsp; <strong>UF:</strong> <?php echo $uf_nome;?></div>
-    <div>&nbsp;&nbsp; <strong>Estado:</strong> <?php echo $municipio_nome;?></div>
+    <div>&nbsp;&nbsp; <strong>Município:</strong> <?php echo $municipio_nome;?></div>
 
     <br />
 
@@ -91,12 +93,10 @@
 
         if ($feriado == 'checked') {
           echo
-            '&nbsp;&nbsp;<input type="checkbox" checked="checked"/>' .
-            '&nbsp;&nbsp;Feriado <br />';
+            '&nbsp;&nbsp;<strong>Feriado</strong> &nbsp;&nbsp;<input type="checkbox" checked="checked"/><br />';
         } else {
           echo
-            '&nbsp;&nbsp;<input type="checkbox"/>' .
-            '&nbsp;&nbsp;Feriado <br />';
+            '&nbsp;&nbsp;<strong>Feriado</strong> &nbsp;&nbsp;<input type="checkbox"/><br />';
         }
       }
     ?>
@@ -119,7 +119,7 @@
         }
       }
       if($origem_comp) {
-        echo '<div>&nbsp;&nbsp;<strong>Informações complementares:  </strong>' . $origem_comp . '</div>';
+        echo '<br /><div>&nbsp;&nbsp;<strong>Informações complementares:  </strong>' . $origem_comp . '</div>';
       }
     ?>
 
@@ -229,7 +229,7 @@
     <?php
       echo '&nbsp;&nbsp;';
       if($semDanos == 'checked'){
-        echo '&nbsp;&nbsp; Sem informação sobre ocorrências e/ou ambientes atingidos';
+        echo '<div>&nbsp;&nbsp; Sem informação sobre ocorrências e/ou ambientes atingidos</div>';
       } else {
         foreach ($tipoDanoIdentificado as $tipo) {
           echo '<div>&nbsp;&nbsp;- ' . $tipo . '</div>';
@@ -254,7 +254,7 @@
     <?php
       echo '&nbsp;&nbsp;';
       if($semResponsavel == 'checked'){
-        echo '&nbsp;&nbsp; Sem informação sobre a empresa/responsável';
+        echo '<div>&nbsp;&nbsp; Sem informação sobre a empresa/responsável</div>';
       } else {
         echo
             '<div>&nbsp;&nbsp; <strong>Nome:</strong> ' . $responsavel . '</div>' .
@@ -275,7 +275,7 @@
     <?php
       echo '&nbsp;&nbsp;';
       if($semInstituicao == 'checked'){
-        echo '&nbsp;&nbsp; Sem informação sobre instituição/empresa atuando no local';
+        echo '<div>&nbsp;&nbsp; Sem informação sobre instituição/empresa atuando no local</div>';
       } else {
         foreach ($instituicaoAtuandoLocal as $tipo) {
           echo '<div>&nbsp;&nbsp;- ' . $tipo . '</div>';
@@ -304,17 +304,15 @@
   <div>
     <?php
       if($semProcedimentos == 'checked'){
-        echo '&nbsp;&nbsp; Sem evidência de ação ou ou providência até o momento';
+        echo '<div>&nbsp;&nbsp; Sem evidência de ação ou ou providência até o momento</div>';
       } else {
         echo '&nbsp;&nbsp;';
         echo '<div>&nbsp;&nbsp; <strong>Existência de Plano de Emergencia Individual ou similar:</strong> ' . $plano_emergencia . '</div>';
 
         if ($plano_acionado == 'on'){
-          echo '<div>&nbsp;&nbsp;<input id="plano_acionado" type="checkbox" value="" name="plano_acionado" checked="checked">' .
-               '&nbsp;&nbsp;Acionado Plano Indivual de Emergencia</div>';
+          echo '<div>&nbsp;&nbsp;<strong>Acionado Plano Indivual de Emergencia</strong>&nbsp;&nbsp;<input id="plano_acionado" type="checkbox" value="" name="plano_acionado" checked="checked"></div>';
         } else {
-          echo '<div>&nbsp;&nbsp;<input id="plano_acionado" type="checkbox" value="" name="plano_acionado"> ' .
-               '&nbsp;&nbsp;Acionado Plano Indivual de Emergencia</div>';
+          echo '<div>&nbsp;&nbsp;<strong>Acionado Plano Indivual de Emergencia</strong>&nbsp;&nbsp;<input id="plano_acionado" type="checkbox" value="" name="plano_acionado"> </div>';
         }
 
         echo '<br /><div>&nbsp;&nbsp;<strong>Providências tomadas a saber: </strong> ' . (($outras_medidas == 'on') ? $medidas_tomadas : " ----- ") . '</div>';
