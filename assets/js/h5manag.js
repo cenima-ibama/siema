@@ -286,21 +286,21 @@
     return $.ajax({
       url: window.location.href.replace("#", "") + "index.php/Auth/create_intern_user",
       dataType: 'json',
-      type: 'get',
+      type: 'post',
       data: {
-        'id_perfil': document.getElementById('selectPerfil').selectedIndex,
+        'id_perfil': document.getElementById('selectPerfil').value,
         'cpf': $('#searchCPF').val(),
         'nome': $('#inputNome').val()
       },
       success: function(data) {
-        return console.log("Enviado para o servidor!");
+        return $("#infoBox").html("Enviado para o servidor!").fadeOut(2000);
       },
       error: function(data, status) {
         $("#inputNome").val("");
         $("#inputEmail").val("");
         $("#inputEmail").val("");
         $("#inputTelefone").val("");
-        return console.log('CPF não encontrado!');
+        return $("#errorBox").html("Enviado para o servidor!").fadeOut(2000);
       }
     });
   });

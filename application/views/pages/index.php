@@ -737,6 +737,9 @@
 
             <?php echo form_open("Auth/sel_pessoa", array("id" => "sel_pessoa", "class" => "form-horizontal", "role" => "form")); ?>
 
+            <div id="errorBox" class="alert alert-block alert-error fade in" style="display:none; padding:5px -px 5px 0px;"></div>
+            <div id="infoBox" class="alert alert-block alert-info fade in" style="display:none; padding:5px -px 5px 0px;"></div>
+
               <div class="form-group">
                 <div class="col-sm-10">
                   <label for="inputCPF" class="col-sm-2 control-label">CPF</label>
@@ -761,7 +764,7 @@
               <div class="form-group" readonly="readonly">
                 <label for="inputOrgao" class="col-sm-2 control-label">Órgão</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" id="inputOrgao" placeholder="Orgao">
+                  <input type="text" class="form-control" id="inputOrgao" placeholder="Orgao" disabled="disabled">
                 </div>
               </div>
               <div class="form-group" readonly="readonly">
@@ -774,8 +777,8 @@
                 <label for="selectPerfil" class="col-sm-2 control-label">Perfil</label>
                 <div class="col-sm-10">
                   <select class="form-control selectpicker" id="selectPerfil" name="selectPerfil">
-                    <option id="1">Administrador</option>
-                    <option id="2" selected="selected">Validador</option>
+                    <option value="1" disabled="disabled">Administrador</option>
+                    <option value="2" selected="selected">Validador</option>
                   </select>
                 </div>
               </div>

@@ -510,12 +510,30 @@ class Auth extends CI_Controller {
 
     public function create_intern_user () {
 
-        if ($_POST['searchCPF'] && $_POST['inputNome'] && $_POST['perfil']) {
+        if ($_POST['cpf'] && $_POST['nome'] && $_POST['id_perfil']) {
             $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
 
-            $_POST['inputNome'];
-            $_POST['searchCPF'];
-            $_POST['perfil'];
+            $nome = (string) $_POST['nome'];
+            // $this->firephp->log($_POST['nome']);
+            $cpf = (string) $_POST['cpf'];
+            // $this->firephp->log($_POST['cpf']);
+            $perfil = (string) $_POST['id_perfil'];
+            // $this->firephp->log($_POST['id_perfil']);
+
+            $query = "select * from usuarios where cpf='". $cpf . "'";
+            $result = $ocorrenciasDatabase->query($query);
+
+            if ($result->num_rows() > 0) {
+                return "Usuário já cadastrado!";
+            } else {
+                $query = "insert into usuarios (id_perfil,cpf,nome) values (" . $perfil . ",'" . $cpf . "','" . $nome . "');";
+
+                $ocorrenciasDatabase->trans_start();
+                $ocorrenciasDatabase->query($query);
+                $ocorrenciasDatabase->trans_complete();
+
+                return "Usuário cadastrado com sucesso!";
+            }
         }
     }
 }

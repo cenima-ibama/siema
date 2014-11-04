@@ -336,19 +336,19 @@ $("#storePerson").on "click", ()->
   $.ajax (
     url: window.location.href.replace("#","") + "index.php/Auth/create_intern_user"
     dataType: 'json'
-    type: 'get'
+    type: 'post'
     data:
-      'id_perfil': document.getElementById('selectPerfil').selectedIndex
+      'id_perfil': document.getElementById('selectPerfil').value
       'cpf': $('#searchCPF').val()
       'nome': $('#inputNome').val()
     success: (data) ->
-      console.log "Enviado para o servidor!"
+      $("#infoBox").html("Enviado para o servidor!").fadeOut(2000)
     error: (data,status)->
       $("#inputNome").val("")
       $("#inputEmail").val("")
       $("#inputEmail").val("")
       $("#inputTelefone").val("")
-      console.log 'CPF não encontrado!'
+      $("#errorBox").html("Enviado para o servidor!").fadeOut(2000)
   )
 # }}}
 
