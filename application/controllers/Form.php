@@ -1272,7 +1272,7 @@ class Form extends CI_Controller {
         //
         // Input Nome Comunicante (Informante)
         $data['inputNomeInformante'] = array(
-            'readonly' => 'readonly',
+            //'readonly' => 'readonly',
             'id' => 'inputNomeInformante',
             'name' => 'inputNomeInformante',
             'class' => 'input-large',
@@ -1297,7 +1297,7 @@ class Form extends CI_Controller {
         );
         // Input Email Comunicante (Informante)
         $data['inputEmailInformante'] = array(
-            'readonly' => 'readonly',
+            //'readonly' => 'readonly',
             'id' => 'inputEmailInformante',
             'name' => 'inputEmailInformante',
             'class' => 'input-large',

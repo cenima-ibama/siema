@@ -228,14 +228,14 @@
   acidentes = new L.VectorLayer.Postgis({
     url: restURL,
     geotable: "vw_ocorrencia_mapa",
-    fields: "id_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, legado, validado",
+    fields: "id_ocorrencia, nro_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, produtos_outros, legado, validado",
     srid: 4326,
     geomFieldName: "shape",
     showAll: true,
     cluster: true,
     popupTemplate: function(properties) {
       var html, text;
-      html = '<div class="iw-content"><h4>' + properties.id_ocorrencia + '</h4>';
+      html = '<div class="iw-content"><h4 class="text-center">' + properties.nro_ocorrencia + '</h4><br />';
       html += '<table class="condensed-table bordered-table zebra-striped"><tbody>';
       text = "";
       if (properties.municipio) {
@@ -280,7 +280,14 @@
       if (properties.produtos === "{}") {
         text = "Sem informação";
       }
-      html += '<tr><th>Produtos Envolvidos: </th><td style="max-width:200px;">' + text + '</td></tr>';
+      html += '<tr><th>Produtos ONU: </th><td style="max-width:200px;">' + text + '</td></tr>';
+       if (properties.produtos_outros !== "{}") {
+        text += properties.produtos.replace(/[{}]/g, "").replace(/,/g, ", ");
+      }
+      if (properties.produtos_outros === "{}") {
+        text = "Sem informação";
+      }
+      html += '<tr><th>Produtos NÃO-ONU: </th><td style="max-width:200px;">' + text + '</td></tr>';
       html += '</tbody></table></div>';
       return html;
     },

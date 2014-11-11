@@ -369,7 +369,11 @@ legados = new L.VectorLayer.Postgis (
     text = ""
     if properties.produtos isnt "{}" then text += properties.produtos.replace(/[{}]/g,"").replace(/,/g,", ")
     if properties.produtos is "{}" then text = "Sem informação"
-    html += '<tr><th>Produtos Envolvidos: </th><td style="max-width:200px;">' + text + '</td></tr>'
+    html += '<tr><th>Produtos ONU: </th><td style="max-width:200px;">' + text + '</td></tr>'
+    
+    if properties.produtos_outro isnt "{}" then text += properties.produtos_outro.replace(/[{}]/g,"").replace(/,/g,", ")
+    if properties.produtos_outro is "{}" then text = "Sem informação"
+    html += '<tr><th>Produtos NÃO-ONU: </th><td style="max-width:200px;">' + text + '</td></tr>'
 
     html += '</tbody></table></div>'
     return html
