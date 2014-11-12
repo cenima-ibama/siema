@@ -119,7 +119,7 @@ class Form extends CI_Controller {
             $this->form_validation->set_rules('semCausa', 'Causa provável do acidente', 'required');
         }
 
-        if (isset($form_data['hasOleo']) and $form_data['hasOleo'] == 'S' and !isset($form_data['SituacaoDescarga'])) {
+        if (isset($form_data['hasOleo']) and $form_data['hasOleo'] == 'S' and ! isset($form_data['SituacaoDescarga'])) {
             $this->form_validation->set_rules('SituacaoDescarga', 'Situação atual da descarga', 'required');
         }
 
@@ -191,11 +191,10 @@ class Form extends CI_Controller {
 //                echo '</div>';
 
             if (!(strcmp('<p>Você não selecionou um arquivo para envio.</p>', $this->upload->display_errors()))) {
-                  // PARA EXIBIR MENSAGEM ALERTANDO QUE NÃO FOI USADO O UPLOAD DE ARQUIVOS
+                // PARA EXIBIR MENSAGEM ALERTANDO QUE NÃO FOI USADO O UPLOAD DE ARQUIVOS
 //                echo '<div class="alert alert-block alert-warning fade in" style="display:inherit;">';
 //                echo $this->upload->display_errors();
 //                echo '</div>';
-
             } else {
                 echo '<div class="alert alert-block alert-error fade in" style="display:inherit;">';
                 echo $this->upload->display_errors();
@@ -225,7 +224,6 @@ class Form extends CI_Controller {
             // if($form_data['generatepdf']) {
             //     $this->generatePDFForm($form_data['comunicado']);
             // }
-
         }
     }
 
@@ -248,9 +246,8 @@ class Form extends CI_Controller {
         $this->loadForm($form_data["nroOcorrencia"]);
     }
 
-    public function validateUpdate()
-    {
-        $numeroRegistro  = trim($_POST["id"]);
+    public function validateUpdate() {
+        $numeroRegistro = trim($_POST["id"]);
         $validation_model = $this->form_validations_model;
         $userIbamaNet = ($this->session->userdata("profile_user") == "3");
         $userName = $this->session->userdata("username");
@@ -258,36 +255,26 @@ class Form extends CI_Controller {
         $status = "";
         $mensagem = "";
 
-        if($numeroRegistro == "")
-        {
-          $status = 'false';
-          $mensagem = "Número do Registro não informado.";
-        }
-        else if (!$validation_model->numRegistroExists($numeroRegistro))
-        {
-          $status = 'false';
-          $mensagem = "Número do Registro não encontrado.";
-        }
-        else if ($validation_model->dadosLegados($numeroRegistro))
-        {
-          $status = 'false';
-          $mensagem = "Dados Legados não podem ser alterados.";
-        }
-        else if ($userIbamaNet  && !$validation_model->userCadastrouOcorrencia($numeroRegistro,$userName))
-        {
-          $status = 'false';
-          $mensagem = "Alteração não pode ser realizada, porque a ocorrência não foi criada por este usuário.";
-        }
-        else
-        {
-          $status = 'true';
-          $mensagem = "Informações válidas.";
+        if ($numeroRegistro == "") {
+            $status = 'false';
+            $mensagem = "Número do Registro não informado.";
+        } else if (!$validation_model->numRegistroExists($numeroRegistro)) {
+            $status = 'false';
+            $mensagem = "Número do Registro não encontrado.";
+        } else if ($validation_model->dadosLegados($numeroRegistro)) {
+            $status = 'false';
+            $mensagem = "Dados Legados não podem ser alterados.";
+        } else if ($userIbamaNet && !$validation_model->userCadastrouOcorrencia($numeroRegistro, $userName)) {
+            $status = 'false';
+            $mensagem = "Alteração não pode ser realizada, porque a ocorrência não foi criada por este usuário.";
+        } else {
+            $status = 'true';
+            $mensagem = "Informações válidas.";
         }
 
-        $result = array("status" => $status , "mensagem" => $mensagem);
+        $result = array("status" => $status, "mensagem" => $mensagem);
 
-         echo json_encode($result);
-
+        echo json_encode($result);
     }
 
     private function loadForm($nro_ocorrencia) {
@@ -781,7 +768,7 @@ class Form extends CI_Controller {
             'rows' => '2',
             'class' => 'input-large',
             'maxlength' => '150',
-            'value' => set_value('inputCompEvento', isset($formLoad['inputCompEvento'])?$formLoad['inputCompEvento']:'')
+            'value' => set_value('inputCompEvento', isset($formLoad['inputCompEvento']) ? $formLoad['inputCompEvento'] : '')
         );
         if (isset($formLoad['semEvento'])) {
             $data['inputCompEvento'] += array(
@@ -850,11 +837,10 @@ class Form extends CI_Controller {
         );
 
         if (isset($formLoad['semProduto'])) {
-                $data['semProduto'] += array(
-                    'checked' => 'checked'
-                );
-
-            }
+            $data['semProduto'] += array(
+                'checked' => 'checked'
+            );
+        }
 
         // Oil Form
         if (isset($formLoad['hasOleo'])) {
@@ -1126,7 +1112,7 @@ class Form extends CI_Controller {
             'rows' => '2',
             'class' => 'input-large',
             'maxlength' => '150',
-            'value' => set_value('inputCompInstituicao',isset($formLoad['inputCompInstituicao']) ? $formLoad['inputCompInstituicao'] : "")
+            'value' => set_value('inputCompInstituicao', isset($formLoad['inputCompInstituicao']) ? $formLoad['inputCompInstituicao'] : "")
         );
         if (isset($formLoad['semInstituicao'])) {
             $data['inputCompInstituicao'] += array(
@@ -1271,14 +1257,26 @@ class Form extends CI_Controller {
         // 11. Identificação do Comunicante
         //
         // Input Nome Comunicante (Informante)
-        $data['inputNomeInformante'] = array(
-            //'readonly' => 'readonly',
-            'id' => 'inputNomeInformante',
-            'name' => 'inputNomeInformante',
-            'class' => 'input-large',
-            'maxlength' => '150',
-            'value' => set_value('inputNomeInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('name') : $formLoad['inputNomeInformante'])
-        );
+
+        if ($this->session->userdata('logged_in')) {
+            $data['inputNomeInformante'] = array(
+                'readonly' => 'readonly',
+                'id' => 'inputNomeInformante',
+                'name' => 'inputNomeInformante',
+                'class' => 'input-large',
+                'maxlength' => '150',
+                'value' => set_value('inputNomeInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('name') : $formLoad['inputNomeInformante'])
+            );
+        } else {
+            $data['inputNomeInformante'] = array(
+                'id' => 'inputNomeInformante',
+                'name' => 'inputNomeInformante',
+                'class' => 'input-large',
+                'maxlength' => '150',
+                'value' => set_value('inputNomeInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('name') : $formLoad['inputNomeInformante'])
+            );
+        }
+
         // Input Funcão Navio Comunicante (Informante)
         $data['inputCargoFunc'] = array(
             'id' => 'inputCargoFunc',
@@ -1296,14 +1294,26 @@ class Form extends CI_Controller {
             'value' => set_value('inputInstEmp', isset($formLoad['inputInstEmp']) ? $formLoad['inputInstEmp'] : '')
         );
         // Input Email Comunicante (Informante)
-        $data['inputEmailInformante'] = array(
-            //'readonly' => 'readonly',
-            'id' => 'inputEmailInformante',
-            'name' => 'inputEmailInformante',
-            'class' => 'input-large',
-            'maxlength' => '150',
-            'value' => set_value('inputEmailInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('mail') : $formLoad['inputEmailInformante'])
-        );
+
+        if ($this->session->userdata('logged_in')) {
+            $data['inputEmailInformante'] = array(
+                'readonly' => 'readonly',
+                'id' => 'inputEmailInformante',
+                'name' => 'inputEmailInformante',
+                'class' => 'input-large',
+                'maxlength' => '150',
+                'value' => set_value('inputEmailInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('mail') : $formLoad['inputEmailInformante'])
+            );
+        } else {
+            $data['inputEmailInformante'] = array(
+                'id' => 'inputEmailInformante',
+                'name' => 'inputEmailInformante',
+                'class' => 'input-large',
+                'maxlength' => '150',
+                'value' => set_value('inputEmailInformante', ($formLoad['typeOfForm'] == 'create') ? $this->session->userdata('mail') : $formLoad['inputEmailInformante'])
+            );
+        }
+
         // // Input Funcão Navio Comunicante (Informante)
         // $data['inputCargoFunc'] = array(
         //     'id' => 'inputCargoFunc',
@@ -1361,7 +1371,7 @@ class Form extends CI_Controller {
             'maxlength' => '150',
             'class' => 'input-large',
             'value' => set_value('inputDescOutrasFontInfo', isset($formLoad['desc_outras_fontes']) ? $formLoad['desc_outras_fontes'] : '')
-            );
+        );
 
 
         // Checkbox Validado
@@ -1372,7 +1382,7 @@ class Form extends CI_Controller {
             'style' => 'float: right; margin-left: 10px; margin-right:10px;'
                 // 'value'        => 'on'
         );
-        if (isset($formLoad['validado']) && $formLoad['validado'] == 'S' ) {
+        if (isset($formLoad['validado']) && $formLoad['validado'] == 'S') {
             $data['validado'] += array(
                 'checked' => 'checked'
             );
@@ -1429,7 +1439,6 @@ class Form extends CI_Controller {
         // $this->firephp->log($this->email->print_debugger());
     }
 
-
     function do_upload($form_data) {
         $path = $form_data['comunicado'];
         $finalPath = "/var/www/siema/assets/uploads/" . $path;
@@ -1461,7 +1470,6 @@ class Form extends CI_Controller {
         //%error = array('error' => $this->upload->display_errors());
     }
 
-
     public function generatePDFForm() {
 
         $nro_ocorrencia = $_POST['nro_ocorrencia'];
@@ -1484,7 +1492,7 @@ class Form extends CI_Controller {
             $validadedForm = $this->load->view('templates/generate_pdf', $form, true);
             // $validadedForm = $this->load->view('templates/form', $form, true);
             pdf_create($validadedForm, $nro_ocorrencia);
-
         }
     }
+
 }

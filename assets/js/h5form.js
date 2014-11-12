@@ -1241,11 +1241,11 @@
       $("#myTable").removeAttr("style");
       $("#productsInfo").removeAttr("style");
     }
-    //if (!parent.H5.logged_in) {
+    if (!parent.H5.logged_in) {
       $("#inputNomeInformante").removeAttr("disabled");
       $("#inputEmailInformante").removeAttr("disabled");
-      //return $("#inputEmailInformante").removeAttr("disabled");
-    //}
+      return $("#inputEmailInformante").removeAttr("disabled");
+    }
   });
 
   H5.formType = '';
