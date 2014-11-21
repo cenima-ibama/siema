@@ -307,6 +307,10 @@ $("#searchCPF").mask("99999999999")
 
 $("#searchPerson").on "click", ()->
   console.log "search for persons info"
+  
+  $("#errorBox").slideUp('fast');
+  $("#infoBox").slideUp('fast');
+  
   $.ajax (
     url: window.location.href.replace("#","") + "index.php/Auth/search_user"
     dataType: 'json'
@@ -314,10 +318,16 @@ $("#searchPerson").on "click", ()->
     data:
       'cpf': $("#searchCPF").val()
     success: (data) ->
-      $("#inputNome").val(data.Nome)
-      $("#inputEmail").val(data.Desc_Email)
-      $("#inputEmail").val(data.Desc_Email)
-      $("#inputTelefone").val(data.Telefone)
+    
+      if data ?
+          $("#inputNome").val(data.Nome);
+          $("#inputEmail").val(data.Desc_Email)
+          $("#inputEmail").val(data.Desc_Email)
+          $("#infoBox").html("CPF encontrado!").slideDown('slow')
+          return console.log('CPF encontrado!')
+      else
+          $("#errorBox").html("CPF não encontrado!").slideDown('slow')
+          return console.log('CPF não cadastrado na CNT!');
 
 
     error: (data,status)->
@@ -333,6 +343,9 @@ $("#searchPerson").on "click", ()->
 $("#storePerson").on "click", ()->
 
   console.log "send form to save"
+  
+  $("#errorBox").slideUp('fast')
+  $("#infoBox").slideUp('fast')
   $.ajax (
     url: window.location.href.replace("#","") + "index.php/Auth/create_intern_user"
     dataType: 'json'
@@ -342,13 +355,23 @@ $("#storePerson").on "click", ()->
       'cpf': $('#searchCPF').val()
       'nome': $('#inputNome').val()
     success: (data) ->
-      $("#infoBox").html("Enviado para o servidor!").fadeOut(2000)
+      if data?
+        $("#infoBox").html("Usuário cadastrado com sucesso!").slideDown('slow')
+        return  console.log('Usuário cadastrado com sucesso!')
+      else 
+        $("#errorBox").html("Usuário já cadastrado!").slideDown('slow')
+        return console.log('Usuário já cadastrado!')
+                
     error: (data,status)->
+      console.log(data);
+      
       $("#inputNome").val("")
       $("#inputEmail").val("")
       $("#inputEmail").val("")
       $("#inputTelefone").val("")
-      $("#errorBox").html("Enviado para o servidor!").fadeOut(2000)
+      
+      $("#errorBox").html("Não foi possível cadastrar usuário!").slideDown('slow')
+      return console.log('Não foi possível cadastrar usuário!')
   )
 # }}}
 
