@@ -1243,6 +1243,7 @@
     }
     if (!parent.H5.logged_in) {
       $("#inputNomeInformante").removeAttr("disabled");
+      $("#inputEmailInformante").removeAttr("disabled");
       return $("#inputEmailInformante").removeAttr("disabled");
     }
   });
