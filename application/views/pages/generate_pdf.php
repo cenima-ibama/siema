@@ -8,7 +8,11 @@
   <center>
   <h5>
     <center>
-      <span>Data de envio: <?php echo date('d/m/Y H:i:s');?></span>
+      <span>Data do cadastro: <?php echo date('d/m/Y', strtotime($dt_registro)); ?></span>
+      
+      <br />
+      
+      <span>Data da atualização: <?php echo date('d/m/Y H:i:s'); ?></span>
     </center>
   <h5 />
 </h4>
