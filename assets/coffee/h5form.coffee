@@ -1089,6 +1089,16 @@ $(document).ready ->
     .add('#inputDesObs')
     .add('#inputDesDanos')
     .add('#inputDescOutrasFontInfo')
+    .add('#inputNomeNavio')
+    .add('#inputNomeInformante')
+    .add('#inputInstEmp')
+    .add('#inputCargoFunc')
+    .add('#inputEmailInformante')
+    .add('#inputResponsavel')
+    .add('#inputInfoInstituicaoNome')
+    .add('#inputInstEmp')
+    .add('#inputEmailInformante')
+    .add('#inputEndereco')
     .maxlength(
       alwaysShow: true,
       threshold: 10,
