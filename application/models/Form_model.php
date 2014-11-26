@@ -1775,6 +1775,13 @@ class Form_model extends CI_Model {
     if($dbResult['nro_ocorrencia']) {
       $form['comunicado'] = $dbResult['nro_ocorrencia'];
     }
+    
+    //
+    // Retrieving the "Data do registro"
+    //
+    if($dbResult['dt_registro']) {
+      $form['dt_registro'] = $dbResult['dt_registro'];
+    }
 
     //
     // Campo para identificar se ocorrência foi validada ou não
