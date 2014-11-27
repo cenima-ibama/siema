@@ -357,6 +357,8 @@
 <br /><br /><hr> <br />
 
 <?php
+
+
   if ($this->authldap->is_authenticated()) {
     echo
         '<div>' .
@@ -369,9 +371,14 @@
       echo  '<div>&nbsp;&nbsp;- ' . $tipo . '</div>';
     }
 
-    echo   '<br /><div>&nbsp;&nbsp; <strong>Descrição Outra(s) Fonte(s):</strong> '. isset($outras_fontes) ? $outras_fontes : ' ----- ' . '</div>';
-    echo    '</div>' .
+      if(isset($outras_fontes)) {
+        echo   '<br /><div>&nbsp;&nbsp; <strong>Descrição Outra(s) Fonte(s):</strong> '. $outras_fontes . '</div>';
+      } else {
+        echo   '<br /><div>&nbsp;&nbsp; <strong>Descrição Outra(s) Fonte(s):</strong> ----- </div>';
+      }
+    // echo   '<br /><div>&nbsp;&nbsp; <strong>Descrição Outra(s) Fonte(s):</strong> '. isset($outras_fontes) ? $outras_fontes : ' ----- ' . '</div>';
 
+    echo    '</div>' .
         '</div>' .
 
         '<br /><br /><hr> <br />';
