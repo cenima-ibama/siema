@@ -237,7 +237,8 @@ deleteTempData = ->
     parameters: "nro_ocorrencia%3D" + nroOcorrencia
     restService: "ws_deletequery.php"
   )
-
+  
+  
 # Event to create the modal
 $("a.editOcorrencia").on "click", (event) ->
   nroOcorrencia = $(this).attr("data-ocorrencia")
@@ -308,8 +309,8 @@ $("#searchCPF").mask("99999999999")
 $("#searchPerson").on "click", ()->
   console.log "search for persons info"
   
-  $("#errorBox").slideUp('fast');
-  $("#infoBox").slideUp('fast');
+  $("#errorBox").slideUp('fast')
+  $("#infoBox").slideUp('fast')
   
   $.ajax (
     url: window.location.href.replace("#","") + "index.php/Auth/search_user"
@@ -319,8 +320,8 @@ $("#searchPerson").on "click", ()->
       'cpf': $("#searchCPF").val()
     success: (data) ->
     
-      if data ?
-          $("#inputNome").val(data.Nome);
+      if data?
+          $("#inputNome").val(data.Nome)
           $("#inputEmail").val(data.Desc_Email)
           $("#inputEmail").val(data.Desc_Email)
           $("#infoBox").html("CPF encontrado!").slideDown('slow')
