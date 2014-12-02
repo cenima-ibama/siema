@@ -729,7 +729,7 @@ if ($profilUser == 1) {
     ?>
 
                         <div id="manage1">
-                            <h2 class="sub-header">Cadastro de Pessoas</h2>
+                            <h2 class="sub-header">Cadastro de Validadores</h2>
 
     <?php echo form_open("Auth/sel_pessoa", array("id" => "sel_pessoa", "class" => "form-horizontal", "role" => "form")); ?>
 
@@ -743,6 +743,7 @@ if ($profilUser == 1) {
                                     <a class="btn icon-search icon-search-filter" id="searchPerson"></a>
                                 </div>
                             </div>
+                            <hr style="margin: 5px 0px;">
                             <div class="form-group" readonly="readonly">
                                 <div class="item">
                                     <label for="inputNome" class="col-sm-2 control-label">Nome</label>
@@ -751,12 +752,14 @@ if ($profilUser == 1) {
                                     </div>
                                 </div>
                             </div>
+                            <hr style="margin: 5px 0px;">
                             <div class="form-group" readonly="readonly">
                                 <label for="inputEmail" class="col-sm-2 control-label">Email</label>
                                 <div class="col-sm-10">
                                     <input type="email" class="form-control" id="inputEmail" placeholder="Email" disabled="disabled">
                                 </div>
                             </div>
+                            <hr style="margin: 5px 0px;">
                             <!--
                               <div class="form-group" readonly="readonly">
                                 <label for="inputOrgao" class="col-sm-2 control-label">Órgão</label>
@@ -780,6 +783,7 @@ if ($profilUser == 1) {
                                     </select>
                                 </div>
                             </div>
+                            <hr style="margin: 5px 0px;">
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10" style="margin: 0.5em">
                                     <a type="submit" class="btn btn-default" id="storePerson">Enviar</a>
@@ -789,7 +793,7 @@ if ($profilUser == 1) {
                             
                             <hr style="margin: 60px 0px;">
                             
-                            <h2 class="sub-header">Pessoas Cadastradas</h2>
+                            <h2 class="sub-header">Validadores Cadastrados</h2>
                             <!-- <input id="searchInput" type="text" value="Type To Filter"><span style="color:#0088CC;"><i class="icon-search icon-white"></i></span> -->
                             <div class="table-responsive table-ocorrencia" id="tableUsuario"></div>
 
