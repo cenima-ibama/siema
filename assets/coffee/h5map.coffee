@@ -234,13 +234,13 @@ restURL = "http://" + document.domain + "/siema/rest"
 acidentes = new L.VectorLayer.Postgis (
   url: restURL
   geotable: "vw_ocorrencia_mapa"
-  fields: "id_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, legado, validado"
+  fields: "id_ocorrencia, nro_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, produtos_outros, legado, validado"
   srid: 4326
   geomFieldName: "shape"
   showAll: true
   cluster: true
   popupTemplate: (properties) ->
-    html = '<div class="iw-content"><h4>' + properties.id_ocorrencia + '</h4>'
+    html = '<div class="iw-content"><h4 class="text-center">' + properties.nro_ocorrencia + '</h4><br />'
     html += '<table class="condensed-table bordered-table zebra-striped"><tbody>'
 
     text = ""
@@ -267,9 +267,15 @@ acidentes = new L.VectorLayer.Postgis (
 
     text = ""
     if properties.produtos isnt "{}" then text += properties.produtos.replace(/[{}]/g,"").replace(/,/g,", ")
-    if properties.produtos is "{}" then text = "Sem informação"
+    if properties.produtos is "{}" then text = ""
     html += '<tr><th>Produtos Envolvidos: </th><td style="max-width:200px;">' + text + '</td></tr>'
-
+    
+    text = "";
+    if properties.produtos_outros isnt "{}" then text += properties.produtos_outros.replace(/[{}]/g,"").replace(/,/g,", ")
+    if properties.produtos_outros is "{}" then text = ""
+    html += '<tr><th></th><td style="max-width:200px;">' + text + '</td></tr>'
+    
+    text = "";
     html += '</tbody></table></div>'
     return html
   focus: false
@@ -335,13 +341,13 @@ legados = new L.VectorLayer.Postgis (
   url: restURL
   map: H5.Map.base
   geotable: "vw_ocorrencia_mapa"
-  fields: "id_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, legado"
+  fields: "id_ocorrencia, nro_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, produtos_outros, legado"
   srid: 4326
   geomFieldName: "shape"
   showAll: true
   cluster: true
   popupTemplate: (properties) ->
-    html = '<div class="iw-content"><h4>' + properties.id_ocorrencia + '</h4>'
+    html = '<div class="iw-content"><h4 class="text-center">' + properties.nro_ocorrencia + '</h4><br />'
     html += '<table class="condensed-table bordered-table zebra-striped"><tbody>'
 
     text = ""
@@ -371,10 +377,12 @@ legados = new L.VectorLayer.Postgis (
     if properties.produtos is "{}" then text = ""
     html += '<tr><th>Produtos Envolvidos: </th><td style="max-width:200px;">' + text + '</td></tr>'
     
-    if properties.produtos_outro isnt "{}" then text += properties.produtos_outro.replace(/[{}]/g,"").replace(/,/g,", ")
-    if properties.produtos_outro is "{}" then text = ""
+    text = "";
+    if properties.produtos_outros isnt "{}" then text += properties.produtos_outros.replace(/[{}]/g,"").replace(/,/g,", ")
+    if properties.produtos_outros is "{}" then text = ""
     html += '<tr><th></th><td style="max-width:200px;">' + text + '</td></tr>'
-
+    
+    text = "";
     html += '</tbody></table></div>'
     return html
   singlePopup: true

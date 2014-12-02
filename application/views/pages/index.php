@@ -786,6 +786,17 @@ if ($profilUser == 1) {
                                 </div>
                             </div>
                             <? echo form_close();?>
+                            
+                            <hr style="margin: 60px 0px;">
+                            
+                            <h2 class="sub-header">Pessoas Cadastradas</h2>
+                            <!-- <input id="searchInput" type="text" value="Type To Filter"><span style="color:#0088CC;"><i class="icon-search icon-white"></i></span> -->
+                            <div class="table-responsive table-ocorrencia" id="tableUsuario"></div>
+
+                            <hr style="margin: 60px 0px;">
+                            
+                            <!-- codigo novo -->
+                            
                         </div>
 
     <?php

@@ -319,8 +319,8 @@ $("#searchPerson").on "click", ()->
       'cpf': $("#searchCPF").val()
     success: (data) ->
     
-      if data ?
-          $("#inputNome").val(data.Nome);
+      if data?
+          $("#inputNome").val(data.Nome)
           $("#inputEmail").val(data.Desc_Email)
           $("#inputEmail").val(data.Desc_Email)
           $("#infoBox").html("CPF encontrado!").slideDown('slow')
