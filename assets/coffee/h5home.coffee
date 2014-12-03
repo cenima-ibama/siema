@@ -173,17 +173,20 @@ Data: 14/07/2014
 consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar) ->
 
   registroTemp = new Array();
-  query = "" 
+  query = ""
+  
+  #Exibição de de ocorrências validadas
+  query = " validado = 'S'" 
 
   switch tpProd
     when "0" 
       #Produtos da lista ONU.
-      query += "produtos_onu <> '{}'"
+      query += " AND produtos_onu <> '{}'"
     when "1" 
       #Produtos da lista outro.
-      query += "produtos_outro <> '{}'"    
+      query += " AND produtos_outro <> '{}'"    
     else
-      query = ""
+      query += ""
   #Adicioanr o filtro de UF
   if uf isnt ""
     query += " AND " if query.length isnt 0
@@ -232,10 +235,11 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar)
       periodo_ocorrencia,       
       dt_ocorrencia_feriado,
       array_to_string(produtos_onu,'; ') AS produtos_onu,
-      array_to_string(produtos_outro,'; ') AS produtos_outro"      
+      array_to_string(produtos_outro,'; ') AS produtos_outro,
+      validado"      
     parameters: query    
   )
-
+  console.log(query)
   dataIncidente = ""
   diaSemana = ""
   dataCadastrada = false

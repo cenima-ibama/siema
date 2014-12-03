@@ -152,15 +152,16 @@
     var dataCadastrada, dataIncidente, diaSemana, headersTable, municipioUf, query, registroTemp, rest;
     registroTemp = new Array();
     query = "";
+    query = " validado = 'S'";
     switch (tpProd) {
       case "0":
-        query += "produtos_onu <> '{}'";
+        query += " AND produtos_onu <> '{}'";
         break;
       case "1":
-        query += "produtos_outro <> '{}'";
+        query += " AND produtos_outro <> '{}'";
         break;
       default:
-        query = "";
+        query += "";
     }
     if (uf !== "") {
       if (query.length !== 0) {
@@ -196,9 +197,10 @@
     rest = new H5.Rest({
       url: H5.Data.restURL,
       table: "vw_ocorrencia_consulta",
-      fields: "cast( id_ocorrencia AS text) AS id_ocorrencia, to_char(dt_registro,'DD/MM/YYYY') AS dt_registro, to_char(dt_ocorrencia,'DD/MM/YYYY') AS dt_ocorrencia, to_char(dt_primeira_obs,'DD/MM/YYYY') AS dt_primeira_obs, municipio, uf, array_to_string(origem,'; ') AS origem, array_to_string(tipo_evento,'; ') AS tipo_evento, array_to_string(tipos_danos_identificados,'; ') AS tipos_danos_identificados, array_to_string(institiuicoes_atuando_local,'; ') AS institiuicoes_atuando_local, array_to_string(tipos_fontes_informacoes,'; ') AS tipos_fontes_informacoes, dia_semana, dia_semana_primeira_obs, dia_semana_registro, periodo_ocorrencia, dt_ocorrencia_feriado, array_to_string(produtos_onu,'; ') AS produtos_onu, array_to_string(produtos_outro,'; ') AS produtos_outro",
+      fields: "cast( id_ocorrencia AS text) AS id_ocorrencia, to_char(dt_registro,'DD/MM/YYYY') AS dt_registro, to_char(dt_ocorrencia,'DD/MM/YYYY') AS dt_ocorrencia, to_char(dt_primeira_obs,'DD/MM/YYYY') AS dt_primeira_obs, municipio, uf, array_to_string(origem,'; ') AS origem, array_to_string(tipo_evento,'; ') AS tipo_evento, array_to_string(tipos_danos_identificados,'; ') AS tipos_danos_identificados, array_to_string(institiuicoes_atuando_local,'; ') AS institiuicoes_atuando_local, array_to_string(tipos_fontes_informacoes,'; ') AS tipos_fontes_informacoes, dia_semana, dia_semana_primeira_obs, dia_semana_registro, periodo_ocorrencia, dt_ocorrencia_feriado, array_to_string(produtos_onu,'; ') AS produtos_onu, array_to_string(produtos_outro,'; ') AS produtos_outro, validado",
       parameters: query
     });
+    console.log(query);
     dataIncidente = "";
     diaSemana = "";
     dataCadastrada = false;
