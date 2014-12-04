@@ -406,12 +406,17 @@ class Auth extends CI_Controller {
 
             $this->email->message($message_body);
 
-            if ($this->email->send()) {
-                $return['msg'] = "Email enviado com sucesso!";
-                $return['style'] = "alert alert-info fade in";
+            if ($p_des_senha) {
+                if ($this->email->send()) {
+                    $return['msg'] = "Email enviado com sucesso!";
+                    $return['style'] = "alert alert-info fade in";
+                } else {
+                    $this->firephp->log("Erro ao enviar o email");
+                    $this->firephp->log($this->email->print_debugger());
+                }
             } else {
-                $this->firephp->log("Erro ao enviar o email");
-                $this->firephp->log($this->email->print_debugger());
+                $return['msg'] = "Ocorreu um erro interno no sistema ao gerar sua senha. Por favor, procure a equipe do SIEMA.";
+                $return['style'] = "alert alert-error fade in";
             }
         } else {
             if ($data) {
@@ -478,7 +483,7 @@ class Auth extends CI_Controller {
             }
 
             $data = oci_fetch_object($p_cursor);
-                        
+
             // Verfica se tem dados antes de carregar $field
             if ($data) {
                 foreach ($data as $field => $value) {
@@ -509,7 +514,7 @@ class Auth extends CI_Controller {
 
             $query = "select * from usuarios where cpf='" . $cpf . "'";
             $result = $ocorrenciasDatabase->query($query);
-            
+
             if ($result->num_rows() > 0) {
                 echo '0';
             } else {

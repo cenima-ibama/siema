@@ -598,40 +598,40 @@
                                 </label>
                             </div>
                         </div>
-                        <hr>
                         <?php
                         if (isset($hasOleo)) {
                             echo '
-                  <div class="row-fluid" >
-                    <label class="control-label"> Situação atual da descarga: </label>
-                    <div class="controls row-fluid">
-                      <div class="span3">
-                        <label class="radio">';
-                            echo form_radio($SitParal);
-                            echo ' Paralisada
-                        </label>
-                      </div>
-                      <div class="span3">
-                        <label class="radio">';
-                            echo form_radio($SitNaoParal);
-                            echo ' Não foi paralisada
-                        </label>
-                      </div>
-                      <div class="span3">
-                        <label class="radio">';
-                            echo form_radio($SitSemCondi);
-                            echo 'Sem condições de informar
-                        </label>
-                      </div>
-                      <div class="span3">
-                        <label class="radio">';
-                            echo form_radio($SitNaoSeApl);
-                            echo 'Não se aplica
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                ';
+                              <hr>
+                              <div class="row-fluid" >
+                                <label class="control-label"> Situação atual da descarga: </label>
+                                <div class="controls row-fluid">
+                                  <div class="span3">
+                                    <label class="radio">';
+                                        echo form_radio($SitParal);
+                                        echo ' Paralisada
+                                    </label>
+                                  </div>
+                                  <div class="span3">
+                                    <label class="radio">';
+                                        echo form_radio($SitNaoParal);
+                                        echo ' Não foi paralisada
+                                    </label>
+                                  </div>
+                                  <div class="span3">
+                                    <label class="radio">';
+                                        echo form_radio($SitSemCondi);
+                                        echo 'Sem condições de informar
+                                    </label>
+                                  </div>
+                                  <div class="span3">
+                                    <label class="radio">';
+                                        echo form_radio($SitNaoSeApl);
+                                        echo 'Não se aplica
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            ';
                         }
                         ?>
 

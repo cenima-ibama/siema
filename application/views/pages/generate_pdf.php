@@ -9,9 +9,9 @@
   <h5>
     <center>
       <span>Data do cadastro: <?php echo date('d/m/Y', strtotime($dt_registro)); ?></span>
-      
+
       <br />
-      
+
       <span>Data da atualização: <?php echo date('d/m/Y H:i:s'); ?></span>
     </center>
   <h5 />
@@ -176,8 +176,18 @@
       if($semProduto == 'checked'){
         echo '<div>&nbsp;&nbsp; Sem informação sobre o tipo do produto</div>';
       } else {
-        foreach ($infoProd as $tipo) {
-          echo '<div>&nbsp;&nbsp;- ' . ucfirst(strtolower($tipo['nome'])) . ' - ' . $tipo['quantidade'] . ' ' . $tipo['unidade_medida'] . '</div>';
+        if (isset($infoProd)) {
+          echo '<br />&nbsp;&nbsp;<strong>Produtos da lista ONU:</strong> <br />';
+          foreach ($infoProd as $tipo) {
+            echo '<div>&nbsp;&nbsp;- ' . ucfirst(strtolower($tipo['nome'])) . ' - ' . $tipo['quantidade'] . ' ' . $tipo['unidade_medida'] . '</div>';
+          }
+        }
+
+        if (isset($infoProdOutros)) {
+          echo '<br />&nbsp;&nbsp;<strong>Produto não pertencentes a lista ONU:</strong> <br />';
+          foreach ($infoProdOutros as $tipo) {
+            echo '<div>&nbsp;&nbsp;- ' . ucfirst(strtolower($tipo['nome'])) . ' - ' . $tipo['quantidade'] . ' ' . $tipo['unidade_medida'] . '</div>';
+          }
         }
       }
     ?>
@@ -218,7 +228,11 @@
     <br />
 
     <div>
-      <div>&nbsp;&nbsp; <strong>Situação atual da descarga:</strong>  - <?php echo $situacao_descarga; ?> </div>
+      <?php
+      if(isset($situacao_descarga)) {
+        echo   '<div>&nbsp;&nbsp; <strong>Situação atual da descarga:</strong>  - '. $situacao_descarga . '</div>';
+      }
+      ?>
     </div>
   </div>
 
