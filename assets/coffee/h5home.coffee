@@ -219,6 +219,7 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar)
     table: "vw_ocorrencia_consulta"
     fields:
       "cast( id_ocorrencia AS text) AS id_ocorrencia,
+      nro_ocorrencia,
       to_char(dt_registro,'DD/MM/YYYY') AS dt_registro,
       to_char(dt_ocorrencia,'DD/MM/YYYY') AS dt_ocorrencia,
       to_char(dt_primeira_obs,'DD/MM/YYYY') AS dt_primeira_obs,
@@ -274,7 +275,7 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar)
      dataIncidente += " "
 
      registroTemp[registroTemp.length] = new Array(
-        dt.id_ocorrencia
+        dt.nro_ocorrencia        
         dataIncidente
         municipioUf
         dt.origem
@@ -482,8 +483,8 @@ getContentExportConsult = ->
           arrayTemp[arrayTemp.length] = ""
         else
           arrayTemp[arrayTemp.length] = if typeof(col) isnt "object" then col else col.text
-
-    arrayResults[arrayResults.length] = arrayTemp
+      
+    arrayResults[arrayResults.length] = arrayTemp    
 
   return arrayResults
 
