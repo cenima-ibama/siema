@@ -282,10 +282,13 @@ class Form extends CI_Controller {
 
         $formLoad = $this->form_model->load($nro_ocorrencia);
 
+
         if ($formLoad != "") {
             $formLoad['typeOfForm'] = "load";
 
+            // $this->firephp->log($formLoad);
             $data = $this->dataForm($formLoad);
+            // $this->firephp->log($data);
 
             $form['data'] = $data;
 

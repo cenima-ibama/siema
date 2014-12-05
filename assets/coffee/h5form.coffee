@@ -1,4 +1,4 @@
-H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+H5.Data.restURL = "//" + window.top.document.location.host + window.top.document.location.pathname + "rest"
 $(document).ready ->
 
 

@@ -1,4 +1,4 @@
-<h3 style="margin-bottom:5px;"><center> COMUNICADO DE ACIDENTE AMBIENTAL <center></h3>
+<h3 style="margin: 110px 0 5px 0"><center> COMUNICADO DE ACIDENTE AMBIENTAL <center></h3>
 
 <!-- <h4 style="color:#0088cc;padding: 0 10px 0 0;"> -->
 <h4 style="padding-bottom: 30px;">
@@ -176,27 +176,46 @@
       if($semProduto == 'checked'){
         echo '<div>&nbsp;&nbsp; Sem informação sobre o tipo do produto</div>';
       } else {
-        if (isset($infoProd)) {
-          echo '<br />&nbsp;&nbsp;<strong>Produtos da lista ONU:</strong> <br />';
+        echo '<br />&nbsp;&nbsp;<strong>Produtos da lista ONU:</strong> <br />';
+        if (!empty($infoProd)) {
           foreach ($infoProd as $tipo) {
             echo '<div>&nbsp;&nbsp;- ' . ucfirst(strtolower($tipo['nome'])) . ' - ' . $tipo['quantidade'] . ' ' . $tipo['unidade_medida'] . '</div>';
           }
+        } else {
+          echo '<div>&nbsp;&nbsp; ----- </div>';
         }
 
-        if (isset($infoProdOutros)) {
-          echo '<br />&nbsp;&nbsp;<strong>Produto não pertencentes a lista ONU:</strong> <br />';
+        echo '<br />&nbsp;&nbsp;<strong>Produto não pertencentes a lista ONU:</strong> <br />';
+        if (!empty($infoProdOutros)) {
           foreach ($infoProdOutros as $tipo) {
             echo '<div>&nbsp;&nbsp;- ' . ucfirst(strtolower($tipo['nome'])) . ' - ' . $tipo['quantidade'] . ' ' . $tipo['unidade_medida'] . '</div>';
+          }
+        } else {
+          echo '<div>&nbsp;&nbsp; ----- </div>';
+        }
+
+        echo '<br />';
+
+        if ($statusProdSetado) {
+          if($produtoNaoPerigoso == 't') {
+            echo '<div>&nbsp;&nbsp;- Produto não classificado</div>';
+          }
+          if($produtoNaoAplica == 't') {
+            echo '<div>&nbsp;&nbsp;- Produto não se aplica</div>';
+          }
+          if($produtoNaoEspecificado == 't') {
+            echo '<div>&nbsp;&nbsp;- Produto não especificado</div>';
           }
         }
       }
     ?>
 
-    <h5>&nbsp;&nbsp;&nbsp;&nbsp;* Substância descarregada: </h5>
-
     <?php
 
-      if(isset($ocorrencia_oleo)){
+      if(!empty($ocorrencia_oleo) && ($ocorrencia_oleo == 'S') ){
+
+        echo '<h5>&nbsp;&nbsp;&nbsp;&nbsp;* Substância descarregada: </h5>';
+
         if ($semSubstancia == 'checked'){
           echo '<div>&nbsp;&nbsp; Sem condições de informar  </div>';
         } else {
@@ -205,6 +224,7 @@
               '<div>&nbsp;&nbsp;<strong>Volume Estimado:</strong> '. $volume_estimado . ' m³</div>';
         }
       }
+
     ?>
   </div>
 

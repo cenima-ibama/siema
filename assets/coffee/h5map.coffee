@@ -228,7 +228,7 @@ marTerritorial = new L.TileLayer.WMS(geoserverUrl,
   transparent: true
 )
 
-restURL = "http://" + document.domain + "/siema/rest"
+restURL = "//" + document.location.host + document.location.pathname + "/rest"
 
 # display acidentes
 acidentes = new L.VectorLayer.Postgis (
@@ -269,12 +269,12 @@ acidentes = new L.VectorLayer.Postgis (
     if properties.produtos isnt "{}" then text += properties.produtos.replace(/[{}]/g,"").replace(/,/g,", ")
     if properties.produtos is "{}" then text = ""
     html += '<tr><th>Produtos Envolvidos: </th><td style="max-width:200px;">' + text + '</td></tr>'
-    
+
     text = "";
     if properties.produtos_outros isnt "{}" then text += properties.produtos_outros.replace(/[{}]/g,"").replace(/,/g,", ")
     if properties.produtos_outros is "{}" then text = ""
     html += '<tr><th></th><td style="max-width:200px;">' + text + '</td></tr>'
-    
+
     text = "";
     html += '</tbody></table></div>'
     return html
@@ -376,12 +376,12 @@ legados = new L.VectorLayer.Postgis (
     if properties.produtos isnt "{}" then text += properties.produtos.replace(/[{}]/g,"").replace(/,/g,", ")
     if properties.produtos is "{}" then text = ""
     html += '<tr><th>Produtos Envolvidos: </th><td style="max-width:200px;">' + text + '</td></tr>'
-    
+
     text = "";
     if properties.produtos_outros isnt "{}" then text += properties.produtos_outros.replace(/[{}]/g,"").replace(/,/g,", ")
     if properties.produtos_outros is "{}" then text = ""
     html += '<tr><th></th><td style="max-width:200px;">' + text + '</td></tr>'
-    
+
     text = "";
     html += '</tbody></table></div>'
     return html
@@ -423,7 +423,7 @@ legados.setMap H5.Map.base
 # legados.clusters.setMap H5.Map.base
 
 # icons
-iconsURL = "http://" + document.domain + "/siema/assets/img/icons/"
+iconsURL = "//" + document.location.host + document.location.pathname + "/assets/img/icons/"
 
 controlswitch = new L.control.switch(
   "OSM":
