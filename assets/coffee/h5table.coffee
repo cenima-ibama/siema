@@ -1,4 +1,4 @@
-window.parent.window.parent.H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+window.parent.window.parent.H5.Data.restURL = "//" + document.location.host + document.location.pathname + "/rest"
 $(document).ready ->
 
   # Adding tables to the configuration panel on the administrator area

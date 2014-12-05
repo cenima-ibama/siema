@@ -1,4 +1,4 @@
-H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+H5.Data.restURL = "//" + document.location.host + document.location.pathname + "/rest"
 
 H5.DB.ocorrencia = {}
 H5.DB.ocorrencia.table = "ocorrencia"
@@ -357,8 +357,8 @@ $("a.removeUsuario").on "click", (event) ->
 
   else
     alert "Operação cancelada"
-    
-  # Remoção de Pessoas Cadastradas ------------------------------------------   
+
+  # Remoção de Pessoas Cadastradas ------------------------------------------
 
 $("a.editOcorrencia").on "click", (event) ->
   nroOcorrencia = $(this).attr("data-ocorrencia")
@@ -428,10 +428,10 @@ $("#searchCPF").mask("99999999999")
 
 $("#searchPerson").on "click", ()->
   console.log "search for persons info"
-  
+
   $("#errorBox").slideUp('fast');
   $("#infoBox").slideUp('fast');
-  
+
   $.ajax (
     url: window.location.href.replace("#","") + "index.php/Auth/search_user"
     dataType: 'json'
@@ -439,7 +439,7 @@ $("#searchPerson").on "click", ()->
     data:
       'cpf': $("#searchCPF").val()
     success: (data) ->
-    
+
       if data
         $("#inputNome").val(data.Nome)
         $("#inputEmail").val(data.Desc_Email)
@@ -469,7 +469,7 @@ $("#searchPerson").on "click", ()->
 $("#storePerson").on "click", ()->
 
   console.log "send form to save"
-  
+
   $("#errorBox").slideUp('fast')
   $("#infoBox").slideUp('fast')
   $.ajax (
@@ -484,18 +484,18 @@ $("#storePerson").on "click", ()->
       if data
         $("#infoBox").html("Usuário cadastrado com sucesso!").slideDown('slow')
         return  console.log('Usuário cadastrado com sucesso!')
-      else 
+      else
         $("#errorBox").html("Usuário já cadastrado!").slideDown('slow')
         return console.log('Usuário já cadastrado!')
-                
+
     error: (data,status)->
       console.log(data);
-      
+
       $("#inputNome").val("")
       $("#inputEmail").val("")
       $("#inputEmail").val("")
       $("#inputTelefone").val("")
-      
+
       $("#errorBox").html("Não foi possível cadastrar usuário!").slideDown('slow')
       return console.log('Não foi possível cadastrar usuário!')
   )

@@ -1947,13 +1947,14 @@ class Form_model extends CI_Model {
     $form['produtoNaoAplica'] = $dbResult['produto_nao_se_aplica'];
     $form['produtoNaoEspecificado'] = $dbResult['produto_nao_especificado'];
 
-    $prodNaoPerigoso = isset($form['produtoNaoPerigoso']) && !empty($form['produtoNaoPerigoso']) && $form['produtoNaoPerigoso'] == 't';
-    $prodNaoAplica = isset($form['produtoNaoAplica']) && !empty($form['produtoNaoAplica']) && $form['produtoNaoAplica'] == 't';
-    $prodNaoEspecificado = isset($form['produtoNaoEspecificado']) && !empty($form['produtoNaoEspecificado']) && $form['produtoNaoEspecificado'] == 't';
+    // $prodNaoPerigoso = isset($form['produtoNaoPerigoso']) && !empty($form['produtoNaoPerigoso']) && ($form['produtoNaoPerigoso'] == 't');
+    // $prodNaoAplica = isset($form['produtoNaoAplica']) && !empty($form['produtoNaoAplica']) && ($form['produtoNaoAplica'] == 't');
+    // $prodNaoEspecificado = isset($form['produtoNaoEspecificado']) && !empty($form['produtoNaoEspecificado']) && ($form['produtoNaoEspecificado'] == 't');
 
-    $statusProdSetado = ($prodNaoPerigoso || $prodNaoAplica || $prodNaoEspecificado)? true : false;
+    $form['statusProdSetado'] = ( ($form['produtoNaoPerigoso'] == 't') || ($form['produtoNaoAplica'] == 't') || ($form['produtoNaoEspecificado'] == 't') ) ? true : false;
 
-    if (!$hasProductsOnu && !$hasProductsOutros && !$statusProdSetado){
+
+    if (!$hasProductsOnu && !$hasProductsOutros && !$form['statusProdSetado']){
       $form['semProduto'] = 'checked';
     } else {
       $form['semProduto'] = '';
