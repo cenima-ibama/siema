@@ -1,4 +1,4 @@
-<h3 style="margin-bottom:5px;"><center> COMUNICADO DE ACIDENTE AMBIENTAL <center></h3>
+<h3 style="margin: 110px 0 5px 0"><center> COMUNICADO DE ACIDENTE AMBIENTAL <center></h3>
 
 <!-- <h4 style="color:#0088cc;padding: 0 10px 0 0;"> -->
 <h4 style="padding-bottom: 30px;">
