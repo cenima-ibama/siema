@@ -661,8 +661,8 @@ $(document).ready ->
           #Mostrar a caixa de texto com a descrição da outra fonte de informação.
           if  input.value == "5"
             $("#descOutrasFontInfo").show()
-
-
+            
+    
       span = document.createElement("span")
       span.innerHTML = value.nome
 
@@ -675,7 +675,9 @@ $(document).ready ->
         $(tipoFonteInformacao).append label
       else
         labelOutros = label
-
+    
+    $("#TFI5").prop('checked', 'checked')
+    
     # Add the last element to the screen
     $(tipoFonteInformacao).append labelOutros
 

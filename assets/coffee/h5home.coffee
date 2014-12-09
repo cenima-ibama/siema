@@ -78,7 +78,7 @@ $(document).ready ->
       $("#dash").hide()
       $("#manag").show()
       $("#consultas").hide()
-      $("#btn-manage1").click()
+      $("#btn-manage2").click()
 
     $('.nav-collapse').collapse('hide')
 
