@@ -1073,7 +1073,7 @@ $(document).ready ->
 
   $("#inputCPFCNPJ").mask("99999999999999")
 
-  $("#inputVolumeEstimado").mask("9999999999999999999999999999")
+  $("#inputVolumeEstimado").mask("000000.999", {reverse: true})
 
   $("#inputNomeInformante").mask(validationString,
     {'translation': {W: {pattern: /[A-Za-z ]/}}})
