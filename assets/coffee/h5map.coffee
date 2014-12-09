@@ -425,7 +425,8 @@ legados.setMap H5.Map.base
 # icons
 iconsURL = "//" + document.location.host + document.location.pathname + "/assets/img/icons/"
 
-controlswitch = new L.control.switch(
+# controlswitch = new L.control.switch(
+H5.controlswitch = new L.Control.ActiveLayers(
   "OSM":
     layer: openstreet
   "Bing Aerial":
