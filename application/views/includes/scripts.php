@@ -1,17 +1,17 @@
   <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
   <!--[if lt IE 9]>
   <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->  
+  <![endif]-->
   <script src="http://barra.brasil.gov.br/barra.js" type="text/javascript"></script>
-  
+
   <script src="<?= base_url()?>assets/js/jquery.min.js"></script>
   <script src="<?= base_url()?>assets/js/jquery-ui.min.js"></script>
   <!-- <script src="<?= base_url()?>assets/js/jquery.maskedinput.min.js"></script> -->
   <script src="<?= base_url()?>assets/js/jquery.mask.min.js"></script>
   <script src="<?= base_url()?>/assets/js/jquery.dataTables.min.js"></script>
   <!--<script src="<?= base_url()?>/assets/js/dataTables.tableTools.min.js"></script>-->
-  
-  
+
+
   <!-- Leaflet -->
   <script src="//cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.bing.js"></script>
@@ -20,6 +20,7 @@
   <script src="<?= base_url()?>assets/js/leaflet.fullscreen.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.vectorLayer.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.control.switch.js"></script>
+  <script src="<?= base_url()?>assets/js/leaflet.activeLayers.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.control.locate.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.control.geosearch.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.geosearch.provider.google.js"></script>
@@ -65,5 +66,5 @@
   <script src="<?= base_url()?>assets/js/h5charts.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/h5manag.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/h5wizard.js" type="text/javascript"></script>
-  <script src="<?= base_url()?>assets/js/pdfmake.js" type="text/javascript"></script>   
+  <script src="<?= base_url()?>assets/js/pdfmake.js" type="text/javascript"></script>
   <script src="<?= base_url()?>assets/js/vfs_fonts.js" type="text/javascript"></script>
