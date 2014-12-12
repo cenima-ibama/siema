@@ -128,13 +128,28 @@
       return this.options.map.on("moveend", this._idleListener, this);
     },
     _checkLayerVisibility: function() {
-      var sr, visibilityBefore, z;
+      var sr, visibilityBefore, z, redrawLayer;
       visibilityBefore = this.options.visibleAtScale;
       z = this.options.map.getZoom();
       sr = this.options.scaleRange;
       this.options.visibleAtScale = z >= sr[0] && z <= sr[1];
+      redrawLayer = false;
       if (visibilityBefore !== this.options.visibleAtScale) {
-        this[(this.options.visibleAtScale ? "_showVectors" : "_hideVectors")]();
+        // this[(this.options.visibleAtScale ? "_showVectors" : "_hideVectors")]();
+
+        /* Hack to fix scaleRange bug (add or remove layer
+          independently of control switch being on/off) */
+        var overlayLayers = H5.controlswitch.getActiveOverlayLayers()
+        for (var overlayId in overlayLayers) {
+          if (overlayLayers[overlayId].layer == this.layer)
+            redrawLayer = true;
+        }
+
+        if (redrawLayer)
+          this[(this.options.visibleAtScale ? "_show" : "_hide")]();
+        /* Hack to fix scaleRange bug (add or remove layer
+          independently of control switch being on/off) */
+
       }
       if (visibilityBefore && !this.options.visibleAtScale && this._autoUpdateInterval) {
         return clearInterval(this._autoUpdateInterval);

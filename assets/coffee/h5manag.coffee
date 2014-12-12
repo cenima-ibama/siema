@@ -1,4 +1,4 @@
-H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+H5.Data.restURL = "//" + document.location.host + document.location.pathname + "/rest"
 
 H5.DB.ocorrencia = {}
 H5.DB.ocorrencia.table = "ocorrencia"
@@ -30,6 +30,39 @@ for i, properties of rest.data
   H5.DB.ocorrencia.data.populate(
     properties.nro_ocorrencia, properties.des_ocorrencia, properties.dt_ocorrencia, properties.validado, properties.legado
   )
+
+
+# Listagem de Pessoas Cadastradas ------------------------------------------
+
+H5.DB.usuarios = {}
+H5.DB.usuarios.table = "usuarios"
+
+H5.DB.usuarios.data =
+  init: ->
+    @usuarios = {}
+
+  populate: (id_usuario, id_perfil, cpf, nome) ->
+    self = @usuarios
+    self[id_usuario] = {}
+    self[id_usuario].id_usuario = id_usuario
+    self[id_usuario].id_perfil = id_perfil
+    self[id_usuario].cpf = cpf
+    self[id_usuario].nome = nome
+
+rest = new H5.Rest (
+  url: H5.Data.restURL
+  table: H5.DB.usuarios.table
+  fields: "id_usuario, id_perfil, cpf, nome"
+  order: "nome ASC, cpf ASC"
+)
+
+H5.DB.usuarios.data.init()
+for i, properties of rest.data
+  H5.DB.usuarios.data.populate(
+    properties.id_usuario, properties.id_perfil, properties.cpf, properties.nome
+  )
+
+# Listagem de Pessoas Cadastradas ------------------------------------------
 
 
 $("#btn_manage1").addClass("active")
@@ -91,6 +124,37 @@ $(".nav-sidebar a").on "click", (event) ->
 # # html += '          </div>'
 # $("#table-ocorrencia").html(html)
 
+
+# Tabela Listagem de Pessoas Cadastradas ------------------------------------------
+
+html = ''
+html = '<table class="table table-striped">'
+html += '  <thead>'
+html += '    <tr>'
+html += '      <th>CPF</th>'
+html += '      <th>Nome</th>'
+html += '      <!-- <th>Perfil</th> -->'
+html += '      <th>Excluir</th>'
+html += '    </tr>'
+html += '  </thead>'
+html += '  <tbody id="fbody" class="fbody">'
+for key, reg of H5.DB.usuarios.data.usuarios
+  if reg.id_perfil is 2
+    html += '    <tr>'
+    html += '      <td>' + reg.cpf + '</td>'
+    html += '      <td>' + reg.nome + '</td>'
+    html += '      <!-- <td>' + reg.id_perfil + '</td> -->'
+    html += '      <td><a class="removeUsuario" data-usuario="' + reg.id_usuario + '"href="#"><i class="icon-trash icon-white"></i></a></td>'
+    html += '    </tr>'
+
+html += '  </tbody>'
+html += '</table>'
+# html += '          </div>'
+$("#tableUsuario").html(html)
+
+# Tabela Listagem de Pessoas Cadastradas ------------------------------------------
+
+
 html = ''
 html = '<table class="table table-striped">'
 html += '  <thead>'
@@ -150,35 +214,35 @@ $("#tableValidado").html(html)
 
 # Filter table rows
 $("#searchInput").keyup ->
-    # split the current value of searchInput
-    data = @value.split(" ")
-    # create a jquery object of the rows
-    jo = $(".fbody").find("tr")
-    if (@value == "")
-        jo.show()
-        return
+  # split the current value of searchInput
+  data = @value.split(" ")
+  # create a jquery object of the rows
+  jo = $(".fbody").find("tr")
+  if (@value == "")
+    jo.show()
+    return
 
-    # hide all the rows
-    jo.hide()
+  # hide all the rows
+  jo.hide()
 
-    # Recusively filter the jquery object to get results.
-    jo.filter((i, v) ->
-        $t = $(this)
-        for element, index in data
-        # for (d = 0; d < data.length; ++d) {
-            if $t.is(":contains('" + data[index] + "')")
-                return true
-        # }
-        return false
-    )
-    # show the rows that match.
-    .show()
+  # Recusively filter the jquery object to get results.
+  jo.filter((i, v) ->
+    $t = $(this)
+    for element, index in data
+    # for (d = 0; d < data.length; ++d) {
+      if $t.is(":contains('" + data[index] + "')")
+        return true
+    # }
+    return false
+  )
+  # show the rows that match.
+  .show()
 .focus ->
-    @value = ""
-    # $(this).css({
-    #     "color": "black"
-    # })
-    $(this).unbind('focus')
+  @value = ""
+  # $(this).css({
+  #     "color": "black"
+  # })
+  $(this).unbind('focus')
 # .css({
 #     "color": "#C0C0C0"
 # });
@@ -237,9 +301,65 @@ deleteTempData = ->
     parameters: "nro_ocorrencia%3D" + nroOcorrencia
     restService: "ws_deletequery.php"
   )
-  
-  
+
 # Event to create the modal
+
+# Remoção de Pessoas Cadastradas ------------------------------------------
+
+$("a.removeUsuario").on "click", (event) ->
+
+  event.preventDefault()
+
+  # Asks for the user permition to alter the database
+  if(confirm "Você deseja excluir essa linha do banco de dados?" )
+    # If the deleting row is the last row of the table, stores the previous one as last row
+    # if @_lastRow is tableRow
+    #   if @_table.rows.length > 2
+    #     @_lastRow = @_table.rows.item(@_table.rows.length-2)
+    #   else
+    #     @_lastRow = null
+
+    # where = ""
+
+    # # Gets the key of the row to be deleted and creates the query for the deletion
+    # $.each tableRow.children, (key,cell) =>
+    #   span = cell.children[0]
+    #   if $(span).attr("data-field") is @options.uniqueField.field
+    #     where = @options.uniqueField.field + "%3D" + span.innerHTML
+
+    # table = ''
+
+    # if @options.primaryTable?
+    #   table = @options.primaryTable
+    # else
+    #   table =  @options.table
+
+    id_usuario = $(this).attr("data-usuario")
+
+    # Send the request for the deletion
+    rest = new window.parent.H5.Rest (
+      url: window.parent.H5.Data.restURL
+      #functionName: "f_deleteUsuario"
+      #parameters: id_usuario
+      table: "usuarios"
+      parameters: "id_usuario%3D" + id_usuario
+      restService: "ws_deletequery.php"
+    )
+
+    if rest.data.length is 1 then $(this).closest('tr').remove()
+
+    # rest = new window.parent.H5.Rest (
+    #   url: window.parent.H5.Data.restURL
+    #   table: "tmp_ocorrencia_produto"
+    #   parameters: "nro_ocorrencia%3D" + nroOcorrencia
+    #   restService: "ws_deletequery.php"
+    # )
+
+  else
+    alert "Operação cancelada"
+
+  # Remoção de Pessoas Cadastradas ------------------------------------------
+
 $("a.editOcorrencia").on "click", (event) ->
   nroOcorrencia = $(this).attr("data-ocorrencia")
   $("#nroOcorrenciaLoadAdmin").val(nroOcorrencia)
@@ -250,54 +370,54 @@ $("a.editOcorrencia").on "click", (event) ->
 # Event to remove records
 $("a.removeOcorrencia").on "click", (event) ->
 
-      event.preventDefault()
+  event.preventDefault()
 
-      # Asks for the user permition to alter the database
-      if(confirm "Você deseja excluir essa linha do banco de dados?" )
-        # If the deleting row is the last row of the table, stores the previous one as last row
-        # if @_lastRow is tableRow
-        #   if @_table.rows.length > 2
-        #     @_lastRow = @_table.rows.item(@_table.rows.length-2)
-        #   else
-        #     @_lastRow = null
+  # Asks for the user permition to alter the database
+  if(confirm "Você deseja excluir essa linha do banco de dados?" )
+    # If the deleting row is the last row of the table, stores the previous one as last row
+    # if @_lastRow is tableRow
+    #   if @_table.rows.length > 2
+    #     @_lastRow = @_table.rows.item(@_table.rows.length-2)
+    #   else
+    #     @_lastRow = null
 
-        # where = ""
+    # where = ""
 
-        # # Gets the key of the row to be deleted and creates the query for the deletion
-        # $.each tableRow.children, (key,cell) =>
-        #   span = cell.children[0]
-        #   if $(span).attr("data-field") is @options.uniqueField.field
-        #     where = @options.uniqueField.field + "%3D" + span.innerHTML
+    # # Gets the key of the row to be deleted and creates the query for the deletion
+    # $.each tableRow.children, (key,cell) =>
+    #   span = cell.children[0]
+    #   if $(span).attr("data-field") is @options.uniqueField.field
+    #     where = @options.uniqueField.field + "%3D" + span.innerHTML
 
-        # table = ''
+    # table = ''
 
-        # if @options.primaryTable?
-        #   table = @options.primaryTable
-        # else
-        #   table =  @options.table
+    # if @options.primaryTable?
+    #   table = @options.primaryTable
+    # else
+    #   table =  @options.table
 
-        nroOcorrencia = $(this).attr("data-ocorrencia")
+    nroOcorrencia = $(this).attr("data-ocorrencia")
 
-        # Send the request for the deletion
-        rest = new H5.Rest (
-          url: H5.Data.restURL
-          functionName: "f_deleteOcorrencia"
-          parameters: nroOcorrencia
-          # parameters: "nro_ocorrencia%3D" + nroOcorrencia
-          restService: "ws_functioncall.php"
-        )
+    # Send the request for the deletion
+    rest = new H5.Rest (
+      url: H5.Data.restURL
+      functionName: "f_deleteOcorrencia"
+      parameters: nroOcorrencia
+      # parameters: "nro_ocorrencia%3D" + nroOcorrencia
+      restService: "ws_functioncall.php"
+    )
 
-        if rest.data.length is 1 then $(this).closest('tr').remove()
+    if rest.data.length is 1 then $(this).closest('tr').remove()
 
-        # rest = new window.parent.H5.Rest (
-        #   url: window.parent.H5.Data.restURL
-        #   table: "tmp_ocorrencia_produto"
-        #   parameters: "nro_ocorrencia%3D" + nroOcorrencia
-        #   restService: "ws_deletequery.php"
-        # )
+    # rest = new window.parent.H5.Rest (
+    #   url: window.parent.H5.Data.restURL
+    #   table: "tmp_ocorrencia_produto"
+    #   parameters: "nro_ocorrencia%3D" + nroOcorrencia
+    #   restService: "ws_deletequery.php"
+    # )
 
-      else
-        alert "Operação cancelada"
+  else
+    alert "Operação cancelada"
 
   #makes mangage area invisible after loading
 $("#manag").hide()
@@ -308,10 +428,10 @@ $("#searchCPF").mask("99999999999")
 
 $("#searchPerson").on "click", ()->
   console.log "search for persons info"
-  
+
   $("#errorBox").slideUp('fast')
   $("#infoBox").slideUp('fast')
-  
+
   $.ajax (
     url: window.location.href.replace("#","") + "index.php/Auth/search_user"
     dataType: 'json'
@@ -319,16 +439,20 @@ $("#searchPerson").on "click", ()->
     data:
       'cpf': $("#searchCPF").val()
     success: (data) ->
-    
-      if data?
-          $("#inputNome").val(data.Nome)
-          $("#inputEmail").val(data.Desc_Email)
-          $("#inputEmail").val(data.Desc_Email)
-          $("#infoBox").html("CPF encontrado!").slideDown('slow')
-          return console.log('CPF encontrado!')
+
+      if data
+        $("#inputNome").val(data.Nome)
+        $("#inputEmail").val(data.Desc_Email)
+        $("#inputEmail").val(data.Desc_Email)
+        $("#infoBox").html("CPF encontrado!").slideDown('slow')
+        return console.log('CPF encontrado!')
       else
-          $("#errorBox").html("CPF não encontrado!").slideDown('slow')
-          return console.log('CPF não cadastrado na CNT!');
+        $("#inputNome").val("")
+        $("#inputEmail").val("")
+        $("#inputEmail").val("")
+        $("#inputTelefone").val("")
+        $("#errorBox").html("CPF não encontrado*!").slideDown('slow')
+        return console.log('CPF não cadastrado na CNT!');
 
 
     error: (data,status)->
@@ -336,7 +460,8 @@ $("#searchPerson").on "click", ()->
       $("#inputEmail").val("")
       $("#inputEmail").val("")
       $("#inputTelefone").val("")
-      console.log('CPF não encontrado!')
+      $("#errorBox").html("CPF inválido").slideDown('slow')
+      console.log('CPF inválido!')
   )
   # $("#sel_pessoa").submit()
 
@@ -344,7 +469,7 @@ $("#searchPerson").on "click", ()->
 $("#storePerson").on "click", ()->
 
   console.log "send form to save"
-  
+
   $("#errorBox").slideUp('fast')
   $("#infoBox").slideUp('fast')
   $.ajax (
@@ -356,21 +481,21 @@ $("#storePerson").on "click", ()->
       'cpf': $('#searchCPF').val()
       'nome': $('#inputNome').val()
     success: (data) ->
-      if data?
+      if data
         $("#infoBox").html("Usuário cadastrado com sucesso!").slideDown('slow')
         return  console.log('Usuário cadastrado com sucesso!')
-      else 
+      else
         $("#errorBox").html("Usuário já cadastrado!").slideDown('slow')
         return console.log('Usuário já cadastrado!')
-                
+
     error: (data,status)->
       console.log(data);
-      
+
       $("#inputNome").val("")
       $("#inputEmail").val("")
       $("#inputEmail").val("")
       $("#inputTelefone").val("")
-      
+
       $("#errorBox").html("Não foi possível cadastrar usuário!").slideDown('slow')
       return console.log('Não foi possível cadastrar usuário!')
   )

@@ -11,8 +11,8 @@
                 <div class="row-fluid">
                     <div class="span6" style="text-align:center;">
                         <p style="text-align:justify; margin-top: 10px">
-                        <!-- <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0"> -->
-                            <img class="pull-left" src="../siema/assets/img/logo_image.jpg" style="margin: 10px 10px 2px 0">
+                        <!-- <img class="pull-left" src="assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0"> -->
+                            <img class="pull-left" src="assets/img/logo_image.jpg" style="margin: 10px 10px 2px 0">
 
                             Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental,  ligue no Linha Verde (<strong>0800-618080</strong>) ou clique no botão abaixo.
                         </p>
@@ -22,7 +22,7 @@
                     </div>
                     <div class="span6" style="text-align:center;">
                         <p style="text-align:justify; margin-top: 40px; margin-bottom: 40px">
-                        <!-- <img class="pull-left" src="../siema/assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0"> -->
+                        <!-- <img class="pull-left" src="assets/img/acidente_ambiental_logo_small.png" style="margin: 10px 10px 2px 0"> -->
                             Para comunicar um acidente envolvendo óleo ou outro produto perigoso (vazamento, derramamento, incêndio/explosão, produtos químicos ou embalagens abandonadas) ou rompimento de barragem, clique no botão abaixo.
                         </p>
                         <div class="row-fluid">
@@ -181,9 +181,9 @@
             <!--
                     <div class="tab-pane" id="tab5">
                       <form id='teste'>
-            
+
                       <div class="row-fluid">
-            
+
                         <div class="span6">
                           <div class="control-group">
                             <label class="control-label span4" style="display:inline;">
@@ -204,9 +204,9 @@
                             </div>
                           </div>
                         </div>
-            
-            
-            
+
+
+
                         <div class="span4">
                           <div class="control-group">
                             <label class="control-label" for="inputEmail">Email:</label>
@@ -223,13 +223,13 @@
                             </div>
                           </div>
                         </div>
-            
-            
+
+
                       </div>
                     <button type="submit" onclick="submitUser()" class="btn btn-primary">send This</button>
                   </form>
                 </div>
-            
+
             -->
 
 
@@ -503,7 +503,7 @@ if (!$logged_in) {
             <div id="chart2" class="box"> </div>
             <!--
             <div id="chart3" class="box"> </div>
-      
+
             <div id="chart4" class="box"> </div>
             -->
             <div id="chart5" class="box"> </div>
@@ -729,7 +729,7 @@ if ($profilUser == 1) {
     ?>
 
                         <div id="manage1">
-                            <h2 class="sub-header">Cadastro de Pessoas</h2>
+                            <h2 class="sub-header">Cadastro de Validadores</h2>
 
     <?php echo form_open("Auth/sel_pessoa", array("id" => "sel_pessoa", "class" => "form-horizontal", "role" => "form")); ?>
 
@@ -743,6 +743,7 @@ if ($profilUser == 1) {
                                     <a class="btn icon-search icon-search-filter" id="searchPerson"></a>
                                 </div>
                             </div>
+                            <!-- <hr style="margin: 5px 0px;"> -->
                             <div class="form-group" readonly="readonly">
                                 <div class="item">
                                     <label for="inputNome" class="col-sm-2 control-label">Nome</label>
@@ -751,12 +752,14 @@ if ($profilUser == 1) {
                                     </div>
                                 </div>
                             </div>
+                            <!-- <hr style="margin: 5px 0px;"> -->
                             <div class="form-group" readonly="readonly">
                                 <label for="inputEmail" class="col-sm-2 control-label">Email</label>
                                 <div class="col-sm-10">
                                     <input type="email" class="form-control" id="inputEmail" placeholder="Email" disabled="disabled">
                                 </div>
                             </div>
+                            <!-- <hr style="margin: 5px 0px;"> -->
                             <!--
                               <div class="form-group" readonly="readonly">
                                 <label for="inputOrgao" class="col-sm-2 control-label">Órgão</label>
@@ -780,12 +783,24 @@ if ($profilUser == 1) {
                                     </select>
                                 </div>
                             </div>
+                            <!-- <hr style="margin: 5px 0px;"> -->
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10" style="margin: 0.5em">
                                     <a type="submit" class="btn btn-default" id="storePerson">Enviar</a>
                                 </div>
                             </div>
                             <? echo form_close();?>
+
+                            <hr style="margin: 60px 0px;">
+
+                            <h2 class="sub-header">Validadores Cadastrados</h2>
+                            <!-- <input id="searchInput" type="text" value="Type To Filter"><span style="color:#0088CC;"><i class="icon-search icon-white"></i></span> -->
+                            <div class="table-responsive table-ocorrencia" id="tableUsuario"></div>
+
+                            <hr style="margin: 60px 0px;">
+
+                            <!-- codigo novo -->
+
                         </div>
 
     <?php
@@ -862,5 +877,5 @@ if ($profilUser == 1) {
     </div>
     <!-- </div>
     </div>
-    
+
     </div> -->

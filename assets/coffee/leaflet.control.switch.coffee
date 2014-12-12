@@ -112,7 +112,7 @@ L.control.switch = L.Control.extend (
 
       if @options.miscTabs
         obj = {
-          icon: "http://" + document.domain + "/siema/assets/img/icons/world.png"
+          icon: "//" + document.location.host + document.location.pathname + "/assets/img/icons/world.png"
           # name: @options.miscTabsName
         }
         @_createTab(@options.miscTabsName, obj)

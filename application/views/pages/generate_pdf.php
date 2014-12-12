@@ -1,4 +1,4 @@
-<h3 style="margin-bottom:5px;"><center> COMUNICADO DE ACIDENTE AMBIENTAL <center></h3>
+<h3 style="margin: 110px 0 5px 0"><center> COMUNICADO DE ACIDENTE AMBIENTAL <center></h3>
 
 <!-- <h4 style="color:#0088cc;padding: 0 10px 0 0;"> -->
 <h4 style="padding-bottom: 30px;">
@@ -9,9 +9,9 @@
   <h5>
     <center>
       <span>Data do cadastro: <?php echo date('d/m/Y', strtotime($dt_registro)); ?></span>
-      
+
       <br />
-      
+
       <span>Data da atualização: <?php echo date('d/m/Y H:i:s'); ?></span>
     </center>
   <h5 />
@@ -176,17 +176,46 @@
       if($semProduto == 'checked'){
         echo '<div>&nbsp;&nbsp; Sem informação sobre o tipo do produto</div>';
       } else {
-        foreach ($infoProd as $tipo) {
-          echo '<div>&nbsp;&nbsp;- ' . ucfirst(strtolower($tipo['nome'])) . ' - ' . $tipo['quantidade'] . ' ' . $tipo['unidade_medida'] . '</div>';
+        echo '<br />&nbsp;&nbsp;<strong>Produtos da lista ONU:</strong> <br />';
+        if (!empty($infoProd)) {
+          foreach ($infoProd as $tipo) {
+            echo '<div>&nbsp;&nbsp;- ' . ucfirst(strtolower($tipo['nome'])) . ' - ' . $tipo['quantidade'] . ' ' . $tipo['unidade_medida'] . '</div>';
+          }
+        } else {
+          echo '<div>&nbsp;&nbsp; ----- </div>';
+        }
+
+        echo '<br />&nbsp;&nbsp;<strong>Produto não pertencentes a lista ONU:</strong> <br />';
+        if (!empty($infoProdOutros)) {
+          foreach ($infoProdOutros as $tipo) {
+            echo '<div>&nbsp;&nbsp;- ' . ucfirst(strtolower($tipo['nome'])) . ' - ' . $tipo['quantidade'] . ' ' . $tipo['unidade_medida'] . '</div>';
+          }
+        } else {
+          echo '<div>&nbsp;&nbsp; ----- </div>';
+        }
+
+        echo '<br />';
+
+        if ($statusProdSetado) {
+          if($produtoNaoPerigoso == 't') {
+            echo '<div>&nbsp;&nbsp;- Produto não classificado</div>';
+          }
+          if($produtoNaoAplica == 't') {
+            echo '<div>&nbsp;&nbsp;- Produto não se aplica</div>';
+          }
+          if($produtoNaoEspecificado == 't') {
+            echo '<div>&nbsp;&nbsp;- Produto não especificado</div>';
+          }
         }
       }
     ?>
 
-    <h5>&nbsp;&nbsp;&nbsp;&nbsp;* Substância descarregada: </h5>
-
     <?php
 
-      if(isset($ocorrencia_oleo)){
+      if(!empty($ocorrencia_oleo) && ($ocorrencia_oleo == 'S') ){
+
+        echo '<h5>&nbsp;&nbsp;&nbsp;&nbsp;* Substância descarregada: </h5>';
+
         if ($semSubstancia == 'checked'){
           echo '<div>&nbsp;&nbsp; Sem condições de informar  </div>';
         } else {
@@ -195,6 +224,7 @@
               '<div>&nbsp;&nbsp;<strong>Volume Estimado:</strong> '. $volume_estimado . ' m³</div>';
         }
       }
+
     ?>
   </div>
 
@@ -218,7 +248,11 @@
     <br />
 
     <div>
-      <div>&nbsp;&nbsp; <strong>Situação atual da descarga:</strong>  - <?php echo $situacao_descarga; ?> </div>
+      <?php
+      if(isset($situacao_descarga)) {
+        echo   '<div>&nbsp;&nbsp; <strong>Situação atual da descarga:</strong>  - '. $situacao_descarga . '</div>';
+      }
+      ?>
     </div>
   </div>
 
@@ -357,6 +391,8 @@
 <br /><br /><hr> <br />
 
 <?php
+
+
   if ($this->authldap->is_authenticated()) {
     echo
         '<div>' .
@@ -369,9 +405,14 @@
       echo  '<div>&nbsp;&nbsp;- ' . $tipo . '</div>';
     }
 
-    echo   '<br /><div>&nbsp;&nbsp; <strong>Descrição Outra(s) Fonte(s):</strong> '. isset($outras_fontes) ? $outras_fontes : ' ----- ' . '</div>';
-    echo    '</div>' .
+      if(isset($outras_fontes)) {
+        echo   '<br /><div>&nbsp;&nbsp; <strong>Descrição Outra(s) Fonte(s):</strong> '. $outras_fontes . '</div>';
+      } else {
+        echo   '<br /><div>&nbsp;&nbsp; <strong>Descrição Outra(s) Fonte(s):</strong> ----- </div>';
+      }
+    // echo   '<br /><div>&nbsp;&nbsp; <strong>Descrição Outra(s) Fonte(s):</strong> '. isset($outras_fontes) ? $outras_fontes : ' ----- ' . '</div>';
 
+    echo    '</div>' .
         '</div>' .
 
         '<br /><br /><hr> <br />';

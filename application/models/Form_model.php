@@ -1775,7 +1775,7 @@ class Form_model extends CI_Model {
     if($dbResult['nro_ocorrencia']) {
       $form['comunicado'] = $dbResult['nro_ocorrencia'];
     }
-    
+
     //
     // Retrieving the "Data do registro"
     //
@@ -1925,27 +1925,41 @@ class Form_model extends CI_Model {
     // 5. Tipo do produto
     //
     //Ver se há produtos cadastrados.
-    $query = "select produto_onu.nome, quantidade, unidade_medida " .
+    $query = "select produto_onu.nome, quantidade, " .
+               " CASE WHEN unidade_medida='l' THEN 'L' WHEN unidade_medida='m3' THEN 'M³' WHEN unidade_medida='kg' THEN 'Kg' WHEN unidade_medida='t' THEN 'T' END as unidade_medida " .
              "from ocorrencia_produto " .
              "left join produto_onu on (produto_onu.id_produto_onu = ocorrencia_produto.id_produto_onu) " .
-             "where ocorrencia_produto.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
-    $hasProducts = ($ocorrenciasDatabase->query($query)->num_rows() > 0);
+             "where ocorrencia_produto.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "' AND produto_onu.nome IS NOT NULL ";
+    $produtos_onu = $ocorrenciasDatabase->query($query);
+    $hasProductsOnu = ($produtos_onu->num_rows() > 0);
+
+    //Ver se há produtos não onu cadastrados.
+    $query = "select produto_outro.nome, quantidade, " .
+               " CASE WHEN unidade_medida='l' THEN 'L' WHEN unidade_medida='m3' THEN 'M³' WHEN unidade_medida='kg' THEN 'Kg' WHEN unidade_medida='t' THEN 'T' END as unidade_medida " .
+             "from ocorrencia_produto " .
+             "left join produto_outro on (produto_outro.id_produto_outro = ocorrencia_produto.id_produto_outro) " .
+             "where ocorrencia_produto.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "' AND produto_outro.nome IS NOT NULL ";
+    $produtos_outros = $ocorrenciasDatabase->query($query);
+    $hasProductsOutros = ($produtos_outros->num_rows() > 0);
+
 
     $form['produtoNaoPerigoso'] = $dbResult['produto_perigoso'];
     $form['produtoNaoAplica'] = $dbResult['produto_nao_se_aplica'];
     $form['produtoNaoEspecificado'] = $dbResult['produto_nao_especificado'];
 
-    $prodNaoPerigoso = isset($form['produtoNaoPerigoso']) && !empty($form['produtoNaoPerigoso']) && $form['produtoNaoPerigoso'] == 't';
-    $prodNaoAplica = isset($form['produtoNaoAplica']) && !empty($form['produtoNaoAplica']) && $form['produtoNaoAplica'] == 't';
-    $prodNaoEspecificado = isset($form['produtoNaoEspecificado']) && !empty($form['produtoNaoEspecificado']) && $form['produtoNaoEspecificado'] == 't';
+    // $prodNaoPerigoso = isset($form['produtoNaoPerigoso']) && !empty($form['produtoNaoPerigoso']) && ($form['produtoNaoPerigoso'] == 't');
+    // $prodNaoAplica = isset($form['produtoNaoAplica']) && !empty($form['produtoNaoAplica']) && ($form['produtoNaoAplica'] == 't');
+    // $prodNaoEspecificado = isset($form['produtoNaoEspecificado']) && !empty($form['produtoNaoEspecificado']) && ($form['produtoNaoEspecificado'] == 't');
 
-    $statusProdSetado = ($prodNaoPerigoso || $prodNaoAplica || $prodNaoEspecificado)? true : false;
+    $form['statusProdSetado'] = ( ($form['produtoNaoPerigoso'] == 't') || ($form['produtoNaoAplica'] == 't') || ($form['produtoNaoEspecificado'] == 't') ) ? true : false;
 
-    if (!$hasProducts && !$statusProdSetado){
+
+    if (!$hasProductsOnu && !$hasProductsOutros && !$form['statusProdSetado']){
       $form['semProduto'] = 'checked';
     } else {
       $form['semProduto'] = '';
-      $form['infoProd'] = $ocorrenciasDatabase->query($query)->result_array();
+      $form['infoProd'] = $produtos_onu->result_array();
+      $form['infoProdOutros'] = $produtos_outros->result_array();
     }
 
 

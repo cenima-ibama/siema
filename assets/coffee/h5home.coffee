@@ -1,6 +1,6 @@
 
 $(document).ready ->
-  $("#login").load("http://" + document.domain + "/siema/index.php/login/login_window")
+  $("#login").load("//" + document.location.host + document.location.pathname + "/index.php/login/login_window")
   $("#login").hide()
 
   $("#map").show()
@@ -78,7 +78,7 @@ $(document).ready ->
       $("#dash").hide()
       $("#manag").show()
       $("#consultas").hide()
-      $("#btn-manage1").click()
+      $("#btn-manage2").click()
 
     $('.nav-collapse').collapse('hide')
 
@@ -95,7 +95,7 @@ $(document).ready ->
   roundNumber = (number, digits) ->
     multiple = Math.pow(10, digits)
     rndedNum = Math.round(number * multiple) / multiple
-    rndedNum  
+    rndedNum
 
   # Animate load screen
   $("#dash").fadeOut(1)
@@ -122,7 +122,7 @@ $(document).ready ->
     orientation: "auto right"
     clearBtn: true
     startView: 1
-    endDate: "today"  
+    endDate: "today"
 
   $("#dateFinish").datepicker
     format: "dd/mm/yyyy"
@@ -131,7 +131,7 @@ $(document).ready ->
     orientation: "auto right"
     clearBtn: true
     startView: 1
-    endDate: "today"  
+    endDate: "today"
 
   # ----------------- Consulta BTN -----------------------------------------
 
@@ -142,7 +142,7 @@ $(document).ready ->
     else
       $("#dateStart").removeAttr "disabled", "disabled"
       $("#dateFinish").removeAttr "disabled", "disabled"
-  
+
   $("#dateStart").on "change", (event) ->
     $("#chkAllDates").attr "unchecked", "unchecked"
 
@@ -150,8 +150,8 @@ $(document).ready ->
     $("#chkAllDates").attr "unchecked", "unchecked"
 
   $("#consultarDados").on "click", (event) ->
-     setFilter()   
-        
+     setFilter()
+
 
   $("#chkOCeano").on "click", (event) ->
     if $(@).is ":checked"
@@ -165,25 +165,28 @@ $(document).ready ->
   # ----------------- End Consulta BTN -------------------------------------
 
 ###
-Descrição: Pesquisa ocorrências cadastradas conforme os parâmetros específicados. 
+Descrição: Pesquisa ocorrências cadastradas conforme os parâmetros específicados.
 Função utilizada na guia de Consulta.
-Autor: Marcos Júnior Lopes. 
+Autor: Marcos Júnior Lopes.
 Data: 14/07/2014
 ###
 consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar) ->
 
   registroTemp = new Array();
-  query = "" 
+  query = ""
+
+  #Exibição de de ocorrências validadas
+  query = " validado = 'S'"
 
   switch tpProd
-    when "0" 
+    when "0"
       #Produtos da lista ONU.
-      query += "produtos_onu <> '{}'"
-    when "1" 
+      query += " AND produtos_onu <> '{}'"
+    when "1"
       #Produtos da lista outro.
-      query += "produtos_outro <> '{}'"    
+      query += " AND produtos_outro <> '{}'"
     else
-      query = ""
+      query += ""
   #Adicioanr o filtro de UF
   if uf isnt ""
     query += " AND " if query.length isnt 0
@@ -209,33 +212,35 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar)
     query += " AND " if query.length isnt 0
     query += "bacia_sedimentar='"+baciaSedimentar+"'"
 
-  H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+  H5.Data.restURL = "//" + document.location.host + document.location.pathname + "/rest"
 
   rest = new H5.Rest (
     url: H5.Data.restURL
     table: "vw_ocorrencia_consulta"
-    fields: 
+    fields:
       "cast( id_ocorrencia AS text) AS id_ocorrencia,
+      nro_ocorrencia,
       to_char(dt_registro,'DD/MM/YYYY') AS dt_registro,
       to_char(dt_ocorrencia,'DD/MM/YYYY') AS dt_ocorrencia,
-      to_char(dt_primeira_obs,'DD/MM/YYYY') AS dt_primeira_obs, 
+      to_char(dt_primeira_obs,'DD/MM/YYYY') AS dt_primeira_obs,
       municipio,
       uf,
-      array_to_string(origem,'; ') AS origem,          
-      array_to_string(tipo_evento,'; ') AS tipo_evento, 
+      array_to_string(origem,'; ') AS origem,
+      array_to_string(tipo_evento,'; ') AS tipo_evento,
       array_to_string(tipos_danos_identificados,'; ') AS tipos_danos_identificados,
       array_to_string(institiuicoes_atuando_local,'; ') AS institiuicoes_atuando_local,
-      array_to_string(tipos_fontes_informacoes,'; ') AS tipos_fontes_informacoes,      
+      array_to_string(tipos_fontes_informacoes,'; ') AS tipos_fontes_informacoes,
       dia_semana,
       dia_semana_primeira_obs,
       dia_semana_registro,
-      periodo_ocorrencia,       
+      periodo_ocorrencia,
       dt_ocorrencia_feriado,
       array_to_string(produtos_onu,'; ') AS produtos_onu,
-      array_to_string(produtos_outro,'; ') AS produtos_outro"      
-    parameters: query    
+      array_to_string(produtos_outro,'; ') AS produtos_outro,
+      validado"
+    parameters: query
   )
-
+  console.log(query)
   dataIncidente = ""
   diaSemana = ""
   dataCadastrada = false
@@ -270,26 +275,26 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar)
      dataIncidente += " "
 
      registroTemp[registroTemp.length] = new Array(
-        dt.id_ocorrencia        
+        dt.nro_ocorrencia        
         dataIncidente
-        municipioUf               
+        municipioUf
         dt.origem
         dt.tipo_evento
         dt.produtos_onu
         dt.produtos_outro
         dt.tipos_danos_identificados
         dt.institiuicoes_atuando_local
-        dt.tipos_fontes_informacoes        
-        diaSemana        
+        dt.tipos_fontes_informacoes
+        diaSemana
         dt.periodo_ocorrencia
-        dt.dt_ocorrencia_feriado               
+        dt.dt_ocorrencia_feriado
       );
 
   #Mostrar opções de exportação quando houver registros no datatable.
   if registroTemp.length > 0
     $("#optionsExport").show();
   else
-    $("#optionsExport").hide();  
+    $("#optionsExport").hide();
 
   #Obter os Headers para o grid de consulta.
   headersTable = getHeadersColumnsResults()
@@ -317,7 +322,7 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar)
             "sLast": "Último"
           }
       }
-  )   
+  )
 
 
 setFilter = ->
@@ -342,24 +347,24 @@ $("#btnExport").on "click", (event) ->
     exportCSV()
   else
     exportPDF()
-  
+
 
 $("#btnExportXls").on "click", (event) ->
   #Indicar que as colunas selecionadas serão para a exportação de csv.
   $("#tipoExport").val("0");
-  $("#modalExport").modal();  
+  $("#modalExport").modal();
 
 $("#btnExportPdf").on "click", (event) ->
   #Indicar que as colunas selecionadas serão para a exportação de um documento PDF.
   $("#tipoExport").val("1");
-  $("#modalExport").modal();  
+  $("#modalExport").modal();
 
 exportCSV = ->
   csv = generateConsultCSV()
   window.open "data:text/csv;charset:utf-8,"+escape(csv)
 
 exportPDF = ->
-  #Obter os filtros selecionados para serem mostrados no PDF.   
+  #Obter os filtros selecionados para serem mostrados no PDF.
   tpProdutoSelect = $("#tipoProd :selected").text()
   UfSelect = $("#dropConsultUF").val()
   OrigemSelect = $("#originsConsultSlct").val()
@@ -373,22 +378,22 @@ exportPDF = ->
     dtCadastro = $("#dateStart").val()+" a "+$("#dateFinish").val()
 
   #Array com o conteúdo para o documento.
-  arrayResults = getContentExportConsult() 
+  arrayResults = getContentExportConsult()
 
   #Total de registros é o total de elementos do array menos as colunas(Headers) do documento.
-  qtdeReg = arrayResults.length - 1 
+  qtdeReg = arrayResults.length - 1
 
   #Definir o conteúdo do PDF.
-  definationPdf = 
-    pageSize: "A4"      
-    pageOrientation: "landscape"      
-    footer: (currentPage, pageCount) -> 
-        { 
+  definationPdf =
+    pageSize: "A4"
+    pageOrientation: "landscape"
+    footer: (currentPage, pageCount) ->
+        {
           text: "Página "+currentPage.toString()+" de "+pageCount,
           margin: [0, 10, 40, 0],
           alignment: "right"
         }
-    content: 
+    content:
         [
           #Mostrar os filtros selecionados no documento.
           {text: "Relatório Sistema SIEMA",bold: true, fontSize: 18, margin: [0, 0, 0, 10]}
@@ -398,15 +403,15 @@ exportPDF = ->
           {text: ["Data de Cadastro: ", {text: dtCadastro,bold: true}],  margin: [0, 0, 0, 10]}
           {text: [{text: "Total de registro(s): "+qtdeReg,bold: true}],  margin: [0, 0, 0, 10]}
           table:
-            #Tamanho das colunas para o relatório. 
-            #Deve ser proporcional a qtde de colunas do grid de resultados.  
-            #widths: []                      
-            headerRows: 1              
-            body: ""          
+            #Tamanho das colunas para o relatório.
+            #Deve ser proporcional a qtde de colunas do grid de resultados.
+            #widths: []
+            headerRows: 1
+            body: ""
         ]
     styles:
       header:
-        bold: true               
+        bold: true
 
   #Setar o conteúdo para PDF.
   definationPdf.content[6].table.body = arrayResults;
@@ -418,7 +423,7 @@ exportPDF = ->
 generateConsultCSV = =>
 
   str = ""
-  line = "" 
+  line = ""
   cont = 0
 
   #Resgatar o array com o conteúdo para a exportação.
@@ -429,27 +434,27 @@ generateConsultCSV = =>
     line = ""
     for col in row
       #a primeira linha do array são os cabeçalhos da tabela estes são objetos, então buscar a propriedade text.
-      value = if cont is 0 then col.text else col              
+      value = if cont is 0 then col.text else col
       line += "\"" + value + "\","
-    
+
     str += line + "\r\n"
 
     cont++
 
   return str
 
-getContentExportConsult = ->  
+getContentExportConsult = ->
   #Array com as linhas a serem exportadas.
   arrayTemp = new Array()
 
   #Cabeçalhos que estarão presentes no documento.
-  arrayHeaders = new Array()  
-  
-  #Array com os IDs das colunas a serem exportadas. 
+  arrayHeaders = new Array()
+
+  #Array com os IDs das colunas a serem exportadas.
   #São referências para os conteúdos no documento.
   arrayColunasExport = new Array()
 
-  #Array com as linhas do conteúdo do documento. 
+  #Array com as linhas do conteúdo do documento.
   arrayResults = new Array()
 
   #Definir as colunas a serem exportadas e guardar seus IDs.
@@ -459,46 +464,46 @@ getContentExportConsult = ->
       arrayColunasExport[arrayColunasExport.length] = $(@).attr("id")
 
   #Todas as colunas caso nenhuma esteja selecionada.
-  if arrayHeaders.length is 0     
+  if arrayHeaders.length is 0
     $("#divOpColunas input[type='checkbox']").each (index,checkbox) ->
       arrayHeaders[arrayHeaders.length] = {text:$(@).val(), style: "header"}
       arrayColunasExport[arrayColunasExport.length] = $(@).attr("id")
 
   #Setar os cabeçalhos do documento.
   arrayResults[arrayResults.length] = arrayHeaders
-  
+
   #Adicionar as linhas com as colunas selecionadas para a exportação.
-  $("#resultTable").DataTable().rows().data().each (row,index) ->     
+  $("#resultTable").DataTable().rows().data().each (row,index) ->
     arrayTemp = []
     $(row).each (indexCol,col) ->
       #Importar a coluna selecionada.
       if $.inArray(indexCol.toString(), arrayColunasExport) isnt -1
         #Evitar colunas nulas que pode causar problemas na visualização do conteúdo em PDF.
-        if col is null       
+        if col is null
           arrayTemp[arrayTemp.length] = ""
         else
           arrayTemp[arrayTemp.length] = if typeof(col) isnt "object" then col else col.text
       
     arrayResults[arrayResults.length] = arrayTemp    
 
-  return arrayResults  
+  return arrayResults
 
 getHeadersColumnsResults = ->
   #Colunas para a grid de consulta.
   columnsResultsConsulta = new Array(
-      { "title": "Número de Registro" }      
+      { "title": "Número de Registro" }
       { "title": "Data do Incidente" }
-      { "title": "Município/UF" }      
+      { "title": "Município/UF" }
       { "title": "Origem" }
-      { "title": "Tipo de Evento" }      
+      { "title": "Tipo de Evento" }
       { "title": "Produtos ONU" }
       { "title": "Outros Produtos" }
       { "title": "Ocorrências/Ambientes Atingidos" }
       { "title": "Inst. Atuando no Local" }
       { "title": "Fontes de Informação" }
-      { "title": "Dia da Semana" } 
+      { "title": "Dia da Semana" }
       { "title": "Período" }
-      { "title": "Feriado" }      
+      { "title": "Feriado" }
     )
 
   return columnsResultsConsulta

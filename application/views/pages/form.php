@@ -598,40 +598,40 @@
                                 </label>
                             </div>
                         </div>
-                        <hr>
                         <?php
                         if (isset($hasOleo)) {
                             echo '
-                  <div class="row-fluid" >
-                    <label class="control-label"> Situação atual da descarga: </label>
-                    <div class="controls row-fluid">
-                      <div class="span3">
-                        <label class="radio">';
-                            echo form_radio($SitParal);
-                            echo ' Paralisada
-                        </label>
-                      </div>
-                      <div class="span3">
-                        <label class="radio">';
-                            echo form_radio($SitNaoParal);
-                            echo ' Não foi paralisada
-                        </label>
-                      </div>
-                      <div class="span3">
-                        <label class="radio">';
-                            echo form_radio($SitSemCondi);
-                            echo 'Sem condições de informar
-                        </label>
-                      </div>
-                      <div class="span3">
-                        <label class="radio">';
-                            echo form_radio($SitNaoSeApl);
-                            echo 'Não se aplica
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                ';
+                              <hr>
+                              <div class="row-fluid" >
+                                <label class="control-label"> Situação atual da descarga: </label>
+                                <div class="controls row-fluid">
+                                  <div class="span3">
+                                    <label class="radio">';
+                                        echo form_radio($SitParal);
+                                        echo ' Paralisada
+                                    </label>
+                                  </div>
+                                  <div class="span3">
+                                    <label class="radio">';
+                                        echo form_radio($SitNaoParal);
+                                        echo ' Não foi paralisada
+                                    </label>
+                                  </div>
+                                  <div class="span3">
+                                    <label class="radio">';
+                                        echo form_radio($SitSemCondi);
+                                        echo 'Sem condições de informar
+                                    </label>
+                                  </div>
+                                  <div class="span3">
+                                    <label class="radio">';
+                                        echo form_radio($SitNaoSeApl);
+                                        echo 'Não se aplica
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            ';
                         }
                         ?>
 
@@ -989,44 +989,7 @@
             </div>'
             ?>
 
-            <?php
-            if ($this->authldap->is_authenticated()) {
-                echo '
-              <div id="servIBAMA" class="accordion-group">
-                <div class="accordion-heading">
-                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse13">
-                    13. Fonte da informação
-                  </a>
-                </div>
-                <div id="collapse13" class="accordion-body collapse">
-                  <div class="accordion-inner">
-                    <div class="row-fluid">
-                      <div id="tipoFonteInformacao" class="span12">
-                        <div style="display:none;">';
-		        foreach ($tipoFonteInformacao as $id) {
-		            echo
-		            '<span data-id="postTFI">' . $id . '</span>';
-		        }
-		        echo '
-                        </div>
-
-                      </div>
-
-                      <div id="descOutrasFontInfo" style="display:none;">
-                        <div class="control-group">
-                           <label class="control-label" for="inputDescOutrasFontInfo">Descrição Outra(s) Fonte(s)</label>
-                        </div>';
-                            echo form_textarea($inputDescOutrasFontInfo);
-                     echo '</div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ';
-            }
-            ?>
-            <script type="text/javascript">
+                        <script type="text/javascript">
                 function showFileName(inputFile) {
                     inputFile.offsetParent.getElementsByClassName('fileName')[0].innerHTML = inputFile.value.replace(/\\/g, '/').split('/').pop();
                 }
@@ -1037,13 +1000,7 @@
             <div class="accordion-group">
                 <div class="accordion-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse14">
-
-                        <?php
-                        if ($this->authldap->is_authenticated())
-                            echo '14. Adicionar arquivos';
-                        else
-                            echo '13. Adicionar arquivos';
-                        ?>
+                        13. Adicionar arquivos
                     </a>
                 </div>
                 <div id="collapse14" class="accordion-body collapse">
@@ -1080,6 +1037,45 @@
                     </div>
                 </div>
             </div>
+            
+            <?php
+            if ($this->authldap->is_authenticated()) {   
+                  
+                echo ' 
+              <div id="servIBAMA" class="accordion-group">
+                <div class="accordion-heading">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse13">
+                    14. Fonte da informação 
+                  </a>
+                </div>
+                <div id="collapse13" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                    <div class="row-fluid">
+                      <div id="tipoFonteInformacao" class="span12">
+                        <div style="display:none;">';
+		        foreach ($tipoFonteInformacao as $id) {
+		            echo
+		            '<span data-id="postTFI">' . $id . '</span>';
+		        }
+		        echo '
+                        </div>
+
+                      </div>
+
+                      <div id="descOutrasFontInfo" style="display:block;">
+                        <div class="control-group">
+                           <label class="control-label" for="inputDescOutrasFontInfo">Descrição da Fonte:</label>
+                        </div>';
+                            echo form_textarea($inputDescOutrasFontInfo);
+                     echo '</div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ';
+            }
+            ?>
 
             <span style="font-size:12px; color:grey;">Campos marcados com ' <b>*</b> ' são de preenchimento obrigatório.</span>
             <div class="checkbox" style="display:none;">

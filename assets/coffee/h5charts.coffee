@@ -1,6 +1,6 @@
 # DATA {{{
 #REST PARA OS SERVIÇOS.
-H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+H5.Data.restURL = "//" + document.location.host + document.location.pathname + "/rest"
 
 H5.Data.changed = false
 

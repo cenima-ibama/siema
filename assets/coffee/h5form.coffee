@@ -1,4 +1,4 @@
-H5.Data.restURL = "http://" + document.domain + "/siema/rest"
+H5.Data.restURL = "//" + window.top.document.location.host + window.top.document.location.pathname + "rest"
 $(document).ready ->
 
 
@@ -661,8 +661,8 @@ $(document).ready ->
           #Mostrar a caixa de texto com a descrição da outra fonte de informação.
           if  input.value == "5"
             $("#descOutrasFontInfo").show()
-
-
+            
+    
       span = document.createElement("span")
       span.innerHTML = value.nome
 
@@ -675,7 +675,9 @@ $(document).ready ->
         $(tipoFonteInformacao).append label
       else
         labelOutros = label
-
+    
+    $("#TFI5").prop('checked', 'checked')
+    
     # Add the last element to the screen
     $(tipoFonteInformacao).append labelOutros
 
@@ -1073,7 +1075,7 @@ $(document).ready ->
 
   $("#inputCPFCNPJ").mask("99999999999999")
 
-  $("#inputVolumeEstimado").mask("9999999999999999999999999999")
+  $("#inputVolumeEstimado").mask("000000.999", {reverse: true})
 
   $("#inputNomeInformante").mask(validationString,
     {'translation': {W: {pattern: /[A-Za-z ]/}}})
