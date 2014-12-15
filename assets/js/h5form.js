@@ -880,7 +880,7 @@
     });
     $("#inputInfoInstituicaoTelefone").mask("(99)999999999");
     $("#inputCPFCNPJ").mask("99999999999999");
-    $("#inputVolumeEstimado").mask("000000.999", {
+    $("#inputVolumeEstimado").mask("000000.99999", {
       reverse: true
     });
     $("#inputNomeInformante").mask(validationString, {
