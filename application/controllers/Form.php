@@ -195,7 +195,12 @@ class Form extends CI_Controller {
 //                echo '<div class="alert alert-block alert-warning fade in" style="display:inherit;">';
 //                echo $this->upload->display_errors();
 //                echo '</div>';
-            } else {
+            } else if (!(strcmp('<p>O caminho de envio não parece válido.</p>', $this->upload->display_errors()))) {
+                // PARA EXIBIR MENSAGEM ALERTANDO QUE NÃO FOI USADO O UPLOAD DE ARQUIVOS
+//                echo '<div class="alert alert-block alert-warning fade in" style="display:inherit;">';
+//                echo $this->upload->display_errors();
+//                echo '</div>';
+            }else {
                 echo '<div class="alert alert-block alert-error fade in" style="display:inherit;">';
                 echo $this->upload->display_errors();
                 echo '</div>';
