@@ -254,7 +254,8 @@ class Form extends CI_Controller {
     public function validateUpdate() {
         $numeroRegistro = trim($_POST["id"]);
         $validation_model = $this->form_validations_model;
-        $userIbamaNet = ($this->session->userdata("profile_user") == "3");
+        $codProfilerUser = trim($this->session->userdata("profile_user"));
+        $userIbamaNet = (codProfilerUser == "" || codProfilerUser == "3"); 
         $userName = $this->session->userdata("username");
 
         $status = "";
