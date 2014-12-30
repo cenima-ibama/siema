@@ -278,8 +278,7 @@ class Form extends CI_Controller {
             $mensagem = "Informações válidas.";
         }
 
-        //$result = array("status" => $status, "mensagem" => $mensagem);
-        $result = array("status" => $status, "mensagem" => $codProfilerUser);
+        $result = array("status" => $status, "mensagem" => $mensagem);        
 
         echo json_encode($result);
     }
