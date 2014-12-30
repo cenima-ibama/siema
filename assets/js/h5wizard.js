@@ -310,7 +310,7 @@
     erroMsg = "";
     validado = false;
     $.ajax({
-      url: "/index.php/form/validateUpdate",
+      url: "../siema/index.php/form/validateUpdate",
       data: {
         id: nroOcorrencia
       },
