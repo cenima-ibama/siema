@@ -359,13 +359,14 @@ $(document).ready ->
   $("#inputEndereco").on 'keyup', (event) ->
     enterKey = 13
 
-    if $(this).val() isnt ""
-      if $("#oceano").is(":checked")
-        $("#oceano").click()
-      $("#oceano").attr "disabled","disabled"
-      $("#dropdownBaciaSedimentar").val("")
-    else
-      $("#oceano").removeAttr "disabled"
+    # Defeito #160 on projects/siema
+    # if $(this).val() isnt ""
+    #   if $("#oceano").is(":checked")
+    #     $("#oceano").click()
+    #   $("#oceano").attr "disabled","disabled"
+    #   $("#dropdownBaciaSedimentar").val("")
+    # else
+    #   $("#oceano").removeAttr "disabled"
 
 
     if event.keyCode is enterKey
