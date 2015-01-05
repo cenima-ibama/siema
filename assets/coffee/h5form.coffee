@@ -934,12 +934,8 @@ $(document).ready ->
       actualDate = new Date()
 
       valiDate = $.datepicker.formatDate('dd/mm/yy',date)
-
-      if (valiDate is $(this).val()) and (actualDate.getFullYear() is date.getFullYear())
-        $("#diaObsSemana").val(date.getDay())
-      else
-        $(this).val("")
-        $("#diaObsSemana").val("")
+      $("#diaObsSemana").val(date.getDay())
+      
 
   $("#inputDataInci").on 'change', ->
     if $(this).val() isnt ""
@@ -952,11 +948,8 @@ $(document).ready ->
 
       valiDate = $.datepicker.formatDate('dd/mm/yy',date)
 
-      if (valiDate is $(this).val())  and (actualDate.getFullYear() is date.getFullYear())
-        $("#diaInciSemana").val(date.getDay())
-      else
-        $(this).val("")
-        $("#diaInciSemana").val("")
+      $("#diaInciSemana").val(date.getDay())
+     
 
   $("#inputDataObs").change()
   $("#inputDataInci").change()
