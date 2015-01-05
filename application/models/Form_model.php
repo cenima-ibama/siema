@@ -1838,6 +1838,20 @@ class Form_model extends CI_Model {
           $form['PeriodoObs'] = 'Madrugada';
           break;
       }
+      
+      //Dia da semana por extenso para o incidente
+       $diaObsSemana = array(
+            '' => 'Data Inválida',
+            '0' => 'Domingo',
+            '1' => 'Segunda',
+            '2' => 'Terça',
+            '3' => 'Quarta',
+            '4' => 'Quinta',
+            '5' => 'Sexta',
+            '6' => 'Sábado'
+        );
+       $numSemana = date("w", strtotime($dbResult['dt_primeira_obs']));
+       $form['diaObsSemana'] = $diaObsSemana["$numSemana"];
     }
 
     //Data e hora da ocorrencia não foi informada.
@@ -1861,6 +1875,20 @@ class Form_model extends CI_Model {
           $form['PeriodoInci'] = 'Madrugada';
           break;
       }
+      
+      //Dia da semana por extenso para o incidente
+       $diaInciSemana = array(
+            '' => 'Data Inválida',
+            '0' => 'Domingo',
+            '1' => 'Segunda',
+            '2' => 'Terça',
+            '3' => 'Quarta',
+            '4' => 'Quinta',
+            '5' => 'Sexta',
+            '6' => 'Sábado'
+        );
+       $numSemana = date("w", strtotime($dbResult['dt_ocorrencia']));
+       $form['diaInciSemana'] = $diaInciSemana["$numSemana"];
 
       if (isset($dbResult['dt_ocorrencia_feriado']) && $dbResult['dt_ocorrencia_feriado'] == 't') {
         $form['feriado'] = 'checked';

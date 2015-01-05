@@ -77,7 +77,7 @@
         echo '<div>&nbsp;&nbsp; Sem informação sobre data e hora da primeira observação</div>';
       } else {
         echo
-            '<div>&nbsp;&nbsp; <strong>Data:</strong> ' . $dataObs . '</div>' .
+            '<div>&nbsp;&nbsp; <strong>Data:</strong> ' . $diaObsSemana . ', ' . $dataObs . '</div>' .
             '<div>&nbsp;&nbsp; <strong>Hora:</strong> ' . $horaObs . '</div>' .
             '<div>&nbsp;&nbsp; <strong>Período:</strong> ' . $PeriodoObs . '</div>';
       }
@@ -88,10 +88,10 @@
   <div>
     <?php
       if($semDataInci == 'checked'){
-        echo '<div>&nbsp;&nbsp; Sem informação sobre data e hora da primeira observação</div>';
+        echo '<div>&nbsp;&nbsp; Sem informação sobre data e hora estimada</div>';
       } else {
         echo
-            '<div>&nbsp;&nbsp; <strong>Data:</strong> ' . $dataInci . '</div>' .
+            '<div>&nbsp;&nbsp; <strong>Data:</strong> '  .$diaInciSemana .', ' . $dataInci . '</div>' .
             '<div>&nbsp;&nbsp; <strong>Hora:</strong> ' . $horaInci . '</div>' .
             '<div>&nbsp;&nbsp; <strong>Período:</strong> ' . $PeriodoInci . '</div> <br />';
 
@@ -127,16 +127,17 @@
       }
     ?>
 
-    <h5>&nbsp;&nbsp;&nbsp;&nbsp;* Identificação do navio ou instalação que originou o incidente: </h5>
-
     <?php
-      if(isset($ocorrencia_oleo)){
+    if(!empty($ocorrencia_oleo) && ($ocorrencia_oleo == 'S') ){
+        echo '<h5>&nbsp;&nbsp;&nbsp;&nbsp;* Identificação do navio ou instalação que originou o incidente: </h5>';
+        
         if (isset($infoOil)){
           echo '<div>&nbsp;&nbsp;' . (isset($instalacao_nome) ? '<strong>Nome da Instalação:</strong> '. $instalacao_nome : '<strong>Nome do Navio:</strong> '. $navio_nome) . '</div>';
         } else {
           echo '<div>&nbsp;&nbsp; Sem condições de informar  </div>';
         }
-      }
+      } 
+      
     ?>
   </div>
 
@@ -249,9 +250,11 @@
 
     <div>
       <?php
-      if(isset($situacao_descarga)) {
-        echo   '<div>&nbsp;&nbsp; <strong>Situação atual da descarga:</strong>  - '. $situacao_descarga . '</div>';
-      }
+        if(!empty($ocorrencia_oleo) && ($ocorrencia_oleo == 'S') ){
+          if(isset($situacao_descarga)) {
+            echo   '<div>&nbsp;&nbsp; <strong>Situação atual da descarga:</strong>  - '. $situacao_descarga . '</div>';
+          }
+        }
       ?>
     </div>
   </div>
