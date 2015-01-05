@@ -195,7 +195,12 @@ class Form extends CI_Controller {
 //                echo '<div class="alert alert-block alert-warning fade in" style="display:inherit;">';
 //                echo $this->upload->display_errors();
 //                echo '</div>';
-            } else {
+            } else if (!(strcmp('<p>O caminho de envio não parece válido.</p>', $this->upload->display_errors()))) {
+                // PARA EXIBIR MENSAGEM ALERTANDO QUE NÃO FOI USADO O UPLOAD DE ARQUIVOS
+//                echo '<div class="alert alert-block alert-warning fade in" style="display:inherit;">';
+//                echo $this->upload->display_errors();
+//                echo '</div>';
+            }else {
                 echo '<div class="alert alert-block alert-error fade in" style="display:inherit;">';
                 echo $this->upload->display_errors();
                 echo '</div>';
@@ -249,7 +254,8 @@ class Form extends CI_Controller {
     public function validateUpdate() {
         $numeroRegistro = trim($_POST["id"]);
         $validation_model = $this->form_validations_model;
-        $userIbamaNet = ($this->session->userdata("profile_user") == "3");
+        $codProfilerUser = trim($this->session->userdata("profile_user"));
+        $userIbamaNet = ($codProfilerUser == "0" || $codProfilerUser == "3"); 
         $userName = $this->session->userdata("username");
 
         $status = "";
@@ -272,7 +278,7 @@ class Form extends CI_Controller {
             $mensagem = "Informações válidas.";
         }
 
-        $result = array("status" => $status, "mensagem" => $mensagem);
+        $result = array("status" => $status, "mensagem" => $mensagem);        
 
         echo json_encode($result);
     }

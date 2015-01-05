@@ -359,13 +359,14 @@ $(document).ready ->
   $("#inputEndereco").on 'keyup', (event) ->
     enterKey = 13
 
-    if $(this).val() isnt ""
-      if $("#oceano").is(":checked")
-        $("#oceano").click()
-      $("#oceano").attr "disabled","disabled"
-      $("#dropdownBaciaSedimentar").val("")
-    else
-      $("#oceano").removeAttr "disabled"
+    # Defeito #160 on projects/siema
+    # if $(this).val() isnt ""
+    #   if $("#oceano").is(":checked")
+    #     $("#oceano").click()
+    #   $("#oceano").attr "disabled","disabled"
+    #   $("#dropdownBaciaSedimentar").val("")
+    # else
+    #   $("#oceano").removeAttr "disabled"
 
 
     if event.keyCode is enterKey
@@ -933,12 +934,8 @@ $(document).ready ->
       actualDate = new Date()
 
       valiDate = $.datepicker.formatDate('dd/mm/yy',date)
-
-      if (valiDate is $(this).val()) and (actualDate.getFullYear() is date.getFullYear())
-        $("#diaObsSemana").val(date.getDay())
-      else
-        $(this).val("")
-        $("#diaObsSemana").val("")
+      $("#diaObsSemana").val(date.getDay())
+      
 
   $("#inputDataInci").on 'change', ->
     if $(this).val() isnt ""
@@ -951,11 +948,8 @@ $(document).ready ->
 
       valiDate = $.datepicker.formatDate('dd/mm/yy',date)
 
-      if (valiDate is $(this).val())  and (actualDate.getFullYear() is date.getFullYear())
-        $("#diaInciSemana").val(date.getDay())
-      else
-        $(this).val("")
-        $("#diaInciSemana").val("")
+      $("#diaInciSemana").val(date.getDay())
+     
 
   $("#inputDataObs").change()
   $("#inputDataInci").change()
@@ -1075,7 +1069,7 @@ $(document).ready ->
 
   $("#inputCPFCNPJ").mask("99999999999999")
 
-  $("#inputVolumeEstimado").mask("000000.999", {reverse: true})
+  $("#inputVolumeEstimado").mask("000000.99999", {reverse: true})
 
   $("#inputNomeInformante").mask(validationString,
     {'translation': {W: {pattern: /[A-Za-z ]/}}})
