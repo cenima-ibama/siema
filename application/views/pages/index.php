@@ -11,8 +11,8 @@
                 <div class="row-fluid">
                     <div class="span6" style="text-align:center;">
                         <p style="text-align:justify; margin-top: 10px">
-                        <!-- <img class="pull-left" src="assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0"> -->
-                            <img class="pull-left" src="assets/img/logo_image.jpg" style="margin: 10px 10px 2px 0">
+                        <!-- <img class="pull-left" src="../siema/assets/img/linha_verde_logo_small.png" style="margin: 10px 10px 2px 0"> -->
+                            <img class="pull-left" src="../siema/assets/img/logo_image.jpg" style="margin: 10px 10px 2px 0">
 
                             Para informar sobre desmatamento, incêndio florestal, denúncia sobre maus tratos ou venda ilegal de animais e todos os demais danos ao meio ambiente que não se enquadram como acidente ambiental,  ligue no Linha Verde (<strong>0800-618080</strong>) ou clique no botão abaixo.
                         </p>

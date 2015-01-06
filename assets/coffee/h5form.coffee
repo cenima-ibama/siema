@@ -678,6 +678,7 @@ $(document).ready ->
         labelOutros = label
     
     $("#TFI5").prop('checked', 'checked')
+    $("#TFI5").parent().hide()
     
     # Add the last element to the screen
     $(tipoFonteInformacao).append labelOutros
@@ -1069,7 +1070,7 @@ $(document).ready ->
 
   $("#inputCPFCNPJ").mask("99999999999999")
 
-  $("#inputVolumeEstimado").mask("000000.99999", {reverse: true})
+  $("#inputVolumeEstimado").mask("000000000,9999", {reverse: true})
 
   $("#inputNomeInformante").mask(validationString,
     {'translation': {W: {pattern: /[A-Za-z ]/}}})

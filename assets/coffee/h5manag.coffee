@@ -445,7 +445,9 @@ $("#searchPerson").on "click", ()->
         $("#inputEmail").val(data.Desc_Email)
         $("#inputEmail").val(data.Desc_Email)
         $("#infoBox").html("CPF encontrado!").slideDown('slow')
+        $("#storePerson").slideDown('slow')
         return console.log('CPF encontrado!')
+        
       else
         $("#inputNome").val("")
         $("#inputEmail").val("")
@@ -483,9 +485,11 @@ $("#storePerson").on "click", ()->
     success: (data) ->
       if data
         $("#infoBox").html("Usuário cadastrado com sucesso!").slideDown('slow')
+        $("#storePerson").slideUp('slow')
         return  console.log('Usuário cadastrado com sucesso!')
       else
         $("#errorBox").html("Usuário já cadastrado!").slideDown('slow')
+        $("#storePerson").slideUp('slow')
         return console.log('Usuário já cadastrado!')
 
     error: (data,status)->
@@ -497,6 +501,7 @@ $("#storePerson").on "click", ()->
       $("#inputTelefone").val("")
 
       $("#errorBox").html("Não foi possível cadastrar usuário!").slideDown('slow')
+      $("#storePerson").slideUp('slow')
       return console.log('Não foi possível cadastrar usuário!')
   )
 # }}}
