@@ -774,3 +774,6 @@ input.search-query:focus
   overflow: hidden;
   text-overflow: ellipsis;
 }
+#storePerson {
+    display: none;
+}

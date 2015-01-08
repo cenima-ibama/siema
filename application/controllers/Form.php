@@ -873,6 +873,7 @@ class Form extends CI_Controller {
                 'name' => 'inputVolumeEstimado',
                 'type' => 'text',
                 'class' => 'input-small',
+                'maxlength' => '14',
                 'placeholder' => 'Valor',
                 'value' => set_value('inputVolumeEstimado', isset($formLoad['inputVolumeEstimado']) ? $formLoad['inputVolumeEstimado'] : '')
             );

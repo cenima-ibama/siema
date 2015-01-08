@@ -191,7 +191,10 @@ class Form_model extends CI_Model {
         }
         if (isset($form['inputVolumeEstimado'])) {
           $fields = $fields . "volume_estimado,";
-          $values = $values . "'" . $form['inputVolumeEstimado'] . "',";
+          //$inputVolumeEstimado = \str_replace(".", "", $form['inputVolumeEstimado']);
+          $inputVolumeEstimado = \str_replace(",", ".", $form['inputVolumeEstimado']);
+          //$inputVolumeEstimado = (double)number_format($inputVolumeEstimado, 5, '.', '');
+          $values = $values . "'" . $inputVolumeEstimado . "',";
         }
     }
 
@@ -827,7 +830,10 @@ class Form_model extends CI_Model {
           $fields = $fields . ",tipo_substancia=''";
         }
         if (isset($form["inputVolumeEstimado"])) {
-          $fields = $fields . ",volume_estimado='" . $form["inputVolumeEstimado"] . "'";
+          //$inputVolumeEstimado = \str_replace(".", "", $form['inputVolumeEstimado']);
+          $inputVolumeEstimado = \str_replace(",", ".", $form['inputVolumeEstimado']);
+          //$inputVolumeEstimado = (double)number_format($inputVolumeEstimado, 5, '.', '');
+          $fields = $fields . ",volume_estimado='" . $inputVolumeEstimado . "'";
         } else {
           $fields = $fields . ",volume_estimado='0'";
 
