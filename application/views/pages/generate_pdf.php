@@ -180,7 +180,7 @@
         echo '<br />&nbsp;&nbsp;<strong>Produtos da lista ONU:</strong> <br />';
         if (!empty($infoProd)) {
           foreach ($infoProd as $tipo) {
-            echo '<div>&nbsp;&nbsp;- ' . ucfirst(strtolower($tipo['nome'])) . ' - ' . $tipo['quantidade'] . ' ' . $tipo['unidade_medida'] . '</div>';
+            echo '<div>&nbsp;&nbsp;- '. $tipo['num_onu'] . ' - ' . ucfirst(strtolower($tipo['nome'])) . ' - ' . $tipo['quantidade'] . ' ' . $tipo['unidade_medida'] . '</div>';
           }
         } else {
           echo '<div>&nbsp;&nbsp; ----- </div>';

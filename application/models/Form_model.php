@@ -1959,7 +1959,7 @@ class Form_model extends CI_Model {
     // 5. Tipo do produto
     //
     //Ver se há produtos cadastrados.
-    $query = "select produto_onu.nome, quantidade, " .
+    $query = "select produto_onu.num_onu, produto_onu.nome, quantidade, " .
                " CASE WHEN unidade_medida='l' THEN 'L' WHEN unidade_medida='m3' THEN 'M³' WHEN unidade_medida='kg' THEN 'Kg' WHEN unidade_medida='t' THEN 'T' END as unidade_medida " .
              "from ocorrencia_produto " .
              "left join produto_onu on (produto_onu.id_produto_onu = ocorrencia_produto.id_produto_onu) " .
