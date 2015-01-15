@@ -662,8 +662,8 @@ $(document).ready ->
           #Mostrar a caixa de texto com a descrição da outra fonte de informação.
           if  input.value == "5"
             $("#descOutrasFontInfo").show()
-            
-    
+
+
       span = document.createElement("span")
       span.innerHTML = value.nome
 
@@ -676,10 +676,10 @@ $(document).ready ->
         $(tipoFonteInformacao).append label
       else
         labelOutros = label
-    
+
     $("#TFI5").prop('checked', 'checked')
     $("#TFI5").parent().hide()
-    
+
     # Add the last element to the screen
     $(tipoFonteInformacao).append labelOutros
 
@@ -936,7 +936,7 @@ $(document).ready ->
 
       valiDate = $.datepicker.formatDate('dd/mm/yy',date)
       $("#diaObsSemana").val(date.getDay())
-      
+
 
   $("#inputDataInci").on 'change', ->
     if $(this).val() isnt ""
@@ -950,7 +950,7 @@ $(document).ready ->
       valiDate = $.datepicker.formatDate('dd/mm/yy',date)
 
       $("#diaInciSemana").val(date.getDay())
-     
+
 
   $("#inputDataObs").change()
   $("#inputDataInci").change()
@@ -1160,7 +1160,7 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
-            else if isNaN(value)
+            else if isNaN(value.replace(",","."))
               text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:
@@ -1220,7 +1220,7 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
-            else if isNaN(value)
+            else if isNaN(value.replace(",","."))
               text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:
@@ -1284,7 +1284,7 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
-            else if isNaN(value)
+            else if isNaN(value.replace(",","."))
               text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:
@@ -1343,7 +1343,7 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
-            else if isNaN(value)
+            else if isNaN(value.replace(",","."))
               text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:

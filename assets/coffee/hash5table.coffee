@@ -949,7 +949,7 @@ class H5.Table
   _closeFields: (closeBtn, tableRow)->
     $(closeBtn).on "click", (event) ->
       $(@).closest('tr').remove()
-    
+
     @._lastRow = null
 
   # Function that reloads the table on the page
