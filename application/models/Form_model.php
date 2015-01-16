@@ -563,7 +563,7 @@ class Form_model extends CI_Model {
     if(($res->num_rows() > 0) and (!isset($form['semProduto'])))
     {
       // Retrieve rows from tmp_ocorrencia_produto
-      $sql = "select * from tmp_ocorrencia_produto;";
+      $sql = "select * from tmp_ocorrencia_produto where nro_ocorrencia='" . $form["comunicado"] . "';";
       $res = $ocorrenciasDatabase->query($sql);
       $this->firephp->log($res->result_array());
 
@@ -591,7 +591,7 @@ class Form_model extends CI_Model {
       $res = $ocorrenciasDatabase->query($sql);
     }
     // Clean tmp_ocorrencia_produto
-    $sql = "delete from tmp_ocorrencia_produto;";
+    $sql = "delete from tmp_ocorrencia_produto where nro_ocorrencia='" . $form["comunicado"] . "';";
     $res = $ocorrenciasDatabase->query($sql);
     $this->firephp->log($sql);
 
@@ -1844,7 +1844,7 @@ class Form_model extends CI_Model {
           $form['PeriodoObs'] = 'Madrugada';
           break;
       }
-      
+
       //Dia da semana por extenso para o incidente
        $diaObsSemana = array(
             '' => 'Data Inválida',
@@ -1881,7 +1881,7 @@ class Form_model extends CI_Model {
           $form['PeriodoInci'] = 'Madrugada';
           break;
       }
-      
+
       //Dia da semana por extenso para o incidente
        $diaInciSemana = array(
             '' => 'Data Inválida',
