@@ -553,6 +553,18 @@ class H5.Draw
         table: "tmp_pon"
         restService: "ws_insertquery.php"
       )
+    else
+
+      sql = "shape=ST_SetSRID(ST_MakePoint(" + latlng.lng + "," + latlng.lat + ")," + srid + ")"
+
+      rest = new H5.Rest (
+        url: H5.Data.restURL
+        fields: sql
+        table: "tmp_pon"
+        where: " nro_ocorrencia=" + @.options.tables['marker'].defaultValues.nro_ocorrencia + " "
+        restService: "ws_updatequery.php"
+      )
+
     @.options.uniquePoint._latlng.lat = latlng.lat
     @.options.uniquePoint._latlng.lng = latlng.lng
 

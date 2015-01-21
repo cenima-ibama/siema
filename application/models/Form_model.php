@@ -1347,7 +1347,10 @@ class Form_model extends CI_Model {
     //
     // Setting up the default timezone
     date_default_timezone_set('America/Sao_Paulo');
-    $form['inputDataObs'] = date('d/m/Y', strtotime($dbResult['dt_primeira_obs']));
+    if ($dbResult['dt_primeira_obs'] != NULL)
+      $form['inputDataObs'] = date('d/m/Y', strtotime($dbResult['dt_primeira_obs']));
+    else
+      $form['inputDataObs'] = "";
     $form['inputHoraObs'] = $dbResult['hr_primeira_obs'];
     switch ($dbResult['periodo_primeira_obs']) {
       case 'M':
@@ -1368,8 +1371,10 @@ class Form_model extends CI_Model {
     if(!isset($dbResult['dt_primeira_obs']))
        $form['semDataObs'] = 'checked';
 
-
-    $form['inputDataInci'] = date('d/m/Y', strtotime($dbResult['dt_ocorrencia']));
+    if ($dbResult['dt_ocorrencia'] != NULL)
+      $form['inputDataInci'] = date('d/m/Y', strtotime($dbResult['dt_ocorrencia']));
+    else
+      $form['inputDataInci'] = "";
     $form['inputHoraInci'] = $dbResult['hr_ocorrencia'];
     switch ($dbResult['periodo_ocorrencia']) {
       case 'M':

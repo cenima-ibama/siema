@@ -1234,4 +1234,10 @@
 
   H5.formType = '';
 
+  $(document).ready(function() {
+    var validBtn;
+    validBtn = window.top.document.getElementById('validationSubmit');
+    return $(validBtn).attr('style', 'display:inline-block');
+  });
+
 }).call(this);

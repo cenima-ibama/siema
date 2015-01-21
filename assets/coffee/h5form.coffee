@@ -1407,4 +1407,8 @@ $(document).ready ->
 # Returns the formType used
 H5.formType = ''
 
+$(document).ready ->
+  validBtn = window.top.document.getElementById('validationSubmit')
+  $(validBtn).attr('style','display:inline-block')
+
 

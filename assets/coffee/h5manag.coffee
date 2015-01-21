@@ -22,7 +22,7 @@ rest = new H5.Rest (
   table: H5.DB.ocorrencia.table
   # parameters: "data_cadastro > '2013-01-01'"
   fields: "nro_ocorrencia, des_ocorrencia, dt_ocorrencia, validado, legado"
-  order: "validado ASC, dt_ocorrencia ASC"
+  order: "validado ASC, dt_registro DESC, dt_ocorrencia ASC"
 )
 
 H5.DB.ocorrencia.data.init()
@@ -365,6 +365,7 @@ $("a.editOcorrencia").on "click", (event) ->
   $("#nroOcorrenciaLoadAdmin").val(nroOcorrencia)
   # Sets the form type used: validate, load or create
   H5.formType = 'validation'
+  $("#validationSubmit").attr('style','display:none')
   $("#formLoadAdmin").submit()
 
 # Event to remove records
@@ -447,7 +448,7 @@ $("#searchPerson").on "click", ()->
         $("#infoBox").html("CPF encontrado!").slideDown('slow')
         $("#storePerson").slideDown('slow')
         return console.log('CPF encontrado!')
-        
+
       else
         $("#inputNome").val("")
         $("#inputEmail").val("")

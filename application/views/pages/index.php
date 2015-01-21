@@ -410,7 +410,7 @@ if (!$logged_in) {
                 <div class="item">
                     <label>Ano</label>
                     <select id="yearsSlct" class="selectpicker" data-width="80px" data-size="6" name="years">
-                        <option value="2014" selected="selected">2014</option>
+<!--                         <option value="2014" selected="selected">2014</option>
                         <option value="2013">2013</option>
                         <option value="2012">2012</option>
                         <option value="2011">2011</option>
@@ -420,7 +420,7 @@ if (!$logged_in) {
                         <option value="2007">2007</option>
                         <option value="2006">2006</option>
                         <option value="2005">2005</option>
-                        <option value="2004">2004</option>
+                        <option value="2004">2004</option> -->
                     </select>
                 </div>
                 <div class="item">

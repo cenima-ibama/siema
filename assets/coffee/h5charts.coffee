@@ -25,6 +25,12 @@ H5.Data.thisDay = H5.Data.thisDate.getDate()
 H5.Data.thisType = 0
 H5.Data.thisOrigin = 0
 
+# Sets dinamically all possible years for querying the DB
+for i in [H5.Data.thisYear..2004]
+  bool = (H5.Data.thisYear == i)
+  opt = new Option(i, i, bool)
+  $("#yearsSlct").append(opt)
+
 H5.Data.months =
   0: "Jan"
   1: "Fev"

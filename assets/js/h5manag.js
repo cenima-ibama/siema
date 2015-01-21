@@ -28,7 +28,7 @@
     url: H5.Data.restURL,
     table: H5.DB.ocorrencia.table,
     fields: "nro_ocorrencia, des_ocorrencia, dt_ocorrencia, validado, legado",
-    order: "validado ASC, dt_ocorrencia ASC"
+    order: "validado ASC, dt_registro DESC, dt_ocorrencia ASC"
   });
 
   H5.DB.ocorrencia.data.init();
@@ -324,6 +324,7 @@
     nroOcorrencia = $(this).attr("data-ocorrencia");
     $("#nroOcorrenciaLoadAdmin").val(nroOcorrencia);
     H5.formType = 'validation';
+    $("#validationSubmit").attr('style', 'display:none');
     return $("#formLoadAdmin").submit();
   });
 
