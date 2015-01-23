@@ -1946,6 +1946,15 @@
           table: "tmp_pon",
           restService: "ws_insertquery.php"
         });
+      } else {
+        sql = "shape=ST_SetSRID(ST_MakePoint(" + latlng.lng + "," + latlng.lat + ")," + srid + ")";
+        rest = new H5.Rest({
+          url: H5.Data.restURL,
+          fields: sql,
+          table: "tmp_pon",
+          where: " nro_ocorrencia=" + this.options.tables['marker'].defaultValues.nro_ocorrencia + " ",
+          restService: "ws_updatequery.php"
+        });
       }
       this.options.uniquePoint._latlng.lat = latlng.lat;
       this.options.uniquePoint._latlng.lng = latlng.lng;

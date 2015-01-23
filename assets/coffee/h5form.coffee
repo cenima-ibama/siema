@@ -350,9 +350,23 @@ $(document).ready ->
       # transform latitude and longitute from degrees minutes and seconds (pattern) into decimal degrees
       lat = drawAPI.DMS2DecimalDegree($("#inputLat").val())
       lng = drawAPI.DMS2DecimalDegree($("#inputLng").val())
-      latlng = new L.LatLng(lat,lng)
-      # console.log latlng
-      drawAPI.setPoint(latlng, '4674')
+
+      sql = "ST_Intersects(br_mar.geom, ST_SetSRID(ST_MakePoint("
+      sql = sql + lng + "," + lat + "),4674))"
+
+      rest = new H5.Rest (
+        url: H5.Data.restURL
+        fields: sql
+        table: "br_mar"
+      )
+
+      if rest.data[0].st_intersects
+        if $("#inputLat").parent().children('span').length
+          $("#inputLat").parent().children('span').remove()
+        latlng = new L.LatLng(lat,lng)
+        drawAPI.setPoint(latlng, '4674')
+      else
+        $("#inputLat").parent().append('<span class="alert alert-block alert-error fade in">O ponto está fora do Brasil!</div>');
 
 
   #connect the GeoSearch to the inputAddress
@@ -662,8 +676,8 @@ $(document).ready ->
           #Mostrar a caixa de texto com a descrição da outra fonte de informação.
           if  input.value == "5"
             $("#descOutrasFontInfo").show()
-            
-    
+
+
       span = document.createElement("span")
       span.innerHTML = value.nome
 
@@ -676,10 +690,10 @@ $(document).ready ->
         $(tipoFonteInformacao).append label
       else
         labelOutros = label
-    
+
     $("#TFI5").prop('checked', 'checked')
     $("#TFI5").parent().hide()
-    
+
     # Add the last element to the screen
     $(tipoFonteInformacao).append labelOutros
 
@@ -936,7 +950,7 @@ $(document).ready ->
 
       valiDate = $.datepicker.formatDate('dd/mm/yy',date)
       $("#diaObsSemana").val(date.getDay())
-      
+
 
   $("#inputDataInci").on 'change', ->
     if $(this).val() isnt ""
@@ -950,7 +964,7 @@ $(document).ready ->
       valiDate = $.datepicker.formatDate('dd/mm/yy',date)
 
       $("#diaInciSemana").val(date.getDay())
-     
+
 
   $("#inputDataObs").change()
   $("#inputDataInci").change()
@@ -1160,7 +1174,7 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
-            else if isNaN(value)
+            else if isNaN(value.replace(",","."))
               text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:
@@ -1220,7 +1234,7 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
-            else if isNaN(value)
+            else if isNaN(value.replace(",","."))
               text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:
@@ -1284,7 +1298,7 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
-            else if isNaN(value)
+            else if isNaN(value.replace(",","."))
               text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:
@@ -1343,7 +1357,7 @@ $(document).ready ->
             text = ''
             if value is '' or value is 'Empty'
               text = 'Valor não pode ser vazio'
-            else if isNaN(value)
+            else if isNaN(value.replace(",","."))
               text = 'Não é permitido letras ou caracteres especiais.'
             return text
         unidade_medida:
@@ -1406,5 +1420,9 @@ $(document).ready ->
 
 # Returns the formType used
 H5.formType = ''
+
+$(document).ready ->
+  validBtn = window.top.document.getElementById('validationSubmit')
+  $(validBtn).attr('style','display:inline-block')
 
 

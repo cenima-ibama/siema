@@ -302,12 +302,26 @@
       }
     });
     $("#inputLat").add("#inputLng").on("change", function() {
-      var lat, latlng, lng;
+      var lat, latlng, lng, sql;
       if (($("#inputLat").val() !== "") && ($("#inputLng").val() !== "")) {
         lat = drawAPI.DMS2DecimalDegree($("#inputLat").val());
         lng = drawAPI.DMS2DecimalDegree($("#inputLng").val());
-        latlng = new L.LatLng(lat, lng);
-        return drawAPI.setPoint(latlng, '4674');
+        sql = "ST_Intersects(br_mar.geom, ST_SetSRID(ST_MakePoint(";
+        sql = sql + lng + "," + lat + "),4674))";
+        rest = new H5.Rest({
+          url: H5.Data.restURL,
+          fields: sql,
+          table: "br_mar"
+        });
+        if (rest.data[0].st_intersects) {
+          if ($("#inputLat").parent().children('span').length) {
+            $("#inputLat").parent().children('span').remove();
+          }
+          latlng = new L.LatLng(lat, lng);
+          return drawAPI.setPoint(latlng, '4674');
+        } else {
+          return $("#inputLat").parent().append('<span class="alert alert-block alert-error fade in">O ponto está fora do Brasil!</div>');
+        }
       }
     });
     $("#inputEndereco").on('keyup', function(event) {
@@ -934,7 +948,7 @@
               text = '';
               if (value === '' || value === 'Empty') {
                 text = 'Valor não pode ser vazio';
-              } else if (isNaN(value)) {
+              } else if (isNaN(value.replace(",", "."))) {
                 text = 'Não é permitido letras ou caracteres especiais.';
               }
               return text;
@@ -1010,7 +1024,7 @@
               text = '';
               if (value === '' || value === 'Empty') {
                 text = 'Valor não pode ser vazio';
-              } else if (isNaN(value)) {
+              } else if (isNaN(value.replace(",", "."))) {
                 text = 'Não é permitido letras ou caracteres especiais.';
               }
               return text;
@@ -1092,7 +1106,7 @@
               text = '';
               if (value === '' || value === 'Empty') {
                 text = 'Valor não pode ser vazio';
-              } else if (isNaN(value)) {
+              } else if (isNaN(value.replace(",", "."))) {
                 text = 'Não é permitido letras ou caracteres especiais.';
               }
               return text;
@@ -1168,7 +1182,7 @@
               text = '';
               if (value === '' || value === 'Empty') {
                 text = 'Valor não pode ser vazio';
-              } else if (isNaN(value)) {
+              } else if (isNaN(value.replace(",", "."))) {
                 text = 'Não é permitido letras ou caracteres especiais.';
               }
               return text;
@@ -1233,5 +1247,11 @@
   });
 
   H5.formType = '';
+
+  $(document).ready(function() {
+    var validBtn;
+    validBtn = window.top.document.getElementById('validationSubmit');
+    return $(validBtn).attr('style', 'display:inline-block');
+  });
 
 }).call(this);

@@ -563,7 +563,7 @@ class Form_model extends CI_Model {
     if(($res->num_rows() > 0) and (!isset($form['semProduto'])))
     {
       // Retrieve rows from tmp_ocorrencia_produto
-      $sql = "select * from tmp_ocorrencia_produto;";
+      $sql = "select * from tmp_ocorrencia_produto where nro_ocorrencia='" . $form["comunicado"] . "';";
       $res = $ocorrenciasDatabase->query($sql);
       $this->firephp->log($res->result_array());
 
@@ -591,7 +591,7 @@ class Form_model extends CI_Model {
       $res = $ocorrenciasDatabase->query($sql);
     }
     // Clean tmp_ocorrencia_produto
-    $sql = "delete from tmp_ocorrencia_produto;";
+    $sql = "delete from tmp_ocorrencia_produto where nro_ocorrencia='" . $form["comunicado"] . "';";
     $res = $ocorrenciasDatabase->query($sql);
     $this->firephp->log($sql);
 
@@ -1347,7 +1347,10 @@ class Form_model extends CI_Model {
     //
     // Setting up the default timezone
     date_default_timezone_set('America/Sao_Paulo');
-    $form['inputDataObs'] = date('d/m/Y', strtotime($dbResult['dt_primeira_obs']));
+    if ($dbResult['dt_primeira_obs'] != NULL)
+      $form['inputDataObs'] = date('d/m/Y', strtotime($dbResult['dt_primeira_obs']));
+    else
+      $form['inputDataObs'] = "";
     $form['inputHoraObs'] = $dbResult['hr_primeira_obs'];
     switch ($dbResult['periodo_primeira_obs']) {
       case 'M':
@@ -1368,8 +1371,10 @@ class Form_model extends CI_Model {
     if(!isset($dbResult['dt_primeira_obs']))
        $form['semDataObs'] = 'checked';
 
-
-    $form['inputDataInci'] = date('d/m/Y', strtotime($dbResult['dt_ocorrencia']));
+    if ($dbResult['dt_ocorrencia'] != NULL)
+      $form['inputDataInci'] = date('d/m/Y', strtotime($dbResult['dt_ocorrencia']));
+    else
+      $form['inputDataInci'] = "";
     $form['inputHoraInci'] = $dbResult['hr_ocorrencia'];
     switch ($dbResult['periodo_ocorrencia']) {
       case 'M':
@@ -1844,7 +1849,7 @@ class Form_model extends CI_Model {
           $form['PeriodoObs'] = 'Madrugada';
           break;
       }
-      
+
       //Dia da semana por extenso para o incidente
        $diaObsSemana = array(
             '' => 'Data Inválida',
@@ -1881,7 +1886,7 @@ class Form_model extends CI_Model {
           $form['PeriodoInci'] = 'Madrugada';
           break;
       }
-      
+
       //Dia da semana por extenso para o incidente
        $diaInciSemana = array(
             '' => 'Data Inválida',
@@ -1959,7 +1964,7 @@ class Form_model extends CI_Model {
     // 5. Tipo do produto
     //
     //Ver se há produtos cadastrados.
-    $query = "select produto_onu.nome, quantidade, " .
+    $query = "select produto_onu.num_onu, produto_onu.nome, quantidade, " .
                " CASE WHEN unidade_medida='l' THEN 'L' WHEN unidade_medida='m3' THEN 'M³' WHEN unidade_medida='kg' THEN 'Kg' WHEN unidade_medida='t' THEN 'T' END as unidade_medida " .
              "from ocorrencia_produto " .
              "left join produto_onu on (produto_onu.id_produto_onu = ocorrencia_produto.id_produto_onu) " .
