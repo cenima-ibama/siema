@@ -818,7 +818,7 @@ if ($profilUser == 1) {
 
 
                             <form class="navbar-form form-search">
-                                <div id="search-group" class="pull-right">
+                                <div id="search-group" class="">
                                     <i class="icon-search icon-search-filter"></i>
                                     <input id="searchInput" type="text" placeholder="Filtrar ocorrência..." class="search-query">
                                     <!-- <button class="btn">Search</button> -->

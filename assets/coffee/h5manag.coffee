@@ -1,18 +1,19 @@
 H5.Data.restURL = "//" + document.location.host + document.location.pathname + "/rest"
 
 H5.DB.ocorrencia = {}
-H5.DB.ocorrencia.table = "ocorrencia"
+H5.DB.ocorrencia.table = "vw_ocorrencia_consulta"
 
 # PRODES CONSOLIDADO {{{
 H5.DB.ocorrencia.data =
   init: ->
     @ocorrencia = {}
 
-  populate: (nro_ocorrencia, des_ocorrencia, dt_ocorrencia, validado, legado) ->
+  populate: (nro_ocorrencia, municipio, uf, dt_ocorrencia, validado, legado) ->
     self = @ocorrencia
     self[nro_ocorrencia] = {}
     self[nro_ocorrencia].nro_ocorrencia = nro_ocorrencia
-    self[nro_ocorrencia].des_ocorrencia = des_ocorrencia
+    self[nro_ocorrencia].municipio = municipio
+    self[nro_ocorrencia].uf = uf
     self[nro_ocorrencia].dt_ocorrencia = dt_ocorrencia
     self[nro_ocorrencia].validado = validado
     self[nro_ocorrencia].legado = legado
@@ -21,14 +22,14 @@ rest = new H5.Rest (
   url: H5.Data.restURL
   table: H5.DB.ocorrencia.table
   # parameters: "data_cadastro > '2013-01-01'"
-  fields: "nro_ocorrencia, des_ocorrencia, dt_ocorrencia, validado, legado"
-  order: "validado ASC, dt_registro DESC, dt_ocorrencia ASC"
+  fields: "nro_ocorrencia, municipio, uf, dt_ocorrencia, validado, legado"
+  order: "validado ASC, dt_ocorrencia ASC"
 )
 
 H5.DB.ocorrencia.data.init()
 for i, properties of rest.data
   H5.DB.ocorrencia.data.populate(
-    properties.nro_ocorrencia, properties.des_ocorrencia, properties.dt_ocorrencia, properties.validado, properties.legado
+    properties.nro_ocorrencia, properties.municipio, properties.uf, properties.dt_ocorrencia, properties.validado, properties.legado
   )
 
 
@@ -152,7 +153,7 @@ html += '</table>'
 # html += '          </div>'
 $("#tableUsuario").html(html)
 
-# Tabela Listagem de Pessoas Cadastradas ------------------------------------------
+# FIM Tabela Listagem de Pessoas Cadastradas ------------------------------------------
 
 
 html = ''
@@ -160,7 +161,8 @@ html = '<table class="table table-striped">'
 html += '  <thead>'
 html += '    <tr>'
 html += '      <th>Número da Ocorrência</th>'
-html += '      <th>Descrição da Ocorrência</th>'
+html += '      <th>Município</th>'
+html += '      <th>UF</th>'
 html += '      <th>Validado</th>'
 html += '      <th>Editar</th>'
 html += '      <th>Excluir</th>'
@@ -171,7 +173,8 @@ for key, reg of H5.DB.ocorrencia.data.ocorrencia
   if not reg.legado and reg.validado is 'N'
     html += '    <tr>'
     html += '      <td>' + reg.nro_ocorrencia + '</td>'
-    html += '      <td>' + reg.des_ocorrencia + '</td>'
+    html += '      <td>' + reg.municipio + '</td>' 
+    html += '      <td>' + reg.uf + '</td>' 
     html += if reg.validado is 'S' then '      <td><span style="color:#0088CC;"><i class="icon-thumbs-up icon-white"></i></span></td>' else '      <td><span style="color:#D80000;"><i class="icon-thumbs-down icon-white"></i></span></td>'
     html += '      <td><a data-toggle="modal" class="editOcorrencia" data-ocorrencia="' + reg.nro_ocorrencia + '"href="#editMeModal"><i class="icon-edit icon-white"></i></a></td>'
     html += '      <td><a class="removeOcorrencia" data-ocorrencia="' + reg.nro_ocorrencia + '"href="#"><i class="icon-trash icon-white"></i></a></td>'
@@ -189,7 +192,8 @@ html = '<table class="table table-striped">'
 html += '  <thead>'
 html += '    <tr>'
 html += '      <th>Número da Ocorrência</th>'
-html += '      <th>Descrição da Ocorrência</th>'
+html += '      <th>Município</th>'
+html += '      <th>UF</th>'
 html += '      <th>Validado</th>'
 html += '      <th>Editar</th>'
 html += '      <th>Excluir</th>'
@@ -200,7 +204,8 @@ for key, reg of H5.DB.ocorrencia.data.ocorrencia
   if not reg.legado and reg.validado is 'S'
     html += '    <tr>'
     html += '      <td>' + reg.nro_ocorrencia + '</td>'
-    html += '      <td>' + reg.des_ocorrencia + '</td>'
+    html += '      <td>' + reg.municipio + '</td>' 
+    html += '      <td>' + reg.uf + '</td>' 
     html += if reg.validado is 'S' then '      <td><span style="color:#0088CC;"><i class="icon-thumbs-up icon-white"></i></span></td>' else '      <td><span style="color:#D80000;"><i class="icon-thumbs-down icon-white"></i></span></td>'
     html += '      <td><a data-toggle="modal" class="editOcorrencia" data-ocorrencia="' + reg.nro_ocorrencia + '"href="#editMeModal"><i class="icon-edit icon-white"></i></a></td>'
     html += '      <td><a class="removeOcorrencia" data-ocorrencia="' + reg.nro_ocorrencia + '"href="#"><i class="icon-trash icon-white"></i></a></td>'
