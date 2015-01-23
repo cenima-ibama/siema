@@ -350,9 +350,23 @@ $(document).ready ->
       # transform latitude and longitute from degrees minutes and seconds (pattern) into decimal degrees
       lat = drawAPI.DMS2DecimalDegree($("#inputLat").val())
       lng = drawAPI.DMS2DecimalDegree($("#inputLng").val())
-      latlng = new L.LatLng(lat,lng)
-      # console.log latlng
-      drawAPI.setPoint(latlng, '4674')
+
+      sql = "ST_Intersects(br_mar.geom, ST_SetSRID(ST_MakePoint("
+      sql = sql + lng + "," + lat + "),4674))"
+
+      rest = new H5.Rest (
+        url: H5.Data.restURL
+        fields: sql
+        table: "br_mar"
+      )
+
+      if rest.data[0].st_intersects
+        if $("#inputLat").parent().children('span').length
+          $("#inputLat").parent().children('span').remove()
+        latlng = new L.LatLng(lat,lng)
+        drawAPI.setPoint(latlng, '4674')
+      else
+        $("#inputLat").parent().append('<span class="alert alert-block alert-error fade in">O ponto está fora do Brasil!</div>');
 
 
   #connect the GeoSearch to the inputAddress

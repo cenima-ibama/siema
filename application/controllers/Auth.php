@@ -439,7 +439,7 @@ class Auth extends CI_Controller {
             if (!$conn) {
                 $e = oci_error();
                 // echo '<pre>'.__FILE__.': '.__LINE__.'<hr>';print_r($e['message']);echo'<hr></pre>';exit;
-                $this->firephp->log($e);
+                // $this->firephp->log($e);
             } // end iF;
             // Montar pl/sql function
             $sql = 'begin
@@ -471,7 +471,7 @@ class Auth extends CI_Controller {
                 $e = oci_error($p_str);
                 oci_close($conn);
                 // echo '<pre>'.__FILE__.': '.__LINE__.'<hr>';print_r($e['message']);echo'<hr></pre>';exit;
-                $this->firephp->log($e);
+                // $this->firephp->log($e);
             }
 
             //Executar Cursor
@@ -479,7 +479,7 @@ class Auth extends CI_Controller {
                 $e = oci_error($p_str);
                 oci_free_statement($p_str);
                 oci_close($conn);
-                $this->firephp->log($e);
+                // $this->firephp->log($e);
             }
 
             $data = oci_fetch_object($p_cursor);

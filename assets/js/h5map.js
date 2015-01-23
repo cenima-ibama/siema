@@ -422,7 +422,6 @@
     singlePopup: true,
     focus: false,
     where: 'legado IS TRUE',
-    scaleRange: [1, 13],
     symbology: {
       type: "single",
       vectorStyle: {
