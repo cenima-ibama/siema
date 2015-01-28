@@ -52,10 +52,16 @@ class Form_model extends CI_Model {
     // } else {
       $values = $values . "'S',";
 
-      if (isset($form['oceano'])) {
+           if (isset($form['oceano'])) {
         $fields = $fields . "id_bacia_sedimentar,";
+
+        if ($form['dropdownBaciaSedimentar']){
         $values = $values . "'" . $form['dropdownBaciaSedimentar'] . "',";
+    	}else{
+        $values = $values . "null,";
+    	}
       }
+      
       if(isset($form['dropdownUF'])) {
         $fields = $fields . "id_uf,";
         $values = $values . $form['dropdownUF'] . ",";
