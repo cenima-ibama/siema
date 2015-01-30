@@ -174,7 +174,7 @@
   <div>
     <?php
       echo '&nbsp;&nbsp;';
-      if($semProduto == 'checked'){
+      if($semProduto == 'checked') {
         echo '<div>&nbsp;&nbsp; Sem informação sobre o tipo do produto</div>';
       } else {
         echo '<br />&nbsp;&nbsp;<strong>Produtos da lista ONU:</strong> <br />';
@@ -212,12 +212,11 @@
     ?>
 
     <?php
-
-      if(!empty($ocorrencia_oleo) && ($ocorrencia_oleo == 'S') ){
-
+  
+      if(!empty($ocorrencia_oleo) && ($ocorrencia_oleo == 'S') ) {
         echo '<h5>&nbsp;&nbsp;&nbsp;&nbsp;* Substância descarregada: </h5>';
-
-        if ($semSubstancia == 'checked'){
+        
+        if ($semSubstancia == 'checked') {
           echo '<div>&nbsp;&nbsp; Sem condições de informar  </div>';
         } else {
           echo
@@ -225,7 +224,6 @@
               '<div>&nbsp;&nbsp;<strong>Volume Estimado:</strong> '. $volume_estimado . ' m³</div>';
         }
       }
-
     ?>
   </div>
 
@@ -239,7 +237,7 @@
   <div>
     <?php
       echo '&nbsp;&nbsp;';
-      if($semCausa == 'checked'){
+      if($semCausa == 'checked') {
         echo '<div>&nbsp;&nbsp; Sem condições de informar</div>';
       } else {
         echo '<div>&nbsp;&nbsp;<strong>Causa provável do acidente:</strong> '. $causa_provavel . '</div>';
@@ -250,7 +248,7 @@
 
     <div>
       <?php
-        if(!empty($ocorrencia_oleo) && ($ocorrencia_oleo == 'S') ){
+        if(!empty($ocorrencia_oleo) && ($ocorrencia_oleo == 'S') ) {
           if(isset($situacao_descarga)) {
             echo   '<div>&nbsp;&nbsp; <strong>Situação atual da descarga:</strong>  - '. $situacao_descarga . '</div>';
           }
@@ -294,7 +292,7 @@
   <div>
     <?php
       echo '&nbsp;&nbsp;';
-      if($semResponsavel == 'checked'){
+      if($semResponsavel == 'checked') {
         echo '<div>&nbsp;&nbsp; Sem informação sobre a empresa/responsável</div>';
       } else {
         echo

@@ -2010,10 +2010,11 @@ class Form_model extends CI_Model {
 
     if($dbResult['ocorrencia_oleo']) {
       $form['tipo_substancia'] = $dbResult['tipo_substancia'];
-      $form['volume_estimado'] = $dbResult['volume_estimado'];
+      $form['volume_estimado'] = \str_replace(".", ",", $dbResult['volume_estimado']);
 
-      //Substância não informada.
-      if (!isset($form['inputTipoSubstancia']) || empty($form['inputTipoSubstancia'])) {
+      //Substância não informada.  
+
+      if (!isset($dbResult['tipo_substancia']) || empty($dbResult['tipo_substancia'])) {
         $form['semSubstancia'] =  'checked';
       } else {
         $form['semSubstancia'] =  '';
