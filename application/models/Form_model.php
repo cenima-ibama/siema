@@ -906,7 +906,9 @@ class Form_model extends CI_Model {
 
       // Remove the old responsible from the database, in case it has one
       if (!empty($oldOcorrencia['id_responsavel'])) {
-        $subquery = "delete * from responsavel where id_responsavel='" . $oldOcorrencia['id_responsavel'] . "'";
+        $subquery = "UPDATE public.ocorrencia SET id_responsavel = NULL WHERE id_responsavel = '" . $oldOcorrencia['id_responsavel'] . "'";
+        $ocorrenciasDatabase->query($subquery);
+        $subquery = "delete from responsavel where id_responsavel='" . $oldOcorrencia['id_responsavel'] . "'";
         $ocorrenciasDatabase->query($subquery);
       }
     } else {
