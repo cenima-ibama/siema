@@ -200,7 +200,7 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar)
   #Adicionar o filtro de Data do Incidente
   if (dtIni isnt "" and dtFim isnt "")
     query += " AND " if query.length isnt 0
-    query += " (dt_registro >= '"+dtIni+"' AND "+"dt_registro <= '"+dtFim+"')"
+    query += " (dt_ocorrencia >= '"+dtIni+"' AND "+"dt_ocorrencia <= '"+dtFim+"')"
 
   #Adicionar o filtro de Oceano
   if eOceano
