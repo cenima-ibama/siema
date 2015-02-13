@@ -146,8 +146,8 @@
   $.each(rest.data, function(i, properties) {
     var date;
     date = properties.dt_registro;
-    if (typeof properties.data_acidente !== 'undefined') {
-      date = properties.data_acidente;
+    if (properties.dt_ocorrencia !== null) {
+      date = properties.dt_ocorrencia;
     }
     return H5.DB.occurence.data.populate(properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem, properties.tipos_danos_identificados, properties.institiuicoes_atuando_local, properties.tipos_fontes_informacoes, properties.periodo_ocorrencia);
   });
