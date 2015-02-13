@@ -134,8 +134,8 @@ $.each rest.data, (i, properties) ->
 
   date = properties.dt_registro
 
-  if typeof properties.data_acidente isnt 'undefined'
-    date = properties.data_acidente
+  if properties.dt_ocorrencia isnt null
+    date = properties.dt_ocorrencia
 
   H5.DB.occurence.data.populate(
     properties.id_ocorrencia, properties.regiao, date, properties.sigla, properties.eventos, properties.origem, properties.tipos_danos_identificados, properties.institiuicoes_atuando_local, properties.tipos_fontes_informacoes, properties.periodo_ocorrencia
