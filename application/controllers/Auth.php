@@ -397,18 +397,24 @@ class Auth extends CI_Controller {
 
             $this->email->subject("Ibama – Senha de Acesso ao Sistema");
 
-            $message_body = "A sua senha para acesso ao Sistema de Emergencias Ambientais foi gerada com sucesso.<br />" .
-                    "O código para acesso gerado é: <br /><br />" .
-                    "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>" . $p_des_senha . "</strong>" .
-                    "<br /><br /> A equipe do CGEMA agradece.<br /><br />" .
-                    "SIEMA.<br /><br />" .
-                    "<i> Obs: Por favor, não responda a este e-mail. Ele é enviado automaticamente e não será lido.</i>";
+            $message_body = "<p>A sua senha de acesso ao Sistema Nacional de Emerg&ecirc;ncias Ambientais foi gerada com sucesso.</p>" .
+                                "Usu&aacute;rio: <strong>" . $p_num_pessoa . "</strong> <br />" .
+                                "Senha: &nbsp;&nbsp; <strong>" . $p_num_pessoa . "</strong>" .
+                                "<p>Para comunicar a ocorr&ecirc;ncia de acidentes ambientais acesse siscom.ibama.gov.br/siema e fa&ccedil;a o login no sistema.</p>" .
+                                "<p><font color=tomato> <strong>Este &eacute; um e-mail enviado automaticamente, n&atilde;o &eacute; poss&iacute;vel respond&ecirc;-lo.</strong></font></p>" .
+                                "<p>Atenciosamente,</p>" .
+                                "<p>Coordena&ccedil;&atilde;o Geral de Emerg&ecirc;ncias Ambientais &ndash; CGEMA<br />" .
+                                "Diretoria de Prote&ccedil;&atilde;o Ambiental &ndash; DIPRO<br />" .
+                                "Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renov&aacute;veis &ndash; IBAMA<br />" .
+                                "E-mail: emergenciasambientais.sede@ibama.gov.br<br />" . 
+                                "Contato: (61) 3316-1070<br />" .
+                                "Celular da Emerg&ecirc;ncia: (61) 9909-4142</p>";
 
             $this->email->message($message_body);
 
             if ($p_des_senha) {
                 if ($this->email->send()) {
-                    $return['msg'] = "Email enviado com sucesso!";
+                    $return['msg'] = "A senha de acesso ao Siema foi encaminhada para o e-mail cadastrado no Cadastro Técnico Federal - CTF. Utilize esta senha para logar no Siema e comunicar a ocorrência de acidentes ambientais.";
                     $return['style'] = "alert alert-info fade in";
                 } else {
                     $this->firephp->log("Erro ao enviar o email");
@@ -420,7 +426,7 @@ class Auth extends CI_Controller {
             }
         } else {
             if ($data) {
-                $return['msg'] = "Usuário sem e-mail ou inexistente. Procure o CNT.";
+                $return['msg'] = "Usuário não cadastrado no Cadastro Técnico Federal - CTF ou sem e-mail cadastrado no CTF. Acesse o link https://servicos.ibama.gov.br para se cadastrar ou para fazer o recadastramento.";
                 $return['style'] = "alert alert-error fade in";
             } else {
                 $return['msg'] = "Usuário não cadastrado no banco do CNT. Procure o CNT.";
