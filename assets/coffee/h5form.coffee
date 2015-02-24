@@ -673,11 +673,6 @@ $(document).ready ->
           input.checked = "checked"
           $(@).remove()
 
-          #Mostrar a caixa de texto com a descrição da outra fonte de informação.
-          if  input.value == "5"
-            $("#descOutrasFontInfo").show()
-
-
       span = document.createElement("span")
       span.innerHTML = value.nome
 
@@ -690,9 +685,9 @@ $(document).ready ->
         $(tipoFonteInformacao).append label
       else
         labelOutros = label
-
-    $("#TFI5").prop('checked', 'checked')
-    $("#TFI5").parent().hide()
+        
+    $("#TFI6").prop('checked', 'checked')
+    $("#TFI6").parent().hide()
 
     # Add the last element to the screen
     $(tipoFonteInformacao).append labelOutros
@@ -863,12 +858,6 @@ $(document).ready ->
         $("#inputCausaProvavel").attr("disabled","disabled")
       else
         $("#inputCausaProvavel").removeAttr("disabled")
-
-    $("#TFI5").on 'click', ()->
-      if $(this).is(":checked")
-        $("#descOutrasFontInfo").show()
-      else
-        $("#descOutrasFontInfo").hide()
 
     $("#semDanos").on 'click', ()->
       if $(this).is(":checked")

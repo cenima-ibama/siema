@@ -546,8 +546,8 @@ class Form_model extends CI_Model {
 
         $descOutrasFontInfo = "null";
 
-        //ID == 5 -> Outras fontes de informação.
-        if (isset($form['inputDescOutrasFontInfo']) && $tipoFonteInformacao == 5)
+        //ID == 6 -> Outras fontes de informação.
+        if (isset($form['inputDescOutrasFontInfo']) && $tipoFonteInformacao == 6)
           $descOutrasFontInfo = "'". pg_escape_string($form['inputDescOutrasFontInfo']) . "'" ;
 
         $sql = "insert into ocorrencia_tipo_fonte_informacao (id_ocorrencia, id_tipo_fonte_informacao, desc_outras_fontes) VALUES (" .
@@ -1222,8 +1222,8 @@ class Form_model extends CI_Model {
 
           $descOutrasFontInfo = "null";
 
-        //ID == 5 -> Outras fontes de informação.
-        if (isset($form['inputDescOutrasFontInfo']) && $tipoFonteInformacao == 5)
+        //ID == 6 -> Outras fontes de informação.
+        if (isset($form['inputDescOutrasFontInfo']) && $tipoFonteInformacao == 6)
           $descOutrasFontInfo = "'". pg_escape_string($form['inputDescOutrasFontInfo']) . "'" ;
 
         $sql = "insert into ocorrencia_tipo_fonte_informacao (id_ocorrencia, id_tipo_fonte_informacao, desc_outras_fontes ) VALUES (" .
@@ -2200,7 +2200,7 @@ class Form_model extends CI_Model {
     }
 
     //
-    // 13. Fonte de Informação
+    // 14. Fonte de Informação
     //
     $query = "select tipo_fonte_informacao.nome, ocorrencia_tipo_fonte_informacao.desc_outras_fontes " .
              "from ocorrencia_tipo_fonte_informacao " .
