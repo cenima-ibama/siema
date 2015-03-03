@@ -509,7 +509,7 @@ class H5.Draw
 
     dec = (d + (m/60.0) + (s/3600.0) + (r/3600.0)) * neg
 
-    console.log dec
+    #console.log dec
 
     return dec
 
@@ -659,7 +659,7 @@ class H5.Draw
 
     sql = "(" + fields + "dt_registro) select " + values + "now() as dt_registro from "  + pointTable.name + " where " + pointTable.parameters.field + "%3D" + pointTable.parameters.value
 
-    console.log sql
+    #console.log sql
 
     rest = new H5.Rest (
       url: @.options.url
@@ -681,7 +681,7 @@ class H5.Draw
 
     sql = "(" + fields + "dt_registro) select " + values + "now() as dt_registro from "  + polygonTable.name + " where " + polygonTable.parameters.field + "%3D" + polygonTable.parameters.value
 
-    console.log sql
+    #console.log sql
 
     rest = new H5.Rest (
       url: @.options.url
@@ -703,7 +703,7 @@ class H5.Draw
 
     sql = "(" + fields + "dt_registro) select " + values + "now() as dt_registro from "  + lineTable.name + " where " + lineTable.parameters.field + "%3D" + lineTable.parameters.value
 
-    console.log sql
+    #console.log sql
 
     rest = new H5.Rest (
       url: @.options.url

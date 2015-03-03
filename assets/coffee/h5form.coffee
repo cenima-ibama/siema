@@ -265,7 +265,7 @@ $(document).ready ->
       result = cepRegExp.test(labelParts[labelParts.length - 2])
       if result
         #case that it has the CEP
-        console.log labelParts[labelParts.length - 2]
+        #console.log labelParts[labelParts.length - 2]
         indexCity = labelParts.length - 3
       else
         indexCity = labelParts.length - 2

@@ -13,10 +13,12 @@ class Form_model extends CI_Model {
     //
     $ocorrenciasDatabase = $this->load->database('emergencias', TRUE);
 
-  	// Starting database transaction: mantaining the integrity of the DB.
-  	// Put TRUE for a test mode (rollback every query, just as a debug mode.)
-    $ocorrenciasDatabase->trans_start();
+    // Starting database transaction: mantaining the integrity of the DB.
+    // Put TRUE for a test mode (rollback every query, just as a debug mode.)
+    //iniciando a transação
 
+    //$ocorrenciasDatabase->trans_start();
+    $ocorrenciasDatabase->trans_begin();
 
   	// Creating the SQL for the new "ocorrencia" entry on the Database
   	$fields = " (";
@@ -217,22 +219,22 @@ class Form_model extends CI_Model {
     if (isset($form["hasOleo"])) {
 
         $fields = $fields . "situacao_atual_descarga,";
-        $this->firephp->log($form["SituacaoDescarga"]);
+        //$this->firephp->log($form["SituacaoDescarga"]);
         switch($form["SituacaoDescarga"]) {
           case '1':
-            $this->firephp->log("P");
+            //$this->firephp->log("P");
             $values = $values . "'P',";
             break;
           case '2':
-            $this->firephp->log("N");
+            //$this->firephp->log("N");
             $values = $values . "'N',";
             break;
           case '3':
-            $this->firephp->log("S");
+            //$this->firephp->log("S");
             $values = $values . "'S',";
             break;
           case '4':
-            $this->firephp->log("A");
+            //$this->firephp->log("A");
             $values = $values . "'A',";
             break;
         }
@@ -279,7 +281,7 @@ class Form_model extends CI_Model {
 
       $subfields = $subfields . ");";
 
-      $this->firephp->log($subfields);
+      //$this->firephp->log($subfields);
 
       $ocorrenciasDatabase->query($subfields);
 
@@ -472,7 +474,7 @@ class Form_model extends CI_Model {
       // Deleted temporary information on tmp tables
       $fields = $fields . " delete from tmp_lin; delete from tmp_pol; delete from tmp_pon;";
 
-      $this->firephp->log($fields);
+      //$this->firephp->log($fields);
       $ocorrenciasDatabase->query($fields);
     }
 
@@ -486,7 +488,7 @@ class Form_model extends CI_Model {
                 $id . "," .  $tipoLocalizacao .
                 ");";
 
-        $this->firephp->log($sql);
+        //$this->firephp->log($sql);
         $ocorrenciasDatabase->query($sql);
       }
     }
@@ -501,7 +503,7 @@ class Form_model extends CI_Model {
                 $id . "," .  $tipoEvento .
                 ");";
 
-        $this->firephp->log($sql);
+        //$this->firephp->log($sql);
         $ocorrenciasDatabase->query($sql);
       }
     }
@@ -516,7 +518,7 @@ class Form_model extends CI_Model {
                 $id . "," .  $instituicaoAtuandoLocal .
                 ");";
 
-        $this->firephp->log($sql);
+        //$this->firephp->log($sql);
         $ocorrenciasDatabase->query($sql);
       }
     }
@@ -531,7 +533,7 @@ class Form_model extends CI_Model {
                 $id . "," .  $tipoDanoIdentificado .
                 ");";
 
-        $this->firephp->log($sql);
+        //$this->firephp->log($sql);
         $ocorrenciasDatabase->query($sql);
       }
     }
@@ -553,7 +555,7 @@ class Form_model extends CI_Model {
         $sql = "insert into ocorrencia_tipo_fonte_informacao (id_ocorrencia, id_tipo_fonte_informacao, desc_outras_fontes) VALUES (" .
                 $id . "," .  $tipoFonteInformacao . "," . $descOutrasFontInfo . ");";
 
-        $this->firephp->log($sql);
+        //$this->firephp->log($sql);
         $ocorrenciasDatabase->query($sql);
       }
     }
@@ -571,14 +573,14 @@ class Form_model extends CI_Model {
       // Retrieve rows from tmp_ocorrencia_produto
       $sql = "select * from tmp_ocorrencia_produto where nro_ocorrencia='" . $form["comunicado"] . "';";
       $res = $ocorrenciasDatabase->query($sql);
-      $this->firephp->log($res->result_array());
+      //$this->firephp->log($res->result_array());
 
       // Copy rows from tmp_ocorrencia_produto to ocorrencia_produto
       $sql = "";
 
       foreach ($res->result_array() as $key => $row)
       {
-        $this->firephp->log($row);
+        //$this->firephp->log($row);
         if (isset($row['id_produto_onu'])) {
           $sql = $sql .
                " insert into ocorrencia_produto " .
@@ -593,13 +595,13 @@ class Form_model extends CI_Model {
 
       }
 
-      $this->firephp->log($sql);
+      //$this->firephp->log($sql);
       $res = $ocorrenciasDatabase->query($sql);
     }
     // Clean tmp_ocorrencia_produto
     $sql = "delete from tmp_ocorrencia_produto where nro_ocorrencia='" . $form["comunicado"] . "';";
     $res = $ocorrenciasDatabase->query($sql);
-    $this->firephp->log($sql);
+    //$this->firephp->log($sql);
 
 
 
@@ -628,14 +630,21 @@ class Form_model extends CI_Model {
       //         $id . "'," . $nomeNavio . "," . $nomeInstalacao . ",'"  . $funcNavio . "');";
 
       $ocorrenciasDatabase->query($sql);
-      $this->firephp->log($sql);
+      //$this->firephp->log($sql);
     }
 
-
-    //
-    // Finishing database transaction
-    //
-  	$ocorrenciasDatabase->trans_complete();
+        if ($ocorrenciasDatabase->trans_status() === FALSE){
+            // On error dont save in database
+            $ocorrenciasDatabase->trans_rollback();
+        }else{
+            // Finishing database transaction
+            $ocorrenciasDatabase->trans_commit();
+        }
+        
+        //
+        // Finishing database transaction
+        //
+        //$ocorrenciasDatabase->trans_complete();
 
   }
 
@@ -1082,18 +1091,18 @@ class Form_model extends CI_Model {
 
       // delete the relations already done with the edited 'ocorrencia'
       $fields = "delete from ocorrencia_lin where id_ocorrencia=" . $id .";";
-      $this->firephp->log($fields);
+      //$this->firephp->log($fields);
       $ocorrenciasDatabase->query($fields);
 
       $fields = "delete from ocorrencia_pol where id_ocorrencia=" . $id .";";
-      $this->firephp->log($fields);
+      //$this->firephp->log($fields);
       $ocorrenciasDatabase->query($fields);
 
       $fields = "delete from ocorrencia_pon where id_ocorrencia=" . $id .";";
-      $this->firephp->log($fields);
+      //$this->firephp->log($fields);
       $ocorrenciasDatabase->query($fields);
 
-      $this->firephp->log($line->num_rows() . " " . $polygon->num_rows() . " " . $point->num_rows() );
+      //$this->firephp->log($line->num_rows() . " " . $polygon->num_rows() . " " . $point->num_rows() );
 
       $fields = " insert into ocorrencia_lin " .
                   " (id_ocorrencia_lin, id_ocorrencia, descricao, shape)" .
@@ -1121,8 +1130,8 @@ class Form_model extends CI_Model {
       // Deleted temporary information on tmp tables
       $fields = $fields . " delete from tmp_lin; delete from tmp_pol; delete from tmp_pon;";
 
-      // $this->firephp->log($sql);
-      $this->firephp->log($fields);
+      //$this->firephp->log($sql);
+      //$this->firephp->log($fields);
 
       // $ocorrenciasDatabase->query($sql);
       $ocorrenciasDatabase->query($fields);
@@ -1142,7 +1151,7 @@ class Form_model extends CI_Model {
                 $id . "," .  $tipoLocalizacao .
                 ");";
 
-        $this->firephp->log($sql);
+        //$this->firephp->log($sql);
 
         $ocorrenciasDatabase->query($sql);
       }
@@ -1162,7 +1171,7 @@ class Form_model extends CI_Model {
                 $id . "," .  $tipoEvento .
                 ");";
 
-        $this->firephp->log($sql);
+        //$this->firephp->log($sql);
 
         $ocorrenciasDatabase->query($sql);
       }
@@ -1182,7 +1191,7 @@ class Form_model extends CI_Model {
                 $id . "," .  $instituicaoAtuandoLocal .
                 ");";
 
-        $this->firephp->log($sql);
+        //$this->firephp->log($sql);
 
         $ocorrenciasDatabase->query($sql);
       }
@@ -1202,7 +1211,7 @@ class Form_model extends CI_Model {
                 $id . "," .  $tipoDanoIdentificado .
                 ");";
 
-        $this->firephp->log($sql);
+        //$this->firephp->log($sql);
 
         $ocorrenciasDatabase->query($sql);
       }
@@ -1229,7 +1238,7 @@ class Form_model extends CI_Model {
         $sql = "insert into ocorrencia_tipo_fonte_informacao (id_ocorrencia, id_tipo_fonte_informacao, desc_outras_fontes ) VALUES (" .
                 $id . "," .  $tipoFonteInformacao . "," . $descOutrasFontInfo  . ");";
 
-        $this->firephp->log($sql);
+        //$this->firephp->log($sql);
 
         $ocorrenciasDatabase->query($sql);
       }
@@ -1308,7 +1317,7 @@ class Form_model extends CI_Model {
 
   public function convertDBtoForm($dbResult)
   {
-    $this->firephp->log('convertDBtoForm');
+    //$this->firephp->log('convertDBtoForm');
     //
     // Setting up the default database
     //
@@ -1468,7 +1477,7 @@ class Form_model extends CI_Model {
 
     $statusProdSetado = ($prodNaoPerigoso || $prodNaoAplica || $prodNaoEspecificado)? true : false;
 
-    $this->firephp->log($hasProducts);
+    //$this->firephp->log($hasProducts);
 
     if (!$hasProducts && !$statusProdSetado)
       $form['semProduto'] = 'checked';
@@ -1670,7 +1679,7 @@ class Form_model extends CI_Model {
              " limit 1;";
     $res = $ocorrenciasDatabase->query($query);
 
-    $this->firephp->log($query);
+    //$this->firephp->log($query);
 
     //
     // In case the registry exists, calls the function that loads a form from the database

@@ -9,7 +9,7 @@
     <meta name="author" content="Hex Tecnologias Espaciais Inovadoras">
 
     <!-- Leaflet -->
-    <link href="//cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" rel="stylesheet" />
+    <link href="<?= base_url()?>assets/css/leaflet.css" rel="stylesheet" />
     <link href="<?= base_url()?>assets/css/leaflet-markercluster.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/leaflet-minimap.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/leaflet-fullscreen.css" rel="stylesheet">
@@ -20,7 +20,7 @@
 
     <!-- Bootstrap -->
     <link href="<?= base_url()?>assets/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <link href="<?= base_url()?>assets/css/font-awesome.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrap-editable.css" rel="stylesheet"/>
     <link href="<?= base_url()?>assets/css/bootstrap-select.min.css" rel="stylesheet">
     <link href="<?= base_url()?>assets/css/bootstrap-switch.css" rel="stylesheet">
@@ -33,7 +33,7 @@
     <!-- <link href="<?= base_url()?>assets/less/hash5-map.less" rel="stylesheet/less" type="text/css" /> -->
     <!-- <link href="<?= base_url()?>assets/less/hash5-charts.less" rel="stylesheet/less" type="text/css" /> -->
 
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href='<?= base_url()?>assets/css/Open-Sans.css' rel='stylesheet' type='text/css'>
     <link href='<?= base_url()?>assets/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css'>
     <link href='<?= base_url()?>assets/css/dataTables.tableTools.min.css' rel='stylesheet' type='text/css'>
     

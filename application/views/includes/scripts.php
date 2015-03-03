@@ -13,7 +13,7 @@
 
 
   <!-- Leaflet -->
-  <script src="//cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
+  <script src="<?= base_url()?>assets/js/leaflet-0-6-4.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.bing.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.markercluster.js"></script>
   <script src="<?= base_url()?>assets/js/leaflet.minimap.js"></script>

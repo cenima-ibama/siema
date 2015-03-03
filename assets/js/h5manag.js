@@ -422,7 +422,6 @@
         }
       },
       error: function(data, status) {
-        console.log(data);
         $("#inputNome").val("");
         $("#inputEmail").val("");
         $("#inputEmail").val("");
