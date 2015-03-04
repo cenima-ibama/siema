@@ -39,8 +39,8 @@ class Form extends CI_Controller {
         // 1. Localização
         //
         // if (!isset($form_data["semLocalizacao"])) {
-        $this->form_validation->set_rules('inputLat', 'Latitude', 'required');
-        $this->form_validation->set_rules('inputLng', 'Longitude ', 'required');
+        $this->form_validation->set_rules('inputLat', 'Latitude', 'trim|min_length[6]|required');
+        $this->form_validation->set_rules('inputLng', 'Longitude ', 'trim|min_length[6]|required');
         // $this->form_validation->set_rules('inputMunicipio', 'Municipio', 'required');
         // $this->form_validation->set_rules('inputUF', 'UF', 'required');
         // if(isset($form_data["inputEPSG"])) {
