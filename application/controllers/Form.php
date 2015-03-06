@@ -703,7 +703,7 @@ class Form extends CI_Controller {
             'name' => 'inputCompOrigem',
             'rows' => '2',
             'class' => 'input-large',
-            'maxlength' => '150',
+            'maxlength' => '1000',
             'value' => set_value('inputCompOrigem', isset($formLoad['inputCompOrigem']) ? $formLoad['inputCompOrigem'] : '')
         );
         if (isset($formLoad['semOrigem'])) {
@@ -776,7 +776,7 @@ class Form extends CI_Controller {
             'name' => 'inputCompEvento',
             'rows' => '2',
             'class' => 'input-large',
-            'maxlength' => '150',
+            'maxlength' => '1000',
             'value' => set_value('inputCompEvento', isset($formLoad['inputCompEvento']) ? $formLoad['inputCompEvento'] : '')
         );
         if (isset($formLoad['semEvento'])) {
@@ -1121,7 +1121,7 @@ class Form extends CI_Controller {
             'name' => 'inputCompInstituicao',
             'rows' => '2',
             'class' => 'input-large',
-            'maxlength' => '150',
+            'maxlength' => '1000',
             'value' => set_value('inputCompInstituicao', isset($formLoad['inputCompInstituicao']) ? $formLoad['inputCompInstituicao'] : "")
         );
         if (isset($formLoad['semInstituicao'])) {
@@ -1378,7 +1378,7 @@ class Form extends CI_Controller {
             'id' => 'inputDescOutrasFontInfo',
             'name' => 'inputDescOutrasFontInfo',
             'rows' => '2',
-            'maxlength' => '150',
+            'maxlength' => '1000',
             'class' => 'input-large',
             'value' => set_value('inputDescOutrasFontInfo', isset($formLoad['desc_outras_fontes']) ? $formLoad['desc_outras_fontes'] : '')
         );
