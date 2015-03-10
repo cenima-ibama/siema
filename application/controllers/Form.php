@@ -872,9 +872,10 @@ class Form extends CI_Controller {
                 'id' => 'inputVolumeEstimado',
                 'name' => 'inputVolumeEstimado',
                 'type' => 'text',
-                'class' => 'input-small',
-                'maxlength' => '14',
+                'class' => 'input-medium',
+                'maxlength' => '20',
                 'placeholder' => 'Valor',
+                'title' => 'Após digitar 9 caracteres a virgula será inserida automaticamente',
                 'value' => set_value('inputVolumeEstimado', isset($formLoad['inputVolumeEstimado']) ? $formLoad['inputVolumeEstimado'] : '')
             );
             if (isset($formLoad['semSubstancia'])) {
