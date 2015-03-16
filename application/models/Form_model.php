@@ -714,7 +714,7 @@ class Form_model extends CI_Model {
       }
 
       if(isset($form['inputEndereco'])) {
-        $fields = $fields . ",endereco_ocorrencia='" . $form['inputEndereco'] . "'";
+        $fields = $fields . ",endereco_ocorrencia='" . pg_escape_string($form['inputEndereco']) . "'";
       }
     // }
 
