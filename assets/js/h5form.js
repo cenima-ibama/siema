@@ -865,7 +865,7 @@
     });
     $("#inputInfoInstituicaoTelefone").mask("(99)999999999");
     $("#inputCPFCNPJ").mask("99999999999999");
-    $("#inputVolumeEstimado").mask("9999999990,009999999999", {
+    $("#inputVolumeEstimado").mask("000000000,9999999999", {
       reverse: true
     });
     $("#inputNomeInformante").mask(validationString, {

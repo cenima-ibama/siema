@@ -1640,15 +1640,23 @@ class Form_model extends CI_Model {
     }
 
     //
-    // 13. Fonte de Informação
+    // 14. Fonte de Informação
     //
     $query = "select ocorrencia_tipo_fonte_informacao.id_tipo_fonte_informacao, ocorrencia_tipo_fonte_informacao.desc_outras_fontes from ocorrencia_tipo_fonte_informacao where ocorrencia_tipo_fonte_informacao.id_ocorrencia = '" . $dbResult['id_ocorrencia'] . "'";
     $form['tipoFonteInformacao'] = array();
+    
+    //$this->firephp->log($query);
+    
     foreach ($ocorrenciasDatabase->query($query)->result_array() as $row) {
-
+        
       array_push($form['tipoFonteInformacao'], $row['id_tipo_fonte_informacao']);
-      $form['desc_outras_fontes'] = $row['desc_outras_fontes'];
-
+      
+      if ($row['id_tipo_fonte_informacao'] == 6) {
+        $form['desc_outras_fontes'] = $row['desc_outras_fontes'];
+      
+        //$this->firephp->log($row['id_tipo_fonte_informacao']);
+        //$this->firephp->log($form['desc_outras_fontes']);
+      }
     }
 
 
