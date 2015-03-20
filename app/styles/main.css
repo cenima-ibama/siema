@@ -1,0 +1,157 @@
+/* Space out content a bit */
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+select{
+  width: 110px;
+}
+
+#page {
+  margin: 5%;
+  text-align: center;
+}
+
+#formChart{
+  display: inline-block;
+}
+
+.box-chart{
+  width: 500px; 
+  height: 300px; 
+  float: left; 
+  margin-bottom: 5%;
+}
+
+.chart{
+  display: inline-block;
+  border-left: 1px solid;
+  border-right: 1px solid;
+  border-bottom: 1px solid; 
+  border-top: 0px solid; 
+  border-color: #DDDDDD;
+  margin: 1%;
+}
+
+.box-header {
+  background-color: #fcfcfc;
+  /* Old browsers */
+
+  background-image: -moz-linear-gradient(top, #fcfcfc, #efefef);
+  /* FF3.6+ */
+
+  background-image: -webkit-linear-gradient(top, #fcfcfc, #efefef);
+  /* Chrome10+,Safari5.1+ */
+
+  background-image: linear-gradient(to bottom, #fcfcfc, #efefef);
+  /* W3C */
+
+  border: 1px solid #DDDDDD;
+  border-radius: 2px 2px 0 0;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  margin-bottom: -1px;
+  overflow: hidden;
+  padding: 1%;
+
+  height:2.9em; 
+  border-bottom:2px solid #DDDDDD;
+}
+
+.box-header h2{
+  color: #646464;
+  float: left;
+  font-size: 1.143em;
+  font-weight: normal;
+  line-height: 16px;
+  margin: 1.5% -100% 0 0;
+  text-shadow: 0 1px 0 #FFFFFF;
+}
+
+.quick-slct{
+  display: inline-block !important;
+
+}
+
+.quick-btn {
+  background-color: #fcfcfc 0%;
+  /* Old browsers */
+
+  background-image: -moz-linear-gradient(top, #fcfcfc 0%, #efefef 100%);
+  /* FF3.6+ */
+
+  background-image: -webkit-linear-gradient(top, #fcfcfc 0%, #efefef 100%);
+  /* Chrome10+,Safari5.1+ */
+
+  background-image: linear-gradient(to bottom, #fcfcfc 0%, #efefef 100%);
+  /* W3C */
+
+  border-top: 1px solid lightgrey;
+  border-left: 1px solid lightgrey;
+  border-radius: 4px 4px 4px 4px;
+  box-shadow: 0 1px 0 0 #ffffff inset, 0 1px 0 rgba(255, 255, 255, 0.4);
+  display: inline-block;
+  line-height: 1%;
+  padding: 0;
+  margin: 1% 1% -1% 1%;
+  max-width: 100%;
+}
+
+/*.item{
+  width: 20%;
+}*/
+
+.quick-btn .item:active {
+  background: #FCFCFC;
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.quick-btn .item {
+  border-right: 1px solid lightgrey;
+  border-bottom: 1px solid lightgrey;
+  box-shadow: 1px 1px 0 0 #FFFFFF;
+  font-weight: bold;
+  margin: 0;
+  /*padding: 25px 15px 20px;*/
+  padding: 23px;
+  float: left;
+}
+.quick-btn .item:hover {
+  background: #FCFCFC;
+  text-decoration: none;
+  transition: all 0.2s ease 0s;
+}
+
+
+/* Customize container */
+@media (min-width: 768px) {
+  .container {
+    max-width: 730px;
+  }
+}
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  /* Remove the padding we set earlier */
+  .header,
+  .marketing,
+  .footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 30px;
+  }
+  /* Remove the bottom border on the jumbotron for visual effect */
+  .jumbotron {
+    border-bottom: 0;
+  }
+}

@@ -1,0 +1,56 @@
+<div id="page">
+
+	<form id="formChart" ng-submit='getValue()'  class="text-center">
+		<div class='quick-btn'>
+			<figure>
+				<img id='{{regions.name}}' href='#' class='item'
+				     ng-repeat='regions in regions' ng-src='{{regions.image}}'
+				     value='{{regions.name}}' ng-model='region'>
+			</figure>
+		</div>
+
+		<br /><br />
+
+		<div class="quick-slct">
+			<select class='btn btn-default' ng-options='mes for mes in meses' ng-model='mes'></select> 
+			<select class='btn btn-default' ng-options='ano for ano in anos' ng-model='ano'></select> 
+			<select class='btn btn-default' ng-options='origem for origem in origens' ng-model='origem'></select> 
+			<select class='btn btn-default' ng-options='tipo for tipo in tipos' ng-model='tipo'></select> 
+			<button class="btn btn-primary" type="submit">Selecionar</button>
+		</div>
+	</form>
+
+	<br /><br />
+	<hr>
+
+
+
+	<div class='chart'>
+		<div class='box-chart'>
+			<div class='box-header'><h2>Bar chart</h2></div>
+			<mensal></mensal>
+		</div>
+	</div>
+
+	<div class='chart'>
+		<div class='box-chart'>
+			<div class='box-header'><h2>Pie chart</h2></div>
+			<pie></pie>
+		</div>
+	</div>
+
+	<div class='chart'>
+		<div class='box-chart'>
+			<div class='box-header'><h2>Pie chart</h2></div>
+			<pie></pie>
+		</div>
+	</div>
+
+	<div class='chart'>
+		<div class='box-chart'>
+			<div class='box-header'><h2>Line chart</h2></div>
+			<line></line>
+		</div>
+	</div>
+
+</div>
