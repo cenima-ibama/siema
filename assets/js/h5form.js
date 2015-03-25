@@ -244,7 +244,6 @@
         cepRegExp = new RegExp("[0-9]{1,}-[0-9]{1,}");
         result = cepRegExp.test(labelParts[labelParts.length - 2]);
         if (result) {
-          console.log(labelParts[labelParts.length - 2]);
           indexCity = labelParts.length - 3;
         } else {
           indexCity = labelParts.length - 2;
@@ -517,10 +516,7 @@
         $("span[data-id='postTFI']").each(function() {
           if (this.innerHTML === input.value) {
             input.checked = "checked";
-            $(this).remove();
-            if (input.value === "5") {
-              return $("#descOutrasFontInfo").show();
-            }
+            return $(this).remove();
           }
         });
         span = document.createElement("span");
@@ -534,8 +530,8 @@
           return labelOutros = label;
         }
       });
-      $("#TFI5").prop('checked', 'checked');
-      $("#TFI5").parent().hide();
+      $("#TFI6").prop('checked', 'checked');
+      $("#TFI6").parent().hide();
       $(tipoFonteInformacao).append(labelOutros);
       _tipoFonteInformacao = tipoFonteInformacao;
       productsOnu = [];
@@ -669,13 +665,6 @@
           return $("#inputCausaProvavel").attr("disabled", "disabled");
         } else {
           return $("#inputCausaProvavel").removeAttr("disabled");
-        }
-      });
-      $("#TFI5").on('click', function() {
-        if ($(this).is(":checked")) {
-          return $("#descOutrasFontInfo").show();
-        } else {
-          return $("#descOutrasFontInfo").hide();
         }
       });
       $("#semDanos").on('click', function() {
@@ -876,7 +865,7 @@
     });
     $("#inputInfoInstituicaoTelefone").mask("(99)999999999");
     $("#inputCPFCNPJ").mask("99999999999999");
-    $("#inputVolumeEstimado").mask("000000000,9999", {
+    $("#inputVolumeEstimado").mask("000000000,9999999999", {
       reverse: true
     });
     $("#inputNomeInformante").mask(validationString, {

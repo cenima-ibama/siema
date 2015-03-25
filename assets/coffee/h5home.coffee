@@ -240,7 +240,7 @@ consultarOcorrencias = (tpProd,uf, origem, dtIni, dtFim,eOceano,baciaSedimentar)
       validado"
     parameters: query
   )
-  console.log(query)
+  #console.log(query)
   dataIncidente = ""
   diaSemana = ""
   dataCadastrada = false

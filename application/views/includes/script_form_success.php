@@ -1,5 +1,5 @@
- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
- <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+ <script src="<?= base_url()?>assets/js/jquery.min.js"></script>
+ <script src="<?= base_url()?>assets/js/jquery-ui.min.js"></script>
 
  <script>
 	var btnSubmit = window.parent.document.getElementById("submit");

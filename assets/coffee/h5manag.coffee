@@ -499,7 +499,7 @@ $("#storePerson").on "click", ()->
         return console.log('Usuário já cadastrado!')
 
     error: (data,status)->
-      console.log(data);
+      #console.log(data);
 
       $("#inputNome").val("")
       $("#inputEmail").val("")

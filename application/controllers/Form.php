@@ -39,8 +39,8 @@ class Form extends CI_Controller {
         // 1. Localização
         //
         // if (!isset($form_data["semLocalizacao"])) {
-        $this->form_validation->set_rules('inputLat', 'Latitude', 'required');
-        $this->form_validation->set_rules('inputLng', 'Longitude ', 'required');
+        $this->form_validation->set_rules('inputLat', 'Latitude', 'trim|min_length[6]|required');
+        $this->form_validation->set_rules('inputLng', 'Longitude ', 'trim|min_length[6]|required');
         // $this->form_validation->set_rules('inputMunicipio', 'Municipio', 'required');
         // $this->form_validation->set_rules('inputUF', 'UF', 'required');
         // if(isset($form_data["inputEPSG"])) {
@@ -703,7 +703,7 @@ class Form extends CI_Controller {
             'name' => 'inputCompOrigem',
             'rows' => '2',
             'class' => 'input-large',
-            'maxlength' => '150',
+            'maxlength' => '1000',
             'value' => set_value('inputCompOrigem', isset($formLoad['inputCompOrigem']) ? $formLoad['inputCompOrigem'] : '')
         );
         if (isset($formLoad['semOrigem'])) {
@@ -776,7 +776,7 @@ class Form extends CI_Controller {
             'name' => 'inputCompEvento',
             'rows' => '2',
             'class' => 'input-large',
-            'maxlength' => '150',
+            'maxlength' => '1000',
             'value' => set_value('inputCompEvento', isset($formLoad['inputCompEvento']) ? $formLoad['inputCompEvento'] : '')
         );
         if (isset($formLoad['semEvento'])) {
@@ -872,9 +872,10 @@ class Form extends CI_Controller {
                 'id' => 'inputVolumeEstimado',
                 'name' => 'inputVolumeEstimado',
                 'type' => 'text',
-                'class' => 'input-small',
-                'maxlength' => '14',
+                'class' => 'input-medium',
+                'maxlength' => '20',
                 'placeholder' => 'Valor',
+                'title' => 'Após digitar 9 caracteres a virgula será inserida automaticamente',
                 'value' => set_value('inputVolumeEstimado', isset($formLoad['inputVolumeEstimado']) ? $formLoad['inputVolumeEstimado'] : '')
             );
             if (isset($formLoad['semSubstancia'])) {
@@ -1121,7 +1122,7 @@ class Form extends CI_Controller {
             'name' => 'inputCompInstituicao',
             'rows' => '2',
             'class' => 'input-large',
-            'maxlength' => '150',
+            'maxlength' => '1000',
             'value' => set_value('inputCompInstituicao', isset($formLoad['inputCompInstituicao']) ? $formLoad['inputCompInstituicao'] : "")
         );
         if (isset($formLoad['semInstituicao'])) {
@@ -1366,7 +1367,7 @@ class Form extends CI_Controller {
 
 
         //
-        // 13. Fonte da Informação.
+        // 14. Fonte da Informação.
         //
         // Checkbox Fonte Informação
         if (isset($formLoad['tipoFonteInformacao'])) {
@@ -1378,7 +1379,7 @@ class Form extends CI_Controller {
             'id' => 'inputDescOutrasFontInfo',
             'name' => 'inputDescOutrasFontInfo',
             'rows' => '2',
-            'maxlength' => '150',
+            'maxlength' => '1000',
             'class' => 'input-large',
             'value' => set_value('inputDescOutrasFontInfo', isset($formLoad['desc_outras_fontes']) ? $formLoad['desc_outras_fontes'] : '')
         );

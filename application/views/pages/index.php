@@ -336,7 +336,7 @@
         Enviar
     </a>
     <!-- Creating the new buttons Cancelar and Fechar - both hidden -->
-    <a id="btnClose" class="btn btn-primary" type="button" style="display:none;" data-dismiss="modal"><i class="icon-remove"></i>Fechar</a>
+    <a id="btnClose" class="btn btn-inverse" type="button" style="display:none;" data-dismiss="modal"><i class="icon-remove"></i>Fechar</a>
 
 </div>
 </div>
@@ -681,7 +681,7 @@ if (!$logged_in) {
             </div>
         </div>
         <div class="modal-footer" style="display:none;">
-            <a id="btnClose" class="btn" type="button" data-dismiss="modal"><i class="icon-remove"></i> Fechar</a>
+            <a id="btnClose" class="btn btn-inverse" type="button" data-dismiss="modal"><i class="icon-remove"></i> Fechar</a>
             <a id="btnExport" class="btn btn-primary" type="button" data-dismiss="modal"><i class="icon-ok"></i> Exportar</a>
             <input type="hidden" id="tipoExport"></input>
         </div>
@@ -825,13 +825,13 @@ if ($profilUser == 1) {
                                 </div>
                             </form>
 
-                            <h2 class="sub-header">Ocorrências Não Validadas</h2>
+                            <h2 class="sub-header" style="margin-bottom: 10px;">Ocorrências Não Validadas</h2>
                             <!-- <input id="searchInput" type="text" value="Type To Filter"><span style="color:#0088CC;"><i class="icon-search icon-white"></i></span> -->
                             <div class="table-responsive table-ocorrencia" id="tableNaoValidado"></div>
 
                             <hr style="margin: 60px 0px;">
 
-                            <h2 class="sub-header">Ocorrências Validadas</h2>
+                            <h2 class="sub-header" style="margin-bottom: 10px;">Ocorrências Validadas</h2>
                             <!-- <input id="searchInput" value="Type To Filter"> -->
                             <div class="table-responsive table-ocorrencia" id="tableValidado"></div>
                             <!-- <div id="editMeModal" class="login"> </div> -->
@@ -864,7 +864,7 @@ if ($profilUser == 1) {
                                         <i class="icon-ok icon-white"></i>
                                         Enviar
                                     </a>
-                                    <a id="btnClose" class="btn btn-primary" type="button" style="display:none;" data-dismiss="modal"><i class="icon-remove"></i>Fechar</a>
+                                    <a id="btnClose" class="btn btn-inverse" type="button" style="display:none;" data-dismiss="modal"><i class="icon-remove"></i>Fechar</a>
                                 </div>
                             </div>
                         </div>

@@ -265,7 +265,7 @@ $(document).ready ->
       result = cepRegExp.test(labelParts[labelParts.length - 2])
       if result
         #case that it has the CEP
-        console.log labelParts[labelParts.length - 2]
+        #console.log labelParts[labelParts.length - 2]
         indexCity = labelParts.length - 3
       else
         indexCity = labelParts.length - 2
@@ -673,11 +673,6 @@ $(document).ready ->
           input.checked = "checked"
           $(@).remove()
 
-          #Mostrar a caixa de texto com a descrição da outra fonte de informação.
-          if  input.value == "5"
-            $("#descOutrasFontInfo").show()
-
-
       span = document.createElement("span")
       span.innerHTML = value.nome
 
@@ -690,9 +685,9 @@ $(document).ready ->
         $(tipoFonteInformacao).append label
       else
         labelOutros = label
-
-    $("#TFI5").prop('checked', 'checked')
-    $("#TFI5").parent().hide()
+        
+    $("#TFI6").prop('checked', 'checked')
+    $("#TFI6").parent().hide()
 
     # Add the last element to the screen
     $(tipoFonteInformacao).append labelOutros
@@ -863,12 +858,6 @@ $(document).ready ->
         $("#inputCausaProvavel").attr("disabled","disabled")
       else
         $("#inputCausaProvavel").removeAttr("disabled")
-
-    $("#TFI5").on 'click', ()->
-      if $(this).is(":checked")
-        $("#descOutrasFontInfo").show()
-      else
-        $("#descOutrasFontInfo").hide()
 
     $("#semDanos").on 'click', ()->
       if $(this).is(":checked")
@@ -1084,7 +1073,7 @@ $(document).ready ->
 
   $("#inputCPFCNPJ").mask("99999999999999")
 
-  $("#inputVolumeEstimado").mask("000000000,9999", {reverse: true})
+  $("#inputVolumeEstimado").mask("000000000,9999999999", {reverse: true})
 
   $("#inputNomeInformante").mask(validationString,
     {'translation': {W: {pattern: /[A-Za-z ]/}}})
