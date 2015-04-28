@@ -1,0 +1,19 @@
+<div class="col-lg-6">
+    <div class="form-group">
+        <div ng-repeat="ambi in ambientes.ambientes" class="checkbox">
+            <label><input type="checkbox" ng-model="ambi.value" ng-disabled="ambientes.semAmbientes"> {{ambi.name}} </label>
+        </div>
+    </div>
+</div>
+<div class="col-lg-6">
+    <div class="form-group">
+        <label class="control-label">
+            Informações complementares:
+        </label>
+        <textarea class="form-control col-lg-3" rows="4" ng-disabled="ambientes.semAmbientes" ng-model="ambientes.complementar"></textarea>
+    </div>
+    <br/>
+    <div class="form-group">
+        <input type="checkbox" ng-model="ambientes.semAmbientes"> Sem informação sobre ocorrências e/ou ambientes atingidos
+    </div>
+</div>

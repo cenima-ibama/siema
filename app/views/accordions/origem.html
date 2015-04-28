@@ -1,0 +1,19 @@
+<div class="col-lg-6">
+    <div class="form-group">
+        <div ng-repeat="orig in origem.origens" class="checkbox">
+            <label><input type="checkbox" ng-model="orig.value" ng-disabled="origem.semOrigem"> {{orig.name}} </label>
+        </div>
+    </div>
+</div>
+<div class="col-lg-6">
+    <div class="form-group">
+        <label class="control-label">
+            Informações complementares:
+        </label>
+        <textarea class="form-control col-lg-3" rows="4" ng-disabled="origem.semOrigem" ng-model="evento.complementar"></textarea>
+    </div>
+    <br/>
+    <div class="form-group">
+        <input type="checkbox" ng-model="origem.semOrigem"> Sem informação sobre a origem do acidente
+    </div>
+</div>
