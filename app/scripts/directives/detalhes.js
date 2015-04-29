@@ -15,6 +15,17 @@ angular.module('estatisticasApp')
 
         $scope.detalhes.subPanel = '(Itens VI e VII do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)';
 
+        $scope.detalhes.semDetalhe = false;
+        $scope.detalhes.causa = "";
+
+        $scope.$on('carregar_detalhes', function(event, data){
+          if (data[0].des_causa_provavel != ""){
+            $scope.detalhes.causa = data[0].des_complemento_tipo_localizaca;
+          } else {
+            $scope.detalhes.semDetalhe = true
+          }
+        });
+
         // $scope.loginIn = function(user, pass){
         //   // $cookies.user = {user: user, password: pass};
         //   RestApi.login({},{
