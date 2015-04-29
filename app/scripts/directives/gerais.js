@@ -13,7 +13,7 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($scope){
 
-        $scope.gerais.subPanel = '(Itens IX do Anexo II do Decreto nÂº 4.136 de 20 de fevereiro de 2002)';
+        $scope.gerais.subPanel = '(Itens IX do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)';
 
         // $scope.loginIn = function(user, pass){
         //   // $cookies.user = {user: user, password: pass};

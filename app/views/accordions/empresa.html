@@ -1,36 +1,29 @@
-<div class="row-fluid">
-    <div class="span6">
-        <div class="control-group">
-            <label class="control-label" for="inputResponsavel">
-                Nome:*
-            </label>
-            <div class="controls">
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="inputCPFCNPJ">CPF/CNPJ: </label>
-            <div class="controls">
-            </div>
-        </div>
+    <!-- <div class="span6"> -->
+<div class="col-lg-6">
+    <div class="form-group">
+        <label class="control-label">
+            Nome:*
+            <input type="text" ng-model='responsavel.nome' class="col-lg-6 form-control" maxlength="50" ng-disabled="responsavel.semInformacao" mask='@' repeat='30'>
+        </label>
     </div>
-    <div class="span6">
-        <div class="control-group">
-            <label class="control-label" for="inputLicenca">
-                Licença ambiental:
+    <div class="form-group">
+        <label class="control-label">CPF/CNPJ: 
+            <input type="text" ng-model='responsavel.cadastro' class="col-lg-6 form-control" ng-disabled="responsavel.semInformacao" mask='9' repeat='20' >
+        </label>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Licença ambiental: 
+            -----------Aqui um select----------
+            <!-- <select ng-model='responsavel.licencaAmbiental' ng-repeat='licenca in licensas' ng-disabled="responsavel.semInformacao" required></select> -->
+        </label>
+    </div>  
+    
+    <div class="row-fluid">
+        <div class="span12">
+            <label class="checkbox text-left">
+                <input type="checkbox" ng-model="responsavel.semInformacao"> Sem informação sobre a empresa/responsável
             </label>
-            <div class="controls">
-            </div>
         </div>
     </div>
 </div>
-<div class="row-fluid">
-    <div class="span12">
-        <div class="control-group">
-            <div class="controls">
-                <label class="checkbox text-left">
-                    Sem informação sobre a empresa/responsável
-                </label>
-            </div>
-        </div>
-    </div>
-</div>
+

@@ -12,6 +12,19 @@ angular.module('estatisticasApp')
       templateUrl: 'views/accordions/instituicao.html',
       restrict: 'E',
       controller: function($scope){
+        $scope.instituicao.instituicao = [
+          {name: "IBAMA", value: "false"},
+          {name: "Órgão Estadual ou Municipal de Meio Ambiente", value: "false"},
+          {name: "Defesa Civil", value: "false"},
+          {name: "Corpo de Bombeiros", value: "false"},
+          {name: "Polícia Rodoviária", value: "false"},
+          {name: "Polícia Militar", value: "false"},
+          {name: "Polícia Civil", value: "false"},
+          {name: "Marinha do Brasil", value: "false"},
+          {name: "Empresa especializada em atendimento", value: "false"},
+          {name: "Outra(s)", value: "false"},
+        ];
+
 
         // $scope.loginIn = function(user, pass){
         //   // $cookies.user = {user: user, password: pass};

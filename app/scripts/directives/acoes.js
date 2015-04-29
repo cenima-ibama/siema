@@ -15,6 +15,9 @@ angular.module('estatisticasApp')
 
         $scope.acoes.subPanel = '(Itens VIII do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)';
 
+        $scope.check = function(){
+          console.log($scope.acoes);
+        }
         // $scope.loginIn = function(user, pass){
         //   // $cookies.user = {user: user, password: pass};
         //   RestApi.login({},{

@@ -1,29 +1,29 @@
-<div class="row-fluid">
-    <div id="tipoInstituicaoAtuando" class="span12">
-        <div style="display:none;">
+
+
+<div class="col-lg-6">
+    <div class="form-group">
+        <div ng-repeat="inst in instituicao.instituicao" class="checkbox">
+            <label><input type="checkbox" ng-model="inst.value" ng-disabled="instituicao.semInstituicao"> {{inst.name}} </label>
         </div>
     </div>
-</div>
-<div class="row-fluid">
-    <div class="control-group">
+    <div class="form-group">
+        <label class="control-label">
+            Informações complementares:
+        </label>
+        <textarea class="form-control col-lg-3" rows="4" ng-disabled="instituicao.semInstituicao" ng-model="instituicao.complementar"></textarea>
+    </div>
+    <br/>
+    <br/>
+    <label class="control-label">Nome do responsável no local/telefone:</label>
+    <br/>
+    <input type="text" ng-model='instituicao.responsavel' maxlength="50"  ng-disabled="instituicao.semInstituicao" placeholder="Nome do Responsável"/>
+    <input type="text" ng-model="instituicao.telefone" ui-br-phone-number  ng-disabled="instituicao.semInstituicao" mask="(99) 9?9999-9999 " placeholder="(99)99999999">
+
+    <div class="row-fluid">
         <div class="span12">
-            <label class="control-label" for="inputCompInstituicao">
-                Informações complementares:
+            <label class="checkbox text-left">
+                <input type="checkbox" ng-model="instituicao.semInstituicao"> Sem informação sobre instituição/empresa atuando no local
             </label>
         </div>
-        <div class="controls">
-        </div>
-    </div>
-</div>
-<div class="control-group">
-    <label class="control-label" for="inputInfoInstituicaoNome">Nome do responsável no local/telefone:</label>
-    <div class="controls">
-    </div>
-</div>
-<div class="row-fluid">
-    <div class="span12">
-        <label class="checkbox text-left">
-            Sem informação sobre instituição/empresa atuando no local
-        </label>
     </div>
 </div>
