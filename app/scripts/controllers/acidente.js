@@ -21,7 +21,7 @@ angular.module('estatisticasApp')
                          'evento',
                          'produtos',
                          'detalhes',
-                         'ambientes',
+                         'ambiente',
                          'empresa',
                          'instituicao',
                          'acoes',
@@ -35,8 +35,9 @@ angular.module('estatisticasApp')
 
     $scope.acao = 'carregar';
     $scope.oleo = false;
-    $scope.nro_ocorrencia = '201531732431';
+    // $scope.nro_ocorrencia = '201531732431';
     // $scope.nro_ocorrencia = '201491928814';
+    $scope.nro_ocorrencia = '201492328850';
 
     $scope.oleo = false;
 
@@ -88,6 +89,25 @@ angular.module('estatisticasApp')
       }
     );
 
+    RestApi.query({query: 'ambientes'},
+      function success(data, status){
+        $scope.ambientes = [];
+        angular.forEach(data, function(value, key){
+          $scope.ambientes.push({'name' : value.nome, 'id': value.id_tipo_dano_identificado, 'value': false});
+        });
+      }
+    );
+
+    RestApi.query({query: 'instituicoes'},
+      function success(data, status){
+        $scope.instituicoes = [];
+        angular.forEach(data, function(value, key){
+          $scope.instituicoes.push({'name' : value.nome, 'id': value.id_instituicao_atuando_local, 'value': false});
+        });
+      }
+    );
+
+
     if ($scope.acao == 'carregar') {
       RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
         function success(data, status){
@@ -98,10 +118,10 @@ angular.module('estatisticasApp')
           $scope.$broadcast('carregar_origem', data);
           $scope.$broadcast('carregar_evento', data);
           // $scope.$broadcast('carregar_propdutos', ret);
-          // $scope.$broadcast('carregar_detalhes', ret);
-          // $scope.$broadcast('carregar_ambientes', ret);
+          $scope.$broadcast('carregar_detalhes', data);
+          $scope.$broadcast('carregar_ambientes', data);
           // $scope.$broadcast('carregar_empresa', ret);
-          // $scope.$broadcast('carregar_instituicao', ret);
+          $scope.$broadcast('carregar_instituicao', data);
           // $scope.$broadcast('carregar_acoes', ret);
           // $scope.$broadcast('carregar_gerais', ret);
           // $scope.$broadcast('carregar_comunicante', ret);

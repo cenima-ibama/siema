@@ -27,7 +27,7 @@ angular.module('estatisticasApp')
 
         $scope.$on('carregar_origem', function(event, data){
             var temp = data[0].origem.replace(/[{}]/g,'').split(',');
-            if (temp.length >= 0) {
+            if (temp[0] != "") {
                 angular.forEach($scope.origens, function(val, key){
                     if (temp.indexOf(val.id) >= 0) {
                         val.value = true;

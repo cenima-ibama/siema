@@ -19,7 +19,7 @@ angular.module('estatisticasApp')
 
         $scope.$on('carregar_evento', function(event, data){
             var temp = data[0].evento.replace(/[{}]/g,'').split(',');
-            if (temp.length >= 0) {
+            if (temp[0] != "") {
                 angular.forEach($scope.eventos, function(val, key){
                     if (temp.indexOf(val.id) >= 0) {
                         val.value = true;
