@@ -28,6 +28,11 @@ angular.module('estatisticasApp')
                          'gerais',
                          'comunicante'];
 
+    angular.forEach($scope.accordions, function(obj) {
+      $scope[obj] = {};
+      $scope[obj].subPanel = "";
+    });
+
     $scope.acao = 'carregar';
     $scope.oleo = false;
     $scope.nro_ocorrencia = '201531732431';
@@ -53,16 +58,6 @@ angular.module('estatisticasApp')
       }
     );
 
-
-    RestApi.query({query: 'origens'},
-      function success(data, status){
-        $scope.origens = [];
-        angular.forEach(data, function(value, key){
-          $scope.origens.push({'name' : value.des_tipo_localizacao, 'id': value.id_tipo_localizacao, 'value': false});
-        });
-      }
-    );
-
     $scope.carregarMunicipios = function($uf) {
       RestApi.query({query: 'municipios', uf:$uf},
         function success(data, status){
@@ -75,6 +70,23 @@ angular.module('estatisticasApp')
     }
 
 
+    RestApi.query({query: 'origens'},
+      function success(data, status){
+        $scope.origens = [];
+        angular.forEach(data, function(value, key){
+          $scope.origens.push({'name' : value.des_tipo_localizacao, 'id': value.id_tipo_localizacao, 'value': false});
+        });
+      }
+    );
+
+    RestApi.query({query: 'eventos'},
+      function success(data, status){
+        $scope.eventos = [];
+        angular.forEach(data, function(value, key){
+          $scope.eventos.push({'name' : value.nome, 'id': value.id_tipo_evento, 'value': false});
+        });
+      }
+    );
 
     if ($scope.acao == 'carregar') {
       RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
@@ -84,7 +96,7 @@ angular.module('estatisticasApp')
           $scope.$broadcast('carregar_localizacao', data);
           $scope.$broadcast('carregar_datas', data);
           $scope.$broadcast('carregar_origem', data);
-          // $scope.$broadcast('carregar_evento', ret);
+          $scope.$broadcast('carregar_evento', data);
           // $scope.$broadcast('carregar_propdutos', ret);
           // $scope.$broadcast('carregar_detalhes', ret);
           // $scope.$broadcast('carregar_ambientes', ret);
@@ -103,12 +115,6 @@ angular.module('estatisticasApp')
         }
       );
     }
-
-
-    angular.forEach($scope.accordions, function(obj) {
-      $scope[obj] = {};
-      $scope[obj].subPanel = "";
-    });
 
     // $scope.bacias = [
     //   { name: "Bacia 1", value: "1" },
