@@ -1,32 +1,31 @@
-<div class="row-fluid">
-    <div class="controls span12">
-        <label class="control-label span5" for="inputNomeInformante">Nome completo: </label>
-        <div class="span6">
-        </div>
+<div class="col-lg-6">
+    <div>
+        <label >Nome completo: </label>
+        <input ng-model='comunicante.nome' class='form-control' type='text' mask='@' repeat='50'>
     </div>
-    <div class="controls span12">
-        <label class="control-label span5" for="inputInstEmp">Instituição / Empresa: </label>
-        <div class="span6">
-        </div>
+
+    <div>
+        <label >Instituição / Empresa: </label>
+        <input ng-model='comunicante.empresa' class='form-control'  type='text' mask='@' repeat='50'>
     </div>
-    <div class="controls span12">
-        <label class="control-label span5" for="inputCargoFunc">Cargo / Função navio ou instalação: </label>
-        <div class="span6">
-        </div>
+
+    <div>
+        <label >Cargo / Função navio ou instalação: </label>
+        <input ng-model='comunicante.funcao' class='form-control'  type='text' mask='@' repeat='50'>
     </div>
-        <div class="controls span12">
-        <label class="control-label span5" for="inputCargoFunc">Cargo / Função: </label>
-        <div class="span6">
-        </div>
+
+    <div>
+        <label  >Cargo / Função: </label>
+        <input ng-model='comunicante.funcao' class='form-control'  type='text' mask='@' repeat='50'>
     </div>
-    <div class="controls span12">
-        <label class="control-label span5" for="inputTelInformante">Telefone de contato: </label>
-        <div class="span6">
-        </div>
+
+    <div>
+        <label >Telefone de contato: </label>
+        <input ng-model='comunicante.telefone' class='form-control'  type='text' mask='@' repeat='50'>
     </div>
-    <div class="controls span12">
-        <label class="control-label span5" for="inputEmailInformante">Email de contato: </label>
-        <div class="span6">
-        </div>
+
+    <div>
+        <label  >Email de contato: </label>
+        <input  ng-model='comunicante.email' class='form-control' type='text' maxlength="50">
     </div>
 </div>

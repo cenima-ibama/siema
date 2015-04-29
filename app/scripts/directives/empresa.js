@@ -13,6 +13,12 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($scope){
 
+        $scope.licencas = [
+          {name: 'Licença ambiental federal'},
+          {name: 'Licença ambiental estadual'},
+          {name: 'Licença ambiental municipal'},
+        ]
+
         // $scope.loginIn = function(user, pass){
         //   // $cookies.user = {user: user, password: pass};
         //   RestApi.login({},{
