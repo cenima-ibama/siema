@@ -8,6 +8,18 @@ select{
   width: 110px;
 }
 
+.map{
+  width: 80% !important;
+  text-align: -webkit-center;
+  border-color: #ddd;
+  margin: auto !important;
+}
+
+#map{
+  width: 600px;
+  height: 350px;
+}
+
 #page {
   margin: 2% 2% 4%;
   text-align: center;
