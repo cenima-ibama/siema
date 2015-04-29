@@ -29,26 +29,29 @@ angular.module('estatisticasApp')
 
 
         $scope.$on('carregar_localizacao', function(event, data){
-            $scope.localizacao.lat = data.lat;
-            $scope.localizacao.lng = data.lng;
-            $scope.localizacao.oceano = false;
-            $scope.localizacao.bacia = data.bacia;
-            $scope.localizacao.uf = data.uf;
-            $scope.localizacao.municipio = data.municipio;
-            $scope.localizacao.endereco = data.endereco;
+            $scope.localizacao.lat = data[0].coordinate.split(' ')[0];
+            $scope.localizacao.lng = data[0].coordinate.split(' ')[1];
+            $scope.localizacao.oceano = data[0].id_bacia_sedimentar ? true : false;
+            $scope.localizacao.bacia = data[0].id_bacia_sedimentar;
+            $scope.localizacao.uf = data[0].id_uf;
+
+            $scope.carregarMunicipios($scope.localizacao.uf);
+
+            $scope.localizacao.municipio = data[0].id_municipio;
+            $scope.localizacao.endereco = data[0].endereco_ocorrencia;
 
         });
 
-        $scope.$on('criar_localizacao', function(event, data){
-            $scope.localizacao.lat = "";
-            $scope.localizacao.lng = "";
-            $scope.localizacao.oceano = false;
-            $scope.localizacao.bacia = "";
-            $scope.localizacao.uf = "";
-            $scope.localizacao.municipio = "";
-            $scope.localizacao.endereco = "";
+        // $scope.$on('criar_localizacao', function(event, data){
+        //     $scope.localizacao.lat = "";
+        //     $scope.localizacao.lng = "";
+        //     $scope.localizacao.oceano = false;
+        //     $scope.localizacao.bacia = "";
+        //     $scope.localizacao.uf = "";
+        //     $scope.localizacao.municipio = "";
+        //     $scope.localizacao.endereco = "";
 
-        });
+        // });
 
         // $scope.localizacao.toggle = function() {
         //   if ($scope.localizacao.show == 'in') {
