@@ -230,6 +230,22 @@
                 </div>
             </div>
 
+            <div class="panel panel-default" ng-if="logado">
+                <div class="panel-heading" role="tab" id="headingFourteen">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="acidente/#collapseFourteen" aria-expanded="false" aria-controls="collapseFourteen">
+                            14. Fonte da informação
+                            </br><i style="font-size: 9px">{{fonte.subPanel}}</i>
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFourteen" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFourteen">
+                    <div class="panel-body">
+                        <fonte></fonte>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
 

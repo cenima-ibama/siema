@@ -13,11 +13,20 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($scope){
 
-        $scope.licencas = [
-          {name: 'Licença ambiental federal'},
-          {name: 'Licença ambiental estadual'},
-          {name: 'Licença ambiental municipal'},
-        ]
+        $scope.empresa.nome = "";
+        $scope.empresa.cadastro = "";
+        $scope.empresa.licencaAmbiental = "0";
+        $scope.empresa.semEmpresa = false;
+
+        $scope.$on('carregar_empresa', function(event, data){
+            if (data[0].nome_responsavel != null) {
+                $scope.empresa.nome = data[0].nome_responsavel;
+                $scope.empresa.cadastro = data[0].cpf_cnpj_responsavel;
+                $scope.empresa.licencaAmbiental = data[0].licenca_responsavel;
+            } else {
+                $scope.empresa.semEmpresa = true;
+            }
+        });
 
         // $scope.loginIn = function(user, pass){
         //   // $cookies.user = {user: user, password: pass};

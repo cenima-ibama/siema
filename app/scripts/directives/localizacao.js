@@ -13,11 +13,13 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($scope){
 
-        if ($scope.oleo) {
-            $scope.localizacao.subPanel = '(Itens IV do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)';
-        } else {
-            $scope.localizacao.subPanel = "";
-        }
+        $scope.localizacao.subPanel  = $scope.oleo ? '(Itens IV do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
+
+        // if ($scope.oleo) {
+        //     $scope.localizacao.subPanel = '(Itens IV do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)';
+        // } else {
+        //     $scope.localizacao.subPanel = "";
+        // }
 
         $scope.localizacao.lat;
         $scope.localizacao.lng;
@@ -29,6 +31,8 @@ angular.module('estatisticasApp')
 
 
         $scope.$on('carregar_localizacao', function(event, data){
+            $scope.localizacao.subPanel  = $scope.oleo ? '(Itens IV do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
+
             $scope.localizacao.lat = data[0].coordinate.split(' ')[0];
             $scope.localizacao.lng = data[0].coordinate.split(' ')[1];
             $scope.localizacao.oceano = data[0].id_bacia_sedimentar ? true : false;

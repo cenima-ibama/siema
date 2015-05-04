@@ -2,22 +2,23 @@
 <div class="col-lg-6">
     <div class="form-group">
         <label class="control-label">Nome:*</label>
-            <input type="text" ng-model='responsavel.nome' class="col-lg-6 form-control" maxlength="50" ng-disabled="responsavel.semInformacao" mask='@' repeat='30'>
+            <input type="text" ng-model='empresa.nome' class="col-lg-6 form-control" maxlength="50" ng-disabled="empresa.semEmpresa" mask='@' repeat='30'>
     </div>
     <hr />
     <div class="form-group">
         <label class="control-label">CPF/CNPJ: </label>
-            <input type="text" ng-model='responsavel.cadastro' class="col-lg-6 form-control" ng-disabled="responsavel.semInformacao" mask='9' repeat='20' >
+            <input type="text" ng-model='empresa.cadastro' class="col-lg-6 form-control" ng-disabled="empresa.semEmpresa" mask='9' repeat='20' >
     </div>
     <hr />
     <div class="form-group">
         <label class="control-label">Licença ambiental:</label>
-            -----------Aqui um select----------
-            <!-- <select ng-model='responsavel.licencaAmbiental' ng-repeat='licenca in licensas' ng-disabled="responsavel.semInformacao" required></select> -->
-    </div>  
+        <select  class="form-control input" ng-model='empresa.licencaAmbiental' ng-options="licenca.value as licenca.name for licenca in licencas" ng-disabled="empresa.semEmpresa" required>
+            <option value="" default selected>Sem Informação</option>
+        </select>
+    </div>
     <div class="row-fluid">
         <label class="checkbox text-left">
-            <input type="checkbox" ng-model="responsavel.semInformacao"> Sem informação sobre a empresa/responsável
+            <input type="checkbox" ng-model="empresa.semEmpresa"> Sem informação sobre a empresa/responsável
         </label>
     </div>
 </div>

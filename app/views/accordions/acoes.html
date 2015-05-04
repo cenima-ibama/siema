@@ -7,17 +7,17 @@
         <div class="form-group">
             <div class="radio">
                 <label>
-                    <input type="radio" ng-model="acoes.plano" value="S" ng-disabled="acoes.semEvidencia"> Sim
+                    <input type="radio" ng-model="acoes.plano" value="S" ng-disabled="acoes.semAcoes"> Sim
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input type="radio" ng-model="acoes.plano" value="N" ng-disabled="acoes.semEvidencia"> Não
+                    <input type="radio" ng-model="acoes.plano" value="N" ng-disabled="acoes.semAcoes"> Não
                 </label>
             </div>
             <div class="radio">
                 <label>
-                    <input type="radio" ng-model="acoes.plano" value="SI" ng-disabled="acoes.semEvidencia"> Sem Informação
+                    <input type="radio" ng-model="acoes.plano" value="I" ng-disabled="acoes.semAcoes"> Sem Informação
                 </label>
             </div>
         </div>
@@ -26,19 +26,19 @@
 <div class="col-lg-6">
     <div class="form-group">
         <label class="checkbox text-left">
-            <input type="checkbox" ng-model="acoes.planoIndividual" ng-disabled="acoes.semEvidencia">Acionado plano individual de emergência
+            <input type="checkbox" ng-model="acoes.planoIndividual" ng-disabled="acoes.semAcoes">Acionado plano individual de emergência
         </label>
 
         <label class="control-label checkbox span6">
-            <input type="checkbox" ng-model="acoes.outrasProvidencias"  ng-disabled="acoes.semEvidencia">Foram tomadas outras providências a saber:
+            <input type="checkbox" ng-model="acoes.outrasProvidencias"  ng-disabled="acoes.semAcoes">Foram tomadas outras providências a saber:
         </label>
-        <textarea ng-if="acoes.outrasProvidencias"  ng-model='acoes.outrasProvidenciasText' ng-disabled="acoes.semEvidencia" class="form-control col-lg-3" rows="4"></textarea>
+        <textarea ng-if="acoes.outrasProvidencias"  ng-model='acoes.outrasProvidenciasText' ng-disabled="acoes.semAcoes" class="form-control col-lg-3" rows="4"></textarea>
 
         <label>
             <label class="text-left checkbox">
-                <input type="checkbox" ng-model="acoes.semEvidencia">Sem evidência de ação ou ou providência até o momento
+                <input type="checkbox" ng-model="acoes.semAcoes">Sem evidência de ação ou ou providência até o momento
             </label>
         </label>
-        
+
     </div>
 </div>

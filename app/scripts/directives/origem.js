@@ -13,12 +13,7 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($scope){
 
-
-        if ($scope.oleo) {
-            $scope.origem.subPanel = '(Itens I do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)';
-        } else {
-            $scope.origem.subPanel = "";
-        }
+        $scope.origem.subPanel = $scope.oleo ? '(Itens I do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : "";
 
         $scope.origem.complementar = "";
         $scope.origem.semOrigem = false;
@@ -26,6 +21,9 @@ angular.module('estatisticasApp')
 
 
         $scope.$on('carregar_origem', function(event, data){
+
+            $scope.origem.subPanel = $scope.oleo ? '(Itens I do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : "";
+
             var temp = data[0].origem.replace(/[{}]/g,'').split(',');
             if (temp[0] != "") {
                 angular.forEach($scope.origens, function(val, key){

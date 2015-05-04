@@ -9,12 +9,12 @@
         <input ng-model='comunicante.empresa' class='form-control'  type='text' mask='@' repeat='50'>
     </div>
 
-    <div>
+    <div ng-if="oleo">
         <label >Cargo / Função navio ou instalação: </label>
         <input ng-model='comunicante.funcao' class='form-control'  type='text' mask='@' repeat='50'>
     </div>
 
-    <div>
+    <div ng-if="!oleo">
         <label  >Cargo / Função: </label>
         <input ng-model='comunicante.funcao' class='form-control'  type='text' mask='@' repeat='50'>
     </div>

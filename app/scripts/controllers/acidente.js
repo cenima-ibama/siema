@@ -26,20 +26,24 @@ angular.module('estatisticasApp')
                          'instituicao',
                          'acoes',
                          'gerais',
-                         'comunicante'];
+                         'comunicante',
+                         'fonte'];
 
     angular.forEach($scope.accordions, function(obj) {
       $scope[obj] = {};
       $scope[obj].subPanel = "";
     });
 
+    // $scope.acao = 'criar';
     $scope.acao = 'carregar';
     $scope.oleo = false;
+    $scope.logado = false;
+
     // $scope.nro_ocorrencia = '201531732431';
     // $scope.nro_ocorrencia = '201491928814';
-    $scope.nro_ocorrencia = '201492328850';
-
-    $scope.oleo = false;
+    // $scope.nro_ocorrencia = '201492328850';
+    $scope.nro_ocorrencia = '201491939644';
+    // $scope.nro_ocorrencia = '201492528839';
 
     RestApi.query({query: 'ufs'},
       function success(data, status){
@@ -107,6 +111,21 @@ angular.module('estatisticasApp')
       }
     );
 
+    RestApi.query({query: 'fontes'},
+      function success(data, status){
+        $scope.fontes = [];
+        angular.forEach(data, function(value, key){
+          $scope.fontes.push({'name' : value.nome, 'id': value.id_tipo_fonte_informacao, 'value': false});
+        });
+      }
+    );
+
+    $scope.licencas = [
+      {name: 'Licença ambiental federal', value: '1'},
+      {name: 'Licença ambiental estadual', value: '2'},
+      {name: 'Licença ambiental municipal', value: '3'},
+    ]
+
 
     if ($scope.acao == 'carregar') {
       RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
@@ -117,15 +136,16 @@ angular.module('estatisticasApp')
           $scope.$broadcast('carregar_datas', data);
           $scope.$broadcast('carregar_origem', data);
           $scope.$broadcast('carregar_evento', data);
-          // $scope.$broadcast('carregar_propdutos', ret);
+          // $scope.$broadcast('carregar_produtos', ret);
           $scope.$broadcast('carregar_detalhes', data);
           $scope.$broadcast('carregar_ambientes', data);
-          // $scope.$broadcast('carregar_empresa', ret);
+          $scope.$broadcast('carregar_empresa', data);
           $scope.$broadcast('carregar_instituicao', data);
-          // $scope.$broadcast('carregar_acoes', ret);
-          // $scope.$broadcast('carregar_gerais', ret);
-          // $scope.$broadcast('carregar_comunicante', ret);
+          $scope.$broadcast('carregar_acoes', data);
+          $scope.$broadcast('carregar_gerais', data);
+          $scope.$broadcast('carregar_comunicante', data);
           // $scope.$broadcast('carregar_arquivos', ret);
+          $scope.$broadcast('carregar_fonte', data);
         }
       );
     } else if ($scope.acao == 'deletar') {

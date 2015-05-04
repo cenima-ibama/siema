@@ -13,7 +13,7 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($scope){
 
-        $scope.produtos.subPanel = '(Itens V do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)';
+        $scope.produtos.subPanel = $scope.oleo ? '(Itens V do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
 
         // $scope.localizacao.toggle = function() {
         //   if ($scope.localizacao.show == 'in') {
