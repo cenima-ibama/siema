@@ -16,6 +16,7 @@ angular.module('estatisticasApp')
     ];
 
     $scope.accordions = ['localizacao',
+                         'mapa',
                          'datas',
                          'origem',
                          'evento',
