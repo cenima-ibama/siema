@@ -44,7 +44,20 @@ angular.module('estatisticasApp')
             $scope.localizacao.municipio = data[0].id_municipio;
             $scope.localizacao.endereco = data[0].endereco_ocorrencia;
 
+
+            $scope.$broadcast('carregar_mapa', data);
         });
+
+        // $scope.localizacao.mudarPonto = function($campo) {
+        //     console.log($scope.localizacao.acidente);
+        // };
+
+        // $scope.$on('mudar_latlng', function(event,data){
+        //     $scope.localizacao.lat = data.lat;
+        //     $scope.localizacao.lng = data.lng;
+
+        //     $scope.$digest();
+        // });
 
         // $scope.$on('criar_localizacao', function(event, data){
         //     $scope.localizacao.lat = "";
