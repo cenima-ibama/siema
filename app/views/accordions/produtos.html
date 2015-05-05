@@ -1,35 +1,106 @@
 
-<div id="productsInfo" class="row-fluid">
-    <div class="span12">
-        <h5 style="font-style:italic;"> Produtos cadastrados na lista ONU</h5>
-        <div id="productOnuTable" name="productOnuTable"></div>
-        <hr>
-        <h5 style="font-style:italic;"> Produtos NÃO cadastrados na lista ONU</h5>
-        <div id="productOutroTable" name="productOutroTable"></div>
+
+<div class='form-group col-lg-6' ng-if='!produto.semProduto' ng-init='popover()'>
+    <h5 style="font-style:italic;"> Produtos cadastrados na lista ONU</h5>
+    <div class="btn-group">
+        <button class="btn btn-default" ng-click='addRowOnu()'>
+            <i class="glyphicon glyphicon-plus-sign"></i> Adicionar
+        </button>
+        <table class="table table-striped">
+            <tr>
+                <td><strong>Substância - Nº ONU - CR</strong></td>
+                <td><strong>Qtd.</strong></td>
+                <td><strong>Unidade</strong></td>
+            </tr>
+            <tr ng-repeat='i in valueRows' id='{{i}}' >
+                <td>
+                    <input type='text' placeholder='Vazio' id='{{i}}' ng-model='produto.substancia'>
+                </td>
+                <td>
+                    <input type='text' placeholder='Vazio' id='{{i}}' ng-model='produto.quantidade'>
+                </td>
+                <td>
+                    <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidade' id='{{i}}'></select>
+                </td>
+                <td>
+                    <button class="btn btn-primary" ng-click='saveData(i)' id='{{i}}'>
+                        <span class="glyphicon glyphicon-ok-circle"></span>
+                    </button>
+                    <button class="btn btn-default" ng-click='deleteData(i)' id='{{i}}'>
+                        <span class="glyphicon glyphicon-remove-sign"></span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <hr>
+
+    <h5 style="font-style:italic;"> Produtos NÃO cadastrados na lista ONU</h5>
+    <div class='btn-group'>
+        <button class="btn btn-default" ng-click='addRowNaoOnu()'>
+            <i class="glyphicon glyphicon-plus-sign"></i> 
+                Adicionar
+        </button>
+
+        <!-- Popover Adicionar Novo Tipo -->
+        <a  id="addTipo" class='btn btn-default'>
+            <span class='glyphicon glyphicon-ok-circle'></span>
+            Novo Tipo
+        </a>
+
+        <div id="popoverContent" style="display: none">
+            <form ng-submit='addTipo(novoTipo)'>
+                <input type='text' ng-model='novoTipo' class='form-control text-left' name='novotipoonu'>
+                <button class='btn btn-primary' type='submit'>
+                    <span class='glyphicon glyphicon-ok-circle'></span>
+                </button>
+            </form>
+        </div>  
+        <!-- Fim popover Adicionar Novo Tipo -->
+
+        <table class="table table-striped">
+            <tr>
+                <td><strong>Substância</strong></td>
+                <td><strong>Qtd.</strong></td>
+                <td><strong>Unidade</strong></td>
+            </tr>
+            <tr ng-repeat='j in valueRowsNaoOnu' id='{{j}}' >
+                <td>
+                    <input type='text' placeholder='Vazio' ng-model='produto.substancia'>
+                </td>
+                <td>
+                    <input type='text' placeholder='Vazio' ng-model='produto.quantidade'>
+                </td>
+                <td>
+                    <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidade' id='{{i}}'></select>
+                </td>
+                <td>
+                    <button class="btn btn-primary" ng-click='saveDataNaoOnu(j)' >
+                        <span class="glyphicon glyphicon-ok-circle"></span>
+                    </button>
+                    <button class="btn btn-default" ng-click='deleteDataNaoOnu(j)'>
+                        <span class="glyphicon glyphicon-remove-sign"></span>
+                    </button>
+                </td>
+            </tr>
+        </table>
+
     </div>
     <hr>
-    <div class="span4">
-        <div class="control-group">
-            <div class="controls">
-                <label class="checkbox text-left"> Não classificado
-                </label>
-            </div>
-            <div class="controls">
-                <label class="checkbox text-left"> Não se aplica
-                </label>
-            </div>
-            <div class="controls">
-                <label class="checkbox text-left"> Não especificado
-                </label>
-            </div>
-        </div>
-    </div>
 </div>
-<br/>
-<div class="row-fluid">
-    <div class="span12">
-        <label class="checkbox text-left">
-            Sem informação sobre o tipo do produto
-        </label>
-    </div>
+
+<div class='form-group col-lg-6'>
+    <label class="checkbox ">
+        <input type="checkbox" ng-model="produto.naoClassificado" ng-disabled='produto.semProduto' class="checkbox text-left"> Não classificado
+    </label>
+    <label class="checkbox ">
+        <input type="checkbox" ng-model="produto.naoAplica" ng-disabled='produto.semProduto' class="checkbox text-left"> Não se aplica
+    </label>
+    <label class="checkbox ">
+        <input type="checkbox" ng-model="produto.naoEspecificado" ng-disabled='produto.semProduto' class="checkbox text-left"> Não especificado
+    </label>
+    <label class="checkbox ">
+        <input type="checkbox" ng-model="produto.semProduto" class="checkbox text-left"> Sem informação sobre o tipo do produto
+    </label>
 </div>
