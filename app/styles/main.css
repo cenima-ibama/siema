@@ -29,6 +29,14 @@ select{
   display: inline-block;
 }
 
+#inputOnu{
+  max-width: 5em;
+}
+
+#inputNaoOnu{
+  max-width: 5em;
+}
+
 .box-chart{
 /*  width: 651px;
   height: 203px;*/

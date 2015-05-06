@@ -16,6 +16,7 @@
     "bootstrap-datepicker": "latest",
     "leaflet": "latest",
     "leaflet-draw": "latest",
+    "jquery-ui": "~1.11.4",
     "jquery.maskedinput": "~1.4.1"
   },
   "devDependencies": {
