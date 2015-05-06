@@ -12,10 +12,10 @@
             <label class="control-label" for="inputLat">Latitude(y) / Longitude(x):*</label>
             <div class='form-inline'>
                 <div class='form-group'>
-                    <input type="text" class="form-control input-sm" ng-model="localizacao.lat" ng-change="mapa.mudarMarcador()" mask="-?+?99°99'99.999"/>
+                    <input type="text" class="form-control input-sm" ng-model="localizacao.lat" ng-change="mapa.mudarMarcador()" placeholder="99°99'99.999"/>
                 </div>
                 <div class='form-group'>
-                    <input type="text" class="form-control input-sm" ng-model="localizacao.lng" ng-change="mapa.mudarMarcador()" mask="-?+?99°99'99.999"/>
+                    <input type="text" class="form-control input-sm" ng-model="localizacao.lng" ng-change="mapa.mudarMarcador()" placeholder="99°99'99.999"/>
                 </div>
             </div>
         </div>

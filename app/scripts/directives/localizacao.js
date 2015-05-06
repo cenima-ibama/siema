@@ -48,6 +48,28 @@ angular.module('estatisticasApp')
             $scope.$broadcast('carregar_mapa', data);
         });
 
+       //  $scope.mask = function(field) {
+       //      if (field == "lat") {
+       //          $($scope.localizacao.lat).mask("S99\°99\'99.999", {
+       //              'translation': {
+       //                  S: {
+       //                      pattern: /^-/,
+       //                      optional: true
+       //                  }
+       //              }
+       //          });
+       //      } else if (field == "lng"){
+       //          $($scope.localizacao.lng).mask("S99\°99\'99.999", {
+       //              'translation': {
+       //                  S: {
+       //                      pattern: /^-/,
+       //                      optional: true
+       //                  }
+       //              }
+       //          });
+       //      }
+       // }
+
         // $scope.localizacao.mudarPonto = function($campo) {
         //     console.log($scope.localizacao.acidente);
         // };

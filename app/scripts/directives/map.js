@@ -7,11 +7,11 @@
  * # map
  */
 angular.module('estatisticasApp')
-  .directive('map', function () {
+  .directive('map', function (RestApi) {
     return {
         template: '<div id="map" class="map"></div>',
         restrict: 'AE',
-        controller: function($scope, $cookies, $rootScope){
+        controller: function($scope, $cookies, $rootScope, $timeout){
 
 
             $scope.mapa.acidente = null;
@@ -76,11 +76,41 @@ angular.module('estatisticasApp')
 
 
             $scope.mapa.converterDD = function(dms){
-                var d = parseFloat(dms.split("°")[0]);
-                var m = parseFloat(dms.split("°")[1].split("'")[0]);
-                var s = parseFloat(dms.split("°")[1].split("'")[1].split("\"")[0]);
-                var dd = Math.sign(d) * (Math.abs(d) + (m / 60.0) + (s / 3600.0));
+                var d = NaN;
+                var m = NaN;
+                var s = NaN;
+
+                if (dms) {
+                    d = dms.split("°")[0];
+                    m = dms.split("°")[1] ? dms.split("°")[1].split("'")[0] : 0;
+                    s = dms.split("°")[1] && dms.split("°")[1].split("'")[1] ?  dms.split("°")[1].split("'")[1].split("\"")[0]  : 0;
+                }
+
+                var dd = NaN;
+
+                if ($.isNumeric(d) && $.isNumeric(m) && $.isNumeric(s)) {
+                    dd = Math.sign(d) * (Math.abs(d) + (m / 60.0) + (s / 3600.0));
+                }
+
                 return dd;
+            };
+
+
+            $scope.mapa.validarMarcador = function(marcador) {
+                RestApi.query({query: 'verificar_marcador', 'lat': marcador.getLatLng().lat, 'lng': marcador.getLatLng().lng},
+                    function success(data, status){
+
+                        angular.forEach(data, function(value, key){
+                            if (value.intersects == 't') {
+                                ret = 1;
+                            } else {
+                                ret = 0;
+                            }
+                        });
+                    }
+                );
+
+                return ret;
             };
 
 
@@ -92,9 +122,25 @@ angular.module('estatisticasApp')
                     var lat =  $scope.mapa.converterDD($scope.localizacao.lat);
                     var lng =  $scope.mapa.converterDD($scope.localizacao.lng);
 
-                    $scope.map.removeLayer($scope.mapa.acidente);
-                    $scope.mapa.acidente = new L.Marker([$scope.localizacao.lat, $scope.localizacao.lng]);
-                    $scope.map.addLayer($scope.mapa.acidente);
+                    if (lat && lng) {
+                        var novoMarcador = new L.Marker([lat, lng]);
+
+                        if ($scope.map.hasLayer($scope.mapa.acidente)) {
+                            $scope.map.removeLayer($scope.mapa.acidente);
+                        }
+
+                        // if ($scope.mapa.validarMarcador(novoMarcador)) {
+                            $scope.mapa.acidente = novoMarcador;
+                            $scope.map.addLayer($scope.mapa.acidente);
+                        // } else {
+                        //     alert("CHUPA SOCIEDADE!");
+                        // }
+                    }
+
+                    // else if (!lat) {
+                    // } else if(!lng) {
+                    // }
+
                     $scope._timeout = null;
                 },1000);
             };
