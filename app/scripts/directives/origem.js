@@ -17,6 +17,7 @@ angular.module('estatisticasApp')
 
         $scope.origem.complementar = "";
         $scope.origem.semOrigem = false;
+        $scope.origem.semOleoOrigem = false;
 
 
 
@@ -34,6 +35,15 @@ angular.module('estatisticasApp')
                 $scope.origem.complementar = data[0].des_complemento_tipo_localizaca;
             } else {
                 $scope.origem.semOrigem = true;
+            }
+
+            if ($scope.oleo) {
+                if ((data[0].des_navio != null) || (data[0].des_instalacao != null)) {
+                    $scope.origem.navio = data[0].des_navio;
+                    $scope.origem.instalacao = data[0].des_instalacao;
+                } else {
+                    $scope.origem.semOleoOrigem = true;
+                }
             }
 
         });

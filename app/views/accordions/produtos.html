@@ -1,26 +1,37 @@
 
 
-<div class='form-group col-lg-6' ng-if='!produto.semProduto' ng-init='popover()'>
+<div class='form-group col-lg-6' ng-if='!produtos.semProduto' ng-init='popover()'>
     <h5 style="font-style:italic;"> Produtos cadastrados na lista ONU</h5>
     <div class="btn-group">
-        <button class="btn btn-default" ng-click='addRowOnu()'>
-            <i class="glyphicon glyphicon-plus-sign"></i> Adicionar
+        <button class="btn btn-default" ng-click='addRowOnu()' ng-disabled="!produtos.novo_onu">
+            <i class="glyphicon glyphicon-plus-sign"></i> Adicionar nova linha
         </button>
         <table class="table table-striped">
             <tr>
                 <td><strong>Substância - Nº ONU - CR</strong></td>
                 <td><strong>Qtd.</strong></td>
                 <td><strong>Unidade</strong></td>
+                <td><strong>Confirmar/Deletar</strong></td>
+            </tr>
+            <tr ng-repeat='prods in produtos.produtos_onu'>
+                <td>{{prods.field}}</td>
+                <td>{{prods.qtd}}</td>
+                <td>{{prods.uni}}</td>
+                <td>
+                    <button class="btn btn-default" ng-click='deleteData(prods)'>
+                        <span class="glyphicon glyphicon-remove-sign"></span>
+                    </button>
+                </td>
             </tr>
             <tr ng-repeat='i in valueRows' id='{{i}}' >
                 <td>
-                    <input type='text' placeholder='Vazio' id='{{i}}' ng-model='produto.substancia'>
+                    <input type='text' class="form-control" placeholder='Vazio' id='{{i}}' ng-model='produtos.substanciaOnu' typeahead="prods as prods.field for prods in produtos_onu | filter:$viewValue | limitTo:8">
                 </td>
                 <td>
-                    <input type='text' placeholder='Vazio' id='{{i}}' ng-model='produto.quantidade'>
+                    <input type='text' class="form-control" placeholder='Vazio' id='{{i}}' ng-model='produtos.quantidadeOnu'>
                 </td>
                 <td>
-                    <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidade' id='{{i}}'></select>
+                    <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidadeOnu' id='{{i}}'></select>
                 </td>
                 <td>
                     <button class="btn btn-primary" ng-click='saveData(i)' id='{{i}}'>
@@ -38,9 +49,9 @@
 
     <h5 style="font-style:italic;"> Produtos NÃO cadastrados na lista ONU</h5>
     <div class='btn-group'>
-        <button class="btn btn-default" ng-click='addRowNaoOnu()'>
-            <i class="glyphicon glyphicon-plus-sign"></i> 
-                Adicionar
+        <button class="btn btn-default" ng-click='addRowNaoOnu()' ng-disabled="!produtos.novo_nao_onu">
+            <i class="glyphicon glyphicon-plus-sign"></i>
+                Adicionar nova linha
         </button>
 
         <!-- Popover Adicionar Novo Tipo -->
@@ -56,7 +67,7 @@
                     <span class='glyphicon glyphicon-ok-circle'></span>
                 </button>
             </form>
-        </div>  
+        </div>
         <!-- Fim popover Adicionar Novo Tipo -->
 
         <table class="table table-striped">
@@ -64,16 +75,27 @@
                 <td><strong>Substância</strong></td>
                 <td><strong>Qtd.</strong></td>
                 <td><strong>Unidade</strong></td>
+                <td><strong>Confirmar/Deletar</strong></td>
+            </tr>
+            <tr ng-repeat='prods in produtos.produtos_outros'>
+                <td>{{prods.field}}</td>
+                <td>{{prods.qtd}}</td>
+                <td>{{prods.uni}}</td>
+                <td>
+                    <button class="btn btn-default" ng-click='deleteData(prods)'>
+                        <span class="glyphicon glyphicon-remove-sign"></span>
+                    </button>
+                </td>
             </tr>
             <tr ng-repeat='j in valueRowsNaoOnu' id='{{j}}' >
                 <td>
-                    <input type='text' placeholder='Vazio' ng-model='produto.substancia'>
+                    <input type='text' class="form-control" placeholder='Vazio' ng-model='produtos.substanciaOutro' typeahead="prods as prods.field for prods in produtos_outros | filter:$viewValue | limitTo:8">
                 </td>
                 <td>
-                    <input type='text' placeholder='Vazio' ng-model='produto.quantidade'>
+                    <input type='text' class="form-control" placeholder='Vazio' ng-model='produtos.quantidadeOutro'>
                 </td>
                 <td>
-                    <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidade' id='{{i}}'></select>
+                    <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidadeOutro' id='{{i}}'></select>
                 </td>
                 <td>
                     <button class="btn btn-primary" ng-click='saveDataNaoOnu(j)' >
@@ -87,20 +109,53 @@
         </table>
 
     </div>
-    <hr>
+</div>
+<div class='form-group col-lg-6'>
+    <div class='form-group col-lg-4' ng-if='!produtos.semProduto'> </div>
+    <div class='form-group col-lg-8'>
+        <label class="checkbox ">
+            <input type="checkbox" ng-model="produtos.naoClassificado" ng-disabled='produtos.semProduto' class="checkbox text-left"> Não classificado
+        </label>
+        <label class="checkbox ">
+            <input type="checkbox" ng-model="produtos.naoAplica" ng-disabled='produtos.semProduto' class="checkbox text-left"> Não se aplica
+        </label>
+        <label class="checkbox ">
+            <input type="checkbox" ng-model="produtos.naoEspecificado" ng-disabled='produtos.semProduto' class="checkbox text-left"> Não especificado
+        </label>
+        <label class="checkbox ">
+            <input type="checkbox" ng-model="produtos.semProduto" class="checkbox text-left"> Sem informação sobre o tipo do produto
+        </label>
+    </div>
 </div>
 
-<div class='form-group col-lg-6'>
-    <label class="checkbox ">
-        <input type="checkbox" ng-model="produto.naoClassificado" ng-disabled='produto.semProduto' class="checkbox text-left"> Não classificado
-    </label>
-    <label class="checkbox ">
-        <input type="checkbox" ng-model="produto.naoAplica" ng-disabled='produto.semProduto' class="checkbox text-left"> Não se aplica
-    </label>
-    <label class="checkbox ">
-        <input type="checkbox" ng-model="produto.naoEspecificado" ng-disabled='produto.semProduto' class="checkbox text-left"> Não especificado
-    </label>
-    <label class="checkbox ">
-        <input type="checkbox" ng-model="produto.semProduto" class="checkbox text-left"> Sem informação sobre o tipo do produto
-    </label>
+<!-- <div ng-if='!produto.semProduto'> -->
+<br ng-if='!produtos.semProduto'/>
+<br ng-if='!produtos.semProduto'/>
+<br ng-if='!produtos.semProduto'/>
+<!-- </div> -->
+
+<div class='form-group col-lg-6' ng-if='oleo'>
+    <div class='form-group col-lg-4' ng-if='!produtos.semProduto'> </div>
+    <div class='form-group col-lg-8'>
+        <label class="control-label">Substância descarregada:</label>
+
+        <br /><br />
+
+        <div>
+            <div class="form-group">
+                <label> Tipo de substância: </label>
+                <div class="form-inline">
+                    <input type="text" class="form-control" ng-model='produtos.tipo_substancia' ng-disabled="produtos.semCondicoes"/>
+                </div>
+            </div>
+            <div class="form-inline">
+                <label> Volume estimado em </label>
+                &nbsp; <input type="text" class="form-control" ng-model='produtos.valor_substancia' ng-disabled="produtos.semCondicoes" mask='9?9?9?9?9?9?9?9?9?9.9?9?'/> &nbsp;
+                <label>  m³ </label>
+            </div>
+        </div>
+        <label class="checkbox ">
+            <input type="checkbox" ng-model="produtos.semCondicoes" class="checkbox text-left"> Sem condições de informar
+        </label>
+    </div>
 </div>

@@ -88,22 +88,6 @@ angular.module('estatisticasApp')
         //   $scope.datas.obsSemana = new Date(temp[2],temp[1] - 1,temp[0]).getDay() + 1;
         // }
 
-
-        // $scope.loginIn = function(user, pass){
-        //   // $cookies.user = {user: user, password: pass};
-        //   RestApi.login({},{
-        //       username: user,
-        //       password: pass
-        //     },function success(data, status){
-        //       $scope.user = data.user;
-        //       Auth.setUser(data.user);
-        //       $location.path("/page2");
-        //     },function error(data, status){
-        //         console.log('!ERROR! ' + data);
-        //     }
-        //   );
-        // }
-
       },
     };
   });

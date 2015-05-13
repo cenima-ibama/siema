@@ -25,7 +25,7 @@ angular.module('estatisticasApp')
                         val.value = true;
                     }
                 });
-                $scope.ambiente.complementar = data[0].des_complemento_tipo_localizaca;
+                $scope.ambiente.complementar = data[0].des_complemento_tipo_dano_ident;
             } else {
                 $scope.ambiente.semAmbientes = true;
             }

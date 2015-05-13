@@ -14,7 +14,7 @@
                 <label class="control-label">Data:*</label>
                 <div class='form-inline'>
                     <div class='form-group'>
-                        <input type="text" class="form-control" calendar ng-model="datas.diaObservacao" ng-change="updateSemana('diaObservacao','obsSemana')" mask='99/99/9999' ng-disabled="datas.semObservacao"/>
+                        <input type="text" class="form-control" calendar ng-model="datas.diaObservacao" ng-change="updateSemana('diaObservacao','obsSemana')" mask='31/12/9999' ng-disabled="datas.semObservacao"/>
                     </div>
                     <select class="form-control input" ng-model="datas.obsSemana" ng-disabled="true">
                         <option value="0" default selected>Data Invalida</option>
@@ -32,7 +32,7 @@
             <div class="form-group">
                 <label class="control-label">Hora:*</label>
                 <div class='form-inline form-group'>
-                    <input type="text" class="form-control" ng-model="datas.horaObservacao" mask='99:99' ng-disabled="datas.semObservacao"/>
+                    <input type="text" class="form-control" ng-model="datas.horaObservacao" mask='24:59' ng-disabled="datas.semObservacao"/>
                 </div>
             </div>
         <!-- </div> -->
@@ -77,7 +77,7 @@
                 <label class="control-label">Data:*</label>
                 <div class='form-inline'>
                     <div class='form-group'>
-                        <input type="text" class="form-control" calendar ng-model="datas.diaIncidente" ng-change="updateSemana('diaIncidente','incSemana')" mask='99/99/9999' ng-disabled="datas.semIncidente"/>
+                        <input type="text" class="form-control" calendar ng-model="datas.diaIncidente" ng-change="updateSemana('diaIncidente','incSemana')" mask='31/12/9999' ng-disabled="datas.semIncidente"/>
                     </div>
                     <select class="form-control input" ng-model="datas.incSemana" ng-disabled="true">
                         <option value="0" default selected>Data Invalida</option>
@@ -95,7 +95,7 @@
             <div class="form-group">
                 <label class="control-label">Hora:*</label>
                 <div class='form-inline form-group'>
-                    <input type="text" class="form-control" ng-model="datas.horaIncidente" mask='99:99' ng-disabled="datas.semIncidente"/>
+                    <input type="text" class="form-control" ng-model="datas.horaIncidente" mask='24:59' ng-disabled="datas.semIncidente"/>
                 </div>
             </div>
         <!-- </div> -->

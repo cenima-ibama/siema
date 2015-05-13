@@ -43,8 +43,12 @@ angular.module('estatisticasApp')
     // $scope.nro_ocorrencia = '201531732431';
     // $scope.nro_ocorrencia = '201491928814';
     // $scope.nro_ocorrencia = '201492328850';
-    $scope.nro_ocorrencia = '201491939644';
+    // $scope.nro_ocorrencia = '201491939644';
     // $scope.nro_ocorrencia = '201492528839';
+    // $scope.nro_ocorrencia = '201491936043';
+    // $scope.nro_ocorrencia = '201492436012';
+    // $scope.nro_ocorrencia = '201491950448';
+    $scope.nro_ocorrencia = '2014121639650';
 
     RestApi.query({query: 'ufs'},
       function success(data, status){
@@ -121,6 +125,28 @@ angular.module('estatisticasApp')
       }
     );
 
+    RestApi.query({query: 'produtos_onu'},
+      function success(data, status){
+        $scope.produtos_onu = [];
+        angular.forEach(data, function(value, key){
+          var field = value.nome + " - "+ value.num_onu + " - " + value.classe_risco;
+          $scope.produtos_onu.push({'field' : field , 'id': value.id});
+        });
+      }
+    );
+
+    RestApi.query({query: 'produtos_outros'},
+      function success(data, status){
+        if(data) {
+          $scope.produtos_outros = [];
+          angular.forEach(data, function(value, key){
+            $scope.produtos_outros.push({'field' : value.nome , 'id': value.id});
+          });
+        }
+      }
+    );
+
+
     $scope.licencas = [
       {name: 'Licença ambiental federal', value: '1'},
       {name: 'Licença ambiental estadual', value: '2'},
@@ -144,7 +170,7 @@ angular.module('estatisticasApp')
           $scope.$broadcast('carregar_datas', data);
           $scope.$broadcast('carregar_origem', data);
           $scope.$broadcast('carregar_evento', data);
-          // $scope.$broadcast('carregar_produtos', ret);
+          $scope.$broadcast('carregar_produtos', data);
           $scope.$broadcast('carregar_detalhes', data);
           $scope.$broadcast('carregar_ambientes', data);
           $scope.$broadcast('carregar_empresa', data);
@@ -163,6 +189,124 @@ angular.module('estatisticasApp')
         }
       );
     }
+
+    $scope.submit = function() {
+
+      if ($scope.acao == 'criar') {
+        console.log($scope.acao);
+
+        var ocorrencia = {};
+
+        ocorrencia.localizacao = $scope.localizacao;
+        ocorrencia.datas = $scope.datas;
+        ocorrencia.origem = $scope.origem;
+        ocorrencia.evento = $scope.evento;
+        ocorrencia.produtos = $scope.produtos;
+        ocorrencia.detalhes = $scope.detalhes;
+        ocorrencia.ambiente = $scope.ambiente;
+        ocorrencia.empresa = $scope.empresa;
+        ocorrencia.instituicao = $scope.instituicao;
+        ocorrencia.acoes = $scope.acoes;
+        ocorrencia.gerais = $scope.gerais;
+        ocorrencia.comunicante = $scope.comunicante;
+        ocorrencia.fonte = $scope.fonte;
+        ocorrencia.arquivo = $scope.arquivo;
+
+        var string_ocorrencia = JSON.stringify(ocorrencia);
+
+        console.log(string_ocorrencia);
+        // RestApi.query({query: 'gravar_ocorrencia'},
+        //   function success(data, status){
+
+        //   }
+        // );
+      } else if ($scope.acao == 'carregar'){
+        console.log($scope.acao);
+
+        var formulario = {};
+
+        formulario.nro_ocorrencia = $scope.nro_ocorrencia;
+        formulario.oleo = $scope.oleo;
+
+        formulario.localizacao = $scope.localizacao;
+        formulario.acidente = $scope.mapa.acidente.toGeoJSON();
+        formulario.datas = $scope.datas;
+        formulario.origem = $scope.origem;
+        formulario.origem.origens = [];
+        angular.forEach($scope.origens, function(val, key){
+          if(val.value)
+            formulario.origem.origens.push(val.id);
+        });
+
+        formulario.evento = $scope.evento;
+        formulario.evento.eventos = [];
+        angular.forEach($scope.eventos, function(val, key){
+          if(val.value)
+            formulario.evento.eventos.push(val.id);
+        });
+
+        formulario.produtos = $scope.produtos;
+        formulario.detalhes = $scope.detalhes;
+        formulario.ambiente = $scope.ambiente;
+        formulario.ambiente.ambientes = [];
+        angular.forEach($scope.ambientes, function(val, key){
+          if(val.value)
+            formulario.ambiente.ambientes.push(val.id);
+        });
+
+        formulario.empresa = $scope.empresa;
+        formulario.instituicao = $scope.instituicao;
+        formulario.instituicao.instituicoes = [];
+        angular.forEach($scope.instituicoes, function(val, key){
+          if(val.value)
+            formulario.instituicao.instituicoes.push(val.id);
+        });
+
+        formulario.acoes = $scope.acoes;
+        formulario.gerais = $scope.gerais;
+        formulario.comunicante = $scope.comunicante;
+        formulario.fonte = $scope.fonte;
+        if($scope.logado) {
+          formulario.fonte.fontes = [];
+          angular.forEach($scope.fontes, function(val, key){
+            if(val.value)
+              formulario.fonte.fontes.push(val.id);
+          });
+        }
+
+        formulario.arquivo = $scope.arquivo;
+
+        var string_formulario = JSON.stringify(formulario);
+
+        var doc = new jsPDF();
+
+        // We'll make our own renderer to skip this editor
+        // var specialElementHandlers = {
+        //   '#editor': function(element, renderer){
+        //     return true;
+        //   }
+        // };
+
+        // All units are in the set measurement for the document
+        // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
+        doc.fromHTML($('body').get(0), 15, 15, {
+          'width': 170
+        });
+
+
+        // console.log(string_ocorrencia);
+        RestApi.query({query: 'atualizar_ocorrencia', 'formulario': string_formulario},
+          function success(data, status){
+            // $scope.recarregarSistema();
+            console.log("RECARREGA O SISTEMA!")
+          }
+        );
+      }
+    };
+
+    $scope.recarregarSistema = function() {
+      window.location = "//servicos.ibama.gov.br/siema";
+    };
 
     // $scope.bacias = [
     //   { name: "Bacia 1", value: "1" },

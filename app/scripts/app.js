@@ -17,6 +17,7 @@ angular
     'ngTouch',
     'chart.js',
     'ngMask',
+    'ui.bootstrap',
   ])
   .config(function ($routeProvider) {
     $routeProvider
