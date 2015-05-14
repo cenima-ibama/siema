@@ -8,7 +8,7 @@
  * Controller of the estatisticasApp
  */
 angular.module('estatisticasApp')
-  .controller('PdfCtrl', function ($scope, RestApi) {
+  .controller('PdfCtrl', function ($scope, RestApi, $routeParams) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -106,18 +106,13 @@ angular.module('estatisticasApp')
     // $scope.nro_ocorrencia = '201492528839';
     // $scope.nro_ocorrencia = '201491936043';
     // $scope.nro_ocorrencia = '201492436012';
-    $scope.nro_ocorrencia = '201491950448';
+    // $scope.nro_ocorrencia = '201491950448';
+
+    $scope.nro_ocorrencia = $routeParams.id;
 
     RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
       function success(data, status){
-        // $scope.data = [];
-        // angular.forEach(data[0], function(value, key){
-        //   $scope.data.push(key + ':' + value);
-        // })
-
       $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
-
-
       //Acoes
         $scope.acoes = {};
         $scope.acoes.plano = "";
@@ -414,6 +409,20 @@ angular.module('estatisticasApp')
           );
         }
         $scope.getProdutos();
+
+        $scope.produtos.naoClassificado = data[0].produto_perigoso == 't' ? true : false;
+        $scope.produtos.naoAplica = data[0].produto_nao_se_aplica == 't' ? true : false;
+        $scope.produtos.naoEspecificado = data[0].produto_nao_especificado == 't' ? true : false;
+
+
+        if (data[0].tipo_substancia || data[0].volume_estimado) {
+            $scope.produtos.tipo_substancia = data[0].tipo_substancia;
+            $scope.produtos.valor_substancia = data[0].volume_estimado;
+        } else {
+            $scope.produtos.semCondicoes = true;
+        }
+
+
 
 
 

@@ -8,7 +8,7 @@
         </button>
         <table class="table table-striped">
             <tr>
-                <td><strong>Substância - Nº ONU - CR</strong></td>
+                <td><strong>Subst?ncia - N? ONU - CR</strong></td>
                 <td><strong>Qtd.</strong></td>
                 <td><strong>Unidade</strong></td>
                 <td><strong>Confirmar/Deletar</strong></td>
@@ -47,7 +47,7 @@
 
     <hr>
 
-    <h5 style="font-style:italic;"> Produtos NÃO cadastrados na lista ONU</h5>
+    <h5 style="font-style:italic;"> Produtos N?O cadastrados na lista ONU</h5>
     <div class='btn-group'>
         <button class="btn btn-default" ng-click='addRowNaoOnu()' ng-disabled="!produtos.novo_nao_onu">
             <i class="glyphicon glyphicon-plus-sign"></i>
@@ -72,7 +72,7 @@
 
         <table class="table table-striped">
             <tr>
-                <td><strong>Substância</strong></td>
+                <td><strong>Subst?ncia</strong></td>
                 <td><strong>Qtd.</strong></td>
                 <td><strong>Unidade</strong></td>
                 <td><strong>Confirmar/Deletar</strong></td>
@@ -114,16 +114,16 @@
     <div class='form-group col-lg-4' ng-if='!produtos.semProduto'> </div>
     <div class='form-group col-lg-8'>
         <label class="checkbox ">
-            <input type="checkbox" ng-model="produtos.naoClassificado" ng-disabled='produtos.semProduto' class="checkbox text-left"> Não classificado
+            <input type="checkbox" ng-model="produtos.naoClassificado" ng-disabled='produtos.semProduto' class="checkbox text-left"> N?o classificado
         </label>
         <label class="checkbox ">
-            <input type="checkbox" ng-model="produtos.naoAplica" ng-disabled='produtos.semProduto' class="checkbox text-left"> Não se aplica
+            <input type="checkbox" ng-model="produtos.naoAplica" ng-disabled='produtos.semProduto' class="checkbox text-left"> N?o se aplica
         </label>
         <label class="checkbox ">
-            <input type="checkbox" ng-model="produtos.naoEspecificado" ng-disabled='produtos.semProduto' class="checkbox text-left"> Não especificado
+            <input type="checkbox" ng-model="produtos.naoEspecificado" ng-disabled='produtos.semProduto' class="checkbox text-left"> N?o especificado
         </label>
         <label class="checkbox ">
-            <input type="checkbox" ng-model="produtos.semProduto" class="checkbox text-left"> Sem informação sobre o tipo do produto
+            <input type="checkbox" ng-model="produtos.semProduto" class="checkbox text-left"> Sem informa??o sobre o tipo do produto
         </label>
     </div>
 </div>
@@ -137,13 +137,11 @@
 <div class='form-group col-lg-6' ng-if='oleo'>
     <div class='form-group col-lg-4' ng-if='!produtos.semProduto'> </div>
     <div class='form-group col-lg-8'>
-        <label class="control-label">Substância descarregada:</label>
-
+        <label class="control-label">Subst?ncia descarregada:</label>
         <br /><br />
-
         <div>
             <div class="form-group">
-                <label> Tipo de substância: </label>
+                <label> Tipo de subst?ncia: </label>
                 <div class="form-inline">
                     <input type="text" class="form-control" ng-model='produtos.tipo_substancia' ng-disabled="produtos.semCondicoes"/>
                 </div>
@@ -151,11 +149,11 @@
             <div class="form-inline">
                 <label> Volume estimado em </label>
                 &nbsp; <input type="text" class="form-control" ng-model='produtos.valor_substancia' ng-disabled="produtos.semCondicoes" mask='9?9?9?9?9?9?9?9?9?9.9?9?'/> &nbsp;
-                <label>  m³ </label>
+                <label>  m? </label>
             </div>
         </div>
         <label class="checkbox ">
-            <input type="checkbox" ng-model="produtos.semCondicoes" class="checkbox text-left"> Sem condições de informar
+            <input type="checkbox" ng-model="produtos.semCondicoes" class="checkbox text-left"> Sem condi??es de informar
         </label>
     </div>
 </div>
