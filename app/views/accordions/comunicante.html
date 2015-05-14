@@ -1,21 +1,21 @@
 <div class="col-lg-6">
     <div>
         <label >Nome completo: </label>
-        <input ng-model='comunicante.nome' class='form-control' type='text' mask='@' repeat='50'>
+        <input ng-model='comunicante.nome' class='form-control' type='text' mask='@' repeat='50' ng-disabled="usuario">
     </div>
 
     <div>
-        <label >InstituiÃ§Ã£o / Empresa: </label>
+        <label >Instituição / Empresa: </label>
         <input ng-model='comunicante.empresa' class='form-control'  type='text' mask='@' repeat='50'>
     </div>
 
     <div ng-if="oleo">
-        <label >Cargo / FunÃ§Ã£o navio ou instalaÃ§Ã£o: </label>
+        <label >Cargo / Função navio ou instalação: </label>
         <input ng-model='comunicante.funcao' class='form-control'  type='text' mask='@' repeat='50'>
     </div>
 
     <div ng-if="!oleo">
-        <label  >Cargo / FunÃ§Ã£o: </label>
+        <label  >Cargo / Função: </label>
         <input ng-model='comunicante.funcao' class='form-control'  type='text' mask='@' repeat='50'>
     </div>
 
@@ -26,6 +26,6 @@
 
     <div>
         <label  >Email de contato: </label>
-        <input  ng-model='comunicante.email' class='form-control' type='text' maxlength="50">
+        <input  ng-model='comunicante.email' class='form-control' type='text' maxlength="50" ng-disabled="usuario">
     </div>
 </div>

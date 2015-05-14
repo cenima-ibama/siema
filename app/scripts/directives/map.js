@@ -16,6 +16,8 @@ angular.module('estatisticasApp')
 
             $scope.mapa.acidente = null;
 
+            L.Icon.Default.imagePath = 'images';
+
 
     		$scope.map = L.map('map').setView([-12, -53], 3);
     		var osm = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
