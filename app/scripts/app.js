@@ -29,6 +29,10 @@ angular
         templateUrl: 'views/acidente.html',
         controller: 'AcidenteCtrl'
       })
+      .when('/html', {
+        templateUrl: 'views/html.html',
+        controller: 'PdfCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

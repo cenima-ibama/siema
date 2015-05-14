@@ -48,7 +48,7 @@ angular.module('estatisticasApp')
     // $scope.nro_ocorrencia = '201491936043';
     // $scope.nro_ocorrencia = '201492436012';
     // $scope.nro_ocorrencia = '201491950448';
-    $scope.nro_ocorrencia = '2014121639650';
+    // $scope.nro_ocorrencia = '2014121639650';
 
     RestApi.query({query: 'ufs'},
       function success(data, status){
