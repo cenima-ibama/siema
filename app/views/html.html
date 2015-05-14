@@ -267,7 +267,25 @@
         <label class='control-label'> Não especificado</label>
       </div>
 
-      
+      <hr/>
+
+      <div ng-if='oleo'>
+        <div ng-if='produtos.semCondicoes'>
+          Sem condições de informar o tipo de substância
+        </div>
+        <div ng-if='!produtos.semCondicoes'>
+          <label class='control-label'>Tipo de substância</label>
+          <p>
+            {{produtos.tipo_substancia }}
+          </p>
+          <label class='control-label'>Volume estimado em m3:</label>
+          <p>
+            {{produtos.valor_substancia}}
+          </p>
+        </div>
+      </div>
+
+
 
     </div>
   </div>
