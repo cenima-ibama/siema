@@ -8,7 +8,7 @@
  * Controller of the estatisticasApp
  */
 angular.module('estatisticasApp')
-  .controller('PdfCtrl', function ($scope, RestApi) {
+  .controller('PdfCtrl', function ($scope, RestApi, $routeParams) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -106,7 +106,7 @@ angular.module('estatisticasApp')
     // $scope.nro_ocorrencia = '201492528839';
     // $scope.nro_ocorrencia = '201491936043';
     // $scope.nro_ocorrencia = '201492436012';
-    $scope.nro_ocorrencia = '201491950448';
+    $scope.nro_ocorrencia = $routeParams.id;
 
     RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
       function success(data, status){
