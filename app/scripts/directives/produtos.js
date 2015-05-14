@@ -34,7 +34,6 @@ angular.module('estatisticasApp')
             RestApi.query({query: 'produtos_cadastrados', id: data[0].id_ocorrencia},
               function success(data, status){
                 if(data) {
-                  $scope.produtos.produtos_outros = [];
                   angular.forEach(data, function(value, key){
 
                     var novo_produto = {};
@@ -57,7 +56,7 @@ angular.module('estatisticasApp')
                         $scope.produtos.produtos_outros.push(novo_produto);
                     }
 
-                    $scope.produtos_outros.push({'field' : value.nome , 'id': value.id});
+                    // $scope.produtos.produtos_outros.push({'field' : value.nome , 'id': value.id});
                   });
                 }
               }

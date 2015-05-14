@@ -8,7 +8,7 @@
  * Controller of the estatisticasApp
  */
 angular.module('estatisticasApp')
-  .controller('AcidenteCtrl', function ($scope, RestApi) {
+  .controller('AcidenteCtrl', function ($scope, RestApi, $routeParams, $window) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -35,10 +35,29 @@ angular.module('estatisticasApp')
       $scope[obj].subPanel = "";
     });
 
-    // $scope.acao = 'criar';
-    $scope.acao = 'carregar';
-    $scope.oleo = false;
-    $scope.logado = false;
+
+    if ($routeParams.id) {
+      $scope.nro_ocorrencia = $routeParams.id;
+    }
+
+    if ($routeParams.acao && ($routeParams.acao == 'carregar')) {
+      $scope.acao = 'carregar';
+    } else {
+      $scope.acao = 'criar';
+      if ($routeParams.oleo) {
+        $scope.oleo = $routeParams.oleo;
+      } else {
+        $scope.oleo = false;
+      }
+    }
+
+    if ($routeParams.usuario) {
+      $scope.usuario = $routeParams.usuario;
+      $scope.email = $routeParams.email;
+    } else {
+      $scope.usuario = null;
+    }
+
 
     // $scope.nro_ocorrencia = '201531732431';
     // $scope.nro_ocorrencia = '201491928814';
@@ -49,6 +68,7 @@ angular.module('estatisticasApp')
     // $scope.nro_ocorrencia = '201492436012';
     // $scope.nro_ocorrencia = '201491950448';
     // $scope.nro_ocorrencia = '2014121639650';
+
 
     RestApi.query({query: 'ufs'},
       function success(data, status){
@@ -278,34 +298,23 @@ angular.module('estatisticasApp')
 
         var string_formulario = JSON.stringify(formulario);
 
-        var doc = new jsPDF();
-
-        // We'll make our own renderer to skip this editor
-        // var specialElementHandlers = {
-        //   '#editor': function(element, renderer){
-        //     return true;
-        //   }
-        // };
-
-        // All units are in the set measurement for the document
-        // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
-        doc.fromHTML($('body').get(0), 15, 15, {
-          'width': 170
-        });
-
 
         // console.log(string_ocorrencia);
         RestApi.query({query: 'atualizar_ocorrencia', 'formulario': string_formulario},
           function success(data, status){
-            // $scope.recarregarSistema();
-            console.log("RECARREGA O SISTEMA!")
+            $scope.recarregarSistema();
+            // $scope.$broadcast('carregar_localizacao', data);
           }
         );
       }
     };
 
+    $scope.close = function() {
+      $window.close();
+    }
+
     $scope.recarregarSistema = function() {
-      window.location = "//servicos.ibama.gov.br/siema";
+      window.location = "//tucunare.ibama.gov.br/~01433540355/stats/#/html";
     };
 
     // $scope.bacias = [

@@ -230,7 +230,7 @@
                 </div>
             </div>
 
-            <div class="panel panel-default" ng-if="logado">
+            <div class="panel panel-default" ng-if="usuario">
                 <div class="panel-heading" role="tab" id="headingFourteen">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="acidente/#collapseFourteen" aria-expanded="false" aria-controls="collapseFourteen">
@@ -652,7 +652,7 @@
         <br />
         <div class="form-group pull-right">
             <div class="col-lg-6">
-                <a id="modalBtnCancel" class="btn btn-default" href="//servicos.ibama.gov.br/siema">
+                <a id="modalBtnCancel" class="btn btn-default" ng-click="close()">
                     <i class="glyphicon glyphicon-trash"></i>
                     Cancelar
                 </a>

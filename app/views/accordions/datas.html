@@ -1,14 +1,13 @@
 <div class="control-group">
-    <div class="form-inline">
-        <div class="col-lg-6">
-            <h4> Data e hora da primeira observaÃ§Ã£o: </h4>
-        </div>
-        <div class="col-lg-6">
-            <h4> Data e hora estimadas do incidente: </h4>
-        </div>
-    </div> <br />
 
     <div class="col-lg-6">
+        <div class="form-inline">
+            <div class="col-lg-6">
+                <h4> Data e hora da primeira observação: </h4>
+            </div>
+        </div>
+        <br />
+        <br />
         <div class="form-group">
             <div class="form-group">
                 <label class="control-label">Data:*</label>
@@ -20,11 +19,11 @@
                         <option value="0" default selected>Data Invalida</option>
                         <option value="1">Domingo</option>
                         <option value="2">Segunda</option>
-                        <option value="3">TerÃ§a</option>
+                        <option value="3">Terça</option>
                         <option value="4">Quarta</option>
                         <option value="5">Quinta</option>
                         <option value="6">Sexta</option>
-                        <option value="7">SÃ¡bado</option>
+                        <option value="7">Sábado</option>
                     </select>
                 </div>
             </div>
@@ -39,7 +38,7 @@
             <br/> <br/>
         <!-- <div class="col-lg-12"> -->
             <div class="form-group">
-                <label class="control-label"> PerÃ­odo:*</label>
+                <label class="control-label"> Período:*</label>
                 <div class="form-group">
                     <div class="radio">
                         <label>
@@ -66,12 +65,20 @@
         </div>
         <div class="form-group">
             <div class="checkbox">
-                <label> <input type="checkbox" ng-model="datas.semObservacao"> Sem informaÃ§Ã£o sobre data e hora da primeira observaÃ§Ã£o </label>
+                <label> <input type="checkbox" ng-model="datas.semObservacao"> Sem informação sobre data e hora da primeira observação </label>
             </div>
         </div>
     </div>
 
+
     <div class="col-lg-6">
+        <div class="form-inline">
+            <div class="col-lg-6">
+                <h4> Data e hora estimadas do incidente: </h4>
+            </div>
+        </div>
+        <br />
+        <br />
         <div class="form-group">
             <div class="form-group">
                 <label class="control-label">Data:*</label>
@@ -83,11 +90,11 @@
                         <option value="0" default selected>Data Invalida</option>
                         <option value="1">Domingo</option>
                         <option value="2">Segunda</option>
-                        <option value="3">TerÃ§a</option>
+                        <option value="3">Terça</option>
                         <option value="4">Quarta</option>
                         <option value="5">Quinta</option>
                         <option value="6">Sexta</option>
-                        <option value="7">SÃ¡bado</option>
+                        <option value="7">Sábado</option>
                     </select>
                 </div>
             </div>
@@ -106,7 +113,7 @@
 
         <!-- <div class="col-lg-12"> -->
             <div class="form-group">
-            <label class="control-label"> PerÃ­odo:*</label>
+            <label class="control-label"> Período:*</label>
             <div class="form-group">
                 <div class="radio">
                     <label>
@@ -133,7 +140,7 @@
     </div>
     <div class="form-group">
         <div class="checkbox">
-            <label> <input type="checkbox" ng-model="datas.semIncidente"> Sem informaÃ§Ã£o sobre data e hora estimada </label>
+            <label> <input type="checkbox" ng-model="datas.semIncidente"> Sem informação sobre data e hora estimada </label>
         </div>
     </div>
 </div>
