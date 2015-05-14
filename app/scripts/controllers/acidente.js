@@ -8,7 +8,7 @@
  * Controller of the estatisticasApp
  */
 angular.module('estatisticasApp')
-  .controller('AcidenteCtrl', function ($scope, RestApi, $routeParams, $window) {
+  .controller('AcidenteCtrl', function ($scope, RestApi, $routeParams, $location) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -314,7 +314,9 @@ angular.module('estatisticasApp')
     }
 
     $scope.recarregarSistema = function() {
-      window.location = "//tucunare.ibama.gov.br/~01433540355/stats/#/html";
+      // $location.url = "#/html?id=" + nro_ocorrencia;
+
+      $location.url("/html?id=" + $scope.nro_ocorrencia);
     };
 
     // $scope.bacias = [
