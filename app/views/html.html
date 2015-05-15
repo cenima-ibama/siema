@@ -9,7 +9,7 @@
   <div class="panel-heading">
     <br />
     <h4 class="text-right" style="color:#0088cc;padding: 0 10px 0 0;">
-      <strong>Número de registro: {{nro_ocorrencia}}</strong>
+      <strong>NÃºmero de registro: {{nro_ocorrencia}}</strong>
       <span id="nroComunicado" name="nroComunicado">
       </span>
     </h4>
@@ -21,7 +21,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">
-            1. Localização
+            1. LocalizaÃ§Ã£o
             </a>
         </h4>
     </div>
@@ -53,7 +53,7 @@
 
 
       <div class="form-group">
-        <label class="control-label">UF/Município:</label>
+        <label class="control-label">UF/MunicÃ­pio:</label>
         <div class='form-inline'>
           <div class='form-group'>
               <select class="form-control input" ng-model="localizacao.uf" ng-options="uf.value as uf.name for uf in ufs" disabled>
@@ -61,14 +61,14 @@
           </div>
           <div class='form-group'>
               <select class="form-control input" ng-model="localizacao.municipio" ng-options="mun.value as mun.name for mun in municipios" disabled>
-              <option value="" default selected>Sem Município</option>
+              <option value="" default selected>Sem MunicÃ­pio</option>
               </select>
           </div>
         </div>
       </div>
 
       <div class="form-group">
-          <label class="control-label" for="inputEndereco">Endereço:</label>
+          <label class="control-label" for="inputEndereco">EndereÃ§o:</label>
           <div class='form-group'>
               <input type="text" class="form-control" ng-model="localizacao.endereco" disabled>
           </div>
@@ -90,30 +90,30 @@
 
         <div ng-if='!datas.semObservacao'>
           <div class="col-lg-6">
-            <label class="control-label">Data e hora da primeira observação:</label>
+            <label class="control-label">Data e hora da primeira observaÃ§Ã£o:</label>
               <p>
                  {{datas.diaObservacao}}
                 <!-- <select ng-model="datas.obsSemana" ng-disabled="true">
                         <option value="1">Domingo</option>
                         <option value="2">Segunda</option>
-                        <option value="3">Terça</option>
+                        <option value="3">TerÃ§a</option>
                         <option value="4">Quarta</option>
                         <option value="5">Quinta</option>
                         <option value="6">Sexta</option>
-                        <option value="7">Sábado</option>
+                        <option value="7">SÃ¡bado</option>
                 </select> -->
-                - {{datas.horaObservacao}} - Período: {{datas.obsPeriodo}}
+                - {{datas.horaObservacao}} - PerÃ­odo: {{datas.obsPeriodo}}
               </p>
           </div>
         </div>
         <div ng-if='datas.semObservacao'>
-          <label>Sem informação sobre data e hora da primeira observação </label>
+          <label>Sem informaÃ§Ã£o sobre data e hora da primeira observaÃ§Ã£o </label>
         </div>
         <div ng-if='!datas.semIncidente'>
           <div class="col-lg-6">
             <label class="control-label">Data e hora estimadas do incidente: </label>
             <p>
-              {{datas.diaIncidente}} - {{datas.horaIncidente}} - Período: {{datas.incPeriodo}}
+              {{datas.diaIncidente}} - {{datas.horaIncidente}} - PerÃ­odo: {{datas.incPeriodo}}
               <div ng-if='datas.feriado'>
                 Feriado
               </div>
@@ -121,7 +121,7 @@
           </div>
         </div>
         <div ng-if='datas.semIncidente'>
-          <label>Sem informação sobre data e hora sobre a hora estimada </label>
+          <label>Sem informaÃ§Ã£o sobre data e hora sobre a hora estimada </label>
         </div>
       </div>
   </div>
@@ -148,7 +148,7 @@
           <div ng-if='origem.complementarVal'>
             <div class="col-lg-6">
                 <div class="form-group">
-                    <label class="control-label">Informações complementares:</label>
+                    <label class="control-label">InformaÃ§Ãµes complementares:</label>
                     <textarea class="form-control col-lg-3" rows="4" ng-disabled="true" ng-model="origem.complementar"></textarea>
                 </div>
                 <br/>
@@ -160,7 +160,7 @@
       <div ng-if='origem.semOrigem'>
         <div class="panel-body">
           <div class="form-group">
-              <label class="control-label"> Sem informação sobre a origem do acidente</label>
+              <label class="control-label"> Sem informaÃ§Ã£o sobre a origem do acidente</label>
           </div>
         </div>
       </div>
@@ -168,7 +168,7 @@
         <div ng-if='origem.semOleoOrigem'>
           <div class="panel-body">
             <div class="form-group">
-                <label class="control-label"> Sem informação sobre a origem do acidente</label>
+                <label class="control-label"> Sem informaÃ§Ã£o sobre a origem do acidente</label>
             </div>
           </div>
         </div>
@@ -180,7 +180,7 @@
                 <p>{{origem.navio}}</p>
               </div>
               <div ng-switch-default>
-                <label class='control-label'>Nome da instalação:</label>
+                <label class='control-label'>Nome da instalaÃ§Ã£o:</label>
                 <p>{{origem.instalacao}}</p>
               </div>
             </div>
@@ -213,7 +213,7 @@
         <div ng-if='evento.complementarVal'>
           <div class="col-lg-6">
             <label class="control-label">
-                Informações complementares:
+                InformaÃ§Ãµes complementares:
             </label>
             <textarea class="form-control col-lg-3" rows="4" ng-disabled="true" ng-model="evento.complementar"></textarea>
           </div>
@@ -223,7 +223,7 @@
 
       <div ng-if='evento.semEvento'>
         <div class="col-lg-6">
-          <label class='control-label'>Sem informação sobre o tipo do evento</label>
+          <label class='control-label'>Sem informaÃ§Ã£o sobre o tipo do evento</label>
         </div>
       </div>
 
@@ -247,7 +247,7 @@
           <p><b>Substancia: </b>{{produto.field}}, <b>Qtd.: </b>{{produto.qtd}}, <b>Unidade: </b>{{produto.uni}}</p>
         </div>
         <hr/>
-        <label class='control-label'>Produtos Não ONU</label>
+        <label class='control-label'>Produtos NÃ£o ONU</label>
         <div ng-repeat='produto in produtos.produtos_outros'>
           <p><b>Substancia: </b>{{produto.field}}, <b>Qtd.: </b>{{produto.qtd}}, <b>Unidade: </b>{{produto.uni}}</p>
         </div>
@@ -255,26 +255,26 @@
       <hr />
 
       <div ng-if='produtos.naoClassificado'>
-        <label class='control-label'> Não Classificado</label>
+        <label class='control-label'> NÃ£o Classificado</label>
       </div>
       <div ng-if='produtos.semProduto'>
-        <label class='control-label'> Sem informação sobre o tipo do produto</label>
+        <label class='control-label'> Sem informaÃ§Ã£o sobre o tipo do produto</label>
       </div>
       <div ng-if='produtos.naoAplica'>
-        <label class='control-label'> Não se aplica</label>
+        <label class='control-label'> NÃ£o se aplica</label>
       </div>
       <div ng-if='produtos.naoEspecificado'>
-        <label class='control-label'> Não especificado</label>
+        <label class='control-label'> NÃ£o especificado</label>
       </div>
 
       <hr/>
 
       <div ng-if='oleo'>
         <div ng-if='produtos.semCondicoes'>
-          Sem condições de informar o tipo de substância
+          Sem condiÃ§Ãµes de informar o tipo de substÃ¢ncia
         </div>
         <div ng-if='!produtos.semCondicoes'>
-          <label class='control-label'>Tipo de substância</label>
+          <label class='control-label'>Tipo de substÃ¢ncia</label>
           <p>
             {{produtos.tipo_substancia }}
           </p>
@@ -307,24 +307,24 @@
         </div>
       </div>
       <div ng-if='detalhes.semDetalhes'>
-        <label class='control-label'>Sem condições de informar</label>
+        <label class='control-label'>Sem condiÃ§Ãµes de informar</label>
       </div>
 
       <div ng-if='oleo'>
         <div ng-if='detalhes.situacaoVal'>
-          <label>Situação da descarga: </label>
+          <label>SituaÃ§Ã£o da descarga: </label>
           <div ng-switch='detalhes.situacao'>
             <div ng-switch-when='N'>
-              <p>Não foi paralisada</p>
+              <p>NÃ£o foi paralisada</p>
             </div>
             <div ng-switch-when='P'>
               <p>Paralisada</p>
             </div>
             <div ng-switch-when='S'>
-              <p>Sem condições de informar</p>
+              <p>Sem condiÃ§Ãµes de informar</p>
             </div>
             <div ng-switch-default>
-              <p>Não se aplica</p>
+              <p>NÃ£o se aplica</p>
             </div>
           </div>
         </div>
@@ -339,7 +339,7 @@
   <div class="panel panel-default">
     <div class="panel-heading" >
       <h4 class="panel-title">
-        7. Ocorrências e/ou ambientes atingidos
+        7. OcorrÃªncias e/ou ambientes atingidos
       </h4>
     </div>
 
@@ -358,7 +358,7 @@
           <div class="col-lg-6">
               <div class="form-group">
                   <label class="control-label">
-                      Informações complementares:
+                      InformaÃ§Ãµes complementares:
                   </label>
                   <textarea class="form-control col-lg-3" rows="4" ng-disabled="true" ng-model="ambiente.complementar"></textarea>
               </div>
@@ -367,7 +367,7 @@
       </div>
 
       <div ng-if='ambiente.semAmbientes'>
-        <label class='control-label'> Sem informação sobre ocorrências e/ou ambientes atingidos</label>
+        <label class='control-label'> Sem informaÃ§Ã£o sobre ocorrÃªncias e/ou ambientes atingidos</label>
       </div>
     </div>
 
@@ -380,7 +380,7 @@
   <div class="panel panel-default">
     <div class="panel-heading" >
       <h4 class="panel-title">
-        8. Identificação da empresa/responsável
+        8. IdentificaÃ§Ã£o da empresa/responsÃ¡vel
       </h4>
     </div>
     <div class="panel-body">
@@ -392,7 +392,7 @@
           <label class="control-label">CPF/CNPJ: </label>
           <p>{{empresa.cadastro}}</p>
 
-          <label class="control-label">Licença ambiental:</label>
+          <label class="control-label">LicenÃ§a ambiental:</label>
             <select  class="form-control input" ng-model='empresa.licencaAmbiental' ng-options="licenca.value as licenca.name for licenca in licencas" ng-disabled="true">
             </select>
           </div>
@@ -400,7 +400,7 @@
 
       </div>
       <div ng-if='empresa.semEmpresa'>
-        <label>Sem informação sobre a empresa/responsável</label>
+        <label>Sem informaÃ§Ã£o sobre a empresa/responsÃ¡vel</label>
       </div>
     </div>
   </div>
@@ -412,7 +412,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">
-        9. Instituição/empresa atuando no local
+        9. InstituiÃ§Ã£o/empresa atuando no local
       </h4>
     </div>
     <div class="panel-body">
@@ -427,22 +427,22 @@
         <hr/>
         <div ng-if='instituicao.complementarVal'>
           <div class="col-lg-6">
-            <label>Informações complementares:</label>
+            <label>InformaÃ§Ãµes complementares:</label>
             <textarea class="form-control col-lg-3" rows="4" ng-disabled="true" ng-model="instituicao.complementar"></textarea>
           </div>
         </div>
         <hr/>
         <div class="col-lg-6">
           <div class="form-group">
-            <label>Nome do responsável no local:</label>
+            <label>Nome do responsÃ¡vel no local:</label>
             <p>{{instituicao.responsavel}}</p>
-            <label>Telefone do responsável no local:</label>
+            <label>Telefone do responsÃ¡vel no local:</label>
             <p>{{instituicao.telefone}}</p>
           </div>
         </div>
       </div>
       <div ng-if='instituicao.semInstituicao'>
-        <label class='control-label'>Sem informação sobre instituição/empresa atuando no local</label>
+        <label class='control-label'>Sem informaÃ§Ã£o sobre instituiÃ§Ã£o/empresa atuando no local</label>
       </div>
     </div>
   </div>
@@ -456,39 +456,39 @@
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingTen">
       <h4 class="panel-title">
-        10. Ações iniciais tomadas
+        10. AÃ§Ãµes iniciais tomadas
       </h4>
     </div>
 
     <div class="panel-body">
       <div ng-if='!acoes.semAcoes'>
         <div ng-switch='acoes.plano'>
-          <label>Existência de Plano de Emergência Individual ou similar: </label>
+          <label>ExistÃªncia de Plano de EmergÃªncia Individual ou similar: </label>
           <div ng-switch-when='S'>
             <p>Sim</p>
           </div>
           <div ng-switch-when='N'>
-            <p>Não</p>
+            <p>NÃ£o</p>
           </div>
           <div ng-switch-when='I'>
-            <p>Sem informação</p>
+            <p>Sem informaÃ§Ã£o</p>
           </div>
         </div>
 
         <div ng-if='acoes.planoIndividual'>
         <label class="checkbox">
-          Acionado plano individual de emergência
+          Acionado plano individual de emergÃªncia
         </label>
         </div>
 
         <div ng-if= "acoes.outrasProvidencias">
-          <label class="control-label">Foram tomadas outras providências a saber:</label>
+          <label class="control-label">Foram tomadas outras providÃªncias a saber:</label>
           <textarea ng-model='acoes.outrasProvidenciasText' ng-disabled="true" class="form-control col-lg-3" rows="4"></textarea>
         </div>
       </div>
 
       <div ng-if='acoes.semAcoes'>
-        <label class="text-left ">Sem evidência de ação ou ou providência até o momento</label>
+        <label class="text-left ">Sem evidÃªncia de aÃ§Ã£o ou ou providÃªncia atÃ© o momento</label>
       </div>
     </div>
   </div>
@@ -501,13 +501,13 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">
-        11. Informações gerais sobre a ocorrência
+        11. InformaÃ§Ãµes gerais sobre a ocorrÃªncia
       </h4>
     </div>
 
     <div class="panel-body">
       <div class="col-lg-6">
-      <label>Outras informações julgadas úteis:</label>
+      <label>Outras informaÃ§Ãµes julgadas Ãºteis:</label>
           <textarea ng-model="gerais.text" class="form-control col-lg-3" rows="4" ng-disabled='true'></textarea>
       </div>
 
@@ -521,7 +521,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">
-        12. Identificação do comunicante
+        12. IdentificaÃ§Ã£o do comunicante
       </h4>
     </div>
 
@@ -529,7 +529,7 @@
       <div class="col-lg-6">
         <label >Nome completo: </label>
         <p>{{comunicante.nome}}</p>
-        <label >Instituição / Empresa: </label>
+        <label >InstituiÃ§Ã£o / Empresa: </label>
         <p>{{comunicante.empresa}}</p>
         <label >Telefone de contato: </label>
         <p>{{comunicante.telefone}}</p>
@@ -537,11 +537,11 @@
         <p>{{comunicante.email}}</p>
 
         <div ng-if="oleo">
-          <label >Cargo / Função navio ou instalação: </label>
+          <label >Cargo / FunÃ§Ã£o navio ou instalaÃ§Ã£o: </label>
           <p>{{comunicante.funcao}}</p>
         </div>
         <div ng-if="!oleo">
-          <label  >Cargo / Função: </label>
+          <label  >Cargo / FunÃ§Ã£o: </label>
           <p>{{comunicante.funcao}}</p>
         </div>
       </div>
@@ -556,7 +556,7 @@
   <!-- <div class="panel panel-default" ng-if='logado'> -->
       <div class="panel-heading">
         <h4 class="panel-title">
-          14. Fonte da informação
+          14. Fonte da informaÃ§Ã£o
         </h4>
       </div>
       <div class="panel-body">
@@ -569,7 +569,7 @@
         </div>
         <div class="col-lg-6" ng-if='fonte.complementarVal'>
           <label class="control-label">
-            Descrição da Fonte:
+            DescriÃ§Ã£o da Fonte:
           </label>
           <textarea class="form-control col-lg-3" rows="4" ng-model="fonte.complementar"></textarea>
         </div>

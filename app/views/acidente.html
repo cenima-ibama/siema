@@ -657,8 +657,14 @@
                     Cancelar
                 </a>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6" ng-if="acao=='carregar'">
                 <a id="submit" class="btn btn-primary" ng-click="submit()">
+                    <i class="glyphicon glyphicon-ok icon-white"></i>
+                    Enviar
+                </a>
+            </div>
+            <div class="col-lg-6" ng-if="acao=='criar'">
+                <a id="submit" class="btn btn-primary" ng-click="">
                     <i class="glyphicon glyphicon-ok icon-white"></i>
                     Enviar
                 </a>
