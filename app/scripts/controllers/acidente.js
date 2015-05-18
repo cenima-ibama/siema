@@ -212,7 +212,7 @@ angular.module('estatisticasApp')
     $scope.submit = function() {
 
       if ($scope.acao == 'criar') {
-        
+
         var ocorrencia = {};
 
         ocorrencia.nro_ocorrencia = $scope.nro_ocorrencia;
@@ -327,7 +327,7 @@ angular.module('estatisticasApp')
             error.push('8. Preencha o Campo Nome em Identificação da Empresa/Responsável');
           }
         }
-        
+
         if(!ocorrencia.instituicao.semInstituicao){
           if(!ocorrencia.instituicao.instituicoes[0]){
             error.push('9. Preencha o campo de instituicao/empresa atuando no local');
@@ -342,27 +342,30 @@ angular.module('estatisticasApp')
                 error.push('10. O campo "Outras providencias a saber" deve ser preenchido');
               }
             }
-            else 
+            else
               error.push('10. Preencha acões iniciais');
           }
         }
 
-        // string_ocorrencia = '{"nro_ocorrencia":"201551554000","oleo":false,"localizacao":{"subPanel":"","oceano":true,"lat":"-15","lng":"-45","uf":"7","municipio":"5300108","bacia":"15","endereco":"endereço-localizacao"},"acidente":{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[-45,-15]}},"datas":{"subPanel":"","obsSemana":4,"semObservacao":false,"incSemana":3,"semIncidente":false,"diaObservacao":"06/05/2015","horaObservacao":"11:11","obsPeriodo":"M","diaIncidente":"05/05/2015","horaIncidente":"14:14","incPeriodo":"V","feriado":true},"origem":{"subPanel":"","complementar":"complementar-origem","semOrigem":false,"semOleoOrigem":false,"origens":["2","4","7"]},"evento":{"subPanel":"","complementar":"complementar-evento","semeventos":false,"eventos":["1","4","5"]},"produtos":{"subPanel":"","novo_onu":true,"produtos_onu":[{"id":"2636","qtd":"14","uni":"m3","field":"1, 1, 1, 2-TETRAFLUORETANO  - 3159     - 2.2","$$hashKey":"object:127"}],"novo_nao_onu":true,"produtos_outros":[{"id":"48","qtd":"14","uni":"m3","field":"café","$$hashKey":"object:144"}],"substanciaOnu":"","quantidadeOnu":"","unidadeOnu":"","substanciaOutro":"","quantidadeOutro":"","unidadeOutro":"","naoClassificado":true,"naoEspecificado":true,"naoAplica":true},"detalhes":{"subPanel":"","semDetalhe":false,"causa":"causa-detalhes"},"ambiente":{"subPanel":"","complementar":"complementar-ambientes","semAmbientes":false,"ambientes":["1","7","9"]},"empresa":{"subPanel":"","nome":"nome-responsavel","cadastro":"88888888888888888888","licencaAmbiental":"2","semEmpresa":false},"instituicao":{"subPanel":"","semInstituicao":false,"complementar":"complementar-instituição","instituicoes":["2","4","5"],"responsavel":"nome-instituicao","telefone":"(99) 99999-9999"},"acoes":{"subPanel":"","plano":"S","planoIndividual":true,"outrasProvidencias":true,"semAcoes":false,"outrasProvidenciasText":"outras providencias-ações"},"gerais":{"subPanel":"","text":"outras-gerais"},"comunicante":{"subPanel":"","nome":"nomecomunicante","empresa":"instituicaoempresacomunicante","funcao":"cargofuncaocomunicante","telefone":"12121212","email":"emailcomunicante"},"fonte":{"subPanel":""}}';
-
         $scope.error = error;
         var string_ocorrencia = JSON.stringify(ocorrencia);
+
+        string_ocorrencia = '{"nro_ocorrencia":"201551554000","oleo":false,"localizacao":{"subPanel":"","oceano":true,"lat":"-15","lng":"-45","uf":"7","municipio":"5300108","bacia":"15","endereco":"endereço-localizacao"},"acidente":{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[-45,-15]}},"datas":{"subPanel":"","obsSemana":4,"semObservacao":false,"incSemana":3,"semIncidente":false,"diaObservacao":"06/05/2015","horaObservacao":"11:11","obsPeriodo":"M","diaIncidente":"05/05/2015","horaIncidente":"14:14","incPeriodo":"V","feriado":true},"origem":{"subPanel":"","complementar":"complementar-origem","semOrigem":false,"semOleoOrigem":false,"origens":["2","4","7"]},"evento":{"subPanel":"","complementar":"complementar-evento","semeventos":false,"eventos":["1","4","5"]},"produtos":{"subPanel":"","novo_onu":true,"produtos_onu":[{"id":"2636","qtd":"14","uni":"m3","field":"1, 1, 1, 2-TETRAFLUORETANO  - 3159     - 2.2","$$hashKey":"object:127"}],"novo_nao_onu":true,"produtos_outros":[{"id":"48","qtd":"14","uni":"m3","field":"café","$$hashKey":"object:144"}],"substanciaOnu":"","quantidadeOnu":"","unidadeOnu":"","substanciaOutro":"","quantidadeOutro":"","unidadeOutro":"","naoClassificado":true,"naoEspecificado":true,"naoAplica":true},"detalhes":{"subPanel":"","semDetalhe":false,"causa":"causa-detalhes"},"ambiente":{"subPanel":"","complementar":"complementar-ambientes","semAmbientes":false,"ambientes":["1","7","9"]},"empresa":{"subPanel":"","nome":"nome-responsavel","cadastro":"88888888888888888888","licencaAmbiental":"2","semEmpresa":false},"instituicao":{"subPanel":"","semInstituicao":false,"complementar":"complementar-instituição","instituicoes":["2","4","5"],"responsavel":"nome-instituicao","telefone":"(99) 99999-9999"},"acoes":{"subPanel":"","plano":"S","planoIndividual":true,"outrasProvidencias":true,"semAcoes":false,"outrasProvidenciasText":"outras providencias-ações"},"gerais":{"subPanel":"","text":"outras-gerais"},"comunicante":{"subPanel":"","nome":"nomecomunicante","empresa":"instituicaoempresacomunicante","funcao":"cargofuncaocomunicante","telefone":"12121212","email":"emailcomunicante"},"fonte":{"subPanel":"","complementar":"complementar-fonte","fontes":["2","3"]}}';
+
         console.log(string_ocorrencia);
 
-        RestApi.query({query: 'criar_ocorrencia', 'formulario': string_ocorrencia},
-          function success(data, status){
-            if(data[0]) {
-              // alert('Formulário gravado com sucesso');
-              $scope.recarregarSistema();
-            } else {
-              alert('Erro interno de banco. Por favor, procurar o administrador do sistema.');
+        if (!$scope.error[0]) {
+          RestApi.query({query: 'criar_ocorrencia', 'formulario': string_ocorrencia},
+            function success(data, status){
+              if(data[0]) {
+                // alert('Formulário gravado com sucesso');
+                $scope.recarregarSistema();
+              } else {
+                alert('Erro interno de banco. Por favor, procurar o administrador do sistema.');
+              }
             }
-          }
-        );
+          );
+        }
 
       } else if ($scope.acao == 'carregar'){
         console.log($scope.acao);
@@ -420,18 +423,106 @@ angular.module('estatisticasApp')
 
         formulario.arquivo = $scope.arquivo;
 
+        var error = [];
+        if(!formulario.localizacao.lat)
+          error.push('1. Preencha o campo de Latitude');
+        if(!formulario.localizacao.lng)
+          error.push('1. Preencha o campo de Longitude');
+        if(!formulario.localizacao.uf)
+          error.push('1. Preencha o campo UF');
+        if(!formulario.localizacao.municipio)
+          error.push('1. Preencha o campo Municipio');
+        if(!formulario.localizacao.endereco)
+          error.push('1. Preencha o campo de Endereço');
+
+        if(!formulario.datas.semIncidente){
+          occur = formulario.datas;
+          if(!occur.diaIncidente)
+            error.push('2. Preencha o campo "Data do Incidente"')
+          if(!occur.horaIncidente)
+            error.push('2. Preencha o campo "Hora do Incidente!');
+          if(!occur.incPeriodo)
+            error.push('2. Preencha o campo "Período do Incidente"');
+        }
+
+        if(!formulario.datas.semObservacao){
+          occur = formulario.datas;
+          if(!occur.diaObservacao)
+            error.push('2. Preencha o campo "Data de Observação"');
+          if(!occur.horaObservacao)
+            error.push('2. Preencha o campo "Hora de Observacão"');
+          if(!occur.obsPeriodo)
+            error.push('2. Preencha o campo "Período de Observacão"');
+        }
+
+        if(!formulario.origem.semOrigem){
+          if(!formulario.origem.origens[0]){
+            error.push('3. Preencha o campo de Origem do acidente');
+          }
+        }
+
+        if(!formulario.evento.semEvento){
+          if(!formulario.evento.eventos[0]){
+            error.push('4. Preencha o campo tipo de evento');
+          }
+        }
+
+        if(!formulario.produtos.semProdutos || !formulario.produtos.naoClassificado || !formulario.produtos.naoAplica || !formulario.produtos.naoEspecificado){
+            error.push('5. Preencha o campo "Tipos de Produtos"');
+        }
+
+        if(!formulario.detalhes.semDetalhe){
+          if(!formulario.detalhes.causa || formulario.detalhes.causa == ''){
+            error.push('6. Preencha o campo "Detalhes do Acidente"');
+          }
+        }
+
+        if(!formulario.ambiente.semAmbientes){
+          if(!formulario.ambiente.ambientes[0]){
+            error.push('7. Preencha o campo de ambientes atingidos');
+          }
+        }
+
+        if(!formulario.empresa.semEmpresa){
+          if(!formulario.empresa.nome || formulario.empresa.nome==''){
+            error.push('8. Preencha o Campo Nome em Identificação da Empresa/Responsável');
+          }
+        }
+
+        if(!formulario.instituicao.semInstituicao){
+          if(!formulario.instituicao.instituicoes[0]){
+            error.push('9. Preencha o campo de instituicao/empresa atuando no local');
+          }
+        }
+
+        if(!formulario.acoes.semAcoes){
+          var occur = formulario.acoes;
+          if(occur.plano == '' && occur.planoIndividual == false){
+            if(occur.outrasProvidencias){
+              if(occur.outrasProvidenciasText == undefined || occur.outrasProvidenciasText == ''){
+                error.push('10. O campo "Outras providencias a saber" deve ser preenchido');
+              }
+            }
+            else
+              error.push('10. Preencha acões iniciais');
+          }
+        }
+
+        $scope.error = error;
         var string_formulario = JSON.stringify(formulario);
 
-        RestApi.query({query: 'atualizar_ocorrencia', 'formulario': string_formulario},
-          function success(data, status){
-            if(data[0]) {
-              // alert('Formulário atualizado com sucesso');
-              $scope.recarregarSistema();
-            } else {
-              alert('Erro interno de banco. Por favor, procurar o administrador do sistema.');
+        if (!$scope.error[0]) {
+          RestApi.query({query: 'atualizar_ocorrencia', 'formulario': string_formulario},
+            function success(data, status){
+              if(data[0]) {
+                // alert('Formulário atualizado com sucesso');
+                $scope.recarregarSistema();
+              } else {
+                alert('Erro interno de banco. Por favor, procurar o administrador do sistema.');
+              }
             }
-          }
-        );
+          );
+        }
       }
     };
 
@@ -444,36 +535,5 @@ angular.module('estatisticasApp')
 
       $location.url("/html?id=" + $scope.nro_ocorrencia);
     };
-
-    // $scope.bacias = [
-    //   { name: "Bacia 1", value: "1" },
-    //   { name: "Bacia 2", value: "2" },
-    //   { name: "Bacia 3", value: "3" },
-    //   { name: "Bacia 4", value: "4" }
-    // ];
-
-
-    // $scope.municipios = [
-    //   { name: "Municipio 1", value: "1" },
-    //   { name: "Municipio 2", value: "2" },
-    //   { name: "Municipio 3", value: "3" },
-    //   { name: "Municipio 4", value: "4" }
-    // ];
-
-    // $scope.toggleAccordion = function($accordion) {
-    //   if ($scope[$accordion].show == 'in') {
-    //     angular.forEach($scope.accordions, function(obj) {
-    //       $scope[obj].show = "";
-    //     });
-    //   } else {
-    //     angular.forEach($scope.accordions, function(obj) {
-    //       $scope[obj].show = "";
-    //     });
-    //     $scope[$accordion].show = 'in';
-    //   }
-    // };
-
-
-
 
   });
