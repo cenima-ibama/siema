@@ -44,8 +44,8 @@ angular.module('estatisticasApp')
       $scope.acao = 'carregar';
     } else {
       $scope.acao = 'criar';
-      if ($routeParams.oleo) {
-        $scope.oleo = $routeParams.oleo;
+      if ($routeParams.oleo && ($routeParams.oleo == 'true')) {
+        $scope.oleo = true;
       } else {
         $scope.oleo = false;
       }
@@ -57,7 +57,6 @@ angular.module('estatisticasApp')
     } else {
       $scope.usuario = null;
     }
-
 
     // $scope.nro_ocorrencia = '201531732431';
     // $scope.nro_ocorrencia = '201491928814';
@@ -213,33 +212,134 @@ angular.module('estatisticasApp')
     $scope.submit = function() {
 
       if ($scope.acao == 'criar') {
-        console.log($scope.acao);
-
         var ocorrencia = {};
-
-        ocorrencia.localizacao = $scope.localizacao;
-        ocorrencia.datas = $scope.datas;
-        ocorrencia.origem = $scope.origem;
-        ocorrencia.evento = $scope.evento;
-        ocorrencia.produtos = $scope.produtos;
-        ocorrencia.detalhes = $scope.detalhes;
-        ocorrencia.ambiente = $scope.ambiente;
-        ocorrencia.empresa = $scope.empresa;
-        ocorrencia.instituicao = $scope.instituicao;
         ocorrencia.acoes = $scope.acoes;
-        ocorrencia.gerais = $scope.gerais;
-        ocorrencia.comunicante = $scope.comunicante;
-        ocorrencia.fonte = $scope.fonte;
+        ocorrencia.ambiente = $scope.ambiente;
+
+        ocorrencia.ambiente.ambientes = [];
+        angular.forEach($scope.ambientes, function(val, key){
+          if(val.value)
+            ocorrencia.ambiente.ambientes.push(val.id);
+        });
         ocorrencia.arquivo = $scope.arquivo;
+        ocorrencia.comunicante = $scope.comunicante;
+        ocorrencia.datas = $scope.datas;
+        ocorrencia.detalhes = $scope.detalhes;
+        ocorrencia.empresa = $scope.empresa;
+        ocorrencia.evento = $scope.evento;
 
+        ocorrencia.evento.eventos = [];
+        angular.forEach($scope.eventos, function(val, key){
+          if(val.value)
+            ocorrencia.evento.eventos.push(val.id);
+        });
+        ocorrencia.fonte = $scope.fonte;
+        ocorrencia.gerais = $scope.gerais;
+        ocorrencia.instituicao = $scope.instituicao;
+        ocorrencia.instituicao.instituicoes = [];
+        angular.forEach($scope.instituicoes, function(val, key){
+          if(val.value)
+            ocorrencia.instituicao.instituicoes.push(val.id);
+        });
+        ocorrencia.localizacao = $scope.localizacao;
+        ocorrencia.origem = $scope.origem;
+        ocorrencia.origem.origens = [];
+        angular.forEach($scope.origens, function(val, key){
+          if(val.value)
+            ocorrencia.origem.origens.push(val.id);
+        });
+        ocorrencia.produtos = $scope.produtos;
+
+        var error = [];
+
+        if(!ocorrencia.localizacao.lat)
+          error.push('1. Preencha o campo de Latitude');
+        if(!ocorrencia.localizacao.lng)
+          error.push('1. Preencha o campo de Longitude');
+        if(!ocorrencia.localizacao.uf)
+          error.push('1. Preencha o campo UF');
+        if(!ocorrencia.localizacao.municipio)
+          error.push('1. Preencha o campo Municipio');
+        if(!ocorrencia.localizacao.endereco)
+          error.push('1. Preencha o campo de Endereço');
+
+        if(!ocorrencia.datas.semIncidente){
+          occur = ocorrencia.datas;
+          if(!occur.diaIncidente)
+            error.push('2. Preencha o campo "Data do Incidente"')
+          if(!occur.horaIncidente)
+            error.push('2. Preencha o campo "Hora do Incidente!');
+          if(!occur.incPeriodo)
+            error.push('2. Preencha o campo "Período do Incidente"');
+        }
+
+        if(!ocorrencia.datas.semObservacao){
+          occur = ocorrencia.datas;
+          if(!occur.diaObservacao)
+            error.push('2. Preencha o campo "Data de Observação"');
+          if(!occur.horaObservacao)
+            error.push('2. Preencha o campo "Hora de Observacão"');
+          if(!occur.obsPeriodo)
+            error.push('2. Preencha o campo "Período de Observacão"');
+        }
+
+        if(!ocorrencia.origem.semOrigem){
+          if(!ocorrencia.origem.origens[0]){
+            error.push('3. Preencha o campo de Origem do acidente');
+          }
+        }
+
+        if(!ocorrencia.evento.semEvento){
+          if(!ocorrencia.evento.eventos[0]){
+            error.push('4. Preencha o campo tipo de evento');
+          }
+        }
+
+        if(!ocorrencia.produtos.semProdutos || !ocorrencia.produtos.naoClassificado || !ocorrencia.produtos.naoAplica || !ocorrencia.produtos.naoEspecificado){
+            error.push('5. Preencha o campo "Tipos de Produtos"');
+        }
+
+        if(!ocorrencia.detalhes.semDetalhe){
+          if(!ocorrencia.detalhes.causa || ocorrencia.detalhes.causa == ''){
+            error.push('6. Preencha o campo "Detalhes do Acidente"');
+          }
+        }
+
+        if(!ocorrencia.ambiente.semAmbientes){
+          if(!ocorrencia.ambiente.ambientes[0]){
+            error.push('7. Preencha o campo de ambientes atingidos');
+          }
+        }
+
+        if(!ocorrencia.empresa.semEmpresa){
+          if(!ocorrencia.empresa.nome || ocorrencia.empresa.nome==''){
+            error.push('8. Preencha o Campo Nome em Identificação da Empresa/Responsável');
+          }
+        }
+        
+        if(!ocorrencia.instituicao.semInstituicao){
+          if(!ocorrencia.instituicao.instituicoes[0]){
+            error.push('9. Preencha o campo de instituicao/empresa atuando no local');
+          }
+        }
+
+        if(!ocorrencia.acoes.semAcoes){
+          var occur = ocorrencia.acoes;
+          if(occur.plano == '' && occur.planoIndividual == false){
+            if(occur.outrasProvidencias){
+              if(occur.outrasProvidenciasText == undefined || occur.outrasProvidenciasText == ''){
+                error.push('10. O campo "Outras providencias a saber" deve ser preenchido');
+              }
+            }
+            else 
+              error.push('10. Preencha acões iniciais');
+          }
+        }
+
+        $scope.error = error;
         var string_ocorrencia = JSON.stringify(ocorrencia);
-
         console.log(string_ocorrencia);
-        // RestApi.query({query: 'gravar_ocorrencia'},
-        //   function success(data, status){
 
-        //   }
-        // );
       } else if ($scope.acao == 'carregar'){
         console.log($scope.acao);
 
@@ -346,5 +446,8 @@ angular.module('estatisticasApp')
     //     $scope[$accordion].show = 'in';
     //   }
     // };
+
+
+
 
   });

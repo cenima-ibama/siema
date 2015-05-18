@@ -16,7 +16,7 @@ angular.module('estatisticasApp')
         $scope.acoes.subPanel = $scope.oleo ? '(Itens VIII do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
 
         $scope.acoes.plano = "";
-        $scope.acoes.planoIndividual = "";
+        $scope.acoes.planoIndividual = false;
         $scope.acoes.outrasProvidencias = false;
         $scope.acoes.semAcoes = false;
 

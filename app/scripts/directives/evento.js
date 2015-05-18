@@ -14,7 +14,7 @@ angular.module('estatisticasApp')
       controller: function($scope){
 
         $scope.evento.complementar = "";
-        $scope.evento.semeventos = false;
+        $scope.evento.semEvento = false;
 
 
         $scope.$on('carregar_evento', function(event, data){

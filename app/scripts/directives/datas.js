@@ -21,16 +21,16 @@ angular.module('estatisticasApp')
         //     $scope.datas.subPanel = "";
         // }
 
-        $scope.datas.diaObservacao;
-        $scope.datas.horaObservacao;
+        $scope.datas.diaObservacao = '';
+        $scope.datas.horaObservacao = '';
         $scope.datas.obsSemana = 0;
-        $scope.datas.obsPeriodo;
+        $scope.datas.obsPeriodo = '';
         $scope.datas.semObservacao = false;
 
-        $scope.datas.diaIncidente;
-        $scope.datas.horaIncidente;
+        $scope.datas.diaIncidente = '';
+        $scope.datas.horaIncidente = '';
         $scope.datas.incSemana = 0;
-        $scope.datas.incPeriodo;
+        $scope.datas.incPeriodo = '';
         $scope.datas.semIncidente = false;
 
         $scope.updateSemana = function($dia, $semana) {
