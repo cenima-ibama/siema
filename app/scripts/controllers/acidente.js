@@ -212,10 +212,14 @@ angular.module('estatisticasApp')
     $scope.submit = function() {
 
       if ($scope.acao == 'criar') {
+        
         var ocorrencia = {};
+
+        ocorrencia.nro_ocorrencia = $scope.nro_ocorrencia;
+        ocorrencia.oleo = $scope.oleo;
+
         ocorrencia.acoes = $scope.acoes;
         ocorrencia.ambiente = $scope.ambiente;
-
         ocorrencia.ambiente.ambientes = [];
         angular.forEach($scope.ambientes, function(val, key){
           if(val.value)
@@ -227,13 +231,11 @@ angular.module('estatisticasApp')
         ocorrencia.detalhes = $scope.detalhes;
         ocorrencia.empresa = $scope.empresa;
         ocorrencia.evento = $scope.evento;
-
         ocorrencia.evento.eventos = [];
         angular.forEach($scope.eventos, function(val, key){
           if(val.value)
             ocorrencia.evento.eventos.push(val.id);
         });
-        ocorrencia.fonte = $scope.fonte;
         ocorrencia.gerais = $scope.gerais;
         ocorrencia.instituicao = $scope.instituicao;
         ocorrencia.instituicao.instituicoes = [];
@@ -250,8 +252,17 @@ angular.module('estatisticasApp')
         });
         ocorrencia.produtos = $scope.produtos;
 
-        var error = [];
+        if($scope.usuario) {
+          ocorrencia.fonte = $scope.fonte;
+          ocorrencia.fonte.fontes = [];
+          angular.forEach($scope.fontes, function(val, key){
+            if(val.value)
+              ocorrencia.fonte.fontes.push(val.id);
+          });
+        }
 
+
+        var error = [];
         if(!ocorrencia.localizacao.lat)
           error.push('1. Preencha o campo de Latitude');
         if(!ocorrencia.localizacao.lng)
@@ -336,9 +347,22 @@ angular.module('estatisticasApp')
           }
         }
 
+        // string_ocorrencia = '{"nro_ocorrencia":"201551554000","oleo":false,"localizacao":{"subPanel":"","oceano":true,"lat":"-15","lng":"-45","uf":"7","municipio":"5300108","bacia":"15","endereco":"endereço-localizacao"},"acidente":{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[-45,-15]}},"datas":{"subPanel":"","obsSemana":4,"semObservacao":false,"incSemana":3,"semIncidente":false,"diaObservacao":"06/05/2015","horaObservacao":"11:11","obsPeriodo":"M","diaIncidente":"05/05/2015","horaIncidente":"14:14","incPeriodo":"V","feriado":true},"origem":{"subPanel":"","complementar":"complementar-origem","semOrigem":false,"semOleoOrigem":false,"origens":["2","4","7"]},"evento":{"subPanel":"","complementar":"complementar-evento","semeventos":false,"eventos":["1","4","5"]},"produtos":{"subPanel":"","novo_onu":true,"produtos_onu":[{"id":"2636","qtd":"14","uni":"m3","field":"1, 1, 1, 2-TETRAFLUORETANO  - 3159     - 2.2","$$hashKey":"object:127"}],"novo_nao_onu":true,"produtos_outros":[{"id":"48","qtd":"14","uni":"m3","field":"café","$$hashKey":"object:144"}],"substanciaOnu":"","quantidadeOnu":"","unidadeOnu":"","substanciaOutro":"","quantidadeOutro":"","unidadeOutro":"","naoClassificado":true,"naoEspecificado":true,"naoAplica":true},"detalhes":{"subPanel":"","semDetalhe":false,"causa":"causa-detalhes"},"ambiente":{"subPanel":"","complementar":"complementar-ambientes","semAmbientes":false,"ambientes":["1","7","9"]},"empresa":{"subPanel":"","nome":"nome-responsavel","cadastro":"88888888888888888888","licencaAmbiental":"2","semEmpresa":false},"instituicao":{"subPanel":"","semInstituicao":false,"complementar":"complementar-instituição","instituicoes":["2","4","5"],"responsavel":"nome-instituicao","telefone":"(99) 99999-9999"},"acoes":{"subPanel":"","plano":"S","planoIndividual":true,"outrasProvidencias":true,"semAcoes":false,"outrasProvidenciasText":"outras providencias-ações"},"gerais":{"subPanel":"","text":"outras-gerais"},"comunicante":{"subPanel":"","nome":"nomecomunicante","empresa":"instituicaoempresacomunicante","funcao":"cargofuncaocomunicante","telefone":"12121212","email":"emailcomunicante"},"fonte":{"subPanel":""}}';
+
         $scope.error = error;
         var string_ocorrencia = JSON.stringify(ocorrencia);
         console.log(string_ocorrencia);
+
+        RestApi.query({query: 'criar_ocorrencia', 'formulario': string_ocorrencia},
+          function success(data, status){
+            if(data[0]) {
+              // alert('Formulário gravado com sucesso');
+              $scope.recarregarSistema();
+            } else {
+              alert('Erro interno de banco. Por favor, procurar o administrador do sistema.');
+            }
+          }
+        );
 
       } else if ($scope.acao == 'carregar'){
         console.log($scope.acao);
@@ -385,8 +409,8 @@ angular.module('estatisticasApp')
         formulario.acoes = $scope.acoes;
         formulario.gerais = $scope.gerais;
         formulario.comunicante = $scope.comunicante;
-        formulario.fonte = $scope.fonte;
-        if($scope.logado) {
+        if($scope.usuario) {
+          formulario.fonte = $scope.fonte;
           formulario.fonte.fontes = [];
           angular.forEach($scope.fontes, function(val, key){
             if(val.value)
@@ -398,12 +422,14 @@ angular.module('estatisticasApp')
 
         var string_formulario = JSON.stringify(formulario);
 
-
-        // console.log(string_ocorrencia);
         RestApi.query({query: 'atualizar_ocorrencia', 'formulario': string_formulario},
           function success(data, status){
-            $scope.recarregarSistema();
-            // $scope.$broadcast('carregar_localizacao', data);
+            if(data[0]) {
+              // alert('Formulário atualizado com sucesso');
+              $scope.recarregarSistema();
+            } else {
+              alert('Erro interno de banco. Por favor, procurar o administrador do sistema.');
+            }
           }
         );
       }
