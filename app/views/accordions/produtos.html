@@ -82,7 +82,7 @@
                 <td>{{prods.qtd}}</td>
                 <td>{{prods.uni}}</td>
                 <td>
-                    <button class="btn btn-default" ng-click='deleteData(prods)'>
+                    <button class="btn btn-default" ng-click='deleteDataNaoOnu(prods)'>
                         <span class="glyphicon glyphicon-remove-sign"></span>
                     </button>
                 </td>
@@ -130,8 +130,6 @@
 
 <!-- <div ng-if='!produto.semProduto'> -->
 <br ng-if='!produtos.semProduto'/>
-<br ng-if='!produtos.semProduto'/>
-<br ng-if='!produtos.semProduto'/>
 <!-- </div> -->
 
 <div class='form-group col-lg-6' ng-if='oleo'>
@@ -153,7 +151,7 @@
             </div>
         </div>
         <label class="checkbox ">
-            <input type="checkbox" ng-model="produtos.semCondicoes" class="checkbox text-left"> Sem condiçõees de informar
+            <input type="checkbox" ng-model="produtos.semCondicoes" class="checkbox text-left"> Sem condições de informar
         </label>
     </div>
 </div>

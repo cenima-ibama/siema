@@ -306,8 +306,17 @@ angular.module('estatisticasApp')
           }
         }
 
-        if(!ocorrencia.produtos.semProdutos || !ocorrencia.produtos.naoClassificado || !ocorrencia.produtos.naoAplica || !ocorrencia.produtos.naoEspecificado){
-            error.push('5. Preencha o campo "Tipos de Produtos"');
+        if(!ocorrencia.produtos.semProduto && !ocorrencia.produtos.naoClassificado && !ocorrencia.produtos.naoAplica && !ocorrencia.produtos.naoEspecificado){
+          if($scope.oleo){
+            if(ocorrencia.produtos.semCondicoes){
+              if(!ocorrencia.produtos.semProduto)
+                var validate = true;
+            }
+            else{
+            if(!ocorrencia.produtos.produtos_onu[0] && !ocorrencia.produtos.produtos_outros[0])
+              error.push('5. Preencha o campo "Tipos de Produtos"');
+            }
+          }
         }
 
         if(!ocorrencia.detalhes.semDetalhe){
