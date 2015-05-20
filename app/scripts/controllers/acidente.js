@@ -8,7 +8,7 @@
  * Controller of the estatisticasApp
  */
 angular.module('estatisticasApp')
-  .controller('AcidenteCtrl', function ($scope, RestApi, $routeParams, $location) {
+  .controller('AcidenteCtrl', function ($scope, RestApi, $routeParams, $location, Upload, $http) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -68,6 +68,7 @@ angular.module('estatisticasApp')
     // $scope.nro_ocorrencia = '201491950448';
     // $scope.nro_ocorrencia = '2014121639650';
 
+    $scope.rests = 0;
 
     RestApi.query({query: 'ufs'},
       function success(data, status){
@@ -75,8 +76,11 @@ angular.module('estatisticasApp')
         angular.forEach(data, function(value, key){
           $scope.ufs.push({'name' : value.sigla, 'value': value.id_uf});
         });
+        $scope.rests++;
+        $scope.$broadcast('carregar_occur', $scope.rests);
       }
     );
+
 
     RestApi.query({query: 'bacias'},
       function success(data, status){
@@ -84,20 +88,10 @@ angular.module('estatisticasApp')
         angular.forEach(data, function(value, key){
           $scope.bacias.push({'name' : value.nome, 'value': value.id_bacia_sedimentar});
         });
+        $scope.rests++;
+        $scope.$broadcast('carregar_occur', $scope.rests);
       }
     );
-
-    $scope.carregarMunicipios = function($uf) {
-      RestApi.query({query: 'municipios', uf:$uf},
-        function success(data, status){
-          $scope.municipios = [];
-          angular.forEach(data, function(value, key){
-            $scope.municipios.push({'name' : value.nome, 'value': value.cod_ibge});
-          });
-        }
-      );
-    }
-
 
     RestApi.query({query: 'origens'},
       function success(data, status){
@@ -105,6 +99,8 @@ angular.module('estatisticasApp')
         angular.forEach(data, function(value, key){
           $scope.origens.push({'name' : value.des_tipo_localizacao, 'id': value.id_tipo_localizacao, 'value': false});
         });
+        $scope.rests++;
+        $scope.$broadcast('carregar_occur', $scope.rests);
       }
     );
 
@@ -114,6 +110,8 @@ angular.module('estatisticasApp')
         angular.forEach(data, function(value, key){
           $scope.eventos.push({'name' : value.nome, 'id': value.id_tipo_evento, 'value': false});
         });
+        $scope.rests++;
+        $scope.$broadcast('carregar_occur', $scope.rests);
       }
     );
 
@@ -123,6 +121,8 @@ angular.module('estatisticasApp')
         angular.forEach(data, function(value, key){
           $scope.ambientes.push({'name' : value.nome, 'id': value.id_tipo_dano_identificado, 'value': false});
         });
+        $scope.rests++;
+        $scope.$broadcast('carregar_occur', $scope.rests);
       }
     );
 
@@ -132,6 +132,8 @@ angular.module('estatisticasApp')
         angular.forEach(data, function(value, key){
           $scope.instituicoes.push({'name' : value.nome, 'id': value.id_instituicao_atuando_local, 'value': false});
         });
+        $scope.rests++;
+        $scope.$broadcast('carregar_occur', $scope.rests);
       }
     );
 
@@ -141,6 +143,8 @@ angular.module('estatisticasApp')
         angular.forEach(data, function(value, key){
           $scope.fontes.push({'name' : value.nome, 'id': value.id_tipo_fonte_informacao, 'value': false});
         });
+        $scope.rests++;
+        $scope.$broadcast('carregar_occur', $scope.rests);
       }
     );
 
@@ -151,6 +155,8 @@ angular.module('estatisticasApp')
           var field = value.nome + " - "+ value.num_onu + " - " + value.classe_risco;
           $scope.produtos_onu.push({'field' : field , 'id': value.id});
         });
+        $scope.rests++;
+        $scope.$broadcast('carregar_occur', $scope.rests);
       }
     );
 
@@ -162,9 +168,10 @@ angular.module('estatisticasApp')
             $scope.produtos_outros.push({'field' : value.nome , 'id': value.id});
           });
         }
+        $scope.rests++;
+        $scope.$broadcast('carregar_occur', $scope.rests);
       }
     );
-
 
     $scope.licencas = [
       {name: 'Licença ambiental federal', value: '1'},
@@ -179,35 +186,41 @@ angular.module('estatisticasApp')
       {name: 'Quilograma (Kg)', value: 'Kg'},
     ];
 
+    $scope.$on('carregar_occur', function(event, data){ 
+      if ($scope.acao == 'carregar' && (data == 9)) {
+        RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
+          function success(data, status){
 
-    if ($scope.acao == 'carregar') {
-      RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
-        function success(data, status){
-          $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
+            if(!data[0]){
+              alert('Ocorrencia não encontrada em nossos registros');
+            } else{
+              $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
 
-          $scope.$broadcast('carregar_localizacao', data);
-          $scope.$broadcast('carregar_datas', data);
-          $scope.$broadcast('carregar_origem', data);
-          $scope.$broadcast('carregar_evento', data);
-          $scope.$broadcast('carregar_produtos', data);
-          $scope.$broadcast('carregar_detalhes', data);
-          $scope.$broadcast('carregar_ambientes', data);
-          $scope.$broadcast('carregar_empresa', data);
-          $scope.$broadcast('carregar_instituicao', data);
-          $scope.$broadcast('carregar_acoes', data);
-          $scope.$broadcast('carregar_gerais', data);
-          $scope.$broadcast('carregar_comunicante', data);
-          // $scope.$broadcast('carregar_arquivos', ret);
-          $scope.$broadcast('carregar_fonte', data);
-        }
-      );
-    } else if ($scope.acao == 'deletar') {
-      RestApi.query({query: 'deletar_ocorrencia'},
-        function success(data, status){
+              $scope.$broadcast('carregar_localizacao', data);
+              $scope.$broadcast('carregar_datas', data);
+              $scope.$broadcast('carregar_origem', data);
+              $scope.$broadcast('carregar_evento', data);
+              $scope.$broadcast('carregar_produtos', data);
+              $scope.$broadcast('carregar_detalhes', data);
+              $scope.$broadcast('carregar_ambientes', data);
+              $scope.$broadcast('carregar_empresa', data);
+              $scope.$broadcast('carregar_instituicao', data);
+              $scope.$broadcast('carregar_acoes', data);
+              $scope.$broadcast('carregar_gerais', data);
+              $scope.$broadcast('carregar_comunicante', data);
+              // $scope.$broadcast('carregar_arquivos', ret);
+              $scope.$broadcast('carregar_fonte', data);
+            }
+          }
+        );
+      } else if ($scope.acao == 'deletar') {
+        RestApi.query({query: 'deletar_ocorrencia'},
+          function success(data, status){
 
-        }
-      );
-    }
+          }
+        );
+      }
+    })
 
     $scope.submit = function() {
 
@@ -262,6 +275,7 @@ angular.module('estatisticasApp')
         }
 
 
+        $scope.error = [];
         var error = [];
         if(!ocorrencia.localizacao.lat)
           error.push('1. Preencha o campo de Latitude');
@@ -359,7 +373,7 @@ angular.module('estatisticasApp')
         $scope.error = error;
         var string_ocorrencia = JSON.stringify(ocorrencia);
 
-        string_ocorrencia = '{"nro_ocorrencia":"201551554000","oleo":false,"localizacao":{"subPanel":"","oceano":true,"lat":"-15","lng":"-45","uf":"7","municipio":"5300108","bacia":"15","endereco":"endereço-localizacao"},"acidente":{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[-45,-15]}},"datas":{"subPanel":"","obsSemana":4,"semObservacao":false,"incSemana":3,"semIncidente":false,"diaObservacao":"06/05/2015","horaObservacao":"11:11","obsPeriodo":"M","diaIncidente":"05/05/2015","horaIncidente":"14:14","incPeriodo":"V","feriado":true},"origem":{"subPanel":"","complementar":"complementar-origem","semOrigem":false,"semOleoOrigem":false,"origens":["2","4","7"]},"evento":{"subPanel":"","complementar":"complementar-evento","semeventos":false,"eventos":["1","4","5"]},"produtos":{"subPanel":"","novo_onu":true,"produtos_onu":[{"id":"2636","qtd":"14","uni":"m3","field":"1, 1, 1, 2-TETRAFLUORETANO  - 3159     - 2.2","$$hashKey":"object:127"}],"novo_nao_onu":true,"produtos_outros":[{"id":"48","qtd":"14","uni":"m3","field":"café","$$hashKey":"object:144"}],"substanciaOnu":"","quantidadeOnu":"","unidadeOnu":"","substanciaOutro":"","quantidadeOutro":"","unidadeOutro":"","naoClassificado":true,"naoEspecificado":true,"naoAplica":true},"detalhes":{"subPanel":"","semDetalhe":false,"causa":"causa-detalhes"},"ambiente":{"subPanel":"","complementar":"complementar-ambientes","semAmbientes":false,"ambientes":["1","7","9"]},"empresa":{"subPanel":"","nome":"nome-responsavel","cadastro":"88888888888888888888","licencaAmbiental":"2","semEmpresa":false},"instituicao":{"subPanel":"","semInstituicao":false,"complementar":"complementar-instituição","instituicoes":["2","4","5"],"responsavel":"nome-instituicao","telefone":"(99) 99999-9999"},"acoes":{"subPanel":"","plano":"S","planoIndividual":true,"outrasProvidencias":true,"semAcoes":false,"outrasProvidenciasText":"outras providencias-ações"},"gerais":{"subPanel":"","text":"outras-gerais"},"comunicante":{"subPanel":"","nome":"nomecomunicante","empresa":"instituicaoempresacomunicante","funcao":"cargofuncaocomunicante","telefone":"12121212","email":"emailcomunicante"},"fonte":{"subPanel":"","complementar":"complementar-fonte","fontes":["2","3"]}}';
+        // string_ocorrencia = '{"nro_ocorrencia":"201551554000","oleo":false,"localizacao":{"subPanel":"","oceano":true,"lat":"-15","lng":"-45","uf":"7","municipio":"5300108","bacia":"15","endereco":"endereço-localizacao"},"acidente":{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[-45,-15]}},"datas":{"subPanel":"","obsSemana":4,"semObservacao":false,"incSemana":3,"semIncidente":false,"diaObservacao":"06/05/2015","horaObservacao":"11:11","obsPeriodo":"M","diaIncidente":"05/05/2015","horaIncidente":"14:14","incPeriodo":"V","feriado":true},"origem":{"subPanel":"","complementar":"complementar-origem","semOrigem":false,"semOleoOrigem":false,"origens":["2","4","7"]},"evento":{"subPanel":"","complementar":"complementar-evento","semeventos":false,"eventos":["1","4","5"]},"produtos":{"subPanel":"","novo_onu":true,"produtos_onu":[{"id":"2636","qtd":"14","uni":"m3","field":"1, 1, 1, 2-TETRAFLUORETANO  - 3159     - 2.2","$$hashKey":"object:127"}],"novo_nao_onu":true,"produtos_outros":[{"id":"48","qtd":"14","uni":"m3","field":"café","$$hashKey":"object:144"}],"substanciaOnu":"","quantidadeOnu":"","unidadeOnu":"","substanciaOutro":"","quantidadeOutro":"","unidadeOutro":"","naoClassificado":true,"naoEspecificado":true,"naoAplica":true},"detalhes":{"subPanel":"","semDetalhe":false,"causa":"causa-detalhes"},"ambiente":{"subPanel":"","complementar":"complementar-ambientes","semAmbientes":false,"ambientes":["1","7","9"]},"empresa":{"subPanel":"","nome":"nome-responsavel","cadastro":"88888888888888888888","licencaAmbiental":"2","semEmpresa":false},"instituicao":{"subPanel":"","semInstituicao":false,"complementar":"complementar-instituição","instituicoes":["2","4","5"],"responsavel":"nome-instituicao","telefone":"(99) 99999-9999"},"acoes":{"subPanel":"","plano":"S","planoIndividual":true,"outrasProvidencias":true,"semAcoes":false,"outrasProvidenciasText":"outras providencias-ações"},"gerais":{"subPanel":"","text":"outras-gerais"},"comunicante":{"subPanel":"","nome":"nomecomunicante","empresa":"instituicaoempresacomunicante","funcao":"cargofuncaocomunicante","telefone":"12121212","email":"emailcomunicante"},"fonte":{"subPanel":"","complementar":"complementar-fonte","fontes":["2","3"]}}';
 
         console.log(string_ocorrencia);
 
@@ -476,8 +490,17 @@ angular.module('estatisticasApp')
           }
         }
 
-        if(!formulario.produtos.semProdutos || !formulario.produtos.naoClassificado || !formulario.produtos.naoAplica || !formulario.produtos.naoEspecificado){
-            error.push('5. Preencha o campo "Tipos de Produtos"');
+        if(!formulario.produtos.semProduto && !formulario.produtos.naoClassificado && !formulario.produtos.naoAplica && !formulario.produtos.naoEspecificado){
+          if($scope.oleo){
+            if(formulario.produtos.semCondicoes){
+              if(!formulario.produtos.semProduto)
+                var validate = true;
+            }
+            else{
+            if(!formulario.produtos.produtos_onu[0] && !formulario.produtos.produtos_outros[0])
+              error.push('5. Preencha o campo "Tipos de Produtos"');
+            }
+          }
         }
 
         if(!formulario.detalhes.semDetalhe){

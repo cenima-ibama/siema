@@ -7,7 +7,7 @@
  * # localizacao
  */
 angular.module('estatisticasApp')
-  .directive('localizacao', function () {
+  .directive('localizacao', function (RestApi) {
     return {
       templateUrl: 'views/accordions/localizacao.html',
       restrict: 'E',
@@ -29,6 +29,18 @@ angular.module('estatisticasApp')
         $scope.localizacao.municipio;
         $scope.localizacao.endereco;
 
+        $scope.localizacao.carregarMunicipios = function($uf) {
+          RestApi.query({query: 'municipios', uf:$uf},
+            function success(data, status){
+              $scope.municipios = [];
+              angular.forEach(data, function(value, key){
+                $scope.municipios.push({'name' : value.nome, 'value': value.cod_ibge});
+              });
+            }
+          );
+        }
+
+
 
         $scope.$on('carregar_localizacao', function(event, data){
             $scope.localizacao.subPanel  = $scope.oleo ? '(Itens IV do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
@@ -39,7 +51,7 @@ angular.module('estatisticasApp')
             $scope.localizacao.bacia = data[0].id_bacia_sedimentar;
             $scope.localizacao.uf = data[0].id_uf;
 
-            $scope.carregarMunicipios($scope.localizacao.uf);
+            $scope.localizacao.carregarMunicipios($scope.localizacao.uf);
 
             $scope.localizacao.municipio = data[0].id_municipio;
             $scope.localizacao.endereco = data[0].endereco_ocorrencia;

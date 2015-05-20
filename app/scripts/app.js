@@ -17,7 +17,8 @@ angular
     'ngTouch',
     'chart.js',
     'ngMask',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'ngFileUpload'
   ])
   .config(function ($routeProvider) {
     $routeProvider
