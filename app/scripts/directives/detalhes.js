@@ -22,7 +22,7 @@ angular.module('estatisticasApp')
         $scope.$on('carregar_detalhes', function(event, data){
             $scope.detalhes.subPanel = $scope.oleo ? '(Itens VI e VII do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
 
-            if (data[0].des_causa_provavel != null){
+            if (data[0].des_causa_provavel != null && data[0].des_causa_provavel != ""){
                 $scope.detalhes.causa = data[0].des_causa_provavel;
             } else {
                 $scope.detalhes.semDetalhe = true;

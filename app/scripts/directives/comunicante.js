@@ -21,11 +21,11 @@ angular.module('estatisticasApp')
         //     $scope.comunicante.subPanel = "";
         // }
 
-        $scope.comunicante.nome = "";
+        $scope.comunicante.nome =  $scope.usuario ? $scope.usuario : "";
         $scope.comunicante.empresa = "";
         $scope.comunicante.funcao = "";
         $scope.comunicante.telefone = "";
-        $scope.comunicante.email = "";
+        $scope.comunicante.email = $scope.email ? $scope.email : "";
 
 
         $scope.$on('carregar_origem', function(event, data){
