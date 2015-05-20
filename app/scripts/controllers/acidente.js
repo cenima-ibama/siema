@@ -8,7 +8,7 @@
  * Controller of the estatisticasApp
  */
 angular.module('estatisticasApp')
-  .controller('AcidenteCtrl', function ($scope, RestApi, $routeParams, $location) {
+  .controller('AcidenteCtrl', function ($scope, RestApi, $routeParams, $location, Upload, $http) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -202,40 +202,37 @@ angular.module('estatisticasApp')
       if ($scope.acao == 'carregar' && (data == 9)) {
         RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
           function success(data, status){
+            $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
+            if ($scope.validador) {
+              $scope.validador.validado = data[0].validado == 'S' ? true : false;
+            }
 
-    if ($scope.acao == 'carregar') {
-      RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
-        function success(data, status){
-          $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
-          if ($scope.validador) {
-            $scope.validador.validado = data[0].validado == 'S' ? true : false;
+            $scope.$broadcast('carregar_localizacao', data);
+            $scope.$broadcast('carregar_datas', data);
+            $scope.$broadcast('carregar_origem', data);
+            $scope.$broadcast('carregar_evento', data);
+            $scope.$broadcast('carregar_produtos', data);
+            $scope.$broadcast('carregar_detalhes', data);
+            $scope.$broadcast('carregar_ambientes', data);
+            $scope.$broadcast('carregar_empresa', data);
+            $scope.$broadcast('carregar_instituicao', data);
+            $scope.$broadcast('carregar_acoes', data);
+            $scope.$broadcast('carregar_gerais', data);
+            $scope.$broadcast('carregar_comunicante', data);
+            // $scope.$broadcast('carregar_arquivos', ret);
+            $scope.$broadcast('carregar_fonte', data);
+
+            // $scope.$apply();
           }
+        );
+      } else if ($scope.acao == 'deletar') {
+        RestApi.query({query: 'deletar_ocorrencia'},
+          function success(data, status){
 
-          $scope.$broadcast('carregar_localizacao', data);
-          $scope.$broadcast('carregar_datas', data);
-          $scope.$broadcast('carregar_origem', data);
-          $scope.$broadcast('carregar_evento', data);
-          $scope.$broadcast('carregar_produtos', data);
-          $scope.$broadcast('carregar_detalhes', data);
-          $scope.$broadcast('carregar_ambientes', data);
-          $scope.$broadcast('carregar_empresa', data);
-          $scope.$broadcast('carregar_instituicao', data);
-          $scope.$broadcast('carregar_acoes', data);
-          $scope.$broadcast('carregar_gerais', data);
-          $scope.$broadcast('carregar_comunicante', data);
-          // $scope.$broadcast('carregar_arquivos', ret);
-          $scope.$broadcast('carregar_fonte', data);
-
-          // $scope.$apply();
-        }
-      );
-    } else if ($scope.acao == 'deletar') {
-      RestApi.query({query: 'deletar_ocorrencia'},
-        function success(data, status){
-
-        }
-      );
-    }
+          }
+        );
+      }
+    });
 
     $scope.submit = function() {
 
@@ -587,5 +584,4 @@ angular.module('estatisticasApp')
     };
 
 
-    // $scope.$apply();
   });
