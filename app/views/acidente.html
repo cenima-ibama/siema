@@ -23,8 +23,14 @@
                 <div class="row-fluid">
                 </div>
             </div>
-            <input type="hidden" id="comunicado" name="comunicado" />
+
+            <label class="pull-right" ng-if="validador.ativado">
+                Validado <input type="checkbox" ng-model="validador.validado"/>
+            </label>
             <br />
+            <br />
+
+
         </div>
 
 

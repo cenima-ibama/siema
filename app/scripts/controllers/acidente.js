@@ -8,7 +8,7 @@
  * Controller of the estatisticasApp
  */
 angular.module('estatisticasApp')
-  .controller('AcidenteCtrl', function ($scope, RestApi, $routeParams, $location, Upload, $http) {
+  .controller('AcidenteCtrl', function ($scope, RestApi, $routeParams, $location) {
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
@@ -35,28 +35,39 @@ angular.module('estatisticasApp')
       $scope[obj].subPanel = "";
     });
 
+    $scope.carregaParametros = function() {
 
-    if ($routeParams.id) {
-      $scope.nro_ocorrencia = $routeParams.id;
-    }
-
-    if ($routeParams.acao && ($routeParams.acao == 'carregar')) {
-      $scope.acao = 'carregar';
-    } else {
-      $scope.acao = 'criar';
-      if ($routeParams.oleo && ($routeParams.oleo == 'true')) {
-        $scope.oleo = true;
-      } else {
-        $scope.oleo = false;
+      if ($routeParams.id) {
+        $scope.nro_ocorrencia = $routeParams.id;
       }
-    }
 
-    if ($routeParams.usuario) {
-      $scope.usuario = $routeParams.usuario;
-      $scope.email = $routeParams.email;
-    } else {
-      $scope.usuario = null;
-    }
+      if ($routeParams.acao && ($routeParams.acao == 'carregar')) {
+        $scope.acao = 'carregar';
+      } else {
+        $scope.acao = 'criar';
+        if ($routeParams.oleo && ($routeParams.oleo == 'true')) {
+          $scope.oleo = true;
+        } else {
+          $scope.oleo = false;
+        }
+      }
+
+      if ($routeParams.usuario) {
+        $scope.usuario = $routeParams.usuario;
+        $scope.email = $routeParams.email;
+      } else {
+        $scope.usuario = null;
+      }
+
+      if ($routeParams.validador) {
+        $scope.validador = {};
+        $scope.validador.ativado = $routeParams.validador;
+        $scope.validador.validado = false;
+      }
+
+    };
+
+    $scope.carregaParametros();
 
     // $scope.nro_ocorrencia = '201531732431';
     // $scope.nro_ocorrencia = '201491928814';
@@ -173,6 +184,7 @@ angular.module('estatisticasApp')
       }
     );
 
+
     $scope.licencas = [
       {name: 'Licença ambiental federal', value: '1'},
       {name: 'Licença ambiental estadual', value: '2'},
@@ -191,36 +203,39 @@ angular.module('estatisticasApp')
         RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
           function success(data, status){
 
-            if(!data[0]){
-              alert('Ocorrencia não encontrada em nossos registros');
-            } else{
-              $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
-
-              $scope.$broadcast('carregar_localizacao', data);
-              $scope.$broadcast('carregar_datas', data);
-              $scope.$broadcast('carregar_origem', data);
-              $scope.$broadcast('carregar_evento', data);
-              $scope.$broadcast('carregar_produtos', data);
-              $scope.$broadcast('carregar_detalhes', data);
-              $scope.$broadcast('carregar_ambientes', data);
-              $scope.$broadcast('carregar_empresa', data);
-              $scope.$broadcast('carregar_instituicao', data);
-              $scope.$broadcast('carregar_acoes', data);
-              $scope.$broadcast('carregar_gerais', data);
-              $scope.$broadcast('carregar_comunicante', data);
-              // $scope.$broadcast('carregar_arquivos', ret);
-              $scope.$broadcast('carregar_fonte', data);
-            }
+    if ($scope.acao == 'carregar') {
+      RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
+        function success(data, status){
+          $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
+          if ($scope.validador) {
+            $scope.validador.validado = data[0].validado == 'S' ? true : false;
           }
-        );
-      } else if ($scope.acao == 'deletar') {
-        RestApi.query({query: 'deletar_ocorrencia'},
-          function success(data, status){
 
-          }
-        );
-      }
-    })
+          $scope.$broadcast('carregar_localizacao', data);
+          $scope.$broadcast('carregar_datas', data);
+          $scope.$broadcast('carregar_origem', data);
+          $scope.$broadcast('carregar_evento', data);
+          $scope.$broadcast('carregar_produtos', data);
+          $scope.$broadcast('carregar_detalhes', data);
+          $scope.$broadcast('carregar_ambientes', data);
+          $scope.$broadcast('carregar_empresa', data);
+          $scope.$broadcast('carregar_instituicao', data);
+          $scope.$broadcast('carregar_acoes', data);
+          $scope.$broadcast('carregar_gerais', data);
+          $scope.$broadcast('carregar_comunicante', data);
+          // $scope.$broadcast('carregar_arquivos', ret);
+          $scope.$broadcast('carregar_fonte', data);
+
+          // $scope.$apply();
+        }
+      );
+    } else if ($scope.acao == 'deletar') {
+      RestApi.query({query: 'deletar_ocorrencia'},
+        function success(data, status){
+
+        }
+      );
+    }
 
     $scope.submit = function() {
 
@@ -275,7 +290,6 @@ angular.module('estatisticasApp')
         }
 
 
-        $scope.error = [];
         var error = [];
         if(!ocorrencia.localizacao.lat)
           error.push('1. Preencha o campo de Latitude');
@@ -397,6 +411,10 @@ angular.module('estatisticasApp')
 
         formulario.nro_ocorrencia = $scope.nro_ocorrencia;
         formulario.oleo = $scope.oleo;
+        if ($scope.validador) {
+          formulario.validador = {};
+          formulario.validador.validado = $scope.validador.validado;
+        }
 
         formulario.localizacao = $scope.localizacao;
         formulario.acidente = $scope.mapa.acidente.toGeoJSON();
@@ -568,4 +586,6 @@ angular.module('estatisticasApp')
       $location.url("/html?id=" + $scope.nro_ocorrencia);
     };
 
+
+    // $scope.$apply();
   });
