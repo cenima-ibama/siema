@@ -8,6 +8,18 @@ select{
   width: 110px;
 }
 
+.namefile{
+  margin-left: 11em;
+  margin-top: -2em;
+}
+
+.thumb {
+  width: 2em;
+  height: 2em;
+  float: none;
+  position: relative;
+}
+
 .map{
   width: 80% !important;
   text-align: -webkit-center;

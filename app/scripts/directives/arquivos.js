@@ -12,41 +12,30 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($rootScope, $scope, Upload){
 
-        $scope.upload = function (files) {
+          $scope.showFileName = function(files) {
+            $scope.file = files;
             if (files && files.length) {
+              $scope.name = files[0].name;
+            }
+          }
+
+          $scope.upload = function (files) {
+            if (files && files.length) {
+              $scope.file = files;
               for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                Upload.http({
-                  url: '//10.1.8.139/upload.php',
-                  transformRequest: angular.identity,
-                  headers : {
-                      'Content-Type': file.type
-                  },
-                  data: file,
-                })
-
-                  // Upload.upload({
-                  //     url: '//localhost/upload.php',
-                  //     // fields: {'username': $scope.username},
-                  //     file: file
-                  // }).progress(function (evt) {
-                  //     var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                  //     console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
-                  // }).success(function (data, status, headers, config) {
-                  //     console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
-                  // });
-                }
+                $scope.name = files[i].name;
+                file.ocurr = $scope.nro_ocorrencia;
+                Upload.upload({
+                  'url': 'http://10.1.8.139/upload.php',
+                  'data': $scope.nro_ocorrencia,
+                  'file': file
+                }).success(function (data, status, headers, config) {
+                    console.log('Arquivo ' + config.file.name + ' uploaded. Resultado: ' + data);
+                });
+              }
             }
-        };
-
-        console.log('isOn directive');
-        $scope.uploadPic = function(files) {
-          $scope.formUpload = true;
-          if (files != null) {
-            $scope.upload(files);
           }
-        };
-      },
-
-    };
-  });
+        }
+      }
+    });
