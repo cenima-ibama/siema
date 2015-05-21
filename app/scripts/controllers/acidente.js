@@ -278,6 +278,7 @@ angular.module('estatisticasApp')
             ocorrencia.instituicao.instituicoes.push(val.id);
         });
         ocorrencia.localizacao = $scope.localizacao;
+        ocorrencia.acidente = $scope.mapa.acidente.toGeoJSON();
         ocorrencia.origem = $scope.origem;
         ocorrencia.origem.origens = [];
         angular.forEach($scope.origens, function(val, key){
