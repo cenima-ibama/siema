@@ -29,9 +29,20 @@ angular.module('estatisticasApp')
 
     		// Initialise the draw control and pass it the FeatureGroup of editable layers
     		var drawControl = new L.Control.Draw({
-    		    edit: {
-    		        featureGroup: drawnItems
-    		    }
+    		    // edit: {
+    		    //     featureGroup: drawnItems
+    		    // }
+
+                edit: {
+                    featureGroup: drawnItems
+                },
+                draw: {
+                    polygon:false,
+                    polyline: false,
+                    rectangle: false,
+                    circle: false,
+                    marker: true
+                }
     		});
     		$scope.map.addControl(drawControl);
 
