@@ -206,26 +206,30 @@ angular.module('estatisticasApp')
       if ($scope.acao == 'carregar' && (data == 9)) {
         RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
           function success(data, status){
-            $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
-            if ($scope.validador) {
-              $scope.validador.validado = data[0].validado == 'S' ? true : false;
+            if(!data[0]){
+              $scope.nro_ocorrencia = '';
+              alert('Ocorrência não encontrada em nossos registros');
+            } else{
+              $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
+              if ($scope.validador) {
+                $scope.validador.validado = data[0].validado == 'S' ? true : false;
+              }
+
+              $scope.$broadcast('carregar_localizacao', data);
+              $scope.$broadcast('carregar_datas', data);
+              $scope.$broadcast('carregar_origem', data);
+              $scope.$broadcast('carregar_evento', data);
+              $scope.$broadcast('carregar_produtos', data);
+              $scope.$broadcast('carregar_detalhes', data);
+              $scope.$broadcast('carregar_ambientes', data);
+              $scope.$broadcast('carregar_empresa', data);
+              $scope.$broadcast('carregar_instituicao', data);
+              $scope.$broadcast('carregar_acoes', data);
+              $scope.$broadcast('carregar_gerais', data);
+              $scope.$broadcast('carregar_comunicante', data);
+              // $scope.$broadcast('carregar_arquivos', ret);
+              $scope.$broadcast('carregar_fonte', data);
             }
-
-            $scope.$broadcast('carregar_localizacao', data);
-            $scope.$broadcast('carregar_datas', data);
-            $scope.$broadcast('carregar_origem', data);
-            $scope.$broadcast('carregar_evento', data);
-            $scope.$broadcast('carregar_produtos', data);
-            $scope.$broadcast('carregar_detalhes', data);
-            $scope.$broadcast('carregar_ambientes', data);
-            $scope.$broadcast('carregar_empresa', data);
-            $scope.$broadcast('carregar_instituicao', data);
-            $scope.$broadcast('carregar_acoes', data);
-            $scope.$broadcast('carregar_gerais', data);
-            $scope.$broadcast('carregar_comunicante', data);
-            // $scope.$broadcast('carregar_arquivos', ret);
-            $scope.$broadcast('carregar_fonte', data);
-
             // $scope.$apply();
           }
         );
@@ -391,7 +395,7 @@ angular.module('estatisticasApp')
 
         // string_ocorrencia = '{"nro_ocorrencia":"201551554000","oleo":false,"localizacao":{"subPanel":"","oceano":true,"lat":"-15","lng":"-45","uf":"7","municipio":"5300108","bacia":"15","endereco":"endereço-localizacao"},"acidente":{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[-45,-15]}},"datas":{"subPanel":"","obsSemana":4,"semObservacao":false,"incSemana":3,"semIncidente":false,"diaObservacao":"06/05/2015","horaObservacao":"11:11","obsPeriodo":"M","diaIncidente":"05/05/2015","horaIncidente":"14:14","incPeriodo":"V","feriado":true},"origem":{"subPanel":"","complementar":"complementar-origem","semOrigem":false,"semOleoOrigem":false,"origens":["2","4","7"]},"evento":{"subPanel":"","complementar":"complementar-evento","semeventos":false,"eventos":["1","4","5"]},"produtos":{"subPanel":"","novo_onu":true,"produtos_onu":[{"id":"2636","qtd":"14","uni":"m3","field":"1, 1, 1, 2-TETRAFLUORETANO  - 3159     - 2.2","$$hashKey":"object:127"}],"novo_nao_onu":true,"produtos_outros":[{"id":"48","qtd":"14","uni":"m3","field":"café","$$hashKey":"object:144"}],"substanciaOnu":"","quantidadeOnu":"","unidadeOnu":"","substanciaOutro":"","quantidadeOutro":"","unidadeOutro":"","naoClassificado":true,"naoEspecificado":true,"naoAplica":true},"detalhes":{"subPanel":"","semDetalhe":false,"causa":"causa-detalhes"},"ambiente":{"subPanel":"","complementar":"complementar-ambientes","semAmbientes":false,"ambientes":["1","7","9"]},"empresa":{"subPanel":"","nome":"nome-responsavel","cadastro":"88888888888888888888","licencaAmbiental":"2","semEmpresa":false},"instituicao":{"subPanel":"","semInstituicao":false,"complementar":"complementar-instituição","instituicoes":["2","4","5"],"responsavel":"nome-instituicao","telefone":"(99) 99999-9999"},"acoes":{"subPanel":"","plano":"S","planoIndividual":true,"outrasProvidencias":true,"semAcoes":false,"outrasProvidenciasText":"outras providencias-ações"},"gerais":{"subPanel":"","text":"outras-gerais"},"comunicante":{"subPanel":"","nome":"nomecomunicante","empresa":"instituicaoempresacomunicante","funcao":"cargofuncaocomunicante","telefone":"12121212","email":"emailcomunicante"},"fonte":{"subPanel":"","complementar":"complementar-fonte","fontes":["2","3"]}}';
 
-        console.log(string_ocorrencia);
+        // console.log(string_ocorrencia);
 
         if (!$scope.error[0]) {
           RestApi.query({query: 'criar_ocorrencia', 'formulario': string_ocorrencia},
