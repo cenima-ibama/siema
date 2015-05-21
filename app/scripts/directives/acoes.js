@@ -13,7 +13,7 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($scope){
 
-        $scope.acoes.subPanel = $scope.oleo ? '(Itens VIII do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
+        $scope.acoes.subPanel = $scope.oleo ? '(Itens VIII do Anexo II do Decreto n 4.136 de 20 de fevereiro de 2002)' : '';
 
         $scope.acoes.plano = "";
         $scope.acoes.planoIndividual = false;
@@ -23,7 +23,7 @@ angular.module('estatisticasApp')
 
         $scope.$on('carregar_acoes', function(event, data){
 
-            $scope.acoes.subPanel = $scope.oleo ? '(Itens VIII do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
+            $scope.acoes.subPanel = $scope.oleo ? '(Itens VIII do Anexo II do Decreto n 4.136 de 20 de fevereiro de 2002)' : '';
 
             if ((data[0].plano_emergencia == "S") || (data[0].plano_emergencia == "N") || (data[0].plano_emergencia == "I")) {
                 $scope.acoes.plano = data[0].plano_emergencia;

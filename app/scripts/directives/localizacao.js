@@ -13,10 +13,10 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($scope){
 
-        $scope.localizacao.subPanel  = $scope.oleo ? '(Itens IV do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
+        $scope.localizacao.subPanel  = $scope.oleo ? '(Itens IV do Anexo II do Decreto n 4.136 de 20 de fevereiro de 2002)' : '';
 
         // if ($scope.oleo) {
-        //     $scope.localizacao.subPanel = '(Itens IV do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)';
+        //     $scope.localizacao.subPanel = '(Itens IV do Anexo II do Decreto n 4.136 de 20 de fevereiro de 2002)';
         // } else {
         //     $scope.localizacao.subPanel = "";
         // }
@@ -43,7 +43,7 @@ angular.module('estatisticasApp')
 
 
         $scope.$on('carregar_localizacao', function(event, data){
-            $scope.localizacao.subPanel  = $scope.oleo ? '(Itens IV do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
+            $scope.localizacao.subPanel  = $scope.oleo ? '(Itens IV do Anexo II do Decreto n 4.136 de 20 de fevereiro de 2002)' : '';
 
             $scope.localizacao.lat = data[0].coordinate.split(' ')[0];
             $scope.localizacao.lng = data[0].coordinate.split(' ')[1];

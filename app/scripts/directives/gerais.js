@@ -13,11 +13,11 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($scope){
 
-        $scope.gerais.subPanel = $scope.oleo ? '(Itens IX do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
+        $scope.gerais.subPanel = $scope.oleo ? '(Itens IX do Anexo II do Decreto n 4.136 de 20 de fevereiro de 2002)' : '';
         $scope.gerais.text = "";
 
         $scope.$on('carregar_gerais', function(event, data){
-            $scope.gerais.subPanel = $scope.oleo ? '(Itens IX do Anexo II do Decreto nº 4.136 de 20 de fevereiro de 2002)' : '';
+            $scope.gerais.subPanel = $scope.oleo ? '(Itens IX do Anexo II do Decreto n 4.136 de 20 de fevereiro de 2002)' : '';
             $scope.gerais.text = data[0].des_obs;
         });
         // $scope.loginIn = function(user, pass){

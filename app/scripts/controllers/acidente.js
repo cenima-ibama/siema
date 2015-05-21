@@ -190,13 +190,13 @@ angular.module('estatisticasApp')
 
 
     $scope.licencas = [
-      {name: 'Licença ambiental federal', value: '1'},
-      {name: 'Licença ambiental estadual', value: '2'},
-      {name: 'Licença ambiental municipal', value: '3'},
+      {name: 'Licen'+String.fromCharCode(231)+'a ambiental federal', value: '1'},
+      {name: 'Licen'+String.fromCharCode(231)+'a ambiental estadual', value: '2'},
+      {name: 'Licen'+String.fromCharCode(231)+'a ambiental municipal', value: '3'},
     ];
 
     $scope.unidades =  [
-      {name: 'Metro Cúbico (m3)', value: 'm3'},
+      {name: 'Metro C' + String.fromCharCode(250) + 'bico (m3)', value: 'm3'},
       {name: 'Litro (L)', value: 'L'},
       {name: 'Tonelada (T)', value: 'T'},
       {name: 'Quilograma (Kg)', value: 'Kg'},
