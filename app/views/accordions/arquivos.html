@@ -1,54 +1,13 @@
-<!-- 
-<script type="text/javascript">
-function showFileName(inputFile) {
-inputFile.offsetParent.getElementsByClassName('fileName')[0].innerHTML = inputFile.value.replace(/\\/g, '/').split('/').pop();
-}
-</script>
 
-<div class="row-fluid">
-    <div class="control-group">
-        <div class="input-append">
-
-            <style type="text/css">
-                .customFileInput input {
-                    position: absolute;
-                    visibility: hidden;
-                    right: 10px;
-                }
-                .fileName{
-                    max-width: 10em;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-            </style>
-
-            <form class="btn" method="post" enctype="multipart/form-data">
-                <label class="customFileInput">
-                    <div class="btn">Escolher um arquivo</div>
-                    <div class="fileName" ></div>
-                    <input type="file" name="userfile" onchange="showFileName(this)" class="boxname" />
-                    <br /><small> *jpg, doc, pdf, xls, até 5MB</small>
-                </label>
-            </form>
-        </div>
+<form class="ng-pristine ng-invalid ng-invalid-required">
+    <button class='btn btn-default' ngf-select="showFileName(files)" ngf-max-size='6000000' ng-model="files" ngf-multiple="false" 
+          tabindex="0">Adicionar <span class='glyphicon glyphicon-upload '></span></button>
+    <img ng-show="file[0] != null" ngf-src="file[0]" class="thumb ng-hide" src="">
+    <div ng-show="file[0] != null" class='namefile' >
+        <span>{{name}}</span>
     </div>
-</div>  -->
-
-
-<form ng-submit='uploadPic(picFile)'>
-        <input type="file" ngf-select="" ng-model="picFile" name="file" accept="image/*" >
-        <br>
-        <!-- <img ng-show="picFile[0] != null" ngf-src="picFile[0]" class="thumb"> -->
-        <button type='submit'>Submit</button>
-        
-        <span class="progress" ng-show="picFile[0].progress >= 0">      
-            <div style="width:{{picFile[0].progress}}%" ng-bind="picFile[0].progress + '%'" class="ng-binding"></div>
-        </span> 
-        <span ng-show="picFile[0].result">Upload Successful</span>
-    <br>
+    <br />
+    <small><label>*jpg, png, pdf, doc, xls até 5MB</label></small>
 </form>
-
-
 
 
