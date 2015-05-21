@@ -65,6 +65,10 @@ angular.module('estatisticasApp')
         $scope.validador.validado = false;
       }
 
+      if ($routeParams.comunicante) {
+        $scope.tipo_comunicante = $routeParams.comunicante;
+      }
+
     };
 
     $scope.carregaParametros();
@@ -198,7 +202,7 @@ angular.module('estatisticasApp')
       {name: 'Quilograma (Kg)', value: 'Kg'},
     ];
 
-    $scope.$on('carregar_occur', function(event, data){ 
+    $scope.$on('carregar_occur', function(event, data){
       if ($scope.acao == 'carregar' && (data == 9)) {
         RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
           function success(data, status){
@@ -242,6 +246,7 @@ angular.module('estatisticasApp')
 
         ocorrencia.nro_ocorrencia = $scope.nro_ocorrencia;
         ocorrencia.oleo = $scope.oleo;
+        ocorrencia.tipo_comunicante = $scope.tipo_comunicante;
 
         ocorrencia.acoes = $scope.acoes;
         ocorrencia.ambiente = $scope.ambiente;
@@ -408,6 +413,7 @@ angular.module('estatisticasApp')
 
         formulario.nro_ocorrencia = $scope.nro_ocorrencia;
         formulario.oleo = $scope.oleo;
+        formulario.tipo_comunicante = $scope.tipo_comunicante;
         if ($scope.validador) {
           formulario.validador = {};
           formulario.validador.validado = $scope.validador.validado;
