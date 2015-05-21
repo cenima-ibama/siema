@@ -497,6 +497,9 @@ angular.module('estatisticasApp')
         if(!formulario.localizacao.endereco)
           error.push('1. Preencha o campo de Endereco');
 
+        if(formulario.localizacao.lat && formulario.localizacao.lng)    
+          formulario.acidente = $scope.mapa.acidente.toGeoJSON();
+
         if(!formulario.datas.semIncidente){
           occur = formulario.datas;
           if(!occur.diaIncidente)
@@ -524,8 +527,8 @@ angular.module('estatisticasApp')
         }
 
         if($scope.oleo){
-          if(!ocorrencia.origem.semOleoOrigem){
-            if(((!ocorrencia.origem.navio) || (ocorrencia.origem.navio == '')) && ((!ocorrencia.origem.instalacao) || (ocorrencia.origem.instalacao == '')))
+          if(!formulario.origem.semOleoOrigem){
+            if(((!formulario.origem.navio) || (formulario.origem.navio == '')) && ((!formulario.origem.instalacao) || (formulario.origem.instalacao == '')))
               error.push('3. Preencha o campo "Origem do acidente - Identificacao do Navio');
           }
         }
