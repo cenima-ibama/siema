@@ -80,11 +80,11 @@ angular.module('estatisticasApp')
 
 
             $scope.mapa.converterDMS = function(dd){
-                var deg = dd | 0; // truncate dd to get degrees
+                var deg = parseInt(dd | 0); // truncate dd to get degrees
                 var frac = Math.abs(dd - deg); // get fractional part
                 var min = (frac * 60) | 0; // multiply fraction by 60 and truncate
                 var sec = frac * 3600 - min * 60;
-                return deg + "°" + min + "'" + sec.toFixed(3);
+                return deg + String.fromCharCode(176) + min + "'" + sec.toFixed(3);
             };
 
 
