@@ -325,11 +325,11 @@ angular.module('estatisticasApp')
         if(!ocorrencia.datas.semObservacao){
           occur = ocorrencia.datas;
           if(!occur.diaObservacao)
-            error.push('2. Preencha o campo "Data de Observa' + String.fromCharCode(231) + String.fromCharCode(245) + 'o"');
+            error.push('2. Preencha o campo "Data de Observa' + String.fromCharCode(195) + String.fromCharCode(245) + 'o"');
           if(!occur.horaObservacao)
-            error.push('2. Preencha o campo "Hora de Observa' + String.fromCharCode(231) + String.fromCharCode(245) + 'o"');
+            error.push('2. Preencha o campo "Hora de Observa' + String.fromCharCode(195) + String.fromCharCode(245) + 'o"');
           if(!occur.obsPeriodo)
-            error.push('2. Preencha o campo "Per' + String.fromCharCode(237) + 'odo de Observa' + String.fromCharCode(231) + String.fromCharCode(245) + 'o"');
+            error.push('2. Preencha o campo "Per' + String.fromCharCode(237) + 'odo de Observa' + String.fromCharCode(195) + String.fromCharCode(245) + 'o"');
         }
 
         if($scope.oleo){
@@ -378,13 +378,13 @@ angular.module('estatisticasApp')
 
         if(!ocorrencia.empresa.semEmpresa){
           if(!ocorrencia.empresa.nome || ocorrencia.empresa.nome==''){
-            error.push('8. Preencha o Campo Nome em Identifica' + String.fromCharCode(231) + String.fromCharCode(245) + 'o da Empresa/Respons' + String.fromCharCode(225) + 'vel');
+            error.push('8. Preencha o Campo Nome em Identifica' + String.fromCharCode(231) + String.fromCharCode(195) + 'o da Empresa/Respons' + String.fromCharCode(225) + 'vel');
           }
         }
 
         if(!ocorrencia.instituicao.semInstituicao){
           if(!ocorrencia.instituicao.instituicoes[0]){
-            error.push('9. Preencha o campo de institui' + String.fromCharCode(231) + String.fromCharCode(245) + 'o/empresa atuando no local');
+            error.push('9. Preencha o campo de institui' + String.fromCharCode(231) + String.fromCharCode(195) + 'o/empresa atuando no local');
           }
         }
 
@@ -495,7 +495,7 @@ angular.module('estatisticasApp')
         if(!formulario.localizacao.municipio)
           error.push('1. Preencha o campo Municipio');
         if(!formulario.localizacao.endereco)
-          error.push('1. Preencha o campo de Endereço');
+          error.push('1. Preencha o campo de Endereco');
 
         if(!formulario.datas.semIncidente){
           occur = formulario.datas;
@@ -510,16 +510,23 @@ angular.module('estatisticasApp')
         if(!formulario.datas.semObservacao){
           occur = formulario.datas;
           if(!occur.diaObservacao)
-            error.push('2. Preencha o campo "Data de Observação"');
+            error.push('2. Preencha o campo "Data de Observaçao"');
           if(!occur.horaObservacao)
-            error.push('2. Preencha o campo "Hora de Observacão"');
+            error.push('2. Preencha o campo "Hora de Observacao"');
           if(!occur.obsPeriodo)
-            error.push('2. Preencha o campo "Período de Observacão"');
+            error.push('2. Preencha o campo "Período de Observacao"');
         }
 
         if(!formulario.origem.semOrigem){
           if(!formulario.origem.origens[0]){
             error.push('3. Preencha o campo de Origem do acidente');
+          }
+        }
+
+        if($scope.oleo){
+          if(!ocorrencia.origem.semOleoOrigem){
+            if(((!ocorrencia.origem.navio) || (ocorrencia.origem.navio == '')) && ((!ocorrencia.origem.instalacao) || (ocorrencia.origem.instalacao == '')))
+              error.push('3. Preencha o campo "Origem do acidente - Identificacao do Navio');
           }
         }
 
@@ -556,7 +563,7 @@ angular.module('estatisticasApp')
 
         if(!formulario.empresa.semEmpresa){
           if(!formulario.empresa.nome || formulario.empresa.nome==''){
-            error.push('8. Preencha o Campo Nome em Identificação da Empresa/Responsável');
+            error.push('8. Preencha o Campo Nome em Identificação da Empresa/Responsavel');
           }
         }
 
