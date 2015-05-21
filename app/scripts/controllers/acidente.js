@@ -278,7 +278,6 @@ angular.module('estatisticasApp')
             ocorrencia.instituicao.instituicoes.push(val.id);
         });
         ocorrencia.localizacao = $scope.localizacao;
-        ocorrencia.acidente = $scope.mapa.acidente.toGeoJSON();
         ocorrencia.origem = $scope.origem;
         ocorrencia.origem.origens = [];
         angular.forEach($scope.origens, function(val, key){
@@ -309,6 +308,10 @@ angular.module('estatisticasApp')
         if(!ocorrencia.localizacao.endereco)
           error.push('1. Preencha o campo de Endereço');
 
+        if(ocorrencia.localizacao.lat && ocorrencia.localizacao.lng)
+          ocorrencia.acidente = $scope.mapa.acidente.toGeoJSON();
+
+
         if(!ocorrencia.datas.semIncidente){
           occur = ocorrencia.datas;
           if(!occur.diaIncidente)
@@ -329,9 +332,16 @@ angular.module('estatisticasApp')
             error.push('2. Preencha o campo "Período de Observacão"');
         }
 
+        if($scope.oleo){
+          if(!ocorrencia.origem.semOleoOrigem){
+            if(((!ocorrencia.origem.navio) || (ocorrencia.origem.navio == '')) && ((!ocorrencia.origem.instalacao) || (ocorrencia.origem.instalacao == '')))
+              error.push('3. Preencha o campo "Origem do acidente - Identificacao do Navio');
+          }
+        }
+
         if(!ocorrencia.origem.semOrigem){
           if(!ocorrencia.origem.origens[0]){
-            error.push('3. Preencha o campo de Origem do acidente');
+            error.push('3. Preencha o campo "Origem do acidente"');
           }
         }
 
@@ -390,6 +400,8 @@ angular.module('estatisticasApp')
               error.push('10. Preencha acões iniciais');
           }
         }
+
+
 
         $scope.error = error;
         var string_ocorrencia = JSON.stringify(ocorrencia);
