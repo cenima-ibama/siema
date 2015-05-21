@@ -26,10 +26,10 @@ angular.module('estatisticasApp')
         $scope.produtos.produtos_outros = [];
 
 
-        $scope.produtos.subPanel = $scope.oleo ? '(Itens V do Anexo II do Decreto n 4.136 de 20 de fevereiro de 2002)' : '';
+        $scope.produtos.subPanel = $scope.oleo ? '(Itens V do Anexo II do Decreto n' + String.fromCharCode(176) + ' 4.136 de 20 de fevereiro de 2002)' : '';
 
         $scope.$on('carregar_produtos', function(event, data){
-            $scope.produtos.subPanel = $scope.oleo ? '(Itens V do Anexo II do Decreto n 4.136 de 20 de fevereiro de 2002)' : '';
+            $scope.produtos.subPanel = $scope.oleo ? '(Itens V do Anexo II do Decreto n' + String.fromCharCode(176) + ' 4.136 de 20 de fevereiro de 2002)' : '';
 
             RestApi.query({query: 'produtos_cadastrados', id: data[0].id_ocorrencia},
               function success(data, status){
