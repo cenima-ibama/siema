@@ -36,7 +36,7 @@
             <label class="control-label" for="inputMunicipio">UF/Município:</label>
             <div class='form-inline'>
                 <div class='form-group'>
-                    <select class="form-control input" ng-model="localizacao.uf" ng-options="uf.value as uf.name for uf in ufs" ng-change="carregarMunicipios(localizacao.uf)">
+                    <select class="form-control input" ng-model="localizacao.uf" ng-options="uf.value as uf.name for uf in ufs" ng-change="localizacao.carregarMunicipios(localizacao.uf)">
                     <option value="" default selected>Sem UF</option>
                     </select>
                 </div>
