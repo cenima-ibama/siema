@@ -208,7 +208,7 @@ angular.module('estatisticasApp')
           function success(data, status){
             if(!data[0]){
               $scope.nro_ocorrencia = '';
-              alert('Ocorrência não encontrada em nossos registros');
+              alert('Ocorrencia não encontrada em nossos registros');
             } else{
               $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
               if ($scope.validador) {
@@ -341,13 +341,13 @@ angular.module('estatisticasApp')
 
         if(!ocorrencia.origem.semOrigem){
           if(!ocorrencia.origem.origens[0]){
-            error.push('3. Preencha o campo de Or' + String.fromCharCode(237) + 'gem do acidente');
+            error.push('3. Preencha o campo "Origem do acidente"');
           }
         }
 
         if(!ocorrencia.evento.semEvento){
           if(!ocorrencia.evento.eventos[0]){
-            error.push('4. Preencha o campo Tipo de Evento');
+            error.push('4. Preencha o campo "Tipo de Evento"');
           }
         }
 
@@ -372,7 +372,7 @@ angular.module('estatisticasApp')
 
         if(!ocorrencia.ambiente.semAmbientes){
           if(!ocorrencia.ambiente.ambientes[0]){
-            error.push('7. Preencha o campo de ambientes atingidos');
+            error.push('7. Preencha o campo "Ambientes atingidos"');
           }
         }
 
@@ -397,7 +397,7 @@ angular.module('estatisticasApp')
               }
             }
             else
-              error.push('10. Preencha a' + String.fromCharCode(231) + String.fromCharCode(245) + 'es iniciais');
+              error.push('10. Preencha o campo "A' + String.fromCharCode(231) + String.fromCharCode(245) + 'es iniciais"');
           }
         }
 
