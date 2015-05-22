@@ -63,10 +63,15 @@ angular.module('estatisticasApp')
             );
 
 
-            $scope.produtos.naoClassificado = data[0].produto_perigoso == 't' ? true : false;
-            $scope.produtos.naoAplica = data[0].produto_nao_se_aplica == 't' ? true : false;
-            $scope.produtos.naoEspecificado = data[0].produto_nao_especificado == 't' ? true : false;
+            if ((data[0].produto_perigoso == 'f') && (data[0].produto_nao_se_aplica == 'f') && (data[0].produto_nao_especificado == 't') &&
+                ($scope.produtos.produtos_onu.length == 0) && ($scope.produtos.produtos_outros.length == 0)) {
+                $scope.produtos.semProduto = true;
+            } else {
 
+                $scope.produtos.naoClassificado = data[0].produto_perigoso == 't' ? true : false;
+                $scope.produtos.naoAplica = data[0].produto_nao_se_aplica == 't' ? true : false;
+                $scope.produtos.naoEspecificado = data[0].produto_nao_especificado == 't' ? true : false;
+            }
 
             if (data[0].tipo_substancia || data[0].volume_estimado) {
                 $scope.produtos.tipo_substancia = data[0].tipo_substancia;

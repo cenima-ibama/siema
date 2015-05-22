@@ -325,11 +325,11 @@ angular.module('estatisticasApp')
         if(!ocorrencia.datas.semObservacao){
           occur = ocorrencia.datas;
           if(!occur.diaObservacao)
-            error.push('2. Preencha o campo "Data de Observa' + String.fromCharCode(195) + String.fromCharCode(245) + 'o"');
+            error.push('2. Preencha o campo "Data de Observa' + String.fromCharCode(231) + String.fromCharCode(227) + 'o"');
           if(!occur.horaObservacao)
-            error.push('2. Preencha o campo "Hora de Observa' + String.fromCharCode(195) + String.fromCharCode(245) + 'o"');
+            error.push('2. Preencha o campo "Hora de Observa' + String.fromCharCode(231) + String.fromCharCode(227) + 'o"');
           if(!occur.obsPeriodo)
-            error.push('2. Preencha o campo "Per' + String.fromCharCode(237) + 'odo de Observa' + String.fromCharCode(195) + String.fromCharCode(245) + 'o"');
+            error.push('2. Preencha o campo "Per' + String.fromCharCode(237) + 'odo de Observa' + String.fromCharCode(231) + String.fromCharCode(227) + 'o"');
         }
 
         if($scope.oleo){
@@ -341,13 +341,13 @@ angular.module('estatisticasApp')
 
         if(!ocorrencia.origem.semOrigem){
           if(!ocorrencia.origem.origens[0]){
-            error.push('3. Preencha o campo de Or' + String.fromCharCode(231) + 'gem do acidente');
+            error.push('3. Preencha o campo de Or' + String.fromCharCode(237) + 'gem do acidente');
           }
         }
 
         if(!ocorrencia.evento.semEvento){
           if(!ocorrencia.evento.eventos[0]){
-            error.push('4. Preencha o campo tipo de evento');
+            error.push('4. Preencha o campo Tipo de Evento');
           }
         }
 
@@ -378,13 +378,13 @@ angular.module('estatisticasApp')
 
         if(!ocorrencia.empresa.semEmpresa){
           if(!ocorrencia.empresa.nome || ocorrencia.empresa.nome==''){
-            error.push('8. Preencha o Campo Nome em Identifica' + String.fromCharCode(231) + String.fromCharCode(195) + 'o da Empresa/Respons' + String.fromCharCode(225) + 'vel');
+            error.push('8. Preencha o Campo Nome em Identifica' + String.fromCharCode(231) + String.fromCharCode(227) + 'o da Empresa/Respons' + String.fromCharCode(225) + 'vel');
           }
         }
 
         if(!ocorrencia.instituicao.semInstituicao){
           if(!ocorrencia.instituicao.instituicoes[0]){
-            error.push('9. Preencha o campo de institui' + String.fromCharCode(231) + String.fromCharCode(195) + 'o/empresa atuando no local');
+            error.push('9. Preencha o campo de institui' + String.fromCharCode(231) + String.fromCharCode(227) + 'o/empresa atuando no local');
           }
         }
 
@@ -497,7 +497,7 @@ angular.module('estatisticasApp')
         if(!formulario.localizacao.endereco)
           error.push('1. Preencha o campo de Endereco');
 
-        if(formulario.localizacao.lat && formulario.localizacao.lng)    
+        if(formulario.localizacao.lat && formulario.localizacao.lng)
           formulario.acidente = $scope.mapa.acidente.toGeoJSON();
 
         if(!formulario.datas.semIncidente){
