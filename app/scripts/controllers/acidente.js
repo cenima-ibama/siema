@@ -387,7 +387,7 @@ angular.module('estatisticasApp')
               }
             }
             else
-              error.push('10. Preencha a' + String.fromCharCode(231) + String.fromCharCode(245) + 'ões iniciais');
+              error.push('10. Preencha a' + String.fromCharCode(231) + String.fromCharCode(245) + 'es iniciais');
           }
         }
 
