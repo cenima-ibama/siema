@@ -3,7 +3,7 @@
     header("Access-Control-Allow-Origin: *");
 
     $dir= $_POST["data"];
-    $path = "/home/01433540355/www/siema/uploads/";
+    $path = getcwd() . "uploads/";
     $finalPath = $path . $dir . "/";
 
     $finalName = $_FILES['file']['name'];
