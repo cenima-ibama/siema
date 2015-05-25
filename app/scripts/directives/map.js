@@ -11,7 +11,7 @@ angular.module('estatisticasApp')
     return {
         template: '<div id="map" class="map"></div>',
         restrict: 'AE',
-        controller: function($scope, $cookies, $rootScope, $timeout){
+        controller: function($scope, $cookies, $rootScope, $timeout, $http){
 
 
             $scope.mapa.acidente = null;
@@ -47,6 +47,49 @@ angular.module('estatisticasApp')
     		$scope.map.addControl(drawControl);
 
 
+            $scope.mapa.getUf = function($lat, $lng){
+
+                $http.get("//nominatim.openstreetmap.org/reverse?format=json&lat="+ $lat + "&lon=" + $lng).
+                    success(function(data,status){
+
+                        if (data.address) {
+
+                            if (data.address.state) {
+                                var ret = ($.grep($scope.ufs, function(e){ return e.fullname == data.address.state;}));
+
+                                if(ret[0]) {
+                                    $scope.localizacao.uf = ret[0].value;
+                                }
+
+                                $scope.localizacao.carregarMunicipios($scope.localizacao.uf);
+                            } else {
+                                $scope.localizacao.uf = "";
+                            }
+
+                            if (data.address.city) {
+
+                                ret  = RestApi.query({query: 'municipio_id', 'municipio_nome': data.address.city},
+                                    function success(data, status){
+                                        $scope.$broadcast('atualizar_municipio', data);
+                                    }
+                                );
+
+                                $scope.$on('atualizar_municipio', function(event, data){
+                                    if (data[0]) {
+                                        $scope.localizacao.municipio = data[0].cod_ibge;
+                                    }
+                                });
+                            } else {
+                                $scope.localizacao.municipio = "";
+                            }
+                        }
+                        // $scope.localizacao.municipio = data.address.city;
+                        // $scope.localizacao.municipio = ($.grep($scope.municipios, function(e){ return e.name == data.address.city; }))[0].value;
+                    }
+                );
+            }
+
+
     		$scope.map.on('draw:created', function (e) {
                 var type = e.layerType;
                 var layer = e.layer;
@@ -71,6 +114,8 @@ angular.module('estatisticasApp')
 
                 $scope.localizacao.lat = $scope.mapa.converterDMS(shape.geometry.coordinates[0]);
                 $scope.localizacao.lng = $scope.mapa.converterDMS(shape.geometry.coordinates[1]);
+
+                $scope.mapa.getUf(shape.geometry.coordinates[0],shape.geometry.coordinates[1]);
 
                 // console.log(shape.geometry.coordinates[0]);
                 // console.log($scope.mapa.converterDD($scope.localizacao.lat));

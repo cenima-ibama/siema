@@ -89,7 +89,7 @@ angular.module('estatisticasApp')
       function success(data, status){
         $scope.ufs = [];
         angular.forEach(data, function(value, key){
-          $scope.ufs.push({'name' : value.sigla, 'value': value.id_uf});
+          $scope.ufs.push({'name' : value.sigla, 'fullname': value.estado, 'value': value.id_uf});
         });
         $scope.rests++;
         $scope.$broadcast('carregar_occur', $scope.rests);
