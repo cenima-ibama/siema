@@ -63,7 +63,7 @@ angular.module('estatisticasApp')
             );
 
 
-            if ((data[0].produto_perigoso == 'f') && (data[0].produto_nao_se_aplica == 'f') && (data[0].produto_nao_especificado == 't') &&
+            if ((data[0].produto_perigoso == 'f') && (data[0].produto_nao_se_aplica == 'f') && (data[0].produto_nao_especificado == 'f') &&
                 ($scope.produtos.produtos_onu.length == 0) && ($scope.produtos.produtos_outros.length == 0)) {
                 $scope.produtos.semProduto = true;
             } else {
