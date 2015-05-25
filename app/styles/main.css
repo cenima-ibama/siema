@@ -187,7 +187,19 @@ select{
     position: relative;
 }
 
+#limpArquivo{
+  position: absolute;
+  margin-left: 1%;
+}
+
 /* Customize container */
+@media print{
+  .no-print, .no-print *{
+    display: none;
+  }
+}
+
+
 @media (min-width: 768px) {
   .container {
     max-width: 730px;

@@ -31,10 +31,16 @@ angular.module('estatisticasApp')
                   'data': $scope.nro_ocorrencia,
                   'file': file
                 }).success(function (data, status, headers, config) {
-                    console.log('Arquivo ' + config.file.name + ' uploaded. Resultado: ' + data);
+                    console.log('Arquivo ' + config.file.name + ' upado com sucesso. Retorno: ' + data);
+                    $rootScope.arquivoSuccess = data;
                 });
               }
             }
+          }
+
+          $scope.limpArquivo = function(files){
+            $scope.file = null;
+            $scope.files = null;
           }
         }
       }

@@ -1,22 +1,37 @@
 
 
+  <div ng-if='arquivoSuccess != null' class='no-print'>
+    <div ng-switch='arquivoSuccess'>
+      <div ng-switch-when='true'>
+        <div class="alert alert-info" role="alert">
+          O Arquivo adicionado foi enviado com Sucesso
+        </div>
+      </div>
+      <div ng-switch-default>
+        <div class="alert alert-warning" role="alert">
+          Ocorreu um erro inesperado ao enviar o arquivo anexado, favor entre em contato com o Administrador do sistema
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 <div class='text-center'>
   <img src='images/logo_ibama.jpg' height="140" width="140">
-  <hr >
+  <hr class='no-print'>
 </div>
 
-<div class='container'>
+<div class='container no-print'>
   <div class="alert alert-info" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <p class='text-center'>Acidente enviado com sucesso!</p>
     <br/>
     <p class='text-center'>Não feche esta página sem antes <a href=''onclick='window.print()'>imprimir</a> este arquivo ou salvá-lo em sua máquina! </p>
     <div style="float:right; margin: -4% 2%">
-      <button class='btn btn-primary '>
+      <button class='btn btn-primary ' onclick='window.print()' id='printButton'>
        <span class='glyphicon glyphicon-print' onclick='window.print()'></span>
       </button>
-    </div>
+    </div> 
   </div>
 </div>
 
