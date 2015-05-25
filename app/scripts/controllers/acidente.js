@@ -413,7 +413,8 @@ angular.module('estatisticasApp')
         if (!$scope.error[0]) {
           RestApi.query({query: 'criar_ocorrencia', 'formulario': string_ocorrencia},
             function success(data, status){
-              $scope.upload($scope.files);
+              if($scope.files)
+                $scope.upload($scope.files);
               if(data[0]) {
                 // alert('Formulário gravado com sucesso');
                 $scope.recarregarSistema();
@@ -595,7 +596,8 @@ angular.module('estatisticasApp')
         if (!$scope.error[0]) {
           RestApi.query({query: 'atualizar_ocorrencia', 'formulario': string_formulario},
             function success(data, status){
-              $scope.upload($scope.files);
+              if($scope.files)
+                $scope.upload($scope.files);
               if(data[0]) {
                 // alert('Formulário atualizado com sucesso');
                 $scope.recarregarSistema();
@@ -614,7 +616,6 @@ angular.module('estatisticasApp')
 
     $scope.recarregarSistema = function() {
       // $location.url = "#/html?id=" + nro_ocorrencia;
-
       $location.url("/html?id=" + $scope.nro_ocorrencia);
     };
 

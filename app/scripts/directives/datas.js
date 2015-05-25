@@ -38,6 +38,34 @@ angular.module('estatisticasApp')
           $scope.datas[$semana] = new Date(temp[2],temp[1] - 1,temp[0]).getDay() + 1;
         }
 
+        $scope.getPeriodoObs = function(hora){
+            var hr = hora.split(':');
+            hr[0] = parseInt(hr[0]); 
+            if(hr[0] >= 0 && hr[0] < 6)
+                $scope.datas.obsPeriodo = 'A';
+            else if(hr[0] >= 6 && hr[0] < 12)
+                $scope.datas.obsPeriodo = 'M';
+            else if(hr[0] >= 12 && hr[0] < 18)
+                $scope.datas.obsPeriodo = 'V';
+            else if(hr[0] >= 18 && hr[0] <= 23)
+                $scope.datas.obsPeriodo = 'N';
+
+        }
+
+        $scope.getPeriodoInc = function(hora){
+            var hr = hora.split(':');
+            hr[0] = parseInt(hr[0]); 
+            if(hr[0] >= 0 && hr[0] < 6)
+                $scope.datas.incPeriodo = 'A';
+            else if(hr[0] >= 6 && hr[0] < 12)
+                $scope.datas.incPeriodo = 'M';
+            else if(hr[0] >= 12 && hr[0] < 18)
+                $scope.datas.incPeriodo = 'V';
+            else if(hr[0] >= 18 && hr[0] <= 23)
+                $scope.datas.incPeriodo = 'N';
+
+        }
+
         $scope.$on('carregar_datas', function(event, data){
             $scope.datas.subPanel = $scope.oleo ? '(Itens II e III do Anexo II do Decreto n' + String.fromCharCode(176) + ' 4.136 de 20 de fevereiro de 2002)' : '';
 
@@ -65,6 +93,7 @@ angular.module('estatisticasApp')
             } else {
                 $scope.datas.semIncidente = true;
             }
+
         });
 
         // $scope.$on('criar_datas', function(event, data){

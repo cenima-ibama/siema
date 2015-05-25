@@ -5,6 +5,7 @@
     <img ng-show="file[0] != null" ngf-src="file[0]" class="thumb ng-hide" src="">
     <div ng-show="file[0] != null" class='namefile' >
         <span>{{name}}</span>
+		<button type="button" class="close" id='limpArquivo' ng-click='limpArquivo(files)'><span aria-hidden="true">&times;</span></button>
     </div>
     <br />
     <small><label>*jpg, png, pdf, doc, xls até 5MB</label></small>
