@@ -10,7 +10,7 @@
 angular.module('estatisticasApp')
   .factory('RestApi', function ($resource) {
     // return $resource('http://10.1.8.55/moduleSiema.php?:type', {},
-    return $resource('http://10.1.8.139/moduleSiema.php?:type', {},
+    return $resource('//' + document.location.hostname + document.location.pathname + '../moduleSiema.php?:type', {},
       {
         get: {
           method:'GET',

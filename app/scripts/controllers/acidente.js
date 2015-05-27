@@ -301,12 +301,14 @@ angular.module('estatisticasApp')
           error.push('1. Preencha o campo de Latitude');
         if(!ocorrencia.localizacao.lng)
           error.push('1. Preencha o campo de Longitude');
-        if(!ocorrencia.localizacao.uf)
-          error.push('1. Preencha o campo UF');
-        if(!ocorrencia.localizacao.municipio)
-          error.push('1. Preencha o campo Munic' + String.fromCharCode(237) + 'pio');
-        if(!ocorrencia.localizacao.endereco)
-          error.push('1. Preencha o campo de Endere' + String.fromCharCode(231) + 'o');
+
+        // Campos não obrigatórios: Ocorrência pode cair no mar.
+        // if(!ocorrencia.localizacao.uf)
+        //   error.push('1. Preencha o campo UF');
+        // if(!ocorrencia.localizacao.municipio)
+        //   error.push('1. Preencha o campo Munic' + String.fromCharCode(237) + 'pio');
+        // if(!ocorrencia.localizacao.endereco)
+        //   error.push('1. Preencha o campo de Endere' + String.fromCharCode(231) + 'o');
 
         if(ocorrencia.localizacao.lat && ocorrencia.localizacao.lng)
           ocorrencia.acidente = $scope.mapa.acidente.toGeoJSON();
@@ -491,12 +493,14 @@ angular.module('estatisticasApp')
           error.push('1. Preencha o campo de Latitude');
         if(!formulario.localizacao.lng)
           error.push('1. Preencha o campo de Longitude');
-        if(!formulario.localizacao.uf)
-          error.push('1. Preencha o campo UF');
-        if(!formulario.localizacao.municipio)
-          error.push('1. Preencha o campo Municipio');
-        if(!formulario.localizacao.endereco)
-          error.push('1. Preencha o campo de Endereco');
+
+        // Campos não obrigatórios: Ocorrência pode cair no mar.
+        // if(!formulario.localizacao.uf)
+        //   error.push('1. Preencha o campo UF');
+        // if(!formulario.localizacao.municipio)
+        //   error.push('1. Preencha o campo Municipio');
+        // if(!formulario.localizacao.endereco)
+        //   error.push('1. Preencha o campo de Endereco');
 
         if(formulario.localizacao.lat && formulario.localizacao.lng)
           formulario.acidente = $scope.mapa.acidente.toGeoJSON();
@@ -505,8 +509,8 @@ angular.module('estatisticasApp')
           occur = formulario.datas;
           if(!occur.diaIncidente)
             error.push('2. Preencha o campo "Data do Incidente"')
-          if(!occur.horaIncidente)
-            error.push('2. Preencha o campo "Hora do Incidente!');
+          // if(!occur.horaIncidente)
+          //   error.push('2. Preencha o campo "Hora do Incidente!');
           if(!occur.incPeriodo)
             error.push('2. Preencha o campo "Período do Incidente"');
         }
@@ -515,8 +519,8 @@ angular.module('estatisticasApp')
           occur = formulario.datas;
           if(!occur.diaObservacao)
             error.push('2. Preencha o campo "Data de Observaçao"');
-          if(!occur.horaObservacao)
-            error.push('2. Preencha o campo "Hora de Observacao"');
+          // if(!occur.horaObservacao)
+          //   error.push('2. Preencha o campo "Hora de Observacao"');
           if(!occur.obsPeriodo)
             error.push('2. Preencha o campo "Período de Observacao"');
         }

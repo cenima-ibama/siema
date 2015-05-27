@@ -26,7 +26,8 @@ angular.module('estatisticasApp')
         $scope.produtos.produtos_outros = [];
 
 
-        $("#volume").mask("0000000000000000000000.09", {reverse: true});
+        // $("#volume").mask("0000000000000000000000.09", {reverse: true});
+        $("#volume").mask("000000000.9999999999", {reverse: true})
         $("#qtdOnu").mask("0000000000000000000000.09", {reverse: true});
         $("#qtdNaoOnu").mask("0000000000000000000000.09", {reverse: true});
 

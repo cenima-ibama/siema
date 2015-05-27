@@ -82,6 +82,18 @@ angular.module('estatisticasApp')
                             } else {
                                 $scope.localizacao.municipio = "";
                             }
+
+                            var endereco = "";
+
+                            if (data.address.road) {
+                                endereco = endereco + " " + data.address.road + ",";
+                            }
+                            if (data.address.suburb) {
+                                endereco = endereco + " " + data.address.suburb + ",";
+                            }
+
+                            $scope.localizacao.endereco = endereco.substring(0, endereco.length - 1);
+
                         }
                         // $scope.localizacao.municipio = data.address.city;
                         // $scope.localizacao.municipio = ($.grep($scope.municipios, function(e){ return e.name == data.address.city; }))[0].value;
@@ -139,9 +151,9 @@ angular.module('estatisticasApp')
                 var s = NaN;
 
                 if (dms) {
-                    d = dms.split("°")[0];
-                    m = dms.split("°")[1] ? dms.split("°")[1].split("'")[0] : 0;
-                    s = dms.split("°")[1] && dms.split("°")[1].split("'")[1] ?  dms.split("°")[1].split("'")[1].split("\"")[0]  : 0;
+                    d = dms.split(String.fromCharCode(176))[0];
+                    m = dms.split(String.fromCharCode(176))[1] ? dms.split(String.fromCharCode(176))[1].split("'")[0] : 0;
+                    s = dms.split(String.fromCharCode(176))[1] && dms.split(String.fromCharCode(176))[1].split("'")[1] ?  dms.split(String.fromCharCode(176))[1].split("'")[1].split("\"")[0]  : 0;
                 }
 
                 var dd = NaN;
@@ -170,7 +182,6 @@ angular.module('estatisticasApp')
 
                 return ret;
             };
-
 
             $scope.mapa.mudarMarcador = function(){
                 if($scope._timeout){ //if there is already a timeout in process cancel it

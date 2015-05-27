@@ -27,7 +27,7 @@ angular.module('estatisticasApp')
                 $scope.name = files[i].name;
                 file.ocurr = $scope.nro_ocorrencia;
                 Upload.upload({
-                  'url': 'http://10.1.8.139/upload.php',
+                  'url': '//' + document.location.hostname + document.location.pathname + '../upload.php',
                   'data': $scope.nro_ocorrencia,
                   'file': file
                 }).success(function (data, status, headers, config) {

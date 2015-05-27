@@ -349,7 +349,7 @@ angular.module('estatisticasApp')
             $scope.origem.complementar = data[0].des_complemento_tipo_localizaca;
             if($scope.origem.complementar == ''){
               $scope.origem.complementarVal = false;
-              $scope.origem.semOrigem = true;
+              // $scope.origem.semOrigem = true;
             } else{
               $scope.origem.complementarVal = true;
             }
