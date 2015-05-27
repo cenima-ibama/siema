@@ -23,21 +23,21 @@
                     </button>
                 </td>
             </tr>
-            <tr ng-repeat='i in valueRows' id='{{i}}' >
+            <tr ng-if='valueRows.length > 0'>
                 <td>
-                    <input type='text' class="form-control" placeholder='Vazio' id='{{i}}' ng-model='produtos.substanciaOnu' typeahead="prods as prods.field for prods in produtos_onu | filter:$viewValue | limitTo:8">
+                    <input type='text' class="form-control" placeholder='Vazio'ng-model='produtos.substanciaOnu' typeahead="prods as prods.field for prods in produtos_onu | filter:$viewValue | limitTo:8">
                 </td>
                 <td>
-                    <input type='text' class="form-control" placeholder='Vazio' id='{{i}}' ng-model='produtos.quantidadeOnu'>
+                    <input type='text' class="form-control" placeholder='Vazio' ng-model='produtos.quantidadeOnu' id="qtdOnu">
                 </td>
                 <td>
-                    <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidadeOnu' id='{{i}}'></select>
+                    <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidadeOnu'></select>
                 </td>
                 <td>
-                    <button class="btn btn-primary" ng-click='saveData(i)' id='{{i}}'>
+                    <button class="btn btn-primary" ng-click='saveData()'>
                         <span class="glyphicon glyphicon-ok-circle"></span>
                     </button>
-                    <button class="btn btn-default" ng-click='deleteData(i)' id='{{i}}'>
+                    <button class="btn btn-default" ng-click='deleteData()'>
                         <span class="glyphicon glyphicon-remove-sign"></span>
                     </button>
                 </td>
@@ -87,21 +87,21 @@
                     </button>
                 </td>
             </tr>
-            <tr ng-repeat='j in valueRowsNaoOnu' id='{{j}}' >
+            <tr ng-if='valueRowsNaoOnu.length > 0'>
                 <td>
                     <input type='text' class="form-control" placeholder='Vazio' ng-model='produtos.substanciaOutro' typeahead="prods as prods.field for prods in produtos_outros | filter:$viewValue | limitTo:8">
                 </td>
                 <td>
-                    <input type='text' class="form-control" placeholder='Vazio' ng-model='produtos.quantidadeOutro'>
+                    <input type="text" class="form-control" placeholder='Vazio' ng-model='produtos.quantidadeOutro' id="qtdNaoOnu">
                 </td>
                 <td>
-                    <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidadeOutro' id='{{i}}'></select>
+                    <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidadeOutro'></select>
                 </td>
                 <td>
-                    <button class="btn btn-primary" ng-click='saveDataNaoOnu(j)' >
+                    <button class="btn btn-primary" ng-click='saveDataNaoOnu()' >
                         <span class="glyphicon glyphicon-ok-circle"></span>
                     </button>
-                    <button class="btn btn-default" ng-click='deleteDataNaoOnu(j)'>
+                    <button class="btn btn-default" ng-click='deleteDataNaoOnu()'>
                         <span class="glyphicon glyphicon-remove-sign"></span>
                     </button>
                 </td>
@@ -146,7 +146,7 @@
             </div>
             <div class="form-inline">
                 <label> Volume estimado em </label>
-                &nbsp; <input type="text" class="form-control" ng-model='produtos.valor_substancia' ng-disabled="produtos.semCondicoes" mask='9?9?9?9?9?9?9?9?9?9.9?9?'/> &nbsp;
+                &nbsp; <input id="volume" type="text" class="form-control" ng-model='produtos.valor_substancia' ng-disabled="produtos.semCondicoes" /> &nbsp;
                 <label>  m3 </label>
             </div>
         </div>

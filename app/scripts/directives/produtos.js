@@ -26,6 +26,16 @@ angular.module('estatisticasApp')
         $scope.produtos.produtos_outros = [];
 
 
+        $("#volume").mask("0000000000000000000000.09", {reverse: true});
+        $("#qtdOnu").mask("0000000000000000000000.09", {reverse: true});
+        $("#qtdNaoOnu").mask("0000000000000000000000.09", {reverse: true});
+
+        $scope.produtos.createMask = function(id) {
+            var field = "#" + id;
+            $(field).mask("00000.09", {reverse: true})
+        };
+
+
         $scope.produtos.subPanel = $scope.oleo ? '(Itens V do Anexo II do Decreto n' + String.fromCharCode(176) + ' 4.136 de 20 de fevereiro de 2002)' : '';
 
         $scope.$on('carregar_produtos', function(event, data){
@@ -112,7 +122,7 @@ angular.module('estatisticasApp')
 
         }
 
-        $scope.saveData = function(i){
+        $scope.saveData = function(){
             // document.getElementById(i).chiladdClass('disabled', 'disabled');
 
             var novo_produto_onu = {
@@ -155,7 +165,7 @@ angular.module('estatisticasApp')
 
         }
 
-        $scope.saveDataNaoOnu = function(i){
+        $scope.saveDataNaoOnu = function(){
             // document.getElementById(i).addClass('disabled', 'disabled');
 
             var novo_produto_outro = {

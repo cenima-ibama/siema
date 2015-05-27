@@ -29,6 +29,10 @@ angular.module('estatisticasApp')
         $scope.localizacao.municipio;
         $scope.localizacao.endereco;
 
+
+        $("#lat").add("#lng").mask("S99\°99\'99.99999999999", {'translation': {S: {pattern: /^-/, optional: true}}});
+
+
         $scope.localizacao.carregarMunicipios = function($uf) {
           RestApi.query({query: 'municipios', uf:$uf},
             function success(data, status){
