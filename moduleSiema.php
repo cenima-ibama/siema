@@ -4,6 +4,7 @@
 	$ocorrencia = $_GET['ocorrencia'];
 	$formulario = $_GET['formulario'];
 	$tipo_produto = $_GET['tipo_produto'];
+	$municipio_nome = $_GET['municipio_nome'];
 	$id = $_GET['id'];
 	$uf = $_GET['uf'];
 	$lat = $_GET['lat'];
@@ -16,9 +17,9 @@
 	$USER = "siema";
 	$PASSWORD = "siemahmlg";
 	$DATABASE = "siema";
-	// $USER = "development";
-	// $PASSWORD = "development";
-	// $DATABASE = "emergencias_test";
+	// $USER = "emergencias";
+	// $PASSWORD = "3m3rg3nc14s";
+	// $DATABASE = "emergencias_homolog";
 	$PORT = "5432";
 
 
@@ -52,11 +53,15 @@
 			break;
 
 		case 'ufs':
-			$query = 'SELECT id_uf, sigla FROM uf ORDER BY sigla;';
+			$query = 'SELECT id_uf, sigla, estado FROM uf ORDER BY sigla;';
 			break;
 
 		case 'municipios':
 			$query = 'SELECT cod_ibge, nome FROM municipio WHERE id_uf=\'' . $uf . '\' ORDER BY nome;';
+			break;
+
+		case 'municipio_id':
+			$query = 'SELECT cod_ibge FROM municipio WHERE nome=\'' . $municipio_nome . '\';';
 			break;
 
 		case 'bacias':
@@ -149,8 +154,18 @@
 			// Localização
 			//
 			//
-			$query_ocorrencia = $query_ocorrencia . 'id_uf=' . $form->localizacao->uf . ',' .
-																						  'id_municipio=' . $form->localizacao->municipio . ',';
+
+			if($form->localizacao->uf) {
+				$query_ocorrencia = $query_ocorrencia . 'id_uf=' . $form->localizacao->uf . ',';
+			} else {
+				$query_ocorrencia = $query_ocorrencia . 'id_uf=null,';
+			}
+
+			if($form->localizacao->municipio) {
+			$query_ocorrencia = $query_ocorrencia . 'id_municipio=' . $form->localizacao->municipio . ',';
+			} else {
+			$query_ocorrencia = $query_ocorrencia . 'id_municipio=null,';
+			}
 
 			if ($form->localizacao->oceano) {
 				$query_ocorrencia = $query_ocorrencia . 'id_bacia_sedimentar=' . $form->localizacao->bacia . ',';
@@ -277,7 +292,7 @@
 			$query = 'DELETE FROM ocorrencia_produto WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\'';
 			$res_produtos = pg_query($query);
 
-			if (!$form->produtos->semProduto && $res_produtos && ($form->produtos->produtos_onu || $form->produtos->produtos_outros)){
+			if (!$form->produtos->semProduto && $res_produtos){
 
 				$query = 'INSERT INTO ocorrencia_produto (id_ocorrencia,id_produto_onu, id_produto_outro, quantidade, unidade_medida) VALUES ';
 
@@ -339,10 +354,8 @@
 				$query_ocorrencia = $query_ocorrencia . 'des_causa_provavel=null,';
 			}
 
-			if ($form->oleo && $form->detalhes->situacao) {
+			if ($form->oleo) {
 				$query_ocorrencia = $query_ocorrencia . 'situacao_atual_descarga=\'' . $form->detalhes->situacao . '\',';
-			} else {
-				$query_ocorrencia = $query_ocorrencia . 'situacao_atual_descarga=null,';
 			}
 
 
@@ -742,8 +755,7 @@
 				$query_ocorrencia = $query_ocorrencia . 'null,';
 			}
 
-			if ($form->oleo && $form->detalhes->situacao) {
-				// print_r("[" . $form->detalhes->situacao . "]");
+			if ($form->oleo) {
 				$situacao = $form->detalhes->situacao ? $form->detalhes->situacao : 'null';
 				$query_ocorrencia = $query_ocorrencia . '\'' . $situacao . '\',';
 			} else {
@@ -792,9 +804,8 @@
 					$res_empresa = pg_query($query);
 				}
 	    } else {
-				$query_ocorrencia = $query_ocorrencia . '\'N\',';
-				$query_ocorrencia = $query_ocorrencia . 'null,';
-					$res_empresa = true;
+					$query_ocorrencia = $query_ocorrencia . 'null,';
+					$res_empresa = pg_query($query);
 	    }
 
 
@@ -940,8 +951,6 @@
 					if (!$form->origem->semOleoOrigem) {
 							$query = 'INSERT INTO detalhamento_ocorrencia (id_ocorrencia,des_navio,des_instalacao) VALUES (\'' . $form->id_ocorrencia . '\',\''. $form->origem->navio . '\',\'' . $form->origem->instalacao . '\');';
 							$res_origem_oleo = pg_query($query);
-					} else {
-						$res_origem_oleo = true;
 					}
 				}
 
@@ -1040,8 +1049,7 @@
 	      // Fonte de Informações
 				//
 				//
-				// print_r("[" . json_encode($form->instituicao->instituicoes) . "]");
-				if ($form->fonte && (sizeof($form->fonte->fontes) > 0)) {
+				if ($form->fonte) {
 					$query = 'INSERT INTO ocorrencia_tipo_fonte_informacao (id_ocorrencia,id_tipo_fonte_informacao,desc_outras_fontes) VALUES ';
 
 					foreach ($form->fonte->fontes as $key => $value) {
