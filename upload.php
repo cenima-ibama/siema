@@ -1,10 +1,13 @@
 <?php
+    defined("TMP_PATH")
+    || define("TMP_PATH", str_replace("\\", "/", realpath(__DIR__ . "/") . '/uploads/'));
+
     header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
     header("Access-Control-Allow-Origin: *");
 
     $dir= $_POST["data"];
-    $path = getcwd() . "uploads/";
-    $finalPath = $path . $dir . "/";
+    $path = TMP_PATH;
+    $finalPath = $path . $dir;
 
     $finalName = $_FILES['file']['name'];
 
@@ -26,9 +29,9 @@
     }
 
 
-    if (move_uploaded_file($_FILES['file']['tmp_name'], $finalPath . $finalName)) {
-        print_r(true);
+    if (move_uploaded_file($_FILES['file']['tmp_name'], $finalPath . '/' . $finalName)) {
+        return true;
     } else {
-        print_r(false);
+        return false;
     }
 ?>
