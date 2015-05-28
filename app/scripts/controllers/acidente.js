@@ -318,8 +318,8 @@ angular.module('estatisticasApp')
           occur = ocorrencia.datas;
           if(!occur.diaIncidente)
             error.push('2. Preencha o campo "Data do Incidente"')
-          if(!occur.horaIncidente)
-            error.push('2. Preencha o campo "Hora do Incidente!');
+          // if(!occur.horaIncidente)
+          //   error.push('2. Preencha o campo "Hora do Incidente!');
           if(!occur.incPeriodo)
             error.push('2. Preencha o campo "Per' + String.fromCharCode(237) + 'odo do Incidente"');
         }
@@ -328,8 +328,8 @@ angular.module('estatisticasApp')
           occur = ocorrencia.datas;
           if(!occur.diaObservacao)
             error.push('2. Preencha o campo "Data de Observa' + String.fromCharCode(231) + String.fromCharCode(227) + 'o"');
-          if(!occur.horaObservacao)
-            error.push('2. Preencha o campo "Hora de Observa' + String.fromCharCode(231) + String.fromCharCode(227) + 'o"');
+          // if(!occur.horaObservacao)
+          //   error.push('2. Preencha o campo "Hora de Observa' + String.fromCharCode(231) + String.fromCharCode(227) + 'o"');
           if(!occur.obsPeriodo)
             error.push('2. Preencha o campo "Per' + String.fromCharCode(237) + 'odo de Observa' + String.fromCharCode(231) + String.fromCharCode(227) + 'o"');
         }
