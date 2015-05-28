@@ -59,9 +59,9 @@ angular.module('estatisticasApp')
 
                                 if(ret[0]) {
                                     $scope.localizacao.uf = ret[0].value;
+                                    $scope.localizacao.carregarMunicipios($scope.localizacao.uf);
                                 }
 
-                                $scope.localizacao.carregarMunicipios($scope.localizacao.uf);
                             } else {
                                 $scope.localizacao.uf = "";
                             }
