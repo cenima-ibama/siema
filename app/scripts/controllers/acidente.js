@@ -204,35 +204,40 @@ angular.module('estatisticasApp')
 
     $scope.$on('carregar_occur', function(event, data){
       if ($scope.acao == 'carregar' && (data == 9)) {
-        RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
-          function success(data, status){
-            if(!data[0]){
-              $scope.nro_ocorrencia = '';
-              alert('Ocorrencia não encontrada em nossos registros');
-            } else{
-              $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
-              if ($scope.validador) {
-                $scope.validador.validado = data[0].validado == 'S' ? true : false;
-              }
+        if (parseInt($scope.nro_ocorrencia)) {
+          RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
+            function success(data, status){
+              if(!data[0]){
+                $scope.nro_ocorrencia = '';
+                alert('Ocorrencia não encontrada em nossos registros');
+              } else{
+                $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
+                if ($scope.validador) {
+                  $scope.validador.validado = data[0].validado == 'S' ? true : false;
+                }
 
-              $scope.$broadcast('carregar_localizacao', data);
-              $scope.$broadcast('carregar_datas', data);
-              $scope.$broadcast('carregar_origem', data);
-              $scope.$broadcast('carregar_evento', data);
-              $scope.$broadcast('carregar_produtos', data);
-              $scope.$broadcast('carregar_detalhes', data);
-              $scope.$broadcast('carregar_ambientes', data);
-              $scope.$broadcast('carregar_empresa', data);
-              $scope.$broadcast('carregar_instituicao', data);
-              $scope.$broadcast('carregar_acoes', data);
-              $scope.$broadcast('carregar_gerais', data);
-              $scope.$broadcast('carregar_comunicante', data);
-              // $scope.$broadcast('carregar_arquivos', ret);
-              $scope.$broadcast('carregar_fonte', data);
+                $scope.$broadcast('carregar_localizacao', data);
+                $scope.$broadcast('carregar_datas', data);
+                $scope.$broadcast('carregar_origem', data);
+                $scope.$broadcast('carregar_evento', data);
+                $scope.$broadcast('carregar_produtos', data);
+                $scope.$broadcast('carregar_detalhes', data);
+                $scope.$broadcast('carregar_ambientes', data);
+                $scope.$broadcast('carregar_empresa', data);
+                $scope.$broadcast('carregar_instituicao', data);
+                $scope.$broadcast('carregar_acoes', data);
+                $scope.$broadcast('carregar_gerais', data);
+                $scope.$broadcast('carregar_comunicante', data);
+                // $scope.$broadcast('carregar_arquivos', ret);
+                $scope.$broadcast('carregar_fonte', data);
+              }
+              // $scope.$apply();
             }
-            // $scope.$apply();
-          }
-        );
+          );
+        } else {
+          $scope.nro_ocorrencia = '';
+          alert('Ocorrencia não encontrada em nossos registros');
+        }
       } else if ($scope.acao == 'deletar') {
         RestApi.query({query: 'deletar_ocorrencia'},
           function success(data, status){
