@@ -42,7 +42,7 @@ angular.module('estatisticasApp')
             var hr = hora.split(':');
             hr[0] = parseInt(hr[0]); 
             if(hr[0] >= 0 && hr[0] < 6)
-                $scope.datas.obsPeriodo = 'A';
+                $scope.datas.obsPeriodo = 'S';
             else if(hr[0] >= 6 && hr[0] < 12)
                 $scope.datas.obsPeriodo = 'M';
             else if(hr[0] >= 12 && hr[0] < 18)
@@ -56,7 +56,7 @@ angular.module('estatisticasApp')
             var hr = hora.split(':');
             hr[0] = parseInt(hr[0]); 
             if(hr[0] >= 0 && hr[0] < 6)
-                $scope.datas.incPeriodo = 'A';
+                $scope.datas.incPeriodo = 'S';
             else if(hr[0] >= 6 && hr[0] < 12)
                 $scope.datas.incPeriodo = 'M';
             else if(hr[0] >= 12 && hr[0] < 18)

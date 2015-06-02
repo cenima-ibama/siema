@@ -1,15 +1,15 @@
 
 
   <div ng-if='arquivoSuccess != null' class='no-print'>
-    <div ng-switch='arquivoSuccess'>
-      <div ng-switch-when='true'>
-        <div class="alert alert-info" role="alert">
-          O Arquivo adicionado foi enviado com Sucesso
-        </div>
-      </div>
-      <div ng-switch-default>
+    <div>
+      <div ng-if="!arquivoSuccess">
         <div class="alert alert-warning" role="alert">
           Ocorreu um erro inesperado ao enviar o arquivo anexado, favor entre em contato com o Administrador do sistema
+        </div>
+      </div>
+      <div ng-if='arquivoSuccess'>
+        <div class="alert alert-info" role="alert">
+          O Arquivo adicionado foi enviado com Sucesso
         </div>
       </div>
     </div>
