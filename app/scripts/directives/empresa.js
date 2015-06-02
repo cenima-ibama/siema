@@ -13,6 +13,8 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($scope){
 
+        $("#cpfCnpjEmpresa").mask("99999999999999");
+
         $scope.empresa.nome = "";
         $scope.empresa.cadastro = "";
         $scope.empresa.licencaAmbiental = "0";

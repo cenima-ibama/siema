@@ -13,6 +13,8 @@ angular.module('estatisticasApp')
       restrict: 'E',
       controller: function($scope){
 
+        $("#telComunicante").mask("(99)9999~-9999",{translation:  {'~': {pattern: /[0-9]/, optional: true}}});
+
         $scope.comunicante.subPanel = $scope.oleo ? '(Itens X do Anexo II do Decreto n' + String.fromCharCode(176) + ' 4.136 de 20 de fevereiro de 2002)' : '';
 
         // if ($scope.oleo) {
