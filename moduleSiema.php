@@ -154,7 +154,6 @@
 			// Localização
 			//
 			//
-
 			if($form->localizacao->uf) {
 				$query_ocorrencia = $query_ocorrencia . 'id_uf=' . $form->localizacao->uf . ',';
 			} else {
@@ -584,6 +583,31 @@
 				array_push($response, false);
 			}
 
+			if (!$res_ocorrencia) {
+				array_push($response, "erro na query ocorrencia");				
+			}
+			if (!$res_localizacao) {
+				array_push($response, "erro na query localizacao");				
+			}
+			if (!$res_origem) {
+				array_push($response, "erro na query origem");				
+			}
+			if (!$res_evento) {
+				array_push($response, "erro na query evento");				
+			}
+			if (!$res_ambiente) {
+				array_push($response, "erro na query ambiente");				
+			}
+			if (!$res_empresa) {
+				array_push($response, "erro na query empresa");				
+			}
+			if (!$res_fonte) {
+				array_push($response, "erro na query fonte");				
+			}
+			if (!$res_origem_oleo) {
+				array_push($response, "erro na query origem_oleo");				
+			}
+
 			print_r(json_encode($response));
 			exit();
 
@@ -638,13 +662,18 @@
 			// Localização
 			//
 			//
-			if ($form->localizacao->uf && $form->localizacao->municipio) {
-				$query_ocorrencia = $query_ocorrencia . '' . $form->localizacao->uf . ',' .
-																							  '' . $form->localizacao->municipio . ',';
+			if($form->localizacao->uf) {
+				$query_ocorrencia = $query_ocorrencia . '' . $form->localizacao->uf . ',';
 			} else {
-				$query_ocorrencia = $query_ocorrencia . 'null,' .
-																							  'null,';
+				$query_ocorrencia = $query_ocorrencia . 'null,';
 			}
+
+			if($form->localizacao->municipio) {
+			$query_ocorrencia = $query_ocorrencia . '' . $form->localizacao->municipio . ',';
+			} else {
+			$query_ocorrencia = $query_ocorrencia . 'null,';
+			}
+
 
 			if ($form->localizacao->oceano) {
 				$query_ocorrencia = $query_ocorrencia . '' . $form->localizacao->bacia . ',';
@@ -804,8 +833,8 @@
 					$res_empresa = pg_query($query);
 				}
 	    } else {
-					$query_ocorrencia = $query_ocorrencia . 'null,';
-					$res_empresa = pg_query($query);
+					$query_ocorrencia = $query_ocorrencia . '\'N\',null,';
+					$res_empresa = true;
 	    }
 
 
@@ -884,8 +913,8 @@
       // Fonte de Informações
 			//
 			//
-      $form->fonte->fontes;
-      $form->fonte->complementar;
+      // $form->fonte->fontes;
+      // $form->fonte->complementar;
 
 
 
@@ -947,10 +976,13 @@
 					$query = 'DELETE FROM ocorrencia_tipo_localizacao WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\';';
 					$res_origem = pg_query($query);
 				}
+
 				if ($form->oleo) {
 					if (!$form->origem->semOleoOrigem) {
 							$query = 'INSERT INTO detalhamento_ocorrencia (id_ocorrencia,des_navio,des_instalacao) VALUES (\'' . $form->id_ocorrencia . '\',\''. $form->origem->navio . '\',\'' . $form->origem->instalacao . '\');';
 							$res_origem_oleo = pg_query($query);
+					} else {
+						$res_origem_oleo = true;
 					}
 				}
 
@@ -1049,7 +1081,7 @@
 	      // Fonte de Informações
 				//
 				//
-				if ($form->fonte) {
+				if ($form->fonte && (sizeof($form->fonte->fontes) > 0)) {
 					$query = 'INSERT INTO ocorrencia_tipo_fonte_informacao (id_ocorrencia,id_tipo_fonte_informacao,desc_outras_fontes) VALUES ';
 
 					foreach ($form->fonte->fontes as $key => $value) {
@@ -1084,6 +1116,31 @@
 				pg_query("ROLLBACK") or die("Transaction rollback failed\n");
 				pg_close($cdb);
 				array_push($response, false);
+			}
+
+			if (!$res_ocorrencia) {
+				array_push($response, "erro na query ocorrencia");				
+			}
+			if (!$res_localizacao) {
+				array_push($response, "erro na query localizacao");				
+			}
+			if (!$res_origem) {
+				array_push($response, "erro na query origem");				
+			}
+			if (!$res_evento) {
+				array_push($response, "erro na query evento");				
+			}
+			if (!$res_ambiente) {
+				array_push($response, "erro na query ambiente");				
+			}
+			if (!$res_empresa) {
+				array_push($response, "erro na query empresa");				
+			}
+			if (!$res_fonte) {
+				array_push($response, "erro na query fonte");				
+			}
+			if (!$res_origem_oleo) {
+				array_push($response, "erro na query origem_oleo");				
 			}
 
 			print_r(json_encode($response));

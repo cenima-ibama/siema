@@ -73,8 +73,8 @@
     transparent: true
   });
 
-  ucFederacao = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms", {
-    layers: "csr:unidade_federacao",
+  ucFederacao = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/cgema/wms", {
+    layers: "cgema:unidade_federacao",
     format: "image/png",
     transparent: true
   });
@@ -319,216 +319,334 @@
     locateOptions: {}
   }).addTo(H5.Map.base);
 
-  legados = new L.VectorLayer.Postgis({
-    url: restURL,
-    map: H5.Map.base,
-    geotable: "vw_ocorrencia_mapa",
-    fields: "id_ocorrencia, nro_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, produtos_outros, legado",
-    srid: 4326,
-    geomFieldName: "shape",
-    showAll: true,
-    cluster: true,
-    popupTemplate: function(properties) {
-      var html, text;
-      html = '<div class="iw-content"><h4 class="text-center">' + properties.nro_ocorrencia + '</h4><br />';
-      html += '<table class="condensed-table bordered-table zebra-striped"><tbody>';
-      text = "";
-      if (properties.municipio) {
-        text += properties.municipio;
-      }
-      text += " - ";
-      if (properties.estado) {
-        text += properties.estado;
-      }
-      if (!properties.municipio && !properties.estado) {
-        text = "Sem informação";
-      }
-      html += '<tr><th>Município - Estado: </th><td style="max-width:200px;">' + text + '</td></tr>';
-      text = "";
-      if (properties.data_acidente) {
-        text += properties.data_acidente;
-      }
-      if (!properties.data_acidente) {
-        text = "Sem informação";
-      }
-      html += '<tr><th>Data: </th><td style="max-width:200px;">' + text + '</td></tr>';
-      text = "";
-      if (properties.origem_acidente !== "{}") {
-        text += properties.origem_acidente.replace(/[{}]/g, "").replace(/,/g, ", ");
-      }
-      if (properties.origem_acidente === "{}") {
-        text = "Sem informação";
-      }
-      html += '<tr><th>Origem do Acidente: </th><td style="max-width:200px;">' + text + '</td></tr>';
-      text = "";
-      if (properties.tipo_eventos !== "{}") {
-        text += properties.tipo_eventos.replace(/[{}]/g, "").replace(/,/g, ", ");
-      }
-      if (properties.tipo_eventos === "{}") {
-        text = "Sem informação";
-      }
-      html += '<tr><th>Tipo de Evento: </th><td style="max-width:200px;">' + text + '</td></tr>';
-      text = "";
-      if (properties.produtos !== "{}") {
-        text += properties.produtos.replace(/[{}]/g, "").replace(/,/g, ", ");
-      }
-      if (properties.produtos === "{}") {
-        text = "";
-      }
-      html += '<tr><th>Produtos Envolvidos: </th><td style="max-width:200px;">' + text + '</td></tr>';
-      text = "";
-      if (properties.produtos_outros !== "{}") {
-        text += properties.produtos_outros.replace(/[{}]/g, "").replace(/,/g, ", ");
-      }
-      if (properties.produtos_outros === "{}") {
-        text = "";
-      }
-      html += '<tr><th></th><td style="max-width:200px;">' + text + '</td></tr>';
-      text = "";
-      html += '</tbody></table></div>';
-      return html;
-    },
-    singlePopup: true,
-    // visible: false,
-    focus: true,
-    where: 'legado IS TRUE',
-    symbology: {
-      type: "single",
-      vectorStyle: {
-        circleMarker: true,
-        radius: 6,
-        fillColor: "#ff0000",
-        fillOpacity: 0.8,
-        weight: 4.0,
-        color: "#ff0000",
-        opacity: 0.8
-      }
-    }
-  });
 
-  legados.setMap(H5.Map.base);
+  if (H5.logged_in && !H5.empresa) {
+    legados = new L.VectorLayer.Postgis({
+      url: restURL,
+      map: H5.Map.base,
+      geotable: "vw_ocorrencia_mapa",
+      fields: "id_ocorrencia, nro_ocorrencia, municipio, estado, data_acidente, origem_acidente, tipo_eventos, produtos, produtos_outros, legado",
+      srid: 4326,
+      geomFieldName: "shape",
+      showAll: true,
+      cluster: true,
+      popupTemplate: function(properties) {
+        var html, text;
+        html = '<div class="iw-content"><h4 class="text-center">' + properties.nro_ocorrencia + '</h4><br />';
+        html += '<table class="condensed-table bordered-table zebra-striped"><tbody>';
+        text = "";
+        if (properties.municipio) {
+          text += properties.municipio;
+        }
+        text += " - ";
+        if (properties.estado) {
+          text += properties.estado;
+        }
+        if (!properties.municipio && !properties.estado) {
+          text = "Sem informação";
+        }
+        html += '<tr><th>Município - Estado: </th><td style="max-width:200px;">' + text + '</td></tr>';
+        text = "";
+        if (properties.data_acidente) {
+          text += properties.data_acidente;
+        }
+        if (!properties.data_acidente) {
+          text = "Sem informação";
+        }
+        html += '<tr><th>Data: </th><td style="max-width:200px;">' + text + '</td></tr>';
+        text = "";
+        if (properties.origem_acidente !== "{}") {
+          text += properties.origem_acidente.replace(/[{}]/g, "").replace(/,/g, ", ");
+        }
+        if (properties.origem_acidente === "{}") {
+          text = "Sem informação";
+        }
+        html += '<tr><th>Origem do Acidente: </th><td style="max-width:200px;">' + text + '</td></tr>';
+        text = "";
+        if (properties.tipo_eventos !== "{}") {
+          text += properties.tipo_eventos.replace(/[{}]/g, "").replace(/,/g, ", ");
+        }
+        if (properties.tipo_eventos === "{}") {
+          text = "Sem informação";
+        }
+        html += '<tr><th>Tipo de Evento: </th><td style="max-width:200px;">' + text + '</td></tr>';
+        text = "";
+        if (properties.produtos !== "{}") {
+          text += properties.produtos.replace(/[{}]/g, "").replace(/,/g, ", ");
+        }
+        if (properties.produtos === "{}") {
+          text = "";
+        }
+        html += '<tr><th>Produtos Envolvidos: </th><td style="max-width:200px;">' + text + '</td></tr>';
+        text = "";
+        if (properties.produtos_outros !== "{}") {
+          text += properties.produtos_outros.replace(/[{}]/g, "").replace(/,/g, ", ");
+        }
+        if (properties.produtos_outros === "{}") {
+          text = "";
+        }
+        html += '<tr><th></th><td style="max-width:200px;">' + text + '</td></tr>';
+        text = "";
+        html += '</tbody></table></div>';
+        return html;
+      },
+      singlePopup: true,
+      // visible: false,
+      focus: true,
+      where: 'legado IS TRUE',
+      symbology: {
+        type: "single",
+        vectorStyle: {
+          circleMarker: true,
+          radius: 6,
+          fillColor: "#ff0000",
+          fillOpacity: 0.8,
+          weight: 4.0,
+          color: "#ff0000",
+          opacity: 0.8
+        }
+      }
+    });
+
+    legados.setMap(H5.Map.base);
+  }
 
   iconsURL = "//" + document.location.host + document.location.pathname + "/assets/img/icons/";
 
-  H5.controlswitch = new L.Control.ActiveLayers({
-    "OSM": {
-      layer: openstreet
-    },
 
-    "OpenCycleMap": {
-      layer: opencyclemap
-    }
-  }, {
-    "Recifes": {
-      layer: recifes,
-      tab: "water"
-    },
-    "Mangues": {
-      layer: mangues,
-      tab: "water"
-    },
-    "Lagunas": {
-      layer: lagunas,
-      tab: "water"
-    },
-    "Estuário": {
-      layer: estuario,
-      tab: "water"
-    },
-    "Dunas": {
-      layer: duna,
-      tab: "water"
-    },
-    "Costão": {
-      layer: costao,
-      tab: "water"
-    },
-    "Banhado": {
-      layer: banhado,
-      tab: "water"
-    },
-    "Marisma": {
-      layer: marisma,
-      tab: "water"
-    },
-    "Restinga": {
-      layer: restinga,
-      tab: "water"
-    },
-    "Bloco Exploratório": {
-      layer: blocoExploratorio,
-      tab: "factory"
-    },
-    "Portos e Terminais": {
-      layer: portoTerminal,
-      tab: "factory"
-    },
-    "Eixos Dutoviários": {
-      layer: eixoDutoviario,
-      tab: "factory"
-    },
-    "Eixos Ferroviários": {
-      layer: eixoFerroviario,
-      tab: "factory"
-    },
-    "Eixos Rodoviários": {
-      layer: eixoRodoviario,
-      tab: "factory"
-    },
-    "Estações Ferroviárias": {
-      layer: estacaoFerroviaria,
-      tab: "factory"
-    },
-    "Refinarias": {
-      layer: refinaria,
-      tab: "factory"
-    },
-    "Pontes e Túneis": {
-      layer: ponteTunel,
-      tab: "factory"
-    },
-    "Terras Indígenas": {
-      layer: terrasIndigenas
-    },
-    "UC Uso Sustentável": {
-      layer: ucSustentavel
-    },
-    "UC Proteção Integral": {
-      layer: ucIntegral
-    },
-    "Unidade da Federação": {
-      layer: ucFederacao
-    },
-    "Bioma IBGE": {
-      layer: biomaIBGE
-    },
-    "Hidrografia": {
-      layer: hidrografia
-    },
-    "Mar Territorial": {
-      layer: marTerritorial
-    },
-    "Dados Legados": {
-      layer: legados.layer,
-      vectorLayer: {
-        layer: legados
+  if (H5.logged_in && !H5.empresa) {
+
+    H5.controlswitch = new L.Control.ActiveLayers({
+      "OSM": {
+        layer: openstreet
+      },
+
+      "OpenCycleMap": {
+        layer: opencyclemap
       }
-    }
-  }, {
-    water: {
-      icon: iconsURL + "water.png",
-      name: null,
-      selected: true
-    },
-    factory: {
-      icon: iconsURL + "factory.png",
-      name: null
-    }
-  }).addTo(H5.Map.base);
+    }, {
+      "Recifes": {
+        layer: recifes,
+        tab: "water"
+      },
+      "Mangues": {
+        layer: mangues,
+        tab: "water"
+      },
+      "Lagunas": {
+        layer: lagunas,
+        tab: "water"
+      },
+      "Estuário": {
+        layer: estuario,
+        tab: "water"
+      },
+      "Dunas": {
+        layer: duna,
+        tab: "water"
+      },
+      "Costão": {
+        layer: costao,
+        tab: "water"
+      },
+      "Banhado": {
+        layer: banhado,
+        tab: "water"
+      },
+      "Marisma": {
+        layer: marisma,
+        tab: "water"
+      },
+      "Restinga": {
+        layer: restinga,
+        tab: "water"
+      },
+      "Bloco Exploratório": {
+        layer: blocoExploratorio,
+        tab: "factory"
+      },
+      "Portos e Terminais": {
+        layer: portoTerminal,
+        tab: "factory"
+      },
+      "Eixos Dutoviários": {
+        layer: eixoDutoviario,
+        tab: "factory"
+      },
+      "Eixos Ferroviários": {
+        layer: eixoFerroviario,
+        tab: "factory"
+      },
+      "Eixos Rodoviários": {
+        layer: eixoRodoviario,
+        tab: "factory"
+      },
+      "Estações Ferroviárias": {
+        layer: estacaoFerroviaria,
+        tab: "factory"
+      },
+      "Refinarias": {
+        layer: refinaria,
+        tab: "factory"
+      },
+      "Pontes e Túneis": {
+        layer: ponteTunel,
+        tab: "factory"
+      },
+      "Terras Indígenas": {
+        layer: terrasIndigenas
+      },
+      "UC Uso Sustentável": {
+        layer: ucSustentavel
+      },
+      "UC Proteção Integral": {
+        layer: ucIntegral
+      },
+      "Unidade da Federação": {
+        layer: ucFederacao
+      },
+      "Bioma IBGE": {
+        layer: biomaIBGE
+      },
+      "Hidrografia": {
+        layer: hidrografia
+      },
+      "Mar Territorial": {
+        layer: marTerritorial
+      },
+      "Dados Legados": {
+        layer: legados.layer,
+        vectorLayer: {
+          layer: legados
+        }
+      }
+    }, {
+      water: {
+        icon: iconsURL + "water.png",
+        name: null,
+        selected: true
+      },
+      factory: {
+        icon: iconsURL + "factory.png",
+        name: null
+      }
+    }).addTo(H5.Map.base);
 
-  $(document).ready(function() {
-    return legados.hideLayer();
-  });
+    $(document).ready(function() {
+      return legados.hideLayer();
+    });
+  } else {
+
+    H5.controlswitch = new L.Control.ActiveLayers({
+      "OSM": {
+        layer: openstreet
+      },
+
+      "OpenCycleMap": {
+        layer: opencyclemap
+      }
+    }, {
+      "Recifes": {
+        layer: recifes,
+        tab: "water"
+      },
+      "Mangues": {
+        layer: mangues,
+        tab: "water"
+      },
+      "Lagunas": {
+        layer: lagunas,
+        tab: "water"
+      },
+      "Estuário": {
+        layer: estuario,
+        tab: "water"
+      },
+      "Dunas": {
+        layer: duna,
+        tab: "water"
+      },
+      "Costão": {
+        layer: costao,
+        tab: "water"
+      },
+      "Banhado": {
+        layer: banhado,
+        tab: "water"
+      },
+      "Marisma": {
+        layer: marisma,
+        tab: "water"
+      },
+      "Restinga": {
+        layer: restinga,
+        tab: "water"
+      },
+      "Bloco Exploratório": {
+        layer: blocoExploratorio,
+        tab: "factory"
+      },
+      "Portos e Terminais": {
+        layer: portoTerminal,
+        tab: "factory"
+      },
+      "Eixos Dutoviários": {
+        layer: eixoDutoviario,
+        tab: "factory"
+      },
+      "Eixos Ferroviários": {
+        layer: eixoFerroviario,
+        tab: "factory"
+      },
+      "Eixos Rodoviários": {
+        layer: eixoRodoviario,
+        tab: "factory"
+      },
+      "Estações Ferroviárias": {
+        layer: estacaoFerroviaria,
+        tab: "factory"
+      },
+      "Refinarias": {
+        layer: refinaria,
+        tab: "factory"
+      },
+      "Pontes e Túneis": {
+        layer: ponteTunel,
+        tab: "factory"
+      },
+      "Terras Indígenas": {
+        layer: terrasIndigenas
+      },
+      "UC Uso Sustentável": {
+        layer: ucSustentavel
+      },
+      "UC Proteção Integral": {
+        layer: ucIntegral
+      },
+      "Unidade da Federação": {
+        layer: ucFederacao
+      },
+      "Bioma IBGE": {
+        layer: biomaIBGE
+      },
+      "Hidrografia": {
+        layer: hidrografia
+      },
+      "Mar Territorial": {
+        layer: marTerritorial
+      }
+    }, {
+      water: {
+        icon: iconsURL + "water.png",
+        name: null,
+        selected: true
+      },
+      factory: {
+        icon: iconsURL + "factory.png",
+        name: null
+      }
+    }).addTo(H5.Map.base);
+  }
 
   // updateLayerByTimer = function() {
   //   if (acidentes !== null) {

@@ -30,8 +30,10 @@
 
 
     if (move_uploaded_file($_FILES['file']['tmp_name'], $finalPath . '/' . $finalName)) {
-        return true;
+        // angularjs way of receiving a response from php
+        echo true;
     } else {
-        return false;
+        // angularjs way of receiving a response from php
+        echo false;
     }
 ?>
