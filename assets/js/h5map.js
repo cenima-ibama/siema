@@ -85,12 +85,12 @@
     transparent: true
   });
 
-  biomaIBGE = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cgema:Bioma_IBGE",
+  biomaIBGE = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms", {
+    layers: "csr:bioma",
     format: "image/png",
     transparent: true
   });
-
+  
   portoTerminal = new L.TileLayer.WMS(geoserverUrl, {
     layers: "cgema:portos_e_terminais",
     format: "image/png",
