@@ -433,7 +433,7 @@
           if (col === null) {
             return arrayTemp[arrayTemp.length] = "";
           } else {
-            return arrayTemp[arrayTemp.length] = typeof col !== "object" ? col : col.text;
+            return arrayTemp[arrayTemp.length] = typeof col !== "object" ? col.toString() : col.text;
           }
         }
       });

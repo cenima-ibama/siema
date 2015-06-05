@@ -161,13 +161,15 @@
 			}
 
 			if($form->localizacao->municipio) {
-			$query_ocorrencia = $query_ocorrencia . 'id_municipio=' . $form->localizacao->municipio . ',';
+				$query_ocorrencia = $query_ocorrencia . 'id_municipio=' . $form->localizacao->municipio . ',';
 			} else {
-			$query_ocorrencia = $query_ocorrencia . 'id_municipio=null,';
+				$query_ocorrencia = $query_ocorrencia . 'id_municipio=null,';
 			}
 
-			if ($form->localizacao->oceano) {
+			if ($form->localizacao->oceano && $form->localizacao->bacia) {
 				$query_ocorrencia = $query_ocorrencia . 'id_bacia_sedimentar=' . $form->localizacao->bacia . ',';
+			} else {
+				$query_ocorrencia = $query_ocorrencia . 'id_bacia_sedimentar=null,';
 			}
 
 			$query_ocorrencia = $query_ocorrencia . 'endereco_ocorrencia=\'' . $form->localizacao->endereco . '\',';
@@ -291,7 +293,7 @@
 			$query = 'DELETE FROM ocorrencia_produto WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\'';
 			$res_produtos = pg_query($query);
 
-			if (!$form->produtos->semProduto && $res_produtos){
+			if (!$form->produtos->semProduto && $res_produtos && ($form->produtos->produtos_onu || $form->produtos->produtos_outros)){
 
 				$query = 'INSERT INTO ocorrencia_produto (id_ocorrencia,id_produto_onu, id_produto_outro, quantidade, unidade_medida) VALUES ';
 
@@ -305,7 +307,7 @@
 					$query = $query . ' (\'' . $form->id_ocorrencia . '\',null,\'' . $value->id . '\',\''. $value->qtd . '\',\'' . $value->uni . '\'),';
 				}
 
-      	$query = trim($query, ",");
+      			$query = trim($query, ",");
 				// print_r($query);
 
 				$res_produtos = pg_query($query);
@@ -674,8 +676,7 @@
 			$query_ocorrencia = $query_ocorrencia . 'null,';
 			}
 
-
-			if ($form->localizacao->oceano) {
+			if ($form->localizacao->oceano && $form->localizacao->bacia) {
 				$query_ocorrencia = $query_ocorrencia . '' . $form->localizacao->bacia . ',';
 			} else {
 				$query_ocorrencia = $query_ocorrencia . 'null,';

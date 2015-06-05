@@ -482,7 +482,7 @@ getContentExportConsult = ->
         if col is null
           arrayTemp[arrayTemp.length] = ""
         else
-          arrayTemp[arrayTemp.length] = if typeof(col) isnt "object" then col else col.text
+          arrayTemp[arrayTemp.length] = if typeof(col) isnt "object" then col.toString() else col.text
       
     arrayResults[arrayResults.length] = arrayTemp    
 
