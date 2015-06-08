@@ -161,9 +161,9 @@
 			}
 
 			if($form->localizacao->municipio) {
-				$query_ocorrencia = $query_ocorrencia . 'id_municipio=' . $form->localizacao->municipio . ',';
+			$query_ocorrencia = $query_ocorrencia . 'id_municipio=' . $form->localizacao->municipio . ',';
 			} else {
-				$query_ocorrencia = $query_ocorrencia . 'id_municipio=null,';
+			$query_ocorrencia = $query_ocorrencia . 'id_municipio=null,';
 			}
 
 			if ($form->localizacao->oceano && $form->localizacao->bacia) {
@@ -307,7 +307,7 @@
 					$query = $query . ' (\'' . $form->id_ocorrencia . '\',null,\'' . $value->id . '\',\''. $value->qtd . '\',\'' . $value->uni . '\'),';
 				}
 
-      			$query = trim($query, ",");
+      	$query = trim($query, ",");
 				// print_r($query);
 
 				$res_produtos = pg_query($query);
@@ -356,7 +356,8 @@
 			}
 
 			if ($form->oleo) {
-				$query_ocorrencia = $query_ocorrencia . 'situacao_atual_descarga=\'' . $form->detalhes->situacao . '\',';
+				$situacao = $form->detalhes->situacao ? '\'' . $form->detalhes->situacao . '\'' : 'null';
+				$query_ocorrencia = $query_ocorrencia . 'situacao_atual_descarga=' . $situacao . ',';
 			}
 
 
@@ -786,8 +787,8 @@
 			}
 
 			if ($form->oleo) {
-				$situacao = $form->detalhes->situacao ? $form->detalhes->situacao : 'null';
-				$query_ocorrencia = $query_ocorrencia . '\'' . $situacao . '\',';
+				$situacao = $form->detalhes->situacao ? '\'' . $form->detalhes->situacao . '\'' : 'null';
+				$query_ocorrencia = $query_ocorrencia . $situacao . ',';
 			} else {
 				$query_ocorrencia = $query_ocorrencia . 'null,';
 			}
