@@ -10,7 +10,8 @@
 <div class="col-lg-6">
     <div class="form-group">
         <label>Informações complementares:</label>
-        <textarea class="form-control col-lg-3" rows="4" ng-disabled="instituicao.semInstituicao" ng-model="instituicao.complementar"></textarea>
+        <textarea class="form-control col-lg-3" rows="4" ng-disabled="instituicao.semInstituicao" ng-model="instituicao.complementar" maxlength='1000' ng-change="instituicao.contador=instituicao.complementar.length"></textarea>
+        <span class="counter pull-right" ng-if="instituicao.contador">{{instituicao.contador}} de 1000 caracteres</span>
     </div>
 </div>
 <div class="col-lg-6">

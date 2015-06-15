@@ -35,6 +35,16 @@ angular.module('estatisticasApp')
       $scope[obj].subPanel = "";
     });
 
+    // Código para configurar o focus dos acordioes clicados
+    $('.panel-group').on('shown.bs.collapse', function (e) {
+      var offset = $('.panel.panel-default > .panel-collapse.in').offset();
+      if (offset) {
+        $('html,body').animate({
+          scrollTop: $('.panel-collapse.in').siblings('.panel-heading').offset().top
+        }, 200);
+      }
+    });
+
     $scope.carregaParametros = function() {
 
       if ($routeParams.id) {
@@ -209,7 +219,7 @@ angular.module('estatisticasApp')
             function success(data, status){
               if(!data[0]){
                 $scope.nro_ocorrencia = '';
-                alert('Ocorrencia não encontrada em nossos registros');
+                alert('Ocorr' + String.fromCharCode(234) + 'ncia n' + String.fromCharCode(227) + 'o encontrada em nossos registros');
               } else{
                 $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
                 if ($scope.validador) {
@@ -236,7 +246,7 @@ angular.module('estatisticasApp')
           );
         } else {
           $scope.nro_ocorrencia = '';
-          alert('Ocorrencia não encontrada em nossos registros');
+                alert('Ocorr' + String.fromCharCode(234) + 'ncia n' + String.fromCharCode(227) + 'o encontrada em nossos registros');
         }
       } else if ($scope.acao == 'deletar') {
         RestApi.query({query: 'deletar_ocorrencia'},
@@ -283,6 +293,10 @@ angular.module('estatisticasApp')
             ocorrencia.instituicao.instituicoes.push(val.id);
         });
         ocorrencia.localizacao = $scope.localizacao;
+        
+        if(ocorrencia.localizacao.lat && ocorrencia.localizacao.lng)
+          ocorrencia.acidente = $scope.mapa.acidente.toGeoJSON();
+
         ocorrencia.origem = $scope.origem;
         ocorrencia.origem.origens = [];
         angular.forEach($scope.origens, function(val, key){
@@ -303,9 +317,9 @@ angular.module('estatisticasApp')
 
         var error = [];
         if(!ocorrencia.localizacao.lat)
-          error.push('1. Preencha o campo de Latitude');
+          error.push('1. Preencha o campo Latitude');
         if(!ocorrencia.localizacao.lng)
-          error.push('1. Preencha o campo de Longitude');
+          error.push('1. Preencha o campo Longitude');
 
         // Campos não obrigatórios: Ocorrência pode cair no mar.
         // if(!ocorrencia.localizacao.uf)
@@ -314,10 +328,6 @@ angular.module('estatisticasApp')
         //   error.push('1. Preencha o campo Munic' + String.fromCharCode(237) + 'pio');
         // if(!ocorrencia.localizacao.endereco)
         //   error.push('1. Preencha o campo de Endere' + String.fromCharCode(231) + 'o');
-
-        if(ocorrencia.localizacao.lat && ocorrencia.localizacao.lng)
-          ocorrencia.acidente = $scope.mapa.acidente.toGeoJSON();
-
 
         if(!ocorrencia.datas.semIncidente){
           occur = ocorrencia.datas;
@@ -342,13 +352,13 @@ angular.module('estatisticasApp')
         if($scope.oleo){
           if(!ocorrencia.origem.semOleoOrigem){
             if(((!ocorrencia.origem.navio) || (ocorrencia.origem.navio == '')) && ((!ocorrencia.origem.instalacao) || (ocorrencia.origem.instalacao == '')))
-              error.push('3. Preencha o campo "Origem do acidente - Identificacao do Navio');
+              error.push('3. Preencha o campo "Origem do Acidente - Identificacao do Navio"');
           }
         }
 
         if(!ocorrencia.origem.semOrigem){
           if(!ocorrencia.origem.origens[0]){
-            error.push('3. Preencha o campo "Origem do acidente"');
+            error.push('3. Preencha o campo "Origem do Acidente"');
           }
         }
 
@@ -385,13 +395,13 @@ angular.module('estatisticasApp')
 
         if(!ocorrencia.empresa.semEmpresa){
           if(!ocorrencia.empresa.nome || ocorrencia.empresa.nome==''){
-            error.push('8. Preencha o Campo Nome em Identifica' + String.fromCharCode(231) + String.fromCharCode(227) + 'o da Empresa/Respons' + String.fromCharCode(225) + 'vel');
+            error.push('8. Preencha o campo "Nome" em "Identifica' + String.fromCharCode(231) + String.fromCharCode(227) + 'o da Empresa/Respons' + String.fromCharCode(225) + 'vel"');
           }
         }
 
         if(!ocorrencia.instituicao.semInstituicao){
           if(!ocorrencia.instituicao.instituicoes[0]){
-            error.push('9. Preencha o campo de institui' + String.fromCharCode(231) + String.fromCharCode(227) + 'o/empresa atuando no local');
+            error.push('9. Preencha o campo "Institui' + String.fromCharCode(231) + String.fromCharCode(227) + 'o/Empresa Atuando no Local"');
           }
         }
 
@@ -446,7 +456,10 @@ angular.module('estatisticasApp')
         }
 
         formulario.localizacao = $scope.localizacao;
-        formulario.acidente = $scope.mapa.acidente.toGeoJSON();
+        
+        if(formulario.localizacao.lat && formulario.localizacao.lng)
+          formulario.acidente = $scope.mapa.acidente.toGeoJSON();
+
         formulario.datas = $scope.datas;
         formulario.origem = $scope.origem;
         formulario.origem.origens = [];
@@ -495,9 +508,9 @@ angular.module('estatisticasApp')
 
         var error = [];
         if(!formulario.localizacao.lat)
-          error.push('1. Preencha o campo de Latitude');
+          error.push('1. Preencha o campo Latitude');
         if(!formulario.localizacao.lng)
-          error.push('1. Preencha o campo de Longitude');
+          error.push('1. Preencha o campo Longitude');
 
         // Campos não obrigatórios: Ocorrência pode cair no mar.
         // if(!formulario.localizacao.uf)
@@ -507,9 +520,6 @@ angular.module('estatisticasApp')
         // if(!formulario.localizacao.endereco)
         //   error.push('1. Preencha o campo de Endereco');
 
-        if(formulario.localizacao.lat && formulario.localizacao.lng)
-          formulario.acidente = $scope.mapa.acidente.toGeoJSON();
-
         if(!formulario.datas.semIncidente){
           occur = formulario.datas;
           if(!occur.diaIncidente)
@@ -517,35 +527,35 @@ angular.module('estatisticasApp')
           // if(!occur.horaIncidente)
           //   error.push('2. Preencha o campo "Hora do Incidente!');
           if(!occur.incPeriodo)
-            error.push('2. Preencha o campo "Período do Incidente"');
+            error.push('2. Preencha o campo "Per' + String.fromCharCode(237) + 'odo do Incidente"');
         }
 
         if(!formulario.datas.semObservacao){
           occur = formulario.datas;
           if(!occur.diaObservacao)
-            error.push('2. Preencha o campo "Data de Observaçao"');
+            error.push('2. Preencha o campo "Data de Observa' + String.fromCharCode(231) + String.fromCharCode(227) + 'o"');
           // if(!occur.horaObservacao)
           //   error.push('2. Preencha o campo "Hora de Observacao"');
           if(!occur.obsPeriodo)
-            error.push('2. Preencha o campo "Período de Observacao"');
+            error.push('2. Preencha o campo "Per' + String.fromCharCode(237) + 'odo de Observa' + String.fromCharCode(231) + String.fromCharCode(227) + 'o"');
         }
 
         if(!formulario.origem.semOrigem){
           if(!formulario.origem.origens[0]){
-            error.push('3. Preencha o campo de Origem do acidente');
+            error.push('3. Preencha o campo "Origem do Acidente"');
           }
         }
 
         if($scope.oleo){
           if(!formulario.origem.semOleoOrigem){
             if(((!formulario.origem.navio) || (formulario.origem.navio == '')) && ((!formulario.origem.instalacao) || (formulario.origem.instalacao == '')))
-              error.push('3. Preencha o campo "Origem do acidente - Identificacao do Navio');
+              error.push('3. Preencha o campo "Origem do Acidente - Identificacao do Navio"');
           }
         }
 
         if(!formulario.evento.semEvento){
           if(!formulario.evento.eventos[0]){
-            error.push('4. Preencha o campo tipo de evento');
+            error.push('4. Preencha o campo "Tipo de Evento"');
           }
         }
 
@@ -570,19 +580,19 @@ angular.module('estatisticasApp')
 
         if(!formulario.ambiente.semAmbientes){
           if(!formulario.ambiente.ambientes[0]){
-            error.push('7. Preencha o campo de ambientes atingidos');
+            error.push('7. Preencha o campo "Ambientes Atingidos"');
           }
         }
 
         if(!formulario.empresa.semEmpresa){
           if(!formulario.empresa.nome || formulario.empresa.nome==''){
-            error.push('8. Preencha o Campo Nome em Identificação da Empresa/Responsavel');
+            error.push('8. Preencha o campo "Nome" em "Identifica' + String.fromCharCode(231) + String.fromCharCode(227) + 'o da Empresa/Respons' + String.fromCharCode(225) + 'vel"');
           }
         }
 
         if(!formulario.instituicao.semInstituicao){
           if(!formulario.instituicao.instituicoes[0]){
-            error.push('9. Preencha o campo de instituicao/empresa atuando no local');
+            error.push('9. Preencha o campo "Institui' + String.fromCharCode(231) + String.fromCharCode(227) + 'o/Empresa Atuando no Local"');
           }
         }
 
@@ -595,7 +605,7 @@ angular.module('estatisticasApp')
               }
             }
             else
-              error.push('10. Preencha acões iniciais');
+              error.push('10. Preencha o campo "A' + String.fromCharCode(231) + String.fromCharCode(245) + 'es iniciais"');
           }
         }
 
@@ -627,6 +637,5 @@ angular.module('estatisticasApp')
       // $location.url = "#/html?id=" + nro_ocorrencia;
       $location.url("/html?id=" + $scope.nro_ocorrencia);
     };
-
 
   });

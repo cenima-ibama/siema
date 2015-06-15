@@ -3,7 +3,8 @@
         <div class="control-group">
             <label class="control-label" for="inputCausaProvavel"> Causa provável do acidente:*</label>
 
-            <textarea class="form-control col-lg-3 ng-pristine ng-untouched ng-valid" rows="4" ng-disabled="detalhes.semDetalhe" ng-model="detalhes.causa"></textarea>
+            <textarea class="form-control col-lg-3 ng-pristine ng-untouched ng-valid" rows="4" ng-disabled="detalhes.semDetalhe" ng-model="detalhes.causa" maxlength='1000' ng-change="detalhes.contador=detalhes.causa.length"></textarea>
+            <span class="counter pull-right" ng-if="detalhes.contador">{{detalhes.contador}} de 1000 caracteres</span>
 
             <div class="controls">
             </div>

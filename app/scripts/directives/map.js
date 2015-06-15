@@ -101,39 +101,43 @@ angular.module('estatisticasApp')
                 );
             }
 
-
     		$scope.map.on('draw:created', function (e) {
                 var type = e.layerType;
                 var layer = e.layer;
 
-                var shape = layer.toGeoJSON();
-                if ($scope.map.hasLayer($scope.mapa.acidente)) {
-                    $scope.map.removeLayer($scope.mapa.acidente);
-                }
-
-                $scope.mapa.acidente = new L.Marker(shape.geometry.coordinates.reverse());
-                $scope.map.addLayer($scope.mapa.acidente);
-
-                $scope.localizacao.lat = shape.geometry.coordinates[0];
-                $scope.localizacao.lng = shape.geometry.coordinates[1];
-
+                $scope.mapa.shape = layer.toGeoJSON();
+                
                 // var data = {}
                 // data.lat = $scope.mapa.converterDMS(shape.geometry.coordinates[0]);
                 // data.lng = $scope.mapa.converterDMS(shape.geometry.coordinates[1]);
 
+                $scope.mapa.validarMarcador(layer);
 
-                // $scope.$broadcast('mudar_latlng', data);
-
-                $scope.localizacao.lat = $scope.mapa.converterDMS(shape.geometry.coordinates[0]);
-                $scope.localizacao.lng = $scope.mapa.converterDMS(shape.geometry.coordinates[1]);
-
-                $scope.mapa.getUf(shape.geometry.coordinates[0],shape.geometry.coordinates[1]);
-
-                // console.log(shape.geometry.coordinates[0]);
-                // console.log($scope.mapa.converterDD($scope.localizacao.lat));
-
-                $scope.$apply();
     		});
+
+            $scope.mapa.criarMarcador = $scope.$on('criar_marcador', function(event, data){
+
+                if ($scope.map.hasLayer($scope.mapa.acidente)) {
+                    $scope.map.removeLayer($scope.mapa.acidente);
+                }
+
+                $scope.mapa.acidente = new L.Marker($scope.mapa.shape.geometry.coordinates.reverse());
+                $scope.map.addLayer($scope.mapa.acidente);
+
+                $scope.localizacao.lat = $scope.mapa.converterDMS($scope.mapa.shape.geometry.coordinates[0]);
+                $scope.localizacao.lng = $scope.mapa.converterDMS($scope.mapa.shape.geometry.coordinates[1]);
+
+                $scope.mapa.getUf($scope.mapa.shape.geometry.coordinates[0],$scope.mapa.shape.geometry.coordinates[1]);
+
+            });
+
+            $scope.mapa.criarErro = $scope.$on('criar_erro', function(event, latlng){
+                var popup = L.popup()
+                            .setLatLng(latlng)
+                            .setContent('<p>O ponto est' + String.fromCharCode(225) + ' fora da ' + String.fromCharCode(225) + 'rea limite do Brasil</p>')
+                            .openOn($scope.map);
+                $scope.map.addLayer(popup);
+            });
 
 
             $scope.mapa.converterDMS = function(dd){
@@ -167,20 +171,17 @@ angular.module('estatisticasApp')
 
 
             $scope.mapa.validarMarcador = function(marcador) {
+
                 RestApi.query({query: 'verificar_marcador', 'lat': marcador.getLatLng().lat, 'lng': marcador.getLatLng().lng},
                     function success(data, status){
 
-                        angular.forEach(data, function(value, key){
-                            if (value.intersects == 't') {
-                                ret = 1;
-                            } else {
-                                ret = 0;
-                            }
-                        });
+                        if (data[0].intersects == 't') {
+                            $scope.$broadcast('criar_marcador',  marcador.getLatLng());
+                        } else {
+                            $scope.$broadcast('criar_erro',  marcador.getLatLng());
+                        }
                     }
                 );
-
-                return ret;
             };
 
             $scope.mapa.mudarMarcador = function(){

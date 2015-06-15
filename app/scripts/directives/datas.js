@@ -23,19 +23,20 @@ angular.module('estatisticasApp')
 
         $scope.datas.diaObservacao = '';
         $scope.datas.horaObservacao = '';
-        $scope.datas.obsSemana = 0;
+        $scope.datas.obsSemana = '0';
         $scope.datas.obsPeriodo = '';
         $scope.datas.semObservacao = false;
 
         $scope.datas.diaIncidente = '';
         $scope.datas.horaIncidente = '';
-        $scope.datas.incSemana = 0;
+        $scope.datas.incSemana = '0';
         $scope.datas.incPeriodo = '';
         $scope.datas.semIncidente = false;
 
         $scope.updateSemana = function($dia, $semana) {
           var temp = $scope.datas[$dia].split('/');
-          $scope.datas[$semana] = new Date(temp[2],temp[1] - 1,temp[0]).getDay() + 1;
+          $scope.datas[$semana] = (new Date(temp[2],temp[1] - 1,temp[0]).getDay() + 1).toString();
+          // $scope.$apply();
         }
 
         $scope.getPeriodoObs = function(hora){

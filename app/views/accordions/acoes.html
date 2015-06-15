@@ -32,7 +32,8 @@
         <label class="control-label checkbox span6">
             <input type="checkbox" ng-model="acoes.outrasProvidencias"  ng-disabled="acoes.semAcoes">Foram tomadas outras providências a saber:
         </label>
-        <textarea ng-if="acoes.outrasProvidencias"  ng-model='acoes.outrasProvidenciasText' ng-disabled="acoes.semAcoes" class="form-control col-lg-3" rows="4"></textarea>
+        <textarea ng-if="acoes.outrasProvidencias"  ng-model='acoes.outrasProvidenciasText' ng-disabled="acoes.semAcoes" class="form-control col-lg-3" rows="4" maxlength='1000' ng-change="acoes.contador=acoes.outrasProvidenciasText.length"></textarea>
+        <span class="counter pull-right" ng-if="acoes.contador">{{acoes.contador}} de 1000 caracteres</span>
 
         <label>
             <label class="text-left checkbox">
