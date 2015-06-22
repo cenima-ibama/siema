@@ -10,7 +10,8 @@
         <label class="control-label">
             Descrição da Fonte:
         </label>
-        <textarea class="form-control col-lg-3" rows="4" ng-model="fonte.complementar"></textarea>
+        <textarea class="form-control col-lg-3" rows="4" ng-model="fonte.complementar" maxlength='1000' ng-change="fonte.contador=fonte.complementar.length"></textarea>
+        <span class="counter pull-right" ng-if="fonte.contador">{{fonte.contador}} de 1000 caracteres</span>
     </div>
     <br/>
 </div>

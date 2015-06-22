@@ -227,3 +227,7 @@ select{
   vertical-align: baseline;
   margin: 2px;
 }
+
+.save-box {
+  margin: 2% !important;
+}

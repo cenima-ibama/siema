@@ -128,22 +128,26 @@ angular.module('estatisticasApp')
         $scope.saveData = function(){
             // document.getElementById(i).chiladdClass('disabled', 'disabled');
 
-            var novo_produto_onu = {
-                'id'    : $scope.produtos.substanciaOnu.id,
-                'qtd'   : $scope.produtos.quantidadeOnu,
-                'uni'   : $scope.produtos.unidadeOnu,
-                'field' : $scope.produtos.substanciaOnu.field
-            };
+            if ($scope.produtos.substanciaOnu) {
+                var novo_produto_onu = {
+                    'id'    : $scope.produtos.substanciaOnu.id,
+                    'qtd'   : $scope.produtos.quantidadeOnu,
+                    'uni'   : $scope.produtos.unidadeOnu,
+                    'field' : $scope.produtos.substanciaOnu.field
+                };
 
-            $scope.produtos.produtos_onu.push(novo_produto_onu);
+                $scope.produtos.produtos_onu.push(novo_produto_onu);
 
-            $scope.produtos.substanciaOnu = "";
-            $scope.produtos.quantidadeOnu = "";
-            $scope.produtos.unidadeOnu = "";
+                $scope.produtos.substanciaOnu = "";
+                $scope.produtos.quantidadeOnu = "";
+                $scope.produtos.unidadeOnu = "";
 
-            $scope.valueRows = [];
+                $scope.valueRows = [];
 
-            $scope.produtos.novo_onu = true;
+                $scope.produtos.novo_onu = true;
+            } else {
+                alert("Por favor, insira alguma subst" + String.fromCharCode(226) + "ncia ONU.");
+            }
         }
 
         // Funcoes para produtos não ONU
@@ -171,22 +175,26 @@ angular.module('estatisticasApp')
         $scope.saveDataNaoOnu = function(){
             // document.getElementById(i).addClass('disabled', 'disabled');
 
-            var novo_produto_outro = {
-                'id'    : $scope.produtos.substanciaOutro.id,
-                'qtd'   : $scope.produtos.quantidadeOutro,
-                'uni'   : $scope.produtos.unidadeOutro,
-                'field' : $scope.produtos.substanciaOutro.field
-            };
+            if ($scope.produtos.substanciaOutro) {
+                var novo_produto_outro = {
+                    'id'    : $scope.produtos.substanciaOutro.id,
+                    'qtd'   : $scope.produtos.quantidadeOutro,
+                    'uni'   : $scope.produtos.unidadeOutro,
+                    'field' : $scope.produtos.substanciaOutro.field
+                };
 
-            $scope.produtos.produtos_outros.push(novo_produto_outro);
+                $scope.produtos.produtos_outros.push(novo_produto_outro);
 
-            $scope.produtos.substanciaOutro = "";
-            $scope.produtos.quantidadeOutro = "";
-            $scope.produtos.unidadeOutro = "";
+                $scope.produtos.substanciaOutro = "";
+                $scope.produtos.quantidadeOutro = "";
+                $scope.produtos.unidadeOutro = "";
 
-            $scope.valueRowsNaoOnu = [];
+                $scope.valueRowsNaoOnu = [];
 
-            $scope.produtos.novo_nao_onu = true;
+                $scope.produtos.novo_nao_onu = true;
+            } else {
+                alert("Por favor, insira alguma subst" + String.fromCharCode(226) + "ncia n" + String.fromCharCode(227) + "o ONU.");
+            }
         }
 
         //Função para inicializar o popover
@@ -204,6 +212,20 @@ angular.module('estatisticasApp')
                 $compile($('.popover.in').contents())($scope);
             });
         }
+
+        // $scope.tooltip = function(){
+        //     $('[data-toggle="tooltip"]').tooltip({ html : true })
+        //     $("#qtdOnu").tooltip({
+        //         html: true,
+        //         content: function() {
+        //             return "<span> Tooltip! </span>";
+        //         }
+        //     }).click(function(ev) {
+        //          //this is workaround needed in order to make ng-click work inside of popover
+
+        //         $compile($('.tooltip.in').contents())($scope);
+        //     });
+        // }
 
         $scope.validate = function(dado){
             var data = ['SELECT', 'select', '*', 'FROM', 'from', '%', 'DROP', 'drop', ''];

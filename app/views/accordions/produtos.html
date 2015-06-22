@@ -6,6 +6,7 @@
         <button class="btn btn-default" ng-click='addRowOnu()' ng-disabled="!produtos.novo_onu">
             <i class="glyphicon glyphicon-plus-sign"></i> Adicionar nova linha
         </button>
+
         <table class="table table-striped">
             <tr>
                 <td><strong>Substância - Nº ONU - CR</strong></td>
@@ -28,7 +29,7 @@
                     <input type='text' class="form-control" placeholder='Vazio'ng-model='produtos.substanciaOnu' typeahead="prods as prods.field for prods in produtos_onu | filter:$viewValue | limitTo:8">
                 </td>
                 <td>
-                    <input type='text' class="form-control" placeholder='Vazio' ng-model='produtos.quantidadeOnu' id="qtdOnu">
+                    <input type='text' class="form-control" placeholder='Vazio' ng-model='produtos.quantidadeOnu' id="qtdOnu" tooltip-placement="top" tooltip="Utilize ponto apenas para demarcar os decimais!" tooltip-trigger="focus"/>
                 </td>
                 <td>
                     <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidadeOnu'></select>
@@ -111,7 +112,7 @@
                     <input type='text' class="form-control" placeholder='Vazio' ng-model='produtos.substanciaOutro' typeahead="prods as prods.field for prods in produtos_outros | filter:$viewValue | limitTo:8">
                 </td>
                 <td>
-                    <input type="text" class="form-control" placeholder='Vazio' ng-model='produtos.quantidadeOutro' id="qtdNaoOnu">
+                    <input type="text" class="form-control" placeholder='Vazio' ng-model='produtos.quantidadeOutro' id="qtdNaoOnu" tooltip-placement="top" tooltip="Utilize ponto apenas para demarcar os decimais!" tooltip-trigger="focus">
                 </td>
                 <td>
                     <select id='inputOnu' class='form-control input' ng-options='unidade.value as unidade.name for unidade in unidades' ng-model='produtos.unidadeOutro'></select>

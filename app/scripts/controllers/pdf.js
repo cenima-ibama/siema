@@ -113,6 +113,9 @@ angular.module('estatisticasApp')
     RestApi.query({query: 'carregar_ocorrencia', ocorrencia:$scope.nro_ocorrencia},
       function success(data, status){
       $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
+      $scope.dt_cadastro = data[0].dt_registro;
+      var dt = new Date();
+      $scope.dt_atualizacao = dt.getFullYear() + "-" + ("0" + (dt.getMonth() + 1)).slice (-2) + "-" + ("0" + dt.getDate()).slice (-2) + " " + ("0" + dt.getHours()).slice (-2) + ":" + ("0" + dt.getMinutes()).slice (-2) + ":" + ("0" + dt.getSeconds()).slice (-2);
       //Acoes
         $scope.acoes = {};
         $scope.acoes.plano = "";
@@ -161,15 +164,15 @@ angular.module('estatisticasApp')
         $scope.comunicante.email = data[0].email_comunicante;
 
         if($scope.comunicante.nome == '' || $scope.comunicante.nome == null)
-          $scope.comunicante.nome = '****SISTEMA: VALOR NAO INFORMADO!****';
+          $scope.comunicante.nome = '********';
         if($scope.comunicante.empresa == '' || $scope.comunicante.empresa == null)
-          $scope.comunicante.empresa = '****SISTEMA: VALOR NAO INFORMADO!****';
+          $scope.comunicante.empresa = '********';
         // if($scope.comunicante.funcao == '' || $scope.comunicante.funcao == null )
         //   $scope.comunicante.funcao = '****SISTEMA: VALOR NAO INFORMADO!****';
         if($scope.comunicante.telefone == '' || $scope.comunicante.telefone == null)
-          $scope.comunicante.telefone = '****SISTEMA: VALOR NAO INFORMADO!****';
+          $scope.comunicante.telefone = '********';
         if($scope.comunicante.email == '' || $scope.comunicante.email == null)
-          $scope.comunicante.email = '****SISTEMA: VALOR NAO INFORMADO!****';
+          $scope.comunicante.email = '********';
 
       //Data
         $scope.datas = {};
@@ -292,7 +295,7 @@ angular.module('estatisticasApp')
         $scope.gerais = {};
         $scope.gerais.text = data[0].des_obs;
         if($scope.gerais.text == ''){
-          $scope.gerais.text = '****SISTEMA: VALOR NAO INFORMADO!****';
+          $scope.gerais.text = '********';
         } else {
           $scope.gerais.text = $scope.gerais.text;
         }

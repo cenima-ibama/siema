@@ -27,25 +27,45 @@
     <p class='text-center'>Acidente enviado com sucesso!</p>
     <br/>
     <p class='text-center'>Não feche esta página sem antes <a href=''onclick='window.print()'>imprimir</a> este arquivo ou salvá-lo em sua máquina! </p>
+    <p class='text-center save-box'>Para <a href=''onclick='window.print()'>salvar</a> o arquivo, selecione o nome "Microsoft XPS Document Writer" (Mozilla Firefox) ou alterar o destino para "Salvar como PDF" (Google Chrome) e mande salvar para selecionar o local em que o arquivo será salvo.</p>
     <div style="float:right; margin: -4% 2%">
       <button class='btn btn-primary ' onclick='window.print()' id='printButton'>
        <span class='glyphicon glyphicon-print' onclick='window.print()'></span>
       </button>
     </div> 
   </div>
+<!--   <div class="alert alert-info" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <p class='text-center save-box'>Para salvar o arquivo, clique em <a href=''onclick='window.print()'>salvar</a> e selecione o nome "Windows XPS File Writer (Windows) ou Salvar no Arquivo (Linux)</p>
+    <div style="float:right; margin: -4% 2%">
+      <button class='btn btn-primary ' onclick='window.print()' id='printButton'>
+       <span class='glyphicon glyphicon-print' onclick='window.print()'></span>
+      </button>
+    </div> 
+  </div> -->
 </div>
 
-<div class='container'>
+
+
+<div class='container' style="padding-bottom: 30px;">
   <div class="panel-heading">
     <br />
-    <h4 class="text-right" style="color:#0088cc;padding: 0 10px 0 0;">
-      <strong>Número de registro: {{nro_ocorrencia}}</strong>
-      <span id="nroComunicado" name="nroComunicado">
+    <h3><center><strong>COMUNICADO DE ACIDENTE AMBIENTAL</strong><center></h3>
+    <h4 class="text-center">
+      <span id="nroComunicado" name="nroComunicado" style="color:#0088cc;">
+        <strong style="color:#0088cc;"><u>Número de registro</u>:{{nro_ocorrencia}}</strong>
       </span>
+      <br>
     </h4>
+    <h5>
+      <div style="padding-bottom:5px;"><center><span>Data do cadastro: {{dt_cadastro}}</span></center></div>
+      <div><center><span>Data da atualização: {{dt_atualizacao}}</span></center></div>
+    </h5>
   </div>
 </div>
 <!-- ________________________________________1________________________________________ -->
+
+<!-- {{dt_cadastro}} &nbps; {{dt_atualizacao}} -->
 
 <div class='container'>
   <div class="panel panel-default">
@@ -151,7 +171,7 @@
           </div>
         </div>
         <div ng-if='datas.semIncidente'>
-          <label>Sem informação sobre data e hora sobre a hora estimada </label>
+          <label>Sem informação sobre data e hora estimadas </label>
         </div>
       </div>
   </div>
@@ -561,10 +581,6 @@
         <p>{{comunicante.nome}}</p>
         <label >Instituição / Empresa: </label>
         <p>{{comunicante.empresa}}</p>
-        <label >Telefone de contato: </label>
-        <p>{{comunicante.telefone}}</p>
-        <label>Email de contato: </label>
-        <p>{{comunicante.email}}</p>
 
         <div ng-if="oleo">
           <label >Cargo / Função navio ou instalação: </label>
@@ -574,6 +590,11 @@
           <label  >Cargo / Função: </label>
           <p>{{comunicante.funcao}}</p>
         </div>
+        
+        <label >Telefone de contato: </label>
+        <p>{{comunicante.telefone}}</p>
+        <label>Email de contato: </label>
+        <p>{{comunicante.email}}</p>
       </div>
     </div>
   </div>
