@@ -13,7 +13,7 @@
 	header('content-type: application/json; charset=utf-8');
 	header("access-control-allow-origin: *");
 
-	$HOST = "10.1.25.65";
+	$HOST = "localhost";
 	// $HOST = "10.1.8.45";
 	$USER = "siema";
 	$PASSWORD = "siemahmlg";
