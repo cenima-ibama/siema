@@ -13,7 +13,8 @@
 	header('content-type: application/json; charset=utf-8');
 	header("access-control-allow-origin: *");
 
-	$HOST = "localhost";
+	$HOST = "10.1.25.65";
+	// $HOST = "10.1.8.45";
 	$USER = "siema";
 	$PASSWORD = "siemahmlg";
 	$DATABASE = "siema";
@@ -182,9 +183,12 @@
 			//
 			//
 			if (!$form->datas->semObservacao) {
+
+				$obsPeriodo = $form->datas->obsPeriodo ? '\'' . $form->datas->obsPeriodo . '\'' : 'null';
+
 				$query_ocorrencia = $query_ocorrencia . 'dt_primeira_obs=\'' . $form->datas->diaObservacao . '\',' .
 																								'hr_primeira_obs=\'' . $form->datas->horaObservacao . '\',' .
-																								'periodo_primeira_obs=\'' . $form->datas->obsPeriodo . '\',';
+																								'periodo_primeira_obs=' . $obsPeriodo . ',';
 			} else {
 				$query_ocorrencia = $query_ocorrencia . 'dt_primeira_obs=null,' .
 																								'hr_primeira_obs=null,' .
@@ -192,9 +196,12 @@
 			}
 
 			if (!$form->datas->semIncidente) {
+
+				$incPeriodo = $form->datas->incPeriodo ? '\'' . $form->datas->incPeriodo . '\'' : 'null';
+
 				$query_ocorrencia = $query_ocorrencia . 'dt_ocorrencia=\'' . $form->datas->diaIncidente . '\',' .
 																								'hr_ocorrencia=\'' . $form->datas->horaIncidente . '\',' .
-																								'periodo_ocorrencia=\'' . $form->datas->incPeriodo . '\',';
+																								'periodo_ocorrencia=' . $incPeriodo . ',';
 			} else {
 				$query_ocorrencia = $query_ocorrencia . 'dt_ocorrencia=null,' .
 																								'hr_ocorrencia=null,' .
@@ -209,7 +216,7 @@
 			//
 			//
 			if (!$form->origem->semOrigem) {
-				$query_ocorrencia = $query_ocorrencia . 'des_complemento_tipo_localizaca=\'' . $form->origem->complementar . '\',';
+				$query_ocorrencia = $query_ocorrencia . 'des_complemento_tipo_localizaca=\'' . pg_escape_string($form->origem->complementar) . '\',';
 
 				$query = 'DELETE FROM ocorrencia_tipo_localizacao WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\';';
 				$res_origem = pg_query($query);
@@ -221,7 +228,7 @@
 						$query = $query . '(' . $form->id_ocorrencia . ',' . $value . '),';
 					}
 
-      		$query = trim($query, ",");
+      				$query = trim($query, ",");
 					$res_origem = pg_query($query);
 				}
 
@@ -239,10 +246,10 @@
 					$detalhamento_ocorrencia = pg_fetch_row($res_origem_oleo);
 
 					if($detalhamento_ocorrencia) {
-						$query = 'UPDATE detalhamento_ocorrencia SET des_navio=\'' . $form->origem->navio . '\', des_instalacao=\'' . $form->origem->instalacao . '\' WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\';';
+						$query = 'UPDATE detalhamento_ocorrencia SET des_navio=\'' . pg_escape_string($form->origem->navio) . '\', des_instalacao=\'' . pg_escape_string($form->origem->instalacao) . '\' WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\';';
 						$res_origem_oleo = pg_query($query);
 					} else {
-						$query = 'INSERT INTO detalhamento_ocorrencia (id_ocorrencia,des_navio,des_instalacao) VALUES (\'' . $form->id_ocorrencia . '\',\''. $form->origem->navio . '\',\'' . $form->origem->instalacao . '\');';
+						$query = 'INSERT INTO detalhamento_ocorrencia (id_ocorrencia,des_navio,des_instalacao) VALUES (\'' . $form->id_ocorrencia . '\',\''. pg_escape_string($form->origem->navio) . '\',\'' . pg_escape_string($form->origem->instalacao) . '\');';
 						$res_origem_oleo = pg_query($query);
 					}
 				} else {
@@ -259,7 +266,7 @@
 			//
 			//
 			if (!$form->evento->semEvento) {
-				$query_ocorrencia = $query_ocorrencia . 'des_complemento_tipo_evento=\'' . $form->evento->complementar . '\',';
+				$query_ocorrencia = $query_ocorrencia . 'des_complemento_tipo_evento=\'' . pg_escape_string($form->evento->complementar) . '\',';
 
 				$query = 'DELETE FROM ocorrencia_tipo_evento WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\';';
 				$res_evento = pg_query($query);
@@ -271,7 +278,7 @@
 						$query = $query . '(' . $form->id_ocorrencia . ',' . $value . '),';
 					}
 
-      		$query = trim($query, ",");
+      				$query = trim($query, ",");
 					$res_evento = pg_query($query);
 				}
 
@@ -307,7 +314,7 @@
 					$query = $query . ' (\'' . $form->id_ocorrencia . '\',null,\'' . $value->id . '\',\''. $value->qtd . '\',\'' . $value->uni . '\'),';
 				}
 
-      	$query = trim($query, ",");
+      			$query = trim($query, ",");
 				// print_r($query);
 
 				$res_produtos = pg_query($query);
@@ -337,7 +344,7 @@
 				$valor_substancia = $form->produtos->valor_substancia;
 			}
 
-			$query_ocorrencia = $query_ocorrencia . 'tipo_substancia=\'' . $form->produtos->tipo_substancia . '\',' .
+			$query_ocorrencia = $query_ocorrencia . 'tipo_substancia=\'' . pg_escape_string($form->produtos->tipo_substancia) . '\',' .
 																							'volume_estimado=' . $valor_substancia . ',' .
 																							'produto_nao_especificado=' . $nao_especificado . ',' .
 																							'produto_nao_se_aplica=' . $nao_aplica . ',' .
@@ -350,7 +357,7 @@
 			//
 			//
 			if (!$form->detalhes->semDetalhe) {
-				$query_ocorrencia = $query_ocorrencia . 'des_causa_provavel=\'' . $form->detalhes->causa . '\',';
+				$query_ocorrencia = $query_ocorrencia . 'des_causa_provavel=\'' . pg_escape_string($form->detalhes->causa) . '\',';
 			} else {
 				$query_ocorrencia = $query_ocorrencia . 'des_causa_provavel=null,';
 			}
@@ -368,7 +375,7 @@
 			//
 			//
 			if (!$form->ambiente->semAmbientes) {
-				$query_ocorrencia = $query_ocorrencia . 'des_complemento_tipo_dano_ident=\'' . $form->ambiente->complementar . '\',';
+				$query_ocorrencia = $query_ocorrencia . 'des_complemento_tipo_dano_ident=\'' . pg_escape_string($form->ambiente->complementar) . '\',';
 
 				$query = 'DELETE FROM ocorrencia_tipo_dano_identificado WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\';';
 				$res_ambiente = pg_query($query);
@@ -380,7 +387,7 @@
 						$query = $query . '(' . $form->id_ocorrencia . ',' . $value . '),';
 					}
 
-      		$query = trim($query, ",");
+      				$query = trim($query, ",");
 					$res_ambiente = pg_query($query);
 				}
 
@@ -439,8 +446,8 @@
 			//
 			//
 			if (!$form->instituicao->semInstituicao) {
-				$query_ocorrencia = $query_ocorrencia . 'des_complemento_instituicao_atu=\'' . $form->instituicao->complementar . '\',' .
-																								'nome_instituicao_atuando=\'' . $form->instituicao->responsavel . '\',' .
+				$query_ocorrencia = $query_ocorrencia . 'des_complemento_instituicao_atu=\'' . pg_escape_string($form->instituicao->complementar) . '\',' .
+																								'nome_instituicao_atuando=\'' . pg_escape_string($form->instituicao->responsavel) . '\',' .
 																								'telefone_instituicao_atuando=\'' . $form->instituicao->telefone . '\',';
 
 				$query = 'DELETE FROM ocorrencia_instituicao_atuando_local WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\';';
@@ -453,7 +460,7 @@
 						$query = $query . '(' . $form->id_ocorrencia . ',' . $value . '),';
 					}
 
-      		$query = trim($query, ",");
+      				$query = trim($query, ",");
 					$res_ambiente = pg_query($query);
 				}
 
@@ -481,7 +488,7 @@
 				$query_ocorrencia = $query_ocorrencia . 'plano_emergencia=\'' . $form->acoes->plano . '\',' .
 																								'plano_emergencia_acionado=\'' . $acionado. '\',' .
 																								'iniciados_outras_providencias=\'' . $outrasProvidencias . '\',' .
-																								'des_outras_providencias=\'' . $form->acoes->outrasProvidenciasText . '\',';
+																								'des_outras_providencias=\'' . pg_escape_string($form->acoes->outrasProvidenciasText) . '\',';
 			} else {
 				$query_ocorrencia = $query_ocorrencia . 'plano_emergencia=null,' .
 																								'plano_emergencia_acionado=\'N\',' .
@@ -504,11 +511,11 @@
 			// Identificação do Comunicante
 			//
 			//
-			$query_ocorrencia = $query_ocorrencia . 'nome_comunicante=\'' . $form->comunicante->nome . '\',' .
-																							'des_instituicao_empresa=\'' . $form->comunicante->empresa . '\','.
-																							'des_funcao_comunicante=\'' . $form->comunicante->funcao . '\','.
+			$query_ocorrencia = $query_ocorrencia . 'nome_comunicante=\'' . pg_escape_string($form->comunicante->nome) . '\',' .
+																							'des_instituicao_empresa=\'' . pg_escape_string($form->comunicante->empresa) . '\','.
+																							'des_funcao_comunicante=\'' . pg_escape_string($form->comunicante->funcao) . '\','.
 																							'telefone_contato=\'' . $form->comunicante->telefone . '\','.
-																							'email_comunicante=\'' . $form->comunicante->email . '\',';
+																							'email_comunicante=\'' . pg_escape_string($form->comunicante->email) . '\',';
 
 
 
@@ -533,10 +540,10 @@
 					$query = 'INSERT INTO ocorrencia_tipo_fonte_informacao (id_ocorrencia,id_tipo_fonte_informacao,desc_outras_fontes) VALUES ';
 
 					foreach ($form->fonte->fontes as $key => $value) {
-						$query = $query . '(' . $form->id_ocorrencia . ',' . $value . ',\'' . $form->fonte->complementar . '\'),';
+						$query = $query . '(' . $form->id_ocorrencia . ',' . $value . ',\'' . pg_escape_string($form->fonte->complementar) . '\'),';
 					}
 
-      		$query = trim($query, ",");
+      				$query = trim($query, ",");
 					$res_fonte = pg_query($query);
 				}
 			} else {
@@ -551,9 +558,9 @@
 			//
 			//
 			if ($form->validador) {
-      	$validado = $form->validador->validado ? "S" : "N";
-      	$query_ocorrencia = $query_ocorrencia . 'validado=\'' . $validado . '\',';
-      }
+				$validado = $form->validador->validado ? "S" : "N";
+				$query_ocorrencia = $query_ocorrencia . 'validado=\'' . $validado . '\',';
+			}
 
 
 			//
@@ -561,10 +568,10 @@
 			// Finalizando a construção da query para inserção da ocorrencia
 			//
 			//
-      $query_ocorrencia = trim($query_ocorrencia, ",");
-      $query_ocorrencia = $query_ocorrencia . ' WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\';';
-      // print_r($query_ocorrencia);
-      $res_ocorrencia = pg_query($query_ocorrencia);
+			$query_ocorrencia = trim($query_ocorrencia, ",");
+			$query_ocorrencia = $query_ocorrencia . ' WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\';';
+			// print_r($query_ocorrencia);
+			$res_ocorrencia = pg_query($query_ocorrencia);
 
 
 
@@ -574,7 +581,7 @@
 			//
 			//
 			$response = array();
-      if ($res_localizacao && $res_ocorrencia && $res_origem && (!$form->oleo || $res_origem_oleo) && $res_evento && $res_ambiente && $res_empresa && $res_fonte) {
+      		if ($res_localizacao && $res_ocorrencia && $res_origem && (!$form->oleo || $res_origem_oleo) && $res_evento && $res_ambiente && $res_empresa && $res_fonte) {
 
 		 		pg_query("COMMIT") or die("Transaction commit failed\n");
 				pg_close($cdb);
@@ -656,7 +663,7 @@
 																'plano_emergencia,plano_emergencia_acionado,iniciados_outras_providencias,des_outras_providencias,' .
 																'des_obs,' .
 																'nome_comunicante,des_instituicao_empresa,des_funcao_comunicante,telefone_contato,email_comunicante,' .
-																'dt_registro,ocorrencia_oleo,nro_ocorrencia,tipo_comunicado' .
+																'ocorrencia_oleo,nro_ocorrencia,tipo_comunicado' .
 																') VALUES (';
 
 
@@ -693,9 +700,12 @@
 			//
 			//
 			if (!$form->datas->semObservacao) {
+
+				$obsPeriodo = $form->datas->obsPeriodo ? '\'' . $form->datas->obsPeriodo . '\'' : 'null';
+
 				$query_ocorrencia = $query_ocorrencia . '\'' . $form->datas->diaObservacao . '\',' .
 																								'\'' . $form->datas->horaObservacao . '\',' .
-																								'\'' . $form->datas->obsPeriodo . '\',';
+																								'' . $obsPeriodo . ',';
 			} else {
 				$query_ocorrencia = $query_ocorrencia . 'null,' .
 																								'null,' .
@@ -703,9 +713,12 @@
 			}
 
 			if (!$form->datas->semIncidente) {
+
+				$incPeriodo = $form->datas->incPeriodo ? '\'' . $form->datas->incPeriodo . '\'' : 'null';
+
 				$query_ocorrencia = $query_ocorrencia . '\'' . $form->datas->diaIncidente . '\',' .
 																								'\'' . $form->datas->horaIncidente . '\',' .
-																								'\'' . $form->datas->incPeriodo . '\',';
+																								'' . $incPeriodo . ',';
 			} else {
 				$query_ocorrencia = $query_ocorrencia . 'null,' .
 																								'null,' .
@@ -926,7 +939,7 @@
 			//
 			//
       $oleo = $form->oleo ? "S" : "N";
-      $query_ocorrencia = $query_ocorrencia . 'now(),\'' . $oleo . '\',\'' . $form->nro_ocorrencia . '\',\'' . $form->tipo_comunicante . '\');';
+      $query_ocorrencia = $query_ocorrencia . '\'' . $oleo . '\',\'' . $form->nro_ocorrencia . '\',\'' . $form->tipo_comunicante . '\');';
       // print_r($query_ocorrencia);
       $res_ocorrencia = pg_query($query_ocorrencia);
 
@@ -971,7 +984,7 @@
 						$query = $query . '(' . $form->id_ocorrencia . ',' . $value . '),';
 					}
 
-      		$query = trim($query, ",");
+      			$query = trim($query, ",");
 					$res_origem = pg_query($query);
 
 				} else {
