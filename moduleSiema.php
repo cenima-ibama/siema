@@ -13,6 +13,7 @@
 	header('content-type: application/json; charset=utf-8');
 	header("access-control-allow-origin: *");
 
+	// $HOST = "10.1.25.65";
 	$HOST = "localhost";
 	// $HOST = "10.1.8.45";
 	$USER = "siema";
@@ -406,6 +407,20 @@
 			//
 			//
 	    if (!$form->empresa->semEmpresa) {
+
+    		$query = 'SELECT id_responsavel FROM ocorrencia WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\';';
+			$res_empresa = pg_query($query);
+			$responsavel_id = pg_fetch_row($res_empresa)[0];
+
+    		if ($responsavel_id) {
+				
+				$query = 'UPDATE responsavel SET nome=\'' . $form->empresa->nome 
+											. '\',cpf_cnpj=\'' . $form->empresa->cadastro 
+											. '\',des_licenca_ambiental=\'' . $form->empresa->licencaAmbiental . '\' WHERE id_responsavel=\'' . $responsavel_id . '\'';
+				$res_empresa = pg_query($query);
+
+    		} else {
+
 				$query = 'INSERT INTO responsavel (nome, cpf_cnpj, des_licenca_ambiental) VALUES (\'' . $form->empresa->nome . '\',\'' .
 																																																$form->empresa->cadastro . '\',\'' .
 																																																$form->empresa->licencaAmbiental . '\');';
@@ -423,19 +438,22 @@
 					$query_ocorrencia = $query_ocorrencia . 'id_responsavel=' . $responsavel_id . ', informacao_responsavel=\'T\',';
 					$res_empresa = pg_query($query);
 				}
+			}
 	    } else {
-    		$query = 'SELECT id_responsavel FROM ocorrencia WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\'';
+
+			// $query = 'SELECT id_responsavel FROM ocorrencia WHERE id_ocorrencia=\'' . $form->id_ocorrencia . '\'';
+			// $res_empresa = pg_query($query);
+			// $responsavel_id = pg_fetch_row($res_empresa)[0];
+
+			// if ($responsavel_id) {
+			// 	$query_responsavel = 'DELETE FROM responsavel WHERE id_responsavel=\'' . $responsavel_id .  '\';';
+			// 	$res_empresa = pg_query($query_responsavel);
+			// }
+
+			// if ($res_empresa) {
+				$query_ocorrencia = $query_ocorrencia . 'id_responsavel=null, informacao_responsavel=\'N\',';
 				$res_empresa = pg_query($query);
-				$responsavel_id = pg_fetch_row($res_empresa)[0];
-
-				if ($responsavel_id) {
-					$query_responsavel = 'DELETE FROM responsavel WHERE id_responsavel=\'' . $responsavel_id .  '\'';
-				}
-
-				if ($res_empresa) {
-					$query_ocorrencia = $query_ocorrencia . 'id_responsavel=null, informacao_responsavel=\'N\',';
-					$res_empresa = pg_query($query);
-				}
+			// }
 	    }
 
 
