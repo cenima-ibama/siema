@@ -71,20 +71,14 @@ angular.module('estatisticasApp')
 
                     // $scope.produtos.produtos_outros.push({'field' : value.nome , 'id': value.id});
                   });
+                    $scope.$broadcast('produtos_cadastrados', "");
                 }
               }
             );
 
-
-            if ((data[0].produto_perigoso == 'f') && (data[0].produto_nao_se_aplica == 'f') && (data[0].produto_nao_especificado == 'f') &&
-                ($scope.produtos.produtos_onu.length == 0) && ($scope.produtos.produtos_outros.length == 0)) {
-                $scope.produtos.semProduto = true;
-            } else {
-
-                $scope.produtos.naoClassificado = data[0].produto_perigoso == 't' ? true : false;
-                $scope.produtos.naoAplica = data[0].produto_nao_se_aplica == 't' ? true : false;
-                $scope.produtos.naoEspecificado = data[0].produto_nao_especificado == 't' ? true : false;
-            }
+            $scope.produtos.naoClassificado = data[0].produto_perigoso == 't' ? true : false;
+            $scope.produtos.naoAplica = data[0].produto_nao_se_aplica == 't' ? true : false;
+            $scope.produtos.naoEspecificado = data[0].produto_nao_especificado == 't' ? true : false;
 
             if (data[0].tipo_substancia || data[0].volume_estimado) {
                 $scope.produtos.tipo_substancia = data[0].tipo_substancia;
@@ -92,6 +86,13 @@ angular.module('estatisticasApp')
             } else {
                 $scope.produtos.semCondicoes = true;
             }
+
+            $scope.$on('produtos_cadastrados', function(event, data){
+                if (!$scope.produtos.naoClassificado && !$scope.produtos.naoAplica && !$scope.produtos.naoEspecificado &&
+                    ($scope.produtos.produtos_onu.length == 0) && ($scope.produtos.produtos_outros.length == 0)) {
+                    $scope.produtos.semProduto = true;
+                }                    
+            });
 
             // if (data[0].des_causa_provavel != null){
             //     $scope.detalhes.causa = data[0].des_causa_provavel;

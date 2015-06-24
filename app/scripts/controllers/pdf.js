@@ -167,8 +167,8 @@ angular.module('estatisticasApp')
           $scope.comunicante.nome = '********';
         if($scope.comunicante.empresa == '' || $scope.comunicante.empresa == null)
           $scope.comunicante.empresa = '********';
-        // if($scope.comunicante.funcao == '' || $scope.comunicante.funcao == null )
-        //   $scope.comunicante.funcao = '****SISTEMA: VALOR NAO INFORMADO!****';
+        if($scope.comunicante.funcao == '' || $scope.comunicante.funcao == null )
+          $scope.comunicante.funcao = '********';
         if($scope.comunicante.telefone == '' || $scope.comunicante.telefone == null)
           $scope.comunicante.telefone = '********';
         if($scope.comunicante.email == '' || $scope.comunicante.email == null)

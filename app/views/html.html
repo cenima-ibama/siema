@@ -77,7 +77,7 @@
     </div>
 
     <div class="panel-body">
-      <div class="form-group">
+      <div class="col-lg-12 form-group">
         <label class="control-label" for="inputLat">Latitude(y) / Longitude(x):*</label>
         <div class='form-inline'>
             <div class='form-group'>
@@ -89,7 +89,7 @@
         </div>
       </div>
 
-      <div class="form-group"  ng-if='localizacao.oceano'>
+      <div class="col-lg-12 form-group"  ng-if='localizacao.oceano'>
         <div class="checkbox" >
             <label> <input type="checkbox" ng-model="localizacao.oceano"> Oceano: </label>
         </div>
@@ -102,7 +102,7 @@
       </div>
 
 
-      <div class="form-group">
+      <div class="col-lg-12 form-group">
         <label class="control-label">UF/Município:</label>
         <div class='form-inline'>
           <div class='form-group'>
@@ -117,7 +117,7 @@
         </div>
       </div>
 
-      <div class="form-group">
+      <div class="col-lg-12 form-group">
           <label class="control-label" for="inputEndereco">Endereço:</label>
           <div class='form-group'>
               <input type="text" class="form-control" ng-model="localizacao.endereco" disabled>
@@ -138,25 +138,23 @@
       </div>
       <div class="panel-body" >
 
-        <div ng-if='!datas.semObservacao'>
-          <div class="col-lg-6">
-            <label class="control-label">Data e hora da primeira observação:</label>
-              <p>
-                 {{datas.diaObservacao}}
-                <!-- <select ng-model="datas.obsSemana" ng-disabled="true">
-                        <option value="1">Domingo</option>
-                        <option value="2">Segunda</option>
-                        <option value="3">Terça</option>
-                        <option value="4">Quarta</option>
-                        <option value="5">Quinta</option>
-                        <option value="6">Sexta</option>
-                        <option value="7">Sábado</option>
-                </select> -->
-                - {{datas.horaObservacao}} - Período: {{datas.obsPeriodo}}
-              </p>
-          </div>
+        <div class="col-lg-6" ng-if='!datas.semObservacao'>
+          <label class="control-label">Data e hora da primeira observação:</label>
+            <p>
+               {{datas.diaObservacao}}
+              <!-- <select ng-model="datas.obsSemana" ng-disabled="true">
+                      <option value="1">Domingo</option>
+                      <option value="2">Segunda</option>
+                      <option value="3">Terça</option>
+                      <option value="4">Quarta</option>
+                      <option value="5">Quinta</option>
+                      <option value="6">Sexta</option>
+                      <option value="7">Sábado</option>
+              </select> -->
+              - {{datas.horaObservacao}} - Período: {{datas.obsPeriodo}}
+            </p>
         </div>
-        <div ng-if='datas.semObservacao'>
+        <div class="col-lg-12 form-group" ng-if='datas.semObservacao'>
           <label>Sem informação sobre data e hora da primeira observação </label>
         </div>
         <div ng-if='!datas.semIncidente'>
@@ -170,7 +168,7 @@
             </p>
           </div>
         </div>
-        <div ng-if='datas.semIncidente'>
+        <div class="col-lg-12 form-group" ng-if='datas.semIncidente'>
           <label>Sem informação sobre data e hora estimadas </label>
         </div>
       </div>
@@ -209,7 +207,7 @@
 
       <div ng-if='origem.semOrigem'>
         <div class="panel-body">
-          <div class="form-group">
+          <div class="col-lg-12 form-group" >
               <label class="control-label"> Sem informação sobre a origem do acidente</label>
           </div>
         </div>
@@ -217,7 +215,7 @@
       <div ng-if='oleo'>
         <div ng-if='origem.semOleoOrigem'>
           <div class="panel-body">
-            <div class="form-group">
+            <div class="col-lg-12 form-group" >
                 <label class="control-label"> Sem informação sobre a origem do acidente</label>
             </div>
           </div>
@@ -271,10 +269,8 @@
 
       </div>
 
-      <div ng-if='evento.semEvento'>
-        <div class="col-lg-6">
-          <label class='control-label'>Sem informação sobre o tipo do evento</label>
-        </div>
+      <div class="col-lg-12 form-group" ng-if='evento.semEvento'>
+        <label class='control-label'>Sem informação sobre o tipo do evento</label>
       </div>
 
     </div>
@@ -291,7 +287,7 @@
       </h4>
     </div>
     <div class="panel-body">
-      <div ng-if='!produtos.semProduto'>
+      <div class="col-lg-12 form-group" ng-if='!produtos.semProduto'>
         <label class='control-label'>Produtos ONU</label>
         <div ng-repeat='produto in produtos.produtos_onu'>
           <p><b>Substancia: </b>{{produto.field}}, <b>Qtd.: </b>{{produto.qtd}}, <b>Unidade: </b>{{produto.uni}}</p>
@@ -351,12 +347,12 @@
       </h4>
     </div>
     <div class="panel-body">
-      <div ng-if='!detalhes.semDetalhes'>
+      <div class="col-lg-12 form-group" ng-if='!detalhes.semDetalhes'>
         <div ng-if='detalhes.causaVal'>
           <textarea class="form-control col-lg-3" rows="4" ng-disabled="true" ng-model="detalhes.causa"></textarea>
         </div>
       </div>
-      <div ng-if='detalhes.semDetalhes'>
+      <div class="col-lg-12 form-group" ng-if='detalhes.semDetalhes'>
         <label class='control-label'>Sem condições de informar</label>
       </div>
 
@@ -416,7 +412,7 @@
         </div>
       </div>
 
-      <div ng-if='ambiente.semAmbientes'>
+      <div class="col-lg-12 form-group" ng-if='ambiente.semAmbientes'>
         <label class='control-label'> Sem informação sobre ocorrências e/ou ambientes atingidos</label>
       </div>
     </div>
@@ -443,13 +439,13 @@
           <p>{{empresa.cadastro}}</p>
 
           <label class="control-label">Licença ambiental:</label>
-            <select  class="form-control input" ng-model='empresa.licencaAmbiental' ng-options="licenca.value as licenca.name for licenca in licencas" ng-disabled="true">
-            </select>
-          </div>
+          <select  class="form-control input" ng-model='empresa.licencaAmbiental' ng-options="licenca.value as licenca.name for licenca in licencas" ng-disabled="true">
+          </select>
         </div>
-
       </div>
-      <div ng-if='empresa.semEmpresa'>
+
+      <!-- </div> -->
+      <div class="col-lg-12 form-group" ng-if='empresa.semEmpresa'>
         <label>Sem informação sobre a empresa/responsável</label>
       </div>
     </div>
@@ -512,7 +508,7 @@
 
     <div class="panel-body">
       <div ng-if='!acoes.semAcoes'>
-        <div ng-switch='acoes.plano'>
+        <div class="col-lg-12 form-group" ng-switch='acoes.plano'>
           <label>Existência de Plano de Emergência Individual ou similar: </label>
           <div ng-switch-when='S'>
             <p>Sim</p>
@@ -525,19 +521,19 @@
           </div>
         </div>
 
-        <div ng-if='acoes.planoIndividual'>
-        <label class="checkbox">
-          Acionado plano individual de emergência
-        </label>
+        <div class="col-lg-12 form-group" ng-if='acoes.planoIndividual'>
+          <label class="checkbox">
+            Acionado plano individual de emergência
+          </label>
         </div>
 
-        <div ng-if= "acoes.outrasProvidencias">
+        <div class="col-lg-12 form-group" ng-if="acoes.outrasProvidencias">
           <label class="control-label">Foram tomadas outras providências a saber:</label>
           <textarea ng-model='acoes.outrasProvidenciasText' ng-disabled="true" class="form-control col-lg-3" rows="4"></textarea>
         </div>
       </div>
 
-      <div ng-if='acoes.semAcoes'>
+      <div class="col-lg-12 form-group" ng-if='acoes.semAcoes'>
         <label class="text-left ">Sem evidência de ação ou ou providência até o momento</label>
       </div>
     </div>
@@ -556,7 +552,7 @@
     </div>
 
     <div class="panel-body">
-      <div class="col-lg-6">
+      <div class="col-lg-12 form-group">
       <label>Outras informações julgadas úteis:</label>
           <textarea ng-model="gerais.text" class="form-control col-lg-3" rows="4" ng-disabled='true'></textarea>
       </div>
