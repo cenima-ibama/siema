@@ -53,7 +53,7 @@
 
   H5.Map.base.attributionControl.setPrefix("Desenvolvido com: &copy; Leaflet | Hexgis Hash5. map data: &copy; OpenStreetMap</a> contributors | Image courtesy of, Earthstar Geographics  SIO, | &copy; 2014 Microsoft Corporation, &copy; 2014 Nokia");
 
-  geoserverUrl = "http://siscom.ibama.gov.br/geoserver/cgema/wms";
+  geoserverUrl = "http://siema:siema@siscom.ibama.gov.br/geoserver/cgema/wms";
 
   terrasIndigenas = new L.TileLayer.WMS(geoserverUrl, {
     layers: "cgema:Terras_Indigenas",
@@ -61,19 +61,19 @@
     transparent: true
   });
 
-  ucSustentavel = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms", {
+  ucSustentavel = new L.TileLayer.WMS("http://siema:siema@siscom.ibama.gov.br/geoserver/csr/wms", {
     layers: "csr:unidade_uso_sustentavel",
     format: "image/png",
     transparent: true
   });
 
-  ucIntegral = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms", {
+  ucIntegral = new L.TileLayer.WMS("http://siema:siema@siscom.ibama.gov.br/geoserver/csr/wms", {
     layers: "csr:unidade_protecao_integral",
     format: "image/png",
     transparent: true
   });
 
-  ucFederacao = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/cgema/wms", {
+  ucFederacao = new L.TileLayer.WMS("http://siema:siema@siscom.ibama.gov.br/geoserver/cgema/wms", {
     layers: "cgema:unidade_federacao",
     format: "image/png",
     transparent: true
@@ -85,7 +85,7 @@
     transparent: true
   });
 
-  biomaIBGE = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms", {
+  biomaIBGE = new L.TileLayer.WMS("http://siema:siema@siscom.ibama.gov.br/geoserver/csr/wms", {
     layers: "csr:bioma",
     format: "image/png",
     transparent: true

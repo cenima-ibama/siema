@@ -256,10 +256,12 @@ class Form extends CI_Controller {
         $validation_model = $this->form_validations_model;
         $codProfilerUser = trim($this->session->userdata("profile_user"));
         $userIbamaNet = ($codProfilerUser == "0" || $codProfilerUser == "3"); 
-        $userName = $this->session->userdata("username");
+        $userName = $this->session->userdata("username") ? $this->session->userdata("username") : str_replace(array('-','/','.'), '', $this->session->userdata('cnpj'));
 
         $status = "";
         $mensagem = "";
+
+        // echo json_encode($this->session->all_userdata());
 
         if ($numeroRegistro == "") {
             $status = 'false';
@@ -270,7 +272,7 @@ class Form extends CI_Controller {
         } else if ($validation_model->dadosLegados($numeroRegistro)) {
             $status = 'false';
             $mensagem = "Dados Legados não podem ser alterados.";
-        } else if ($userIbamaNet && !$validation_model->userCadastrouOcorrencia($numeroRegistro, $userName)) {
+        } else if (/*$userIbamaNet &&*/ !$validation_model->userCadastrouOcorrencia($numeroRegistro, $userName)) {
             $status = 'false';
             $mensagem = "Alteração não pode ser realizada, porque a ocorrência não foi criada por este usuário.";
         } else {

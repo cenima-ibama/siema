@@ -79,7 +79,7 @@ H5.Map.base.attributionControl.setPrefix "Desenvolvido com: &copy; Leaflet | Hex
 # }}}
 # OVERLAYER {{{
 # geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms"
-geoserverUrl = "http://siscom.ibama.gov.br/geoserver/cgema/wms"
+geoserverUrl = "//siema:siema@siscom.ibama.gov.br/geoserver/cgema/wms"
 
 terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
   layers: "cgema:Terras_Indigenas"
@@ -87,21 +87,21 @@ terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
   transparent: true
 )
 
-ucSustentavel = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms",
+ucSustentavel = new L.TileLayer.WMS("//siema:siema@siscom.ibama.gov.br/geoserver/csr/wms",
   # layers: "cemam:ucstodas_municipal"
   layers: "csr:unidades_uso_sustentavel"
   format: "image/png"
   transparent: true
 )
 
-ucIntegral = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms",
+ucIntegral = new L.TileLayer.WMS("//siema:siema@siscom.ibama.gov.br/geoserver/csr/wms",
   # layers: "cemam:ucstodas_federal"
   layers: "csr:unidades_protecao_integral"
   format: "image/png"
   transparent: true
 )
 
-ucFederacao = new L.TileLayer.WMS("http://siscom.ibama.gov.br/geoserver/csr/wms",
+ucFederacao = new L.TileLayer.WMS("//siema:siema@siscom.ibama.gov.br/geoserver/csr/wms",
   # layers: "cemam:ucstodas_estadual"
   layers: "csr:unidades_federacao"
   format: "image/png"

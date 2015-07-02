@@ -206,7 +206,7 @@ class Auth extends CI_Controller {
                     $userArray = array(
                         'logged_in' => TRUE,
                         'name' => ucwords(strtolower($data['Nome'][0])),
-                        'cpf' => $data['CNPJ_CPF'][0],
+                        'cnpj' => $data['CNPJ_CPF'][0],
                         'ctf' => TRUE,
                         'empresa' => TRUE
                     );
@@ -277,12 +277,16 @@ class Auth extends CI_Controller {
 
     function logout() {
 
-        if ($this->session->userdata('logged_in') && !$this->session->userdata('ctf')) {
-            $this->authldap->logout();
-        } else {
-            $this->session->set_userdata(array('logged_in' => FALSE));
-            $this->session->set_userdata("profile_user", 0);
-        }
+        // if ($this->session->userdata('logged_in') && !$this->session->userdata('ctf')) {
+        // if ($this->session->userdata('logged_in') && $this->session->userdata('ctf')) {
+        // //     $this->authldap->logout();
+        // // } else {
+        //     $this->session->set_userdata(array('logged_in' => FALSE));
+        //     $this->session->set_userdata("profile_user", 0);
+        // }
+
+        //$this->session->set_userdata(array("ctf"=> false, "cpf" => null, "empresa" => false));
+        $this->authldap->logout();
 
         redirect(base_url());
     }

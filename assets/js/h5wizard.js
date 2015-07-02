@@ -192,25 +192,26 @@
       }
 
       if (isAtual) {
-        // validado = validateUpdate();
-        // if (validado === "true") {
+        validado = validateUpdate();
+        if (validado === "true") {
         //   nroOcorrencia = $("#inputRegistro").prop("value");
         //   $("#nroOcorrenciaLoad").val(nroOcorrencia);
         //   showButtonsCadastro();
         //   $("#formLoad").submit();
         //   $(this).tab('show');
-        // } else {
-        //   $(".modal-footer").show();
-        //   this.href = "#tab" + --collapse;
-        //   history.push({
-        //     tab: "#tab" + 2,
-        //     collapse: 2
-        //   });
-        // }
+       
 
-        nroOcorrencia = $("#inputRegistro").prop("value");
-        window.open("//" + document.location.host + document.location.pathname + "stats/#/acidente?id=" + nroOcorrencia + "&acao=carregar&usuario=" + H5.user + "&email=" + H5.mail, "_blank", "width=1200,height=800,scrollbars=yes,status=yes,resizable=no");
-        $("#addMeModal").toggle();
+          nroOcorrencia = $("#inputRegistro").prop("value");
+          window.open("//" + document.location.host + document.location.pathname + "stats/#/acidente?id=" + nroOcorrencia + "&acao=carregar&usuario=" + H5.user + "&email=" + H5.mail, "_blank", "width=1200,height=800,scrollbars=yes,status=yes,resizable=no");
+          $("#addMeModal").toggle();
+        } else {
+          $(".modal-footer").show();
+          this.href = "#tab" + --collapse;
+          history.push({
+            tab: "#tab" + 2,
+            collapse: 2
+          });
+        }
       } else {
 
         date = new Date();
@@ -219,7 +220,7 @@
         nroComunicado = "" + parseInt(date.getFullYear(), 10) + parseInt(date.getMonth() + 1, 10) + parseInt(date.getDate(), 10) + seconds;
 
         if (H5.logged_in) {
-          window.open("//" + document.location.host + document.location.pathname + "stats/#/acidente?id=" + nroComunicado + "&acao=criar&oleo=" + hasOleo.checked + "&usuario=" + H5.user + "&email=" + H5.mail + "&comunicante=" + tipo_ocorrencia, "_blank", "width=1200,height=800,scrollbars=yes,status=yes,resizable=no");
+          window.open("//" + document.location.host + document.location.pathname + "stats/#/acidente?id=" + nroComunicado + "&acao=criar&oleo=" + hasOleo.checked + "&usuario=" + H5.user + "&email=" + H5.mail + "&comunicante=" + tipo_ocorrencia + "&userId=" + H5.id, "_blank", "width=1200,height=800,scrollbars=yes,status=yes,resizable=no");
         } else {
           window.open("//" + document.location.host + document.location.pathname + "stats/#/acidente?id=" + nroComunicado + "&acao=criar&oleo=" + hasOleo.checked + "&comunicante=" + tipo_ocorrencia, "_blank", "width=1200,height=800,scrollbars=yes,status=yes,resizable=no");
         }

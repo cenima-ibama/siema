@@ -51,13 +51,21 @@
             echo "H5.logged_in = true;";
             echo "H5.user = '" . $this->session->userdata('name') . "';";
             echo "H5.mail = '" . $this->session->userdata('mail') . "';";
+            
             $empresa = $this->session->userdata('empresa') ? "true" : "false";
             echo "H5.empresa = " . $empresa . ";";
+
+            $cnpj_string = str_replace(array('-','/','.'), '', $this->session->userdata('cnpj'));
+            $cpf_string = $this->session->userdata('username');
+
+            $id = $this->session->userdata('empresa') ? $cnpj_string : $cpf_string;
+            echo "H5.id = '" . $id . "';";
         }
         else {
             echo "H5.logged_in = false;";
         }
 
+        echo "H5.session = " . json_encode($this->session->all_userdata()) . ";";
 
       ?>
   </script>
