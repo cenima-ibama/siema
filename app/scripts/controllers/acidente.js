@@ -60,6 +60,8 @@ angular.module('estatisticasApp')
         } else {
           $scope.oleo = false;
         }
+
+        $scope.cpf_contato = $routeParams.userId;
       }
 
       if ($routeParams.usuario) {
@@ -266,6 +268,7 @@ angular.module('estatisticasApp')
         ocorrencia.nro_ocorrencia = $scope.nro_ocorrencia;
         ocorrencia.oleo = $scope.oleo;
         ocorrencia.tipo_comunicante = $scope.tipo_comunicante;
+        ocorrencia.cpf_contato = $scope.cpf_contato;
 
         ocorrencia.acoes = $scope.acoes;
         ocorrencia.ambiente = $scope.ambiente;
@@ -630,7 +633,7 @@ angular.module('estatisticasApp')
     };
 
     $scope.close = function() {
-      $window.close();
+      window.parent.close();
     }
 
     $scope.recarregarSistema = function() {

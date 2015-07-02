@@ -114,8 +114,9 @@ angular.module('estatisticasApp')
       function success(data, status){
       $scope.oleo = data[0].ocorrencia_oleo == 'S' ? true : false;
       $scope.dt_cadastro = data[0].dt_registro;
-      var dt = new Date();
-      $scope.dt_atualizacao = dt.getFullYear() + "-" + ("0" + (dt.getMonth() + 1)).slice (-2) + "-" + ("0" + dt.getDate()).slice (-2) + " " + ("0" + dt.getHours()).slice (-2) + ":" + ("0" + dt.getMinutes()).slice (-2) + ":" + ("0" + dt.getSeconds()).slice (-2);
+      // var dt = new Date();
+      // $scope.dt_atualizacao = dt.getFullYear() + "-" + ("0" + (dt.getMonth() + 1)).slice (-2) + "-" + ("0" + dt.getDate()).slice (-2) + " " + ("0" + dt.getHours()).slice (-2) + ":" + ("0" + dt.getMinutes()).slice (-2) + ":" + ("0" + dt.getSeconds()).slice (-2);
+      $scope.dt_atualizacao = data[0].hora_atual;
       //Acoes
         $scope.acoes = {};
         $scope.acoes.plano = "";
@@ -198,7 +199,21 @@ angular.module('estatisticasApp')
             $scope.datas.diaObservacao = temp[2] + "/" + temp[1] + "/" + temp[0];
             $scope.updateSemana('diaObservacao','obsSemana');
             $scope.datas.horaObservacao = data[0].hr_primeira_obs;
-            $scope.datas.obsPeriodo = data[0].periodo_primeira_obs;
+            switch(data[0].periodo_primeira_obs){
+              case 'M':
+                $scope.datas.obsPeriodo = "Matutino";
+                break;
+              case 'V':
+                $scope.datas.obsPeriodo = "Vespertino";
+                break;
+              case 'N':
+                $scope.datas.obsPeriodo = "Noturno";
+                break;
+              case 'S':
+                $scope.datas.obsPeriodo = "Madrugada";
+                break;
+            }
+            // $scope.datas.obsPeriodo = data[0].periodo_primeira_obs;
             $scope.datas.semObservacao = false;
         } else {
             $scope.datas.semObservacao = true;
@@ -210,7 +225,21 @@ angular.module('estatisticasApp')
             $scope.datas.diaIncidente = temp[2] + "/" + temp[1] + "/" + temp[0];
             $scope.updateSemana('diaIncidente','incSemana');
             $scope.datas.horaIncidente = data[0].hr_ocorrencia;
-            $scope.datas.incPeriodo = data[0].periodo_ocorrencia;
+            switch(data[0].periodo_primeira_obs){
+              case 'M':
+                $scope.datas.incPeriodo = "Matutino";
+                break;
+              case 'V':
+                $scope.datas.incPeriodo = "Vespertino";
+                break;
+              case 'N':
+                $scope.datas.incPeriodo = "Noturno";
+                break;
+              case 'S':
+                $scope.datas.incPeriodo = "Madrugada";
+                break;
+            }
+            // $scope.datas.incPeriodo = data[0].periodo_ocorrencia;
             $scope.datas.feriado = data[0].dt_ocorrencia_feriado;
             $scope.datas.semIncidente = false;
         } else {
@@ -220,9 +249,13 @@ angular.module('estatisticasApp')
       //Detalhes
         $scope.detalhes = {};
 
-        $scope.detalhes.semDetalhe = false;
-        $scope.detalhes.causa = "";
-        $scope.detalhes.situacao;
+        if (data[0].des_causa_provavel != null && data[0].des_causa_provavel != ""){
+          $scope.detalhes.semDetalhe = false;
+          $scope.detalhes.causa = "";
+          $scope.detalhes.situacao;
+        } else {
+          $scope.detalhes.semDetalhe = true;
+        }
 
         if (data[0].des_causa_provavel != null){
               $scope.detalhes.causa = data[0].des_causa_provavel;
@@ -248,6 +281,7 @@ angular.module('estatisticasApp')
             $scope.empresa.nome = data[0].nome_responsavel;
             $scope.empresa.cadastro = data[0].cpf_cnpj_responsavel;
             $scope.empresa.licencaAmbiental = data[0].licenca_responsavel;
+
         } else {
             $scope.empresa.semEmpresa = true;
         }
@@ -315,6 +349,14 @@ angular.module('estatisticasApp')
             $scope.instituicao.complementar = data[0].des_complemento_instituicao_atu;
             $scope.instituicao.responsavel = data[0].nome_instituicao_atuando;
             $scope.instituicao.telefone = data[0].telefone_instituicao_atuando;
+
+            if($scope.instituicao.responsavel == '' || $scope.instituicao.responsavel == null)
+              $scope.instituicao.responsavel = '********';
+            if($scope.instituicao.telefone == '' || $scope.instituicao.telefone == null)
+              $scope.instituicao.telefone = '********';
+            if($scope.instituicao.complementar == '' || $scope.instituicao.complementar == null )
+              $scope.instituicao.complementar = '********';
+
             if($scope.instituicao.complementar == ''){
               $scope.instituicao.complementarVal = false;
             } else {
