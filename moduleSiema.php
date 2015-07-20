@@ -197,15 +197,19 @@
 
 			if (!$form->datas->semIncidente) {
 
+				$feriado = $form->datas->feriado == 't' ? 'true' : 'false';
+
 				$incPeriodo = $form->datas->incPeriodo ? '\'' . $form->datas->incPeriodo . '\'' : 'null';
 
 				$query_ocorrencia = $query_ocorrencia . 'dt_ocorrencia=\'' . $form->datas->diaIncidente . '\',' .
 																								'hr_ocorrencia=\'' . $form->datas->horaIncidente . '\',' .
-																								'periodo_ocorrencia=' . $incPeriodo . ',';
+																								'periodo_ocorrencia=' . $incPeriodo . ',' . 
+																								'dt_ocorrencia_feriado=' . $feriado . ',';
 			} else {
 				$query_ocorrencia = $query_ocorrencia . 'dt_ocorrencia=null,' .
 																								'hr_ocorrencia=null,' .
-																								'periodo_ocorrencia=null,';
+																								'periodo_ocorrencia=null,' .
+																								'dt_ocorrencia_feriado=false,';
 			}
 
 
@@ -669,7 +673,7 @@
 			//Cria a query para atualização de uma ocorrência
 			//
 			$query_ocorrencia = 'INSERT INTO ocorrencia (id_uf,id_municipio,id_bacia_sedimentar,endereco_ocorrencia,' .
-																'dt_primeira_obs,hr_primeira_obs,periodo_primeira_obs,dt_ocorrencia,hr_ocorrencia,periodo_ocorrencia,' .
+																'dt_primeira_obs,hr_primeira_obs,periodo_primeira_obs,dt_ocorrencia,hr_ocorrencia,periodo_ocorrencia,dt_ocorrencia_feriado,' .
 																'des_complemento_tipo_localizaca,' .
 																'des_complemento_tipo_evento,' .
 																'tipo_substancia,volume_estimado,produto_nao_especificado,produto_nao_se_aplica,produto_perigoso,' .
@@ -731,15 +735,19 @@
 
 			if (!$form->datas->semIncidente) {
 
+				$feriado = $form->datas->feriado == 't' ? 'true' : 'false';
+
 				$incPeriodo = $form->datas->incPeriodo ? '\'' . $form->datas->incPeriodo . '\'' : 'null';
 
 				$query_ocorrencia = $query_ocorrencia . '\'' . $form->datas->diaIncidente . '\',' .
 																								'\'' . $form->datas->horaIncidente . '\',' .
-																								'' . $incPeriodo . ',';
+																								'' . $incPeriodo . ',' . 
+																								'' . $feriado . ',';
 			} else {
 				$query_ocorrencia = $query_ocorrencia . 'null,' .
 																								'null,' .
-																								'null,';
+																								'null,' . 
+																								'false,';
 			}
 
 

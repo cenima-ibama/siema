@@ -10,7 +10,8 @@
     <!-- Bootstrap -->
     <link href="<?= base_url()?>assets/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
     <!-- <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet"> -->
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+     <!-- <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"> -->
+     <link href="<?= base_url()?>assets/css/font-awesome.css" rel="stylesheet">
 
     <style>
         body, html {
@@ -58,12 +59,14 @@
     <?php echo form_close(); ?>
 
     <!-- jquery -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
+    <script src="<?= base_url()?>assets/js/jquery.min.js"></script>
     <!-- <script src="<?= base_url()?>assets/js/jquery.maskedinput.min.js"></script> -->
     <script src="<?= base_url()?>assets/js/jquery.mask.min.js"></script>
 
     <!-- Bootstrap -->
-    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <!-- <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script> -->
+    <script src="<?= base_url()?>assets/js/bootstrap.min.js"></script>
     <!-- mask -->
     <script>
       // $("#username").mask("99999999999");

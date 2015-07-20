@@ -360,26 +360,34 @@
 
   $("#manag").hide();
 
-  $("#searchCPF").mask("99999999999");
+  $("#searchCPF").mask("99999999999").on("change", function(){
+    $("#inputNome").val('');
+    $("#inputEmail").val('');
+    $("#storePerson").slideUp('fast');
+  });
 
   $("#searchPerson").on("click", function() {
+    $("#passModal").modal('hide');
     console.log("search for persons info");
     $("#errorBox").slideUp('fast');
     $("#infoBox").slideUp('fast');
     return $.ajax({
-      url: window.location.href.replace("#", "") + "index.php/Auth/search_user",
-      dataType: 'json',
-      type: 'get',
+      url: window.location.href.replace("#", "") + "index.php/Auth/search_ldap_user",
+      type: 'post',
       data: {
-        'cpf': $("#searchCPF").val()
+        'cpf': $("#searchCPF").val(),
+        'password': $("#password").val()
       },
       success: function(data) {
+        data = JSON.parse(data);
         if (data) {
-          $("#inputNome").val(data.Nome);
-          $("#inputEmail").val(data.Desc_Email);
-          $("#inputEmail").val(data.Desc_Email);
+          // $("#inputNome").val(data.Nome);
+          $("#inputNome").val(data.name);
+          // $("#inputEmail").val(data.Desc_Email);
+          $("#inputEmail").val(data.mail);
           $("#infoBox").html("CPF encontrado!").slideDown('slow');
           $("#storePerson").slideDown('slow');
+          $("#password").val("")
           return console.log('CPF encontrado!');
         } else {
           $("#inputNome").val("");
@@ -395,10 +403,22 @@
         $("#inputEmail").val("");
         $("#inputEmail").val("");
         $("#inputTelefone").val("");
-        $("#errorBox").html("CPF inválido").slideDown('slow');
-        return console.log('CPF inválido!');
+        var message = "";
+        
+        if (data.status == 401) {
+          message = "CPF/Senha invalidos!";
+        } else {
+          message = "CPF inválido!";
+        }
+
+        // console.log(data);
+        console.log(status);
+
+        $("#errorBox").html(message).slideDown('slow');
+        return console.log(message);
       }
     });
+    $("#password").val("");
   });
 
   $("#storePerson").on("click", function() {
@@ -407,7 +427,6 @@
     $("#infoBox").slideUp('fast');
     return $.ajax({
       url: window.location.href.replace("#", "") + "index.php/Auth/create_intern_user",
-      dataType: 'json',
       type: 'post',
       data: {
         'id_perfil': document.getElementById('selectPerfil').value,

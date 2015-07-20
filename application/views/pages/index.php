@@ -323,23 +323,47 @@
         </div>
     </div>
 </div>
-<div class="modal-footer" style="display:none;">
-    <a id="modalBtnBack" href="" class="btn" data-toggle="tab">Voltar</a>
-    <a id="modalBtnNext" href="#tab1" class="btn" data-toggle="tab">Avançar</a>
-    <a id="modalBtnCancel" href="#tab2" class="btn" data-toggle="tab" style="display:none;"><i class="icon-trash"></i> Cancelar</a>
 
-    <a id="btnSendCTF" class="btn btn-primary" type="button" style="display:none;" onClick="window.top.form_access.document.formAccess.submit()">Registrar</a>
 
-    <a id="submit" class="btn btn-primary" type="button" style="display:none;" onClick="window.top.form_frame.document.formAcidentes.submit()">
-        <i class="icon-ok icon-white"></i>
-        Enviar
-    </a>
-    <!-- Creating the new buttons Cancelar and Fechar - both hidden -->
-    <a id="btnClose" class="btn btn-inverse" type="button" style="display:none;" data-dismiss="modal"><i class="icon-remove"></i>Fechar</a>
+    <div class="modal-footer" style="display:none;">
+        <a id="modalBtnBack" href="" class="btn" data-toggle="tab">Voltar</a>
+        <a id="modalBtnNext" href="#tab1" class="btn" data-toggle="tab">Avançar</a>
+        <a id="modalBtnCancel" href="#tab2" class="btn" data-toggle="tab" style="display:none;"><i class="icon-trash"></i> Cancelar</a>
 
+        <a id="btnSendCTF" class="btn btn-primary" type="button" style="display:none;" onClick="window.top.form_access.document.formAccess.submit()">Registrar</a>
+
+        <a id="submit" class="btn btn-primary" type="button" style="display:none;" onClick="window.top.form_frame.document.formAcidentes.submit()">
+            <i class="icon-ok icon-white"></i>
+            Enviar
+        </a>
+        <!-- Creating the new buttons Cancelar and Fechar - both hidden -->
+        <a id="btnClose" class="btn btn-inverse" type="button" style="display:none;" data-dismiss="modal"><i class="icon-remove"></i>Fechar</a>
+
+    </div>
 </div>
-</div>
 
+
+<div id="passModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4> Senha Obrigatória</h4>
+            </div>
+            
+            <div class="modal-body">
+                <div class="center-block">
+                    <label for="password">Insira a senha do usuário IBAMA Net</label>
+                    <input id="password" class="form-control" type="password" placeholder="Senha" autocomplete="off">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <a  id="searchPerson" type="button" class="btn btn-primary">Buscar Dados</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -719,6 +743,7 @@ if (!$logged_in) {
                     ?>
                 </ul>
             </div>
+        
             <div class="span9 col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                 <div class="row-fluid">
 
@@ -739,7 +764,7 @@ if ($profilUser == 1) {
                                 <div class="col-sm-10">
                                     <label for="inputCPF" class="col-sm-2 control-label">CPF</label>
                                     <input id="searchCPF" type="text" placeholder="Verificar CPF" class="form-control">
-                                    <a class="btn icon-search icon-search-filter" id="searchPerson"></a>
+                                    <a class="btn icon-search icon-search-filter" data-toggle="modal" data-target="#passModal"></a>
                                 </div>
                             </div>
                             <!-- <hr style="margin: 5px 0px;"> -->
@@ -801,7 +826,6 @@ if ($profilUser == 1) {
                             <!-- codigo novo -->
 
                         </div>
-
     <?php
 }
 ?>
@@ -869,11 +893,14 @@ if ($profilUser == 1) {
                         </div>
                     </div>
                 </div>
+
     <?php
 }
 ?>
+
         </div>
     </div>
+
     <!-- </div>
     </div>
 

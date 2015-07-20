@@ -528,19 +528,69 @@ class Auth extends CI_Controller {
 
             // Verfica se tem dados antes de carregar $field
             if ($data) {
-                foreach ($data as $field => $value) {
-                    $data->$field = ucwords(strtolower($value));
+                foreach ($data as $field => &$value) {
+                    $value = utf8_encode(ucwords(strtolower($value)));
+                    $field = utf8_encode($field);
+
+                    // echo $field . " = ". $value . "," ;
                 }
             }
             // $this->firephp->log($data);
 
             oci_free_statement($p_cursor);
 
-            echo json_encode($data);
+            // $data = utf8_encode($data);
+
+            echo json_encode($data,JSON_UNESCAPED_UNICODE);
         } else {
             return null;
         }
     }
+
+    public function search_ldap_user() {
+        $rules = $this->form_validation;
+
+        $_POST['cpf'] = str_replace(array('-','/','.'), '', $_POST['cpf']);
+
+        $rules->set_rules('cpf', 'cpf', 'required|alpha_dash');
+        $rules->set_rules('password', 'password', 'required');
+
+        $currentProfile = $this->session->all_userdata();
+
+        // Do the login...
+        if ($rules->run() && $this->authldap->login(
+                        $rules->set_value('cpf'), $rules->set_value('password'))) {
+
+            $user =  $this->session->all_userdata();
+
+            echo json_encode($user);
+
+            //Save profiler(perfil) user in session.
+            // $this->save_profile_user($rules->set_value('cpf'));
+            // $userArray = array(
+            //     'logged_in' => TRUE,
+            //     'ctf' => FALSE,
+            //     'empresa' => FALSE
+            // );
+
+            // $this->session->set_userdata($userArray);
+            // echo "eta!";
+
+            // $userArray = array(
+            //     'logged_in' => TRUE,
+            //     'ctf' => FALSE,
+            //     'empresa' => FALSE
+            // );
+
+            $this->session->set_userdata($currentProfile);
+
+            
+        } else {
+            header("HTTP/1.0 401 Unauthorized");
+            echo '';
+        }
+    }
+
 
     public function create_intern_user() {
 
