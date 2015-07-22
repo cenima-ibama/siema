@@ -61,7 +61,6 @@ angular.module('estatisticasApp')
         elem = restData[regions[reg]][data[i].id_ocorrencia];
 
 
-
         elem.dt_registro = data[i].dt_registro;
         elem.dt_ocorrencia = data[i].dt_ocorrencia;
         elem.regiao = data[i].regiao;
@@ -70,6 +69,7 @@ angular.module('estatisticasApp')
         elem.danos = data[i].tipos_danos_identificados.replace(/[\"{}]+/g, '').split(",");
         elem.instituicoes = data[i].institiuicoes_atuando_local.replace(/[\"{}]+/g, '').split(",");
         elem.fontes = data[i].tipos_fontes_informacoes.replace(/[\"{}]+/g, '').split(",");
+        
       }
 
 
