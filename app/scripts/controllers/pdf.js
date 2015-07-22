@@ -225,7 +225,7 @@ angular.module('estatisticasApp')
             $scope.datas.diaIncidente = temp[2] + "/" + temp[1] + "/" + temp[0];
             $scope.updateSemana('diaIncidente','incSemana');
             $scope.datas.horaIncidente = data[0].hr_ocorrencia;
-            switch(data[0].periodo_primeira_obs){
+            switch(data[0].periodo_ocorrencia){
               case 'M':
                 $scope.datas.incPeriodo = "Matutino";
                 break;
@@ -240,7 +240,7 @@ angular.module('estatisticasApp')
                 break;
             }
             // $scope.datas.incPeriodo = data[0].periodo_ocorrencia;
-            $scope.datas.feriado = data[0].dt_ocorrencia_feriado;
+            $scope.datas.feriado = data[0].dt_ocorrencia_feriado == 't' ? true : false;
             $scope.datas.semIncidente = false;
         } else {
             $scope.datas.semIncidente = true;
@@ -394,7 +394,6 @@ angular.module('estatisticasApp')
             $scope.origem.complementar = data[0].des_complemento_tipo_localizaca;
             if($scope.origem.complementar == ''){
               $scope.origem.complementarVal = false;
-              // $scope.origem.semOrigem = true;
             } else{
               $scope.origem.complementarVal = true;
             }
@@ -462,14 +461,10 @@ angular.module('estatisticasApp')
 
         if (data[0].tipo_substancia || data[0].volume_estimado) {
             $scope.produtos.tipo_substancia = data[0].tipo_substancia;
-            $scope.produtos.valor_substancia = data[0].volume_estimado;
+            $scope.produtos.valor_substancia = parseFloat(data[0].volume_estimado);
         } else {
             $scope.produtos.semCondicoes = true;
         }
-
-
-
-
 
       }
     );

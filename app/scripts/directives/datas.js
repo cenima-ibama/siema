@@ -89,7 +89,7 @@ angular.module('estatisticasApp')
                 $scope.updateSemana('diaIncidente','incSemana');
                 $scope.datas.horaIncidente = data[0].hr_ocorrencia;
                 $scope.datas.incPeriodo = data[0].periodo_ocorrencia;
-                $scope.datas.feriado = data[0].dt_ocorrencia_feriado;
+                $scope.datas.feriado = data[0].dt_ocorrencia_feriado == 't' ? true : false;
                 $scope.datas.semIncidente = false;
             } else {
                 $scope.datas.semIncidente = true;
