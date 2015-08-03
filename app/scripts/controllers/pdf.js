@@ -346,9 +346,7 @@ angular.module('estatisticasApp')
             $scope.gerais = {};
             $scope.gerais.text = data[0].des_obs;
             if($scope.gerais.text == ''){
-              $scope.gerais.text = '********';
-            } else {
-              $scope.gerais.text = $scope.gerais.text;
+              $scope.gerais.text = null;
             }
 
           //Instituicao
@@ -371,8 +369,8 @@ angular.module('estatisticasApp')
                   $scope.instituicao.responsavel = '********';
                 if($scope.instituicao.telefone == '' || $scope.instituicao.telefone == null)
                   $scope.instituicao.telefone = '********';
-                if($scope.instituicao.complementar == '' || $scope.instituicao.complementar == null )
-                  $scope.instituicao.complementar = '********';
+                // if($scope.instituicao.complementar == '' || $scope.instituicao.complementar == null )
+                //   $scope.instituicao.complementar = '********';
 
                 if($scope.instituicao.complementar == ''){
                   $scope.instituicao.complementarVal = false;
@@ -482,6 +480,12 @@ angular.module('estatisticasApp')
             } else {
                 $scope.produtos.semCondicoes = true;
             }
+
+            
+            if (!$scope.produtos.naoClassificado && !$scope.produtos.naoAplica && !$scope.produtos.naoEspecificado &&
+                ($scope.produtos.produtos_onu.length == 0) && ($scope.produtos.produtos_outros.length == 0)) {
+                $scope.produtos.semProduto = true;
+            }  
 
         });
       }

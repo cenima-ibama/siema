@@ -298,7 +298,7 @@
           <p><b>Substância: </b>{{produto.field}}, <b>Qtd.: </b>{{produto.qtd}}, <b>Unidade: </b>{{produto.uni}}</p>
         </div>
       </div>
-      <hr />
+      <hr ng-if='!produtos.semProduto'/>
 
       <div ng-if='produtos.naoClassificado'>
         <label class='control-label'> Não Classificado</label>
@@ -313,7 +313,7 @@
         <label class='control-label'> Não especificado</label>
       </div>
 
-      <hr/>
+      <hr ng-if='!produtos.semProduto && oleo'/>
 
       <div ng-if='oleo'>
         <div ng-if='produtos.semCondicoes'>
@@ -472,14 +472,12 @@
             </div>
           </div>
         </div>
-        <hr/>
         <div ng-if='instituicao.complementarVal'>
           <div class="col-lg-6">
             <label>Informações complementares:</label>
             <textarea class="form-control col-lg-3" rows="4" ng-disabled="true" ng-model="instituicao.complementar"></textarea>
           </div>
         </div>
-        <hr/>
         <div class="col-lg-6">
           <div class="form-group">
             <label>Nome do responsável no local:</label>
@@ -554,7 +552,7 @@
     </div>
 
     <div class="panel-body">
-      <div class="col-lg-12 form-group">
+      <div class="col-lg-12 form-group" ng-if="gerais.text">
       <label>Outras informações julgadas úteis:</label>
           <textarea ng-model="gerais.text" class="form-control col-lg-3" rows="4" ng-disabled='true'></textarea>
       </div>

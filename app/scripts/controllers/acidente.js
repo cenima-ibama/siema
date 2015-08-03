@@ -308,14 +308,15 @@ angular.module('estatisticasApp')
         });
         ocorrencia.produtos = $scope.produtos;
 
-        if($scope.usuario) {
-          ocorrencia.fonte = $scope.fonte;
-          ocorrencia.fonte.fontes = [];
-          angular.forEach($scope.fontes, function(val, key){
-            if(val.value)
-              ocorrencia.fonte.fontes.push(val.id);
-          });
-        }
+        // Rule for presenting only that field when is a logged user went to the ground! Release the Kraken!
+        // if($scope.usuario) {
+        ocorrencia.fonte = $scope.fonte;
+        ocorrencia.fonte.fontes = [];
+        angular.forEach($scope.fontes, function(val, key){
+          if(val.value)
+            ocorrencia.fonte.fontes.push(val.id);
+        });
+        // }
 
 
         var error = [];
@@ -498,14 +499,15 @@ angular.module('estatisticasApp')
         formulario.acoes = $scope.acoes;
         formulario.gerais = $scope.gerais;
         formulario.comunicante = $scope.comunicante;
-        if($scope.usuario) {
-          formulario.fonte = $scope.fonte;
-          formulario.fonte.fontes = [];
-          angular.forEach($scope.fontes, function(val, key){
-            if(val.value)
-              formulario.fonte.fontes.push(val.id);
-          });
-        }
+        // Rule for presenting only that field when is a logged user went to the ground! Release the Kraken!
+        // if($scope.usuario) {
+        formulario.fonte = $scope.fonte;
+        formulario.fonte.fontes = [];
+        angular.forEach($scope.fontes, function(val, key){
+          if(val.value)
+            formulario.fonte.fontes.push(val.id);
+        });
+        // }
 
         formulario.arquivo = $scope.arquivo;
 
