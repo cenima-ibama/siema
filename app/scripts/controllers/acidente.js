@@ -321,9 +321,9 @@ angular.module('estatisticasApp')
 
         var error = [];
         if(!ocorrencia.localizacao.lat)
-          error.push('1. Preencha o campo Latitude');
+          error.push('1. Preencha o campo "Latitude"');
         if(!ocorrencia.localizacao.lng)
-          error.push('1. Preencha o campo Longitude');
+          error.push('1. Preencha o campo "Longitude"');
 
         // Campos não obrigatórios: Ocorrência pode cair no mar.
         // if(!ocorrencia.localizacao.uf)
@@ -356,7 +356,7 @@ angular.module('estatisticasApp')
         if($scope.oleo){
           if(!ocorrencia.origem.semOleoOrigem){
             if(((!ocorrencia.origem.navio) || (ocorrencia.origem.navio == '')) && ((!ocorrencia.origem.instalacao) || (ocorrencia.origem.instalacao == '')))
-              error.push('3. Preencha o campo "Origem do Acidente - Identificacao do Navio"');
+              error.push('3. Preencha o campo "Origem do Acidente - Identifica' + String.fromCharCode(231) + String.fromCharCode(227) + 'o do Navio"');
           }
         }
 
@@ -393,7 +393,7 @@ angular.module('estatisticasApp')
 
         if(!ocorrencia.ambiente.semAmbientes){
           if(!ocorrencia.ambiente.ambientes[0]){
-            error.push('7. Preencha o campo "Ambientes atingidos"');
+            error.push('7. Preencha o campo "Ambientes Atingidos"');
           }
         }
 
@@ -418,7 +418,7 @@ angular.module('estatisticasApp')
               }
             }
             else
-              error.push('10. Preencha o campo "A' + String.fromCharCode(231) + String.fromCharCode(245) + 'es iniciais"');
+              error.push('10. Preencha o campo "A' + String.fromCharCode(231) + String.fromCharCode(245) + 'es Iniciais"');
           }
         }
 
@@ -513,9 +513,9 @@ angular.module('estatisticasApp')
 
         var error = [];
         if(!formulario.localizacao.lat)
-          error.push('1. Preencha o campo Latitude');
+          error.push('1. Preencha o campo "Latitude"');
         if(!formulario.localizacao.lng)
-          error.push('1. Preencha o campo Longitude');
+          error.push('1. Preencha o campo "Longitude"');
 
         // Campos não obrigatórios: Ocorrência pode cair no mar.
         // if(!formulario.localizacao.uf)
@@ -554,7 +554,7 @@ angular.module('estatisticasApp')
         if($scope.oleo){
           if(!formulario.origem.semOleoOrigem){
             if(((!formulario.origem.navio) || (formulario.origem.navio == '')) && ((!formulario.origem.instalacao) || (formulario.origem.instalacao == '')))
-              error.push('3. Preencha o campo "Origem do Acidente - Identificacao do Navio"');
+              error.push('3. Preencha o campo "Origem do Acidente - Identifica' + String.fromCharCode(231) + String.fromCharCode(227) + 'o do Navio"');
           }
         }
 
@@ -610,7 +610,7 @@ angular.module('estatisticasApp')
               }
             }
             else
-              error.push('10. Preencha o campo "A' + String.fromCharCode(231) + String.fromCharCode(245) + 'es iniciais"');
+              error.push('10. Preencha o campo "A' + String.fromCharCode(231) + String.fromCharCode(245) + 'es Iniciais"');
           }
         }
 
