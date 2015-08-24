@@ -82,6 +82,7 @@ $query_builder = TRUE;
 $db['emergencias'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
+	// 'hostname' => '10.1.25.65',
 	// 'username' => 'development',
 	'username' => 'siema',
 	// 'password' => 'development',

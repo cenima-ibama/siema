@@ -23,8 +23,8 @@
     return $('#map').height($(window).height() - $('#navbar').height());
   }), false);
 
-  openstreetUrl = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-  thunderforest = "http://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png"
+  openstreetUrl = "//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+  thunderforest = "//{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png"
 
   openstreet = new L.TileLayer(openstreetUrl, {
     maxZoom: 18,
@@ -55,8 +55,8 @@
 
   geoserverUrl = "http://siema:siema@siscom.ibama.gov.br/geoserver/cgema/wms";
 
-  terrasIndigenas = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cgema:Terras_Indigenas",
+  terrasIndigenas = new L.TileLayer.WMS('http://siema:siema@siscom.ibama.gov.br/geoserver/csr/wms', {
+    layers: "csr:terra_indigena",
     format: "image/png",
     transparent: true
   });
@@ -73,8 +73,8 @@
     transparent: true
   });
 
-  ucFederacao = new L.TileLayer.WMS("http://siema:siema@siscom.ibama.gov.br/geoserver/cgema/wms", {
-    layers: "cgema:unidade_federacao",
+  ucFederacao = new L.TileLayer.WMS("http://siema:siema@siscom.ibama.gov.br/geoserver/csr/wms", {
+    layers: "csr:unidade_federacao",
     format: "image/png",
     transparent: true
   });
@@ -103,8 +103,8 @@
     transparent: true
   });
 
-  restinga = new L.TileLayer.WMS(geoserverUrl, {
-    layers: "cgema:Restinga",
+  restinga = new L.TileLayer.WMS("http://siema:siema@siscom.ibama.gov.br/geoserver/csr/wms", {
+    layers: "csr:restinga",
     format: "image/png",
     transparent: true
   });
@@ -193,8 +193,8 @@
     transparent: true
   });
 
-  marTerritorial = new L.TileLayer.WMS(geoserverUrl, {
-    layers: " cgema:Mar_Territorial",
+  marTerritorial = new L.TileLayer.WMS("http://siema:siema@siscom.ibama.gov.br/geoserver/csr/wms", {
+    layers: "csr:mar_territorial",
     format: "image/png",
     transparent: true
   });

@@ -81,8 +81,8 @@ H5.Map.base.attributionControl.setPrefix "Desenvolvido com: &copy; Leaflet | Hex
 # geoserverUrl = "http://siscom.ibama.gov.br/geo-srv/cemam/wms"
 geoserverUrl = "//siema:siema@siscom.ibama.gov.br/geoserver/cgema/wms"
 
-terrasIndigenas = new L.TileLayer.WMS(geoserverUrl,
-  layers: "cgema:Terras_Indigenas"
+terrasIndigenas = new L.TileLayer.WMS("//siema:siema@siscom.ibama.gov.br/geoserver/csr/wms",
+  layers: "csr:terra_indigena"
   format: "image/png"
   transparent: true
 )
