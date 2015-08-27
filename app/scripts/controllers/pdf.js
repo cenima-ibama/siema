@@ -433,12 +433,12 @@ angular.module('estatisticasApp')
             }
 
           //Produtos
-            $scope.produtos = {};
-            $scope.produtos.produtos_outros = [];
-            $scope.produtos.produtos_onu = [];
             $scope.getProdutos = function(){
               RestApi.query({query: 'produtos_cadastrados', id: data[0].id_ocorrencia},
                 function success(data, status){
+                  $scope.produtos = {};
+                  $scope.produtos.produtos_outros = [];
+                  $scope.produtos.produtos_onu = [];
                   if(data) {
                     $scope.produtos.produtos_outros = [];
                     angular.forEach(data, function(value, key){
@@ -464,28 +464,31 @@ angular.module('estatisticasApp')
                       }
                     });
                   }
+                
+                  $scope.produtos.naoClassificado = data[0].produto_perigoso == 't' ? true : false;
+                  $scope.produtos.naoAplica = data[0].produto_nao_se_aplica == 't' ? true : false;
+                  $scope.produtos.naoEspecificado = data[0].produto_nao_especificado == 't' ? true : false;
+
+
+                  if (data[0].tipo_substancia || data[0].volume_estimado) {
+                      $scope.produtos.tipo_substancia = data[0].tipo_substancia;
+                      $scope.produtos.valor_substancia = parseFloat(data[0].volume_estimado);
+                  } else {
+                      $scope.produtos.semCondicoes = true;
+                  }
+
+                  
+                  if (!$scope.produtos.naoClassificado && !$scope.produtos.naoAplica && !$scope.produtos.naoEspecificado &&
+                      ($scope.produtos.produtos_onu.length == 0) && ($scope.produtos.produtos_outros.length == 0)) {
+                      $scope.produtos.semProduto = true;
+                  }  
+
                 }
               );
             }
             $scope.getProdutos();
 
-            $scope.produtos.naoClassificado = data[0].produto_perigoso == 't' ? true : false;
-            $scope.produtos.naoAplica = data[0].produto_nao_se_aplica == 't' ? true : false;
-            $scope.produtos.naoEspecificado = data[0].produto_nao_especificado == 't' ? true : false;
-
-
-            if (data[0].tipo_substancia || data[0].volume_estimado) {
-                $scope.produtos.tipo_substancia = data[0].tipo_substancia;
-                $scope.produtos.valor_substancia = parseFloat(data[0].volume_estimado);
-            } else {
-                $scope.produtos.semCondicoes = true;
-            }
-
             
-            if (!$scope.produtos.naoClassificado && !$scope.produtos.naoAplica && !$scope.produtos.naoEspecificado &&
-                ($scope.produtos.produtos_onu.length == 0) && ($scope.produtos.produtos_outros.length == 0)) {
-                $scope.produtos.semProduto = true;
-            }  
 
         });
       }
